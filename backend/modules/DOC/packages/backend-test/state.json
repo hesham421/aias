@@ -5,23 +5,23 @@
   "version": 1,
   "profile": "aias",
   "markers_schema_version": 2,
-  "source": "governance-shared/analysis/modules/DOC/P4/backend-test-plan-doc.md",
-  "split_at": "2026-10-01T15:10:25+00:00",
+  "source": "analysis/modules/DOC/P4/backend-test-plan-doc.md",
+  "split_at": "2026-10-01T16:25:56+00:00",
   "strict": false,
   "files": [
-    "governance-shared/backend/modules/DOC/packages/backend-test/TEST-PLAN-BE-HEADER.md",
-    "governance-shared/backend/modules/DOC/packages/backend-test/RULE-SCENARIOS.md",
-    "governance-shared/backend/modules/DOC/packages/backend-test/API-SCENARIOS.md",
-    "governance-shared/backend/modules/DOC/packages/backend-test/MODEL-EVAL.md",
-    "governance-shared/backend/modules/DOC/packages/backend-test/INT-XM.md",
-    "governance-shared/backend/modules/DOC/packages/backend-test/_SECTIONS.md",
-    "governance-shared/backend/modules/DOC/packages/backend-test/RULE-SCENARIOS.package.json",
-    "governance-shared/backend/modules/DOC/packages/backend-test/API-SCENARIOS.package.json",
-    "governance-shared/backend/modules/DOC/packages/backend-test/MODEL-EVAL.package.json",
-    "governance-shared/backend/modules/DOC/packages/backend-test/INT-XM.package.json"
+    "backend/modules/DOC/packages/backend-test/TEST-PLAN-BE-HEADER.md",
+    "backend/modules/DOC/packages/backend-test/RULE-SCENARIOS.md",
+    "backend/modules/DOC/packages/backend-test/API-SCENARIOS.md",
+    "backend/modules/DOC/packages/backend-test/MODEL-EVAL.md",
+    "backend/modules/DOC/packages/backend-test/INT-XM.md",
+    "backend/modules/DOC/packages/backend-test/_SECTIONS.md",
+    "backend/modules/DOC/packages/backend-test/RULE-SCENARIOS.package.json",
+    "backend/modules/DOC/packages/backend-test/API-SCENARIOS.package.json",
+    "backend/modules/DOC/packages/backend-test/MODEL-EVAL.package.json",
+    "backend/modules/DOC/packages/backend-test/INT-XM.package.json"
   ],
   "indexes": [
-    "governance-shared/backend/modules/DOC/packages/backend-test/index.md"
+    "backend/modules/DOC/packages/backend-test/index.md"
   ],
   "units": [
     "SUB:RULE-SCENARIOS",
@@ -108,6 +108,6 @@
     "TC:TC-DOC-068",
     "TC:TC-DOC-069"
   ],
-  "verification": "governance-shared/backend/modules/DOC/packages/backend-test/verification.json",
+  "verification": "backend/modules/DOC/packages/backend-test/verification.json",
   "verified": true
 }

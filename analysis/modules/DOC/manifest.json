@@ -43,19 +43,19 @@
       "integration": [
         {
           "xm": "XM-DOC-001",
-          "path": "governance-shared/backend/modules/DOC/packages/integration/XM-DOC-001"
+          "path": "/Users/ezzat/my project/aias/governance-shared/backend/modules/DOC/packages/integration/XM-DOC-001"
         },
         {
           "xm": "XM-DOC-002",
-          "path": "governance-shared/backend/modules/DOC/packages/integration/XM-DOC-002"
+          "path": "/Users/ezzat/my project/aias/governance-shared/backend/modules/DOC/packages/integration/XM-DOC-002"
         },
         {
           "xm": "XM-DOC-003",
-          "path": "governance-shared/backend/modules/DOC/packages/integration/XM-DOC-003"
+          "path": "/Users/ezzat/my project/aias/governance-shared/backend/modules/DOC/packages/integration/XM-DOC-003"
         },
         {
           "xm": "XM-DOC-004",
-          "path": "governance-shared/backend/modules/DOC/packages/integration/XM-DOC-004"
+          "path": "/Users/ezzat/my project/aias/governance-shared/backend/modules/DOC/packages/integration/XM-DOC-004"
         }
       ]
     },

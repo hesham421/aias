@@ -3,11 +3,11 @@
   "version": 1,
   "scope": "all",
   "counts": {
-    "CRITICAL": 0,
+    "CRITICAL": 4,
     "MAJOR": 0,
     "MINOR": 12
   },
-  "clean": true,
+  "clean": false,
   "blocking": [
     "CRITICAL",
     "MAJOR"
@@ -93,7 +93,7 @@
     "C9.24": 0,
     "C9.22": 0,
     "C9.23": 6,
-    "C10.1": 77,
+    "C10.1": 82,
     "C10.2": 70,
     "C10.7": 0,
     "C10.8": 160,
@@ -174,6 +174,38 @@
     }
   ],
   "findings": [
+    {
+      "severity": "CRITICAL",
+      "clause": "C7.14",
+      "check": "paths-resolve",
+      "message": "manifest.json \u2192 `status.split.integration[0].path` = `governance-shared/backend/modules/DOC/packages/integration/XM-DOC-001` resolves to nothing under /Users/ezzat/my project/aias/governance-shared/analysis/modules/DOC",
+      "artifact": "manifest_file",
+      "line": 0
+    },
+    {
+      "severity": "CRITICAL",
+      "clause": "C7.14",
+      "check": "paths-resolve",
+      "message": "manifest.json \u2192 `status.split.integration[1].path` = `governance-shared/backend/modules/DOC/packages/integration/XM-DOC-002` resolves to nothing under /Users/ezzat/my project/aias/governance-shared/analysis/modules/DOC",
+      "artifact": "manifest_file",
+      "line": 0
+    },
+    {
+      "severity": "CRITICAL",
+      "clause": "C7.14",
+      "check": "paths-resolve",
+      "message": "manifest.json \u2192 `status.split.integration[2].path` = `governance-shared/backend/modules/DOC/packages/integration/XM-DOC-003` resolves to nothing under /Users/ezzat/my project/aias/governance-shared/analysis/modules/DOC",
+      "artifact": "manifest_file",
+      "line": 0
+    },
+    {
+      "severity": "CRITICAL",
+      "clause": "C7.14",
+      "check": "paths-resolve",
+      "message": "manifest.json \u2192 `status.split.integration[3].path` = `governance-shared/backend/modules/DOC/packages/integration/XM-DOC-004` resolves to nothing under /Users/ezzat/my project/aias/governance-shared/analysis/modules/DOC",
+      "artifact": "manifest_file",
+      "line": 0
+    },
     {
       "severity": "MINOR",
       "clause": "C5.14",
@@ -309,11 +341,11 @@
       "domain-profile": "c9ffe7c45c917c5793e15b6fbc7151ccc4b9181c36a5aaf1ce2f15f6849e3cbd",
       "flow-diagram": "cd4d58137eb14c8482bff3a8612cc85043c33f21f3d8c0f88f920b8ef028d5cd",
       "frontend-execution-plan": "9b63247c51a645de51bea56ef45c27e2a7955c68a26b21684ef697c12c24d7d3",
-      "frontend-test-plan": "faea4f643a94f95af70111a67505fce5fada641907e9aa36d41079f280f5c21f",
+      "frontend-test-plan": "d46b6fd8d0acd0454604920dd7e3095f27385351f35dd45fac5efd6d6112a1d1",
       "module-registry": "b8de43f6c9f01340d973219f0d250ef6886d8121f0cfc383e9960c1c464fdaed",
       "platform-summary": "2beb30eaa26a520522195bd01764073ec4b086ee85c0642849b0a3943a8f0986",
       "prd": "682c62b88bbd8f2df993120568162993c3b1b6cb64a8d0c92572cdd73e7ba976",
-      "project-registry": "715e7fc8d741601c09b787acf9a9c67c5d885977334834eb3b1f3bbf958928a1",
+      "project-registry": "7a389817f730ec9c3e3e6e96562c8ed5753214059e0e715c2ae8c491e2b9d009",
       "registry-db": "fb31015865488e29fea56048478d7a9f987a40065f0b4ad0bb183dcaf35c79c5",
       "registry-exec-be": "862fe02080975df06daf89a040ced896f9045af2033fd6d7343c023e99c591b1",
       "registry-exec-fe": "7c182333d056d1f805d20e6dc076e9c110635b4f1f73b26fcbca19469f098122",
@@ -321,6 +353,6 @@
       "srs": "b88a90753396d7a88e7f860beb6c75fa781f8f9ad16b7e8a0a42f17a9cc634d0",
       "ui-ux-spec": "a573f4dc8407c342aa58a28a73cea0e915f088519dafea0bfe126780a746e4af"
     },
-    "at": "2026-10-01T14:53:08+00:00"
+    "at": "2026-10-01T16:25:22+00:00"
   }
 }

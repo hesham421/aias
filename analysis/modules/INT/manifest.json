@@ -36,10 +36,16 @@
   "status": {
     "archived": false,
     "split": {
-      "backend/exec": false,
-      "backend/test": false,
-      "frontend/exec": false,
-      "frontend/test": false
+      "backend/exec": true,
+      "backend/test": true,
+      "frontend/exec": true,
+      "frontend/test": true,
+      "integration": [
+        {
+          "xm": "XM-INT-001",
+          "path": "governance-shared/backend/modules/INT/packages/integration/XM-INT-001"
+        }
+      ]
     },
     "coverage": {
       "us-req": 100.0,

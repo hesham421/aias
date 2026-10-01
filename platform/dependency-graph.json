@@ -7,6 +7,7 @@
       "REG": "v1"
     },
     "srs": {
+      "CHK": "v1",
       "DOC": "v1",
       "REG": "v1"
     }
@@ -43,8 +44,42 @@
     {
       "from": "CHK",
       "to": "REG",
+      "entity": "ENT-REG-001",
+      "type": "SOFT-READ",
       "state": "READY",
-      "source": "platform"
+      "source": "module"
+    },
+    {
+      "from": "CHK",
+      "to": "REG",
+      "entity": "ENT-REG-002",
+      "type": "SOFT-READ",
+      "state": "READY",
+      "source": "module"
+    },
+    {
+      "from": "CHK",
+      "to": "REG",
+      "entity": "ENT-REG-003",
+      "type": "SOFT-READ",
+      "state": "READY",
+      "source": "module"
+    },
+    {
+      "from": "CHK",
+      "to": "REG",
+      "entity": "ENT-REG-004",
+      "type": "SOFT-READ",
+      "state": "READY",
+      "source": "module"
+    },
+    {
+      "from": "CHK",
+      "to": "REG",
+      "entity": "ENT-REG-005",
+      "type": "SOFT-READ",
+      "state": "READY",
+      "source": "module"
     },
     {
       "id": "XM-DOC-001",

@@ -36,7 +36,7 @@
     {
       "from": "CHK",
       "to": "DOC",
-      "state": "CONTRACTED",
+      "state": "READY",
       "source": "platform"
     },
     {
@@ -46,36 +46,67 @@
       "source": "platform"
     },
     {
+      "id": "XM-DOC-001",
       "from": "DOC",
       "to": "REG",
       "entity": "ENT-REG-002",
       "type": "SOFT-READ",
       "state": "READY",
-      "source": "module"
+      "declared": "CONTRACTED",
+      "contract_ref": "CON-REG-002",
+      "traces": [
+        "REQ-DOC-002",
+        "REQ-DOC-003",
+        "REQ-DOC-020"
+      ],
+      "source": "xm"
     },
     {
+      "id": "XM-DOC-002",
       "from": "DOC",
       "to": "REG",
       "entity": "ENT-REG-003",
       "type": "SOFT-READ",
       "state": "READY",
-      "source": "module"
+      "declared": "CONTRACTED",
+      "contract_ref": "CON-REG-003",
+      "traces": [
+        "REQ-DOC-004",
+        "REQ-DOC-012",
+        "REQ-DOC-051"
+      ],
+      "source": "xm"
     },
     {
+      "id": "XM-DOC-003",
       "from": "DOC",
       "to": "REG",
       "entity": "ENT-REG-004",
       "type": "SOFT-READ",
       "state": "READY",
-      "source": "module"
+      "declared": "CONTRACTED",
+      "contract_ref": "CON-REG-004",
+      "traces": [
+        "REQ-DOC-021",
+        "REQ-DOC-035"
+      ],
+      "source": "xm"
     },
     {
+      "id": "XM-DOC-004",
       "from": "DOC",
       "to": "REG",
       "entity": "ENT-REG-005",
       "type": "SOFT-READ",
       "state": "READY",
-      "source": "module"
+      "declared": "CONTRACTED",
+      "contract_ref": "CON-REG-005",
+      "traces": [
+        "REQ-DOC-012",
+        "REQ-DOC-014",
+        "REQ-DOC-052"
+      ],
+      "source": "xm"
     },
     {
       "from": "INT",
@@ -86,7 +117,7 @@
     {
       "from": "INT",
       "to": "DOC",
-      "state": "CONTRACTED",
+      "state": "READY",
       "source": "platform"
     },
     {

@@ -114,7 +114,7 @@ REQ count 64 · AC count 74 · RULE count 4 · last sequence per atom (REQ: 64, 
 | RULE-INT-004 | REQ-INT-041 |
 
 ### Decisions
-ADR-INT-010, ADR-INT-011, ADR-INT-012, ADR-INT-013, ADR-INT-016, ADR-INT-020 (new, ACCEPTED — ADR-INT-020 adds REQ-INT-061 … REQ-INT-064 in a revision); applied ADR-INT-001 … ADR-INT-009. No BLOCKED ADR.
+ADR-INT-010, ADR-INT-011, ADR-INT-012, ADR-INT-013, ADR-INT-016, ADR-INT-020, ADR-INT-023 (new, ACCEPTED — ADR-INT-020 adds REQ-INT-061 … REQ-INT-064 in a revision; ADR-INT-023 binds REQ-INT-063 to Document Access's CON-DOC-006, closing ADR-INT-020 (4)); applied ADR-INT-001 … ADR-INT-009. No BLOCKED ADR.
 
 ### Event
-P1 completed: INT v1 — 64 REQ · 74 AC · 0 ENT · 4 RULE · 5 SCR-REQ · 6 ADR (revision: +4 REQ, +8 AC — ADR-INT-020)
+P1 completed: INT v1 — 64 REQ · 74 AC · 0 ENT · 4 RULE · 5 SCR-REQ · 7 ADR (revision: +4 REQ, +8 AC — ADR-INT-020; CON-DOC-006 binding — ADR-INT-023)

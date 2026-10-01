@@ -31,7 +31,7 @@
 None — no SCR-REQ in this version (DOC has no screen, ADR-DOC-003).
 
 ### Requirements
-REQ count 63 · AC count 68 · RULE count 10 · last sequence per atom (REQ: 63, AC: 68, ENT: 2, RULE: 10, SCR-REQ: 0)
+REQ count 64 · AC count 70 · RULE count 10 · last sequence per atom (REQ: 64, AC: 70, ENT: 2, RULE: 10, SCR-REQ: 0)
 
 | REQ | AC |
 |---|---|
@@ -98,6 +98,7 @@ REQ count 63 · AC count 68 · RULE count 10 · last sequence per atom (REQ: 63,
 | REQ-DOC-061 | AC-DOC-065 |
 | REQ-DOC-062 | AC-DOC-066 |
 | REQ-DOC-063 | AC-DOC-067, AC-DOC-068 |
+| REQ-DOC-064 | AC-DOC-069, AC-DOC-070 |
 
 | RULE | Traces |
 |---|---|
@@ -113,7 +114,7 @@ REQ count 63 · AC count 68 · RULE count 10 · last sequence per atom (REQ: 63,
 | RULE-DOC-010 | REQ-DOC-063 |
 
 ### Decisions
-ADR-DOC-005, ADR-DOC-006, ADR-DOC-007, ADR-DOC-008, ADR-DOC-009, ADR-DOC-015, ADR-DOC-016 (new, ACCEPTED); applied ADR-DOC-001 … ADR-DOC-004, ADR-REG-001, ADR-REG-004, ADR-REG-005, ADR-REG-006. BLOCKED: none.
+ADR-DOC-005, ADR-DOC-006, ADR-DOC-007, ADR-DOC-008, ADR-DOC-009, ADR-DOC-015, ADR-DOC-016, ADR-DOC-017 (new, ACCEPTED); applied ADR-DOC-001 … ADR-DOC-004, ADR-REG-001, ADR-REG-004, ADR-REG-005, ADR-REG-006. BLOCKED: none.
 
 ### Event
-"P1 completed: DOC v1 — REQ 63 · AC 68 · ENT 2 · RULE 10 · SCR-REQ 0 · ADR 7 (analysis-gate revise: ADR-DOC-015, ADR-DOC-016)"
+"P1 completed: DOC v1 — REQ 64 · AC 70 · ENT 2 · RULE 10 · SCR-REQ 0 · ADR 8 (analysis-gate revise: ADR-DOC-015, ADR-DOC-016, ADR-DOC-017)"

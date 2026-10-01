@@ -2,7 +2,7 @@
 ══════════════════════════════════════════════════════════════════
 Module : DOC   Version : v1   Profile : aias
 Inputs : prd, domain-profile, project-registry (PRD approved 2026-10-01)
-Counts : REQ 63 · AC 68 · ENT 2 · RULE 10 · SCR-REQ 0 · ADR 7 (new: ADR-DOC-005 … ADR-DOC-009, ADR-DOC-015, ADR-DOC-016; applied: ADR-DOC-001 … ADR-DOC-009, ADR-DOC-015, ADR-DOC-016, ADR-REG-001, ADR-REG-004, ADR-REG-005, ADR-REG-006)
+Counts : REQ 64 · AC 70 · ENT 2 · RULE 10 · SCR-REQ 0 · ADR 8 (new: ADR-DOC-005 … ADR-DOC-009, ADR-DOC-015 … ADR-DOC-017; applied: ADR-DOC-001 … ADR-DOC-009, ADR-DOC-015 … ADR-DOC-017, ADR-REG-001, ADR-REG-004, ADR-REG-005, ADR-REG-006)
 ══════════════════════════════════════════════════════════════════
 
 # PART A — MODULE FOUNDATION
@@ -16,7 +16,7 @@ Counts : REQ 63 · AC 68 · ENT 2 · RULE 10 · SCR-REQ 0 · ADR 7 (new: ADR-DOC
 | Date | 2026-10-01 |
 | Status | DRAFT — P1 output, PRD approved 2026-10-01 (gate prd-approval) |
 | Prepared by | P1 SRS engine (operator run, lane analysis) |
-| Decisions applied | 11 DOC ADRs (ADR-DOC-001 … ADR-DOC-009, ADR-DOC-015, ADR-DOC-016), 4 REG ADRs and 6 DEFAULTs — see Decisions applied |
+| Decisions applied | 12 DOC ADRs (ADR-DOC-001 … ADR-DOC-009, ADR-DOC-015 … ADR-DOC-017), 4 REG ADRs and 6 DEFAULTs — see Decisions applied |
 
 ## A2 — Functional context
 
@@ -1003,6 +1003,25 @@ Kind reason: transactional — one row per Check whose end the Check Engine has 
   When   : INT hands over `id.png` with document type ID_CARD for Check 501
   Then   : the upload is accepted and 20 Uploaded Documents exist for Check 501
 
+### REQ-DOC-064 — Uploaded Documents of a Check listed without content
+  Pattern    : event
+  Statement  : When the host integration asks for the Uploaded Documents of a Check, the system shall return every Uploaded Document carrying that Check's identifier, ordered by upload time, with its identifier, document type, file name, file size, oversized flag and upload time and without its content.
+  Traces     : US-DOC-005
+  Entities   : ENT-DOC-001
+  Rationale  : The employee sees which files were handed over for the Check before it runs; the file content never leaves DOC except to the Check.
+  Source     : POL-DOC-007; ADR-DOC-003, ADR-DOC-017; INT ADR-INT-020
+  Priority   : —
+
+#### AC-DOC-069 — [REQ-DOC-064]
+  Given  : Check 501 has 2 Uploaded Documents, `transcript.pdf` (TRANSCRIPT, 81920 bytes) uploaded first and `id.png` (ID_CARD, oversized) second, and Check 502 has 1
+  When   : INT asks for the Uploaded Documents of Check 501
+  Then   : 2 entries are returned in the order `transcript.pdf`, `id.png`, each with uploadedDocumentId, documentType, fileName, fileSize, oversized (false, true) and upload time, and 0 entries carry content
+
+#### AC-DOC-070 — [REQ-DOC-064]
+  Given  : Check 503 has 0 Uploaded Documents
+  When   : INT asks for the Uploaded Documents of Check 503
+  Then   : an empty list of 0 entries is returned and no error is raised
+
 ## A5 — Business rules
 
 ### RULE-DOC-001 — Upload only for a manual service
@@ -1150,6 +1169,7 @@ Errors    : ProblemDetail (RFC 9457) → {type, title, status, detail, code} —
 | hand over an upload (in-process, called by INT) | — | — | checkId, serviceCode, versionNumber, documentType, fileName, file content | Uploaded Document summary (id, documentType, fileName, fileSize, oversized) or rejection | RULE-DOC-001, RULE-DOC-002, RULE-DOC-003, RULE-DOC-005, RULE-DOC-009, RULE-DOC-010 | REQ-DOC-017, REQ-DOC-020, REQ-DOC-021, REQ-DOC-022, REQ-DOC-043, REQ-DOC-061, REQ-DOC-063 |
 | fetch and read the documents of a Check (in-process, called by CHK) | — | — | checkId, requestNumber, serviceCode, versionNumber, the Check's deadline (REQ-DOC-040) | list of Document Outcomes (documentType, sourceMode, readStatus, reason, detail, content) | RULE-DOC-005, RULE-DOC-006, RULE-DOC-007, RULE-DOC-008 | REQ-DOC-001 … REQ-DOC-016, REQ-DOC-018, REQ-DOC-019, REQ-DOC-024 … REQ-DOC-042, REQ-DOC-044 … REQ-DOC-048, REQ-DOC-056 … REQ-DOC-059 |
 | end a Check (in-process, called by CHK) | — | — | checkId | count of Uploaded Documents deleted | — | REQ-DOC-054, REQ-DOC-060, REQ-DOC-062 |
+| list the Uploaded Documents of a Check (in-process, called by INT; the HTTP read delegates to it) | — | — | checkId | list of Uploaded Document summaries (id, documentType, fileName, fileSize, oversized, upload time) — never content | RULE-DOC-008 | REQ-DOC-064 |
 
 # STANDALONE
 
@@ -1160,7 +1180,7 @@ Errors    : ProblemDetail (RFC 9457) → {type, title, status, detail, code} —
 | US-DOC-002 | REQ-DOC-004, REQ-DOC-005, REQ-DOC-006, REQ-DOC-007 | AC-DOC-004, AC-DOC-005, AC-DOC-006, AC-DOC-007 | — | ENT-REG-002, ENT-REG-003, ENT-REG-004, ENT-REG-005 | — |
 | US-DOC-003 | REQ-DOC-008, REQ-DOC-009, REQ-DOC-010, REQ-DOC-011 | AC-DOC-008, AC-DOC-009, AC-DOC-010, AC-DOC-011, AC-DOC-012, AC-DOC-013 | — | — | — |
 | US-DOC-004 | REQ-DOC-006, REQ-DOC-012, REQ-DOC-013, REQ-DOC-014, REQ-DOC-015, REQ-DOC-016 | AC-DOC-006, AC-DOC-014, AC-DOC-015, AC-DOC-016, AC-DOC-017, AC-DOC-018 | RULE-DOC-006 | ENT-REG-002, ENT-REG-003, ENT-REG-004, ENT-REG-005 | — |
-| US-DOC-005 | REQ-DOC-017, REQ-DOC-018, REQ-DOC-019, REQ-DOC-020, REQ-DOC-021, REQ-DOC-022, REQ-DOC-023, REQ-DOC-043, REQ-DOC-061, REQ-DOC-063 | AC-DOC-019, AC-DOC-020, AC-DOC-021, AC-DOC-022, AC-DOC-023, AC-DOC-024, AC-DOC-025, AC-DOC-046, AC-DOC-065, AC-DOC-067, AC-DOC-068 | RULE-DOC-001, RULE-DOC-002, RULE-DOC-003, RULE-DOC-004, RULE-DOC-005, RULE-DOC-008, RULE-DOC-009, RULE-DOC-010 | ENT-DOC-001, ENT-DOC-002, ENT-REG-002, ENT-REG-004 | — |
+| US-DOC-005 | REQ-DOC-017, REQ-DOC-018, REQ-DOC-019, REQ-DOC-020, REQ-DOC-021, REQ-DOC-022, REQ-DOC-023, REQ-DOC-043, REQ-DOC-061, REQ-DOC-063, REQ-DOC-064 | AC-DOC-019, AC-DOC-020, AC-DOC-021, AC-DOC-022, AC-DOC-023, AC-DOC-024, AC-DOC-025, AC-DOC-046, AC-DOC-065, AC-DOC-067, AC-DOC-068, AC-DOC-069, AC-DOC-070 | RULE-DOC-001, RULE-DOC-002, RULE-DOC-003, RULE-DOC-004, RULE-DOC-005, RULE-DOC-008, RULE-DOC-009, RULE-DOC-010 | ENT-DOC-001, ENT-DOC-002, ENT-REG-002, ENT-REG-004 | — |
 | US-DOC-006 | REQ-DOC-024, REQ-DOC-025, REQ-DOC-026, REQ-DOC-027, REQ-DOC-028, REQ-DOC-029 | AC-DOC-026, AC-DOC-027, AC-DOC-028, AC-DOC-029, AC-DOC-030, AC-DOC-031 | — | — | — |
 | US-DOC-007 | REQ-DOC-030, REQ-DOC-031, REQ-DOC-032, REQ-DOC-033 | AC-DOC-032, AC-DOC-033, AC-DOC-034, AC-DOC-035 | — | — | — |
 | US-DOC-008 | REQ-DOC-034, REQ-DOC-035, REQ-DOC-036, REQ-DOC-037, REQ-DOC-038, REQ-DOC-039, REQ-DOC-040 | AC-DOC-036, AC-DOC-037, AC-DOC-038, AC-DOC-039, AC-DOC-040, AC-DOC-041, AC-DOC-042, AC-DOC-043 | — | ENT-DOC-001, ENT-REG-003, ENT-REG-004 | — |
@@ -1190,6 +1210,7 @@ Raw-idea §12 guardrails (AIAS-1): (1) LLM analyses only → REQ-DOC-048 · (2) 
 | ADR-DOC-009 | Free-tier rule enforced from model tier + environment data class | P1 (this stage) | ACCEPTED — non-breaking |
 | ADR-DOC-015 | Ended Checks recorded; a handover for an ended Check refused; late uploads of ended Checks swept at every end of a Check | P1 (analysis-gate revise, finding G2) | ACCEPTED — non-breaking |
 | ADR-DOC-016 | Maximum uploads per Check is platform configuration, default 20 | P1 (analysis-gate revise, finding G3) | ACCEPTED — non-breaking |
+| ADR-DOC-017 | In-process listing of a Check's Uploaded Documents without content, for INT (ADR-INT-020); no read status held by DOC | P1 (analysis-gate revise, INT request) | ACCEPTED — non-breaking |
 | DEFAULT — format by content signature | A document's format is detected from its content, not its file name | domain best practice; `blob` documents have no file name | Override: trust the file extension for `path` and `manual` |
 | DEFAULT — supported image formats | JPEG, PNG and TIFF go to the document-reading step | [KB:raw-idea.md §2, §5 step 4]; ADR-DOC-004 | Override: add a format to the reader list |
 | DEFAULT — model tier FREE when not declared | An undeclared document-reading model tier counts as FREE | ADR-DOC-009; domain-profile G13 | Override: declare APPROVED after the D3 go-live gate |
@@ -1202,6 +1223,6 @@ Raw-idea §12 guardrails (AIAS-1): (1) LLM analyses only → REQ-DOC-048 · (2) 
 |---|---|---|
 | Employee | none in DOC (uploads from the embedded frontend through INT) | upload handover (via INT); reads outcomes in the report (RPT/INT) |
 | Service Administrator | none | sets the storage root, the data class and the document-reading model of the environment; chooses the fetch mode in the Service Package (REG) |
-| CHK, INT (in-process) | — | CHK: fetch and read the documents of a Check, end a Check · INT: hand over an upload (only while its Check is awaiting documents — ADR-DOC-015) |
+| CHK, INT (in-process) | — | CHK: fetch and read the documents of a Check, end a Check · INT: hand over an upload (only while its Check is awaiting documents — ADR-DOC-015), list the Uploaded Documents of a Check (ADR-DOC-017) |
 Caller authentication is deferred (raw-idea A2); no role check is specified in this version.
 ══════════════════════════════════════════════════════════════════

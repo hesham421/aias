@@ -3,7 +3,7 @@
 Module : REG   Version : v1   Profile : aias   Stage : P3.2 (Part A)
 Inputs : srs-reg.md · prd-reg.md · api-spec-reg.yaml · registry-srs-reg.md · registry-exec-be-reg.md
 Counts : SCR 0 · UXD 0
-Decisions : ADR-REG-012 (new, ACCEPTED); applied ADR-REG-007, ADR-REG-011
+Decisions : ADR-REG-012 (new, ACCEPTED); applied ADR-REG-007, ADR-REG-011, ADR-REG-016, ADR-REG-017, ADR-REG-018, ADR-REG-022
 ══════════════════════════════════════════════════════════════════
 
 ## Screens
@@ -36,7 +36,7 @@ For reference only — no REG screen renders them. Shapes are read in `api-spec-
 | approvalEnabled | API-REG-001, API-REG-002 | Approval API enabled | PENDING ADR-REG-011 |
 | subjectKind, subjectName, outcome, reason, loadRunAt | API-REG-003 | Subject kind, Subject, Outcome, Reason, Load run | PENDING ADR-REG-011 |
 
-Service codes in every response are canonical lower case; a read matches the code trimmed and case-insensitively (REQ-REG-064, ADR-REG-017). `subjectKind` includes PACKAGE_DIRECTORY (ADR-REG-018).
+Service codes in every response are canonical lower case; a read matches the code trimmed and case-insensitively (REQ-REG-064, ADR-REG-017). `subjectKind` includes PACKAGE_DIRECTORY (ADR-REG-018). A load report's subjectName, serviceCode and reason are at most 200, 100 and 1000 characters and end in "…" when the service shortened them (REQ-REG-074, ADR-REG-022); a consumer shows them as received.
 
 No response carries SQL text or a connection setting (REQ-REG-013, AC-REG-014); the frontend never asks for one.
 

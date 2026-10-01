@@ -4,7 +4,7 @@ Module : REG   Version : v1   Profile : aias   Framework : react-ts-vite (react-
 Inputs : srs-reg.md · prd-reg.md · api-spec-reg.yaml · registry-srs-reg.md · registry-exec-be-reg.md
 Screens : 0 SCR · 0 UXD — REG has no screen (ADR-REG-012)
 Security : no permission model — screens open per the SRS; caller authentication deferred (raw idea A2), so the profile has no SEC-FE phase
-Open ADRs : 0 BLOCKED — decisions applied: ADR-REG-007, ADR-REG-011, ADR-REG-012 (analysis/decisions/REG/)
+Open ADRs : 0 BLOCKED — decisions applied: ADR-REG-005, ADR-REG-007, ADR-REG-011, ADR-REG-012, ADR-REG-016 (analysis/decisions/REG/; header regenerated from the ADRs this file's body cites — gate-analysis REVISE round 2)
 ══════════════════════════════════════════════════════════════════
 
 ## 3.0 Binding to the API document

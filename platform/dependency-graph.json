@@ -42,44 +42,88 @@
       "source": "platform"
     },
     {
+      "id": "XM-CHK-001",
       "from": "CHK",
       "to": "REG",
       "entity": "ENT-REG-001",
       "type": "SOFT-READ",
       "state": "READY",
-      "source": "module"
+      "declared": "CONTRACTED",
+      "contract_ref": "CON-REG-001",
+      "traces": [
+        "REQ-CHK-005",
+        "REQ-CHK-007"
+      ],
+      "source": "xm"
     },
     {
+      "id": "XM-CHK-002",
       "from": "CHK",
       "to": "REG",
       "entity": "ENT-REG-002",
       "type": "SOFT-READ",
       "state": "READY",
-      "source": "module"
+      "declared": "CONTRACTED",
+      "contract_ref": "CON-REG-002",
+      "traces": [
+        "REQ-CHK-007",
+        "REQ-CHK-008",
+        "REQ-CHK-015",
+        "REQ-CHK-027",
+        "REQ-CHK-034",
+        "REQ-CHK-056",
+        "REQ-CHK-057"
+      ],
+      "source": "xm"
     },
     {
+      "id": "XM-CHK-003",
       "from": "CHK",
       "to": "REG",
       "entity": "ENT-REG-003",
       "type": "SOFT-READ",
       "state": "READY",
-      "source": "module"
+      "declared": "CONTRACTED",
+      "contract_ref": "CON-REG-003",
+      "traces": [
+        "REQ-CHK-011",
+        "REQ-CHK-012",
+        "REQ-CHK-015"
+      ],
+      "source": "xm"
     },
     {
+      "id": "XM-CHK-004",
       "from": "CHK",
       "to": "REG",
       "entity": "ENT-REG-004",
       "type": "SOFT-READ",
       "state": "READY",
-      "source": "module"
+      "declared": "CONTRACTED",
+      "contract_ref": "CON-REG-004",
+      "traces": [
+        "REQ-CHK-019",
+        "REQ-CHK-020",
+        "REQ-CHK-021",
+        "REQ-CHK-022"
+      ],
+      "source": "xm"
     },
     {
+      "id": "XM-CHK-005",
       "from": "CHK",
       "to": "REG",
       "entity": "ENT-REG-005",
       "type": "SOFT-READ",
       "state": "READY",
-      "source": "module"
+      "declared": "CONTRACTED",
+      "contract_ref": "CON-REG-005",
+      "traces": [
+        "REQ-CHK-006",
+        "REQ-CHK-013",
+        "REQ-CHK-014"
+      ],
+      "source": "xm"
     },
     {
       "id": "XM-DOC-001",
@@ -147,7 +191,7 @@
     {
       "from": "INT",
       "to": "CHK",
-      "state": "CONTRACTED",
+      "state": "READY",
       "source": "platform"
     },
     {
@@ -165,7 +209,7 @@
     {
       "from": "RPT",
       "to": "CHK",
-      "state": "CONTRACTED",
+      "state": "READY",
       "source": "platform"
     }
   ]

@@ -1,0 +1,7 @@
+# ADR-REG-010 — Closed REG lookups are CHECK constraints; open lookups are data entered by loading the pilot package; no lookup table
+Status      : ACCEPTED
+Stage       : P2        Module: REG        Version: v1
+Context     : SRS A6 declares four closed keys (FETCH_MODE consumed by value, CONNECTION_TYPE, LOAD_OUTCOME, LOAD_SUBJECT) and two open keys (SERVICE_CODE, DOCUMENT_TYPE). The P2 engine asks for seed rows per lookup but forbids columns without SRS origin; the SRS declares no lookup entity, and the open keys' values are fields of ENT-REG-001 and ENT-REG-004, which are filled by loading package folders (ADR-REG-007), never by a client.
+Decision    : Each closed key is enforced by a named CHECK constraint on the column it backs, listing every value of A6. No generic lookup table is created (it would be a column invention). The open keys need no seed SQL: SERVICE_CODE `scholarship-request` and DOCUMENT_TYPE `TRANSCRIPT`, `ID_CARD` enter REG_SVC_PKG and REG_REQ_DOC when the delivered pilot package folder is loaded at start-up (REQ-REG-057). Best practice followed: closed domain values as CHECK constraints; configuration-derived values not duplicated as seed rows.
+Consequences: The backend plan's bootstrap names the pilot package folder (source: delivered package directory) as the producer of the open values, and the CHECK constraints as the source of the closed ones. Adding a closed value is a migration.
+traces      : ENT-REG-001, ENT-REG-002, ENT-REG-004, ENT-REG-005, ENT-REG-006, REQ-REG-036, REQ-REG-052, REQ-REG-057

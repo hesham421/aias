@@ -3,8 +3,8 @@
   "version": 1,
   "scope": "all",
   "counts": {
-    "CRITICAL": 9,
-    "MAJOR": 138,
+    "CRITICAL": 6,
+    "MAJOR": 85,
     "MINOR": 0
   },
   "clean": false,
@@ -30,7 +30,7 @@
   ],
   "skipped": [],
   "coverage": {
-    "C0.1": 5,
+    "C0.1": 7,
     "C1.4": 3,
     "C2.2": 10,
     "C3.7": 15,
@@ -48,9 +48,9 @@
     "C5.15": 6,
     "C5.16": 13,
     "C5.17": 1,
-    "C6.2": 0,
+    "C6.2": 49,
     "C6.3": 0,
-    "C6.5": 0,
+    "C6.5": 49,
     "C6.6": 6,
     "C6.10": 0,
     "C6.11": 1,
@@ -97,7 +97,7 @@
     "C10.9": 0,
     "C10.10": 0,
     "C10.11": 0,
-    "C13.5": 0
+    "C13.5": 13
   },
   "vacuous": [
     "C10.1",
@@ -106,13 +106,10 @@
     "C10.7",
     "C10.8",
     "C10.9",
-    "C13.5",
     "C6.10",
     "C6.12",
     "C6.15",
-    "C6.2",
     "C6.3",
-    "C6.5",
     "C7.18",
     "C7.19",
     "C7.2",
@@ -216,34 +213,10 @@
     },
     {
       "severity": "CRITICAL",
-      "clause": "C13.1",
-      "check": "exists",
-      "message": "`contract` is missing or empty",
-      "artifact": "contract",
-      "line": 0
-    },
-    {
-      "severity": "CRITICAL",
-      "clause": "C6.1",
-      "check": "exists",
-      "message": "`db-script` is missing or empty",
-      "artifact": "db-script",
-      "line": 0
-    },
-    {
-      "severity": "CRITICAL",
       "clause": "C7.1",
       "check": "markers",
       "message": "`backend-execution-plan` missing",
       "artifact": "backend-execution-plan",
-      "line": 0
-    },
-    {
-      "severity": "CRITICAL",
-      "clause": "C7.10",
-      "check": "value-agreement",
-      "message": "binding artifact `db-script` missing",
-      "artifact": "db-script",
       "line": 0
     },
     {
@@ -784,62 +757,6 @@
     },
     {
       "severity": "MAJOR",
-      "clause": "C6.5",
-      "check": "registry-agree",
-      "message": "registry `registry-db` missing",
-      "artifact": "registry-db",
-      "line": 0
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C6.6",
-      "check": "orphans",
-      "message": "`ENT-REG-001` is referenced by 0 of ['DBF'], needs \u22651",
-      "artifact": "",
-      "line": 62
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C6.6",
-      "check": "orphans",
-      "message": "`ENT-REG-002` is referenced by 0 of ['DBF'], needs \u22651",
-      "artifact": "",
-      "line": 77
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C6.6",
-      "check": "orphans",
-      "message": "`ENT-REG-003` is referenced by 0 of ['DBF'], needs \u22651",
-      "artifact": "",
-      "line": 102
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C6.6",
-      "check": "orphans",
-      "message": "`ENT-REG-004` is referenced by 0 of ['DBF'], needs \u22651",
-      "artifact": "",
-      "line": 117
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C6.6",
-      "check": "orphans",
-      "message": "`ENT-REG-005` is referenced by 0 of ['DBF'], needs \u22651",
-      "artifact": "",
-      "line": 130
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C6.6",
-      "check": "orphans",
-      "message": "`ENT-REG-006` is referenced by 0 of ['DBF'], needs \u22651",
-      "artifact": "",
-      "line": 151
-    },
-    {
-      "severity": "MAJOR",
       "clause": "C7.2",
       "check": "traces",
       "message": "`backend-execution-plan` missing",
@@ -856,19 +773,11 @@
     },
     {
       "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-001` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 172
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-002` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 186
+      "clause": "C7.5",
+      "check": "registry-agree",
+      "message": "artifact `backend-execution-plan` missing",
+      "artifact": "backend-execution-plan",
+      "line": 0
     },
     {
       "severity": "MAJOR",
@@ -882,73 +791,9 @@
       "severity": "MAJOR",
       "clause": "C7.6",
       "check": "orphans",
-      "message": "`REQ-REG-004` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 215
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
       "message": "`REQ-REG-005` is referenced by 0 of ['API', 'DBF'], needs \u22651",
       "artifact": "",
       "line": 230
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-006` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 244
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-007` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 258
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-008` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 272
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-009` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 286
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-010` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 300
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-011` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 314
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-012` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 328
     },
     {
       "severity": "MAJOR",
@@ -994,97 +839,9 @@
       "severity": "MAJOR",
       "clause": "C7.6",
       "check": "orphans",
-      "message": "`REQ-REG-018` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 419
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-019` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 433
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-020` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 447
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-021` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 461
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-022` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 476
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-023` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 491
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-024` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 505
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-025` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 519
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
       "message": "`REQ-REG-026` is referenced by 0 of ['API', 'DBF'], needs \u22651",
       "artifact": "",
       "line": 533
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-027` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 547
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-028` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 561
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-029` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 576
     },
     {
       "severity": "MAJOR",
@@ -1098,217 +855,9 @@
       "severity": "MAJOR",
       "clause": "C7.6",
       "check": "orphans",
-      "message": "`REQ-REG-031` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 604
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-032` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 619
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-033` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 639
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-034` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 654
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-035` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 669
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-036` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 684
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-037` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 698
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-038` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 712
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-039` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 727
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-040` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 742
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-041` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 757
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-042` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 772
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-043` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 786
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-044` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 801
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-045` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 815
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-046` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 829
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-047` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 843
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-048` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 858
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-049` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 872
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-050` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 886
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
       "message": "`REQ-REG-051` is referenced by 0 of ['API', 'DBF'], needs \u22651",
       "artifact": "",
       "line": 900
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-052` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 914
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-053` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 929
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-054` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 944
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-055` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 958
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-056` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 973
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-057` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 987
     },
     {
       "severity": "MAJOR",
@@ -1362,7 +911,7 @@
       "severity": "MAJOR",
       "clause": "C9.23",
       "check": "publication-fresh",
-      "message": "`dependency-graph` in the project repo is stale \u2014 generated_from.srs differ from what the factory derives now. Run `gov.py publish` (the version, split and gate steps do it themselves)",
+      "message": "`dependency-graph` in the project repo is stale \u2014 edges differ from what the factory derives now. Run `gov.py publish` (the version, split and gate steps do it themselves)",
       "artifact": "governance-shared/platform/dependency-graph.json",
       "line": 0
     },
@@ -1383,24 +932,30 @@
     },
     "resolvable": [
       "business-policies",
+      "contract",
+      "db-script",
       "domain-profile",
       "module-registry",
       "platform-summary",
       "prd",
       "project-registry",
+      "registry-db",
       "registry-srs",
       "srs"
     ],
     "inputs": {
       "business-policies": "b6f725a79290552291db42eaeb23c9e63eb20cc480ffbe3dfa9319271c708fee",
+      "contract": "8c99e96d1a7023bfc1adbf7fccd4cda57704388898915a7e9a40eac14042525c",
+      "db-script": "6043c0a02e989596cc52ff59b19ac18f8e6ef8f03b0ea1f9713e7d9c8d22603d",
       "domain-profile": "c9ffe7c45c917c5793e15b6fbc7151ccc4b9181c36a5aaf1ce2f15f6849e3cbd",
       "module-registry": "e928789f16ba02d947ed4ecda767397ffda8c3f23800c840465d12652050f20c",
       "platform-summary": "71a08acf727ff7da0c363990b2aa193dec4e0d3a72ef95e7dff19aaf8ffc197f",
       "prd": "8a1c68fbab13cfa2243996a08e0e26c8c9a1c12b5d1e9cffb1bbe41bc52a0047",
       "project-registry": "7652329cae1b5e14558ead423c4a0d157fcf3aead94176473c23adb034161a82",
+      "registry-db": "ff09b2b33e370672674b6745dc7b304acd0c7945190331a07d1e5240d2fb25c2",
       "registry-srs": "66a13d6897dbd06aebe1a99239bc4d7609a93faf51e5dac527542c9646d3d453",
       "srs": "3c99ff5e021a6a058edaeaf94c86ff27a53f9da1871e5f50559f1a1fd43ffb5e"
     },
-    "at": "2026-10-01T11:44:46+00:00"
+    "at": "2026-10-01T11:47:36+00:00"
   }
 }

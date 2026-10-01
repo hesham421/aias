@@ -1,0 +1,518 @@
+openapi: 3.1.0
+info:
+  title: Host Integration (INT) API
+  version: 1.0.0
+  description: 'Derived from backend-execution-plan-int.md (API-INT-001 … API-INT-004). Write operations
+    only; the reads of a Check, its report and the Checks of a request are served by the Report Store
+    (api-spec-rpt.yaml), the service reads by the Service Registry and the uploaded documents by Document
+    Access (ADR-INT-001). Refusals of other modules keep their own code (ADR-INT-003). No security scheme:
+    caller authentication is deferred (raw-idea A2).'
+paths:
+  /api/v1/checks:
+    post:
+      operationId: startCheck
+      summary: Start a Check
+      x-api-id: API-INT-001
+      x-traces:
+      - REQ-INT-001
+      - REQ-INT-002
+      - REQ-INT-003
+      - REQ-INT-004
+      - REQ-INT-005
+      - REQ-INT-006
+      - REQ-INT-007
+      - REQ-INT-008
+      - REQ-INT-044
+      - REQ-INT-057
+      - REQ-INT-058
+      - REQ-INT-059
+      - REQ-INT-060
+      - DBF-INT-001
+      - DBF-INT-002
+      - DBF-INT-003
+      - DBF-INT-005
+      - DBF-INT-006
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartCheckRequest'
+      responses:
+        '202':
+          description: The Check is accepted and runs asynchronously
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StartedCheckResponse'
+          headers:
+            Location:
+              description: Address of the Check's read (/api/v1/checks/{checkId})
+              schema:
+                type: string
+        '400':
+          description: the body, a multipart part or the checkId cannot be read (REQ-INT-007) / the Check
+            Engine refuses a start with a value absent or blank
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - INT-400-REQUEST-INVALID
+          - CHK-400-START-INCOMPLETE
+        '422':
+          description: the Check Engine refuses a start for an unknown or withdrawn service / the Check
+            Engine refuses a start whose connection is not activated
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - CHK-422-SERVICE-NOT-AVAILABLE
+          - CHK-422-CONNECTION-NOT-ACTIVATED
+        '500':
+          description: an unexpected server failure (REQ-INT-008)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - INT-500
+  /api/v1/checks/{checkId}/documents:
+    post:
+      operationId: uploadDocument
+      summary: Hand over an uploaded document
+      x-api-id: API-INT-002
+      x-traces:
+      - REQ-INT-006
+      - REQ-INT-007
+      - REQ-INT-008
+      - REQ-INT-009
+      - REQ-INT-010
+      - REQ-INT-011
+      - REQ-INT-012
+      - REQ-INT-013
+      - REQ-INT-014
+      - REQ-INT-015
+      - REQ-INT-016
+      - REQ-INT-017
+      - REQ-INT-019
+      - REQ-INT-053
+      - DBF-INT-001
+      - DBF-INT-002
+      - DBF-INT-003
+      - DBF-INT-004
+      parameters:
+      - &id001
+        name: checkId
+        in: path
+        required: true
+        description: The Check identifier (DBF-INT-001)
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UploadRequest'
+      responses:
+        '201':
+          description: The file was handed over to Document Access
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadReceiptResponse'
+        '400':
+          description: the body, a multipart part or the checkId cannot be read (REQ-INT-007) / Document
+            Access refuses an upload without a document type or with an empty file
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - INT-400-REQUEST-INVALID
+          - DOC-400-INCOMPLETE-UPLOAD
+        '404':
+          description: Document Access cannot resolve the Check's service package version / the Report
+            Store holds no Check with this identifier
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - DOC-404-SERVICE-VERSION-NOT-FOUND
+          - RPT-404-CHECK-NOT-FOUND
+        '409':
+          description: a file is uploaded for a Check whose status is not AWAITING_DOCUMENTS (REQ-INT-011)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - INT-409-CHECK-NOT-AWAITING-DOCUMENTS
+        '413':
+          description: the upload request exceeds the upload request limit (REQ-INT-014)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - INT-413-UPLOAD-TOO-LARGE
+        '422':
+          description: Document Access refuses an upload for a service whose fetch mode is not manual
+            / Document Access refuses a document type the version does not require
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - DOC-422-FETCH-MODE-NOT-MANUAL
+          - DOC-422-DOCUMENT-TYPE-NOT-OF-SERVICE
+        '500':
+          description: an unexpected server failure (REQ-INT-008)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - INT-500
+  /api/v1/checks/{checkId}/upload-confirmation:
+    post:
+      operationId: confirmUploads
+      summary: Confirm the uploads
+      x-api-id: API-INT-003
+      x-traces:
+      - REQ-INT-006
+      - REQ-INT-007
+      - REQ-INT-008
+      - REQ-INT-018
+      - REQ-INT-019
+      - REQ-INT-020
+      - REQ-INT-053
+      - DBF-INT-001
+      - DBF-INT-002
+      parameters:
+      - *id001
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UploadConfirmationRequest'
+      responses:
+        '202':
+          description: The uploads are confirmed and the Check continues asynchronously
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfirmedCheckResponse'
+        '400':
+          description: the body, a multipart part or the checkId cannot be read (REQ-INT-007)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - INT-400-REQUEST-INVALID
+        '404':
+          description: the Check Engine knows no Check with this identifier on confirmation
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - CHK-404-CHECK-NOT-FOUND
+        '409':
+          description: the Check Engine refuses a confirmation of a Check not waiting for documents
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - CHK-409-CHECK-NOT-AWAITING-DOCUMENTS
+        '500':
+          description: an unexpected server failure (REQ-INT-008)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - INT-500
+  /api/v1/checks/{checkId}/decision:
+    post:
+      operationId: recordEmployeeDecision
+      summary: Record an Employee Decision
+      x-api-id: API-INT-004
+      x-traces:
+      - REQ-INT-006
+      - REQ-INT-007
+      - REQ-INT-008
+      - REQ-INT-021
+      - REQ-INT-022
+      - REQ-INT-023
+      - REQ-INT-024
+      - REQ-INT-025
+      - REQ-INT-026
+      - REQ-INT-027
+      - REQ-INT-028
+      - REQ-INT-029
+      - REQ-INT-030
+      - REQ-INT-031
+      - REQ-INT-032
+      - REQ-INT-033
+      - REQ-INT-034
+      - REQ-INT-035
+      - REQ-INT-036
+      - REQ-INT-037
+      - REQ-INT-038
+      - REQ-INT-039
+      - REQ-INT-054
+      - DBF-INT-001
+      - DBF-INT-002
+      - DBF-INT-003
+      - DBF-INT-004
+      - DBF-INT-005
+      - DBF-INT-007
+      - DBF-INT-008
+      - DBF-INT-009
+      - DBF-INT-010
+      parameters:
+      - *id001
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DecisionRequest'
+      responses:
+        '201':
+          description: The decision was recorded beside the Check's result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecordedDecisionResponse'
+        '400':
+          description: the body, a multipart part or the checkId cannot be read (REQ-INT-007) / the decision
+            code is not APPROVED or REJECTED or the deciding employee is missing — raised by INT before
+            an Approval API call, otherwise by the Report Store
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - INT-400-REQUEST-INVALID
+          - RPT-400-DECISION-INCOMPLETE
+        '404':
+          description: the Report Store holds no Check with this identifier
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - RPT-404-CHECK-NOT-FOUND
+        '409':
+          description: the Check is not COMPLETED — raised by INT before an Approval API call, otherwise
+            by the Report Store / the Check already holds an Employee Decision — raised by INT before
+            an Approval API call, otherwise by the Report Store
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - RPT-409-CHECK-NOT-COMPLETED
+          - RPT-409-DECISION-ALREADY-RECORDED
+        '422':
+          description: the Report Store refuses an executed rejection (INT never sends one — REQ-INT-027)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - RPT-422-APPROVAL-FLAG-ON-REJECTION
+        '500':
+          description: an unexpected server failure (REQ-INT-008)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - INT-500
+        '502':
+          description: the host Approval API answers outside 2xx, cannot be reached or has no configured
+            address (REQ-INT-036)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - INT-502-APPROVAL-API-FAILED
+        '504':
+          description: the host Approval API does not answer within the approval timeout (REQ-INT-037)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - INT-504-APPROVAL-API-TIMED-OUT
+components:
+  schemas:
+    StartCheckRequest:
+      type: object
+      required:
+      - serviceCode
+      - requestNumber
+      - employeeId
+      properties:
+        serviceCode:
+          type: string
+          maxLength: 100
+          description: DBF-INT-003 — SERVICE_CODE, never hardcoded
+        requestNumber:
+          type: string
+          maxLength: 100
+          description: DBF-INT-005 — exactly as the host sent it
+        employeeId:
+          type: string
+          maxLength: 100
+          description: DBF-INT-006 — exactly as the host sent it
+    StartedCheckResponse:
+      type: object
+      required:
+      - checkId
+      - status
+      - checkUrl
+      properties:
+        checkId:
+          type: integer
+          format: int64
+          description: DBF-INT-001
+        status:
+          type: string
+          enum:
+          - RUNNING
+          - AWAITING_DOCUMENTS
+          description: DBF-INT-002 — CHECK_STATUS
+        checkUrl:
+          type: string
+          description: Address of the Check's read
+    UploadRequest:
+      type: object
+      required:
+      - documentType
+      - file
+      properties:
+        documentType:
+          type: string
+          maxLength: 100
+          description: DOCUMENT_TYPE code — one of the service's required document types
+        file:
+          type: string
+          format: binary
+          description: Exactly one file
+    UploadReceiptResponse:
+      type: object
+      required:
+      - uploadedDocumentId
+      - documentType
+      - fileName
+      - fileSize
+      - oversized
+      properties:
+        uploadedDocumentId:
+          type: integer
+          format: int64
+        documentType:
+          type: string
+          maxLength: 100
+        fileName:
+          type: string
+          maxLength: 255
+        fileSize:
+          type: integer
+          format: int64
+        oversized:
+          type: boolean
+        notice:
+          type: string
+          description: Present only when oversized — the file will be reported unreadable
+    ConfirmedCheckResponse:
+      type: object
+      required:
+      - checkId
+      - status
+      properties:
+        checkId:
+          type: integer
+          format: int64
+          description: DBF-INT-001
+        status:
+          type: string
+          enum:
+          - RUNNING
+          description: DBF-INT-002
+    DecisionRequest:
+      type: object
+      required:
+      - employeeDecision
+      - decidedBy
+      properties:
+        employeeDecision:
+          type: string
+          enum:
+          - APPROVED
+          - REJECTED
+          description: DBF-INT-007 — EMPLOYEE_DECISION
+        decidedBy:
+          type: string
+          maxLength: 100
+          description: DBF-INT-008 — exactly as the host sent it
+    RecordedDecisionResponse:
+      type: object
+      required:
+      - checkId
+      - employeeDecision
+      - decidedBy
+      - decidedAt
+      - approvalApiExecuted
+      properties:
+        checkId:
+          type: integer
+          format: int64
+        employeeDecision:
+          type: string
+          enum:
+          - APPROVED
+          - REJECTED
+        decidedBy:
+          type: string
+          maxLength: 100
+        decidedAt:
+          type: string
+          format: date-time
+        approvalApiExecuted:
+          type: boolean
+    ProblemDetail:
+      type: object
+      required:
+      - type
+      - title
+      - status
+      - code
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        code:
+          type: string
+    UploadConfirmationRequest:
+      type: object
+      properties: {}
+      additionalProperties: false
+      description: An empty object — the confirmation carries no field

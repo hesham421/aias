@@ -72,7 +72,7 @@
       "DOC": "done",
       "CHK": "done",
       "RPT": "done",
-      "INT": "ready"
+      "INT": "done"
     },
     "2": {
       "REG": "ready",

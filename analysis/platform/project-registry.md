@@ -1,10 +1,10 @@
 # PROJECT REGISTRY — Request Verification Service
 ══════════════════════════════════════════════════════════════════
 Profile            : aias
-Registry Version   : 1.1.0
+Registry Version   : 1.2.0
 Domain Profile     : analysis/domain/domain-profile.md v1
-Last Updated       : 2026-10-01 by P-1 (registry step of the REG v1 analysis-gate revise round 2, findings G1, G12: platform findings PF-7, PF-8 recorded; earlier: findings G9, G11 — sections and compliance map realigned to shared/REGISTRY-SCHEMA.md §1, decision index added, pipeline status set to the modules' real state)
-Modules registered : 5   Entity candidates : 6   Open items : 0 (OQ-1, OQ-2 RESOLVED) · ADR streams : 5 · platform findings OPEN : 8
+Last Updated       : 2026-10-01 by P-1 (final v1 state: all five modules gate-approved, split and tagged reg-v1, doc-v1, chk-v1, rpt-v1, int-v1; §7 ADR streams and XM resolution events, §8 pipeline status and §10 platform-finding statuses set from evidence)
+Modules registered : 5   Entity candidates : 6   Open items : 0 (OQ-1, OQ-2 RESOLVED) · ADR streams : 5 (109 ADRs) · XM resolution events : 15 (5 ANSWERED, 10 OPEN) · platform findings OPEN : 1 (PF-7), FIXED : 7
 ══════════════════════════════════════════════════════════════════
 
 ## SCHEMA COMPLIANCE MAP
@@ -49,6 +49,7 @@ uncovered: []
 |---|---|---|---|---|
 | 1.0.0 | 2026-10-01 | P-1 | Registry bootstrapped from domain-profile v1 (first creation) | domain-profile v1 |
 | 1.1.0 | 2026-10-01 | P-1 | Sections and compliance map realigned to shared/REGISTRY-SCHEMA.md §1 (CAT-N = section N); conventions folded into CAT-1; decision index (CAT-7) added; platform findings made their own CAT-10 section; pipeline status (CAT-8) set to the real module state | REG v1 analysis gate G9, G11 |
+| 1.2.0 | 2026-10-01 | P-1 | Final v1 state: §2 versions table and §8 pipeline status set to all five modules gate-approved, split and tagged; §7.1 ADR ranges/counts recounted (109 ADRs); §7.2 lists all 15 XM resolution events with their `gov.py feedback` status (5 ANSWERED, 10 OPEN); §10 PF-1 … PF-6 and PF-8 set FIXED from the owners' delivered artifacts, PF-7 stays OPEN (DOC v2 follow-up) | analysis/decisions/{MOD}/; `gov.py feedback`; module manifests and gate-analysis.json; owners' artifacts cited in §10 |
 
 ### 1.2 Conventions & steering
 
@@ -185,11 +186,11 @@ All five codes are in `profile.vocabulary.module_prefixes`; RESERVED = code rese
 
 | Module | Versions | Last committed stage (v1) | Module folder |
 |---|---|---|---|
-| REG | v1 | P4 | analysis/modules/REG/ |
-| CHK | v1 (tagged) | P4 | analysis/modules/CHK/ |
-| DOC | v1 | P4 | analysis/modules/DOC/ |
-| RPT | v1 | P4 (pass 1 re-run from P3.1 pending) | analysis/modules/RPT/ |
-| INT | v1 | P4 | analysis/modules/INT/ |
+| REG | v1 (tagged reg-v1 — v1 complete) | P4 | analysis/modules/REG/ |
+| CHK | v1 (tagged chk-v1 — v1 complete) | P4 | analysis/modules/CHK/ |
+| DOC | v1 (tagged doc-v1 — v1 complete) | P4 | analysis/modules/DOC/ |
+| RPT | v1 (tagged rpt-v1 — v1 complete) | P4 | analysis/modules/RPT/ |
+| INT | v1 (tagged int-v1 — v1 complete) | P4 | analysis/modules/INT/ |
 
 External systems (not modules — no code assigned, recorded for context only): host database via Oracle SQLcl MCP server; host file storage / host BLOB columns; LLM provider via Spring AI; host approval API; host systems (Oracle ADF, others). Source: domain-profile §6.
 
@@ -251,22 +252,37 @@ The structural artifacts of each module version are registered by its P2 stage r
 
 ### 7.1 ADR streams
 
-Every module keeps one ADR stream under `analysis/decisions/{MOD}/` (`ADR-{MOD}-{seq:03d}`); an ADR is never rewritten under its id — a later ADR supersedes it. Counts as of this registry version.
+Every module keeps one ADR stream under `analysis/decisions/{MOD}/` (`ADR-{MOD}-{seq:03d}`); an ADR is never rewritten under its id — a later ADR supersedes it. Counts as of this registry version (files counted in each folder): 109 ADRs in total, every one ACCEPTED, none BLOCKED.
 
 | Stream | Folder | Id range | ADRs | Status | BLOCKED |
 |---|---|---|---|---|---|
-| REG | analysis/decisions/REG/ | ADR-REG-001 … ADR-REG-019 | 19 | ACCEPTED (P0 decisions confirmed in dialogue / at prd-approval) | 0 |
-| DOC | analysis/decisions/DOC/ | ADR-DOC-001 … ADR-DOC-017 | 17 | ACCEPTED (P0 decisions confirmed in dialogue / at prd-approval) | 0 |
-| CHK | analysis/decisions/CHK/ | ADR-CHK-001 … ADR-CHK-021 | 21 | ACCEPTED (P0 decisions confirmed in dialogue / at prd-approval) | 0 |
-| RPT | analysis/decisions/RPT/ | ADR-RPT-001 … ADR-RPT-018 | 18 | ACCEPTED (P0 decisions confirmed in dialogue / at prd-approval) | 0 |
-| INT | analysis/decisions/INT/ | ADR-INT-001 … ADR-INT-024 | 24 | ACCEPTED (P0 decisions confirmed in dialogue / at prd-approval) | 0 |
+| REG | analysis/decisions/REG/ | ADR-REG-001 … ADR-REG-022 | 22 | ACCEPTED | 0 |
+| DOC | analysis/decisions/DOC/ | ADR-DOC-001 … ADR-DOC-017 | 17 | ACCEPTED | 0 |
+| CHK | analysis/decisions/CHK/ | ADR-CHK-001 … ADR-CHK-021 | 21 | ACCEPTED | 0 |
+| RPT | analysis/decisions/RPT/ | ADR-RPT-001 … ADR-RPT-020 | 20 | ACCEPTED | 0 |
+| INT | analysis/decisions/INT/ | ADR-INT-001 … ADR-INT-029 | 29 | ACCEPTED | 0 |
 
 ### 7.2 Resolution events
 
 | Event | Consumer → target | Trigger | Status | Answer |
 |---|---|---|---|---|
+| RPT>CHK | RPT v1 → CHK v1 | CHK v1 delivered | ANSWERED | ADR-RPT-019 — cited CON-CHK-001 … -003 and CON-CHK-006 … -011 unchanged; every RPT → CHK edge remains valid |
 | INT>CHK | INT v1 → CHK v1 | CHK v1 delivered | ANSWERED | ADR-INT-024 — cited CON-CHK-001 … CON-CHK-005 unchanged; edge remains valid |
-| RPT>CHK | RPT v1 → CHK v1 | CHK v1 delivered | OPEN | — (RPT's to answer) |
+| INT>DOC | INT v1 → DOC v1 | DOC v1 delivered | ANSWERED | ADR-INT-027 — INT binds CON-DOC-006 (ADR-INT-023) and passes through DOC-409-CHECK-ENDED and DOC-422-UPLOAD-LIMIT-REACHED (ADR-INT-025); edge remains valid |
+| XM-INT-001 | INT v1 → REG v1 (ENT-REG-002, CON-REG-002) | REG v1 delivered | ANSWERED | ADR-INT-028 — CON-REG-002/004/009/012 still honoured; required document types read via CON-REG-009 with the Check's pinned version (ADR-REG-020) |
+| INT>RPT | INT v1 → RPT v1 | RPT v1 delivered | ANSWERED | ADR-INT-029 — cited CON-RPT-001 … -004 and CON-RPT-006 unchanged; edge remains valid |
+| CHK>DOC | CHK v1 → DOC v1 | DOC v1 delivered | OPEN | — (CHK's to answer) |
+| XM-CHK-001 | CHK v1 → REG v1 | REG v1 delivered | OPEN | — (CHK's to answer) |
+| XM-CHK-002 | CHK v1 → REG v1 | REG v1 delivered | OPEN | — (CHK's to answer) |
+| XM-CHK-003 | CHK v1 → REG v1 | REG v1 delivered | OPEN | — (CHK's to answer) |
+| XM-CHK-004 | CHK v1 → REG v1 | REG v1 delivered | OPEN | — (CHK's to answer) |
+| XM-CHK-005 | CHK v1 → REG v1 | REG v1 delivered | OPEN | — (CHK's to answer) |
+| XM-DOC-001 | DOC v1 → REG v1 | REG v1 delivered | OPEN | — (DOC's to answer) |
+| XM-DOC-002 | DOC v1 → REG v1 | REG v1 delivered | OPEN | — (DOC's to answer) |
+| XM-DOC-003 | DOC v1 → REG v1 | REG v1 delivered | OPEN | — (DOC's to answer) |
+| XM-DOC-004 | DOC v1 → REG v1 | REG v1 delivered | OPEN | — (DOC's to answer) |
+
+Status as `gov.py feedback -m {MOD}` reports it on 2026-10-01 (REG has none: no module raised against REG's consumers' delivery on REG's side). The ten OPEN events were raised after CHK and DOC were tagged (REG v1 delivered last; DOC v1 delivered after CHK v1) and are carried as follow-ups for those modules' next version or answer round.
 
 ### 7.3 Open question index
 
@@ -281,15 +297,17 @@ domain-profile §10 lists no open items; caller authentication and report-viewin
 
 ## 8. Pipeline status
 
-As `gov.py status` / `gov.py next` report it on 2026-10-01 (manifest.json of each module).
+As `gov.py status -m {MOD}` reports it on 2026-10-01 (manifest.json and _state/gate-analysis.json of each module).
 
 | Module · version | Last committed stage | Gates | Last analysis-gate verdict (scores u/v/c/cs/s/f/t) | Packaged tracks | Tag | Next step |
 |---|---|---|---|---|---|---|
-| REG v1 | P4 | prd-approval ✓ · analysis REVISE | REVISE — 2/2/2/2/3/2/2 (2026-10-01) | none | untagged | analysis gate (re-review after revise) |
-| CHK v1 | P4 | prd-approval ✓ · analysis APPROVE | APPROVE — 3/2/2/3/3/3/3 (2026-10-01) | backend/exec, backend/test, frontend/exec, frontend/test, integration XM-CHK-001 … XM-CHK-005 | tagged — v1 complete | `version --new` for a delta |
-| DOC v1 | P4 | prd-approval ✓ · analysis REVISE | REVISE — 3/3/2/2/3/3/2 (2026-10-01) | none | untagged | analysis gate (re-review after revise) |
-| RPT v1 | P4 | prd-approval ✓ · analysis not yet run | — | none | untagged | pass 1 from P3.1 (revise in progress), then the analysis gate |
-| INT v1 | P4 | prd-approval ✓ · analysis not yet run | — | none | untagged | analysis gate |
+| REG v1 | P4 | prd-approval ✓ · analysis APPROVE | APPROVE — 3/3/3/3/3/3/3 (2026-10-01) | backend/exec, backend/test, frontend/exec, frontend/test | reg-v1 — v1 complete | `version --new` for a delta |
+| CHK v1 | P4 | prd-approval ✓ · analysis APPROVE | APPROVE — 3/2/2/3/3/3/3 (2026-10-01) | backend/exec, backend/test, frontend/exec, frontend/test, integration XM-CHK-001 … XM-CHK-005 | chk-v1 — v1 complete | answer CHK>DOC, XM-CHK-001 … -005; `version --new` for a delta |
+| DOC v1 | P4 | prd-approval ✓ · analysis APPROVE | APPROVE — 3/3/3/3/3/3/3 (2026-10-01) | backend/exec, backend/test, frontend/exec, frontend/test, integration XM-DOC-001 … XM-DOC-004 | doc-v1 — v1 complete | answer XM-DOC-001 … -004; DOC v2 for PF-7 |
+| RPT v1 | P4 | prd-approval ✓ · analysis APPROVE | APPROVE — 3/3/3/3/3/3/3 (2026-10-01) | backend/exec, backend/test, frontend/exec, frontend/test | rpt-v1 — v1 complete | `version --new` for a delta |
+| INT v1 | P4 | prd-approval ✓ · analysis APPROVE | APPROVE — 3/3/3/3/3/3/3 (2026-10-01) | backend/exec, backend/test, frontend/exec, frontend/test, integration XM-INT-001 | int-v1 — v1 complete | `version --new` for a delta |
+
+All five modules are v1 complete: gate-approved, split (every track packaged) and tagged. Delivery (implementation results of the packaged phases) has not started in any module — `gov.py feedback` reports no result recorded.
 
 Maintained by the orchestrator from commits (E5). The P0 platform-summary snapshots under analysis/modules/*/P0/ were written when no module had started and are not updated here.
 
@@ -306,6 +324,9 @@ Maintained by the orchestrator from commits (E5). The P0 platform-summary snapsh
 | 2026-10-01 | PIPELINE-STATUS | — | REG v1 analysis gate (finding G11) | §8 set from the modules' manifests: CHK v1 APPROVE and tagged; REG, DOC at the analysis gate after REVISE; INT at the analysis gate; RPT re-running pass 1 from P3.1 |
 | 2026-10-01 | RESOLUTION-EVENT | INT>CHK | ADR-INT-024 | INT's XM event on CHK v1 delivery answered: cited CON-CHK-001 … CON-CHK-005 unchanged |
 | 2026-10-01 | PLATFORM-FINDING | PF-7, PF-8 | REG v1 analysis gate round 2 (findings G1, G12) | 2 CAT-10 rows recorded in §10, both OPEN — DOC v2 switches to the version-pinned lookup (ADR-REG-020); the Check-limits hand-off to CHK and DOC (ADR-REG-019) |
+| 2026-10-01 | RESOLUTION-EVENT | RPT>CHK, INT>DOC, XM-INT-001, INT>RPT | ADR-RPT-019, ADR-INT-027, ADR-INT-028, ADR-INT-029 | Four further XM events answered; CHK>DOC, XM-CHK-001 … -005 and XM-DOC-001 … -004 recorded OPEN as `gov.py feedback` reports them |
+| 2026-10-01 | PIPELINE-STATUS | — | module manifests; gate-analysis.json | Registry 1.2.0: all five modules gate-approved (APPROVE), split and tagged reg-v1, doc-v1, chk-v1, rpt-v1, int-v1 — v1 complete |
+| 2026-10-01 | PLATFORM-FINDING | PF-1 … PF-6, PF-8 | owners' delivered artifacts (§10 Status column) | 7 CAT-10 rows set FIXED (PF-5 by ADR-INT-025); PF-7 stays OPEN for DOC v2 |
 
 ---
 
@@ -315,14 +336,14 @@ Findings a module-scoped stage recorded that are not that module's to settle (sh
 
 | Ref | Finding | Evidence | Found by | Belongs to | Status |
 |---|---|---|---|---|---|
-| PF-1 | CHK must leave the `blob` document source query to DOC and never run or duplicate it (it returns BLOB content, which must not cross MCP — G14); duplicating the `path` query is harmless | ADR-DOC-001 (reviewer challenge "recorded for the CHK analysis"); contract-doc.md CON-DOC-004 | DOC · P0 · v1 | CHK (its analysis / backend plan) | OPEN |
-| PF-2 | INT must pass the Check's service code and version number with every upload handover | ADR-DOC-006 (Consequences "recorded for the INT analysis"); contract-doc.md CON-DOC-003 | DOC · P1 · v1 | INT (its upload operation) | OPEN |
-| PF-3 | CHK must send the end-of-Check notice (`endCheck`) on every ending path — report stored, failed, timed out | ADR-DOC-008 (Consequences "recorded for CHK"); contract-doc.md CON-DOC-005 | DOC · P1 · v1 | CHK (its pipeline end paths) | OPEN |
-| PF-4 | RPT's database must carry the CHECK constraints for DOCUMENT_READ_STATUS (3 values) and UNREADABLE_REASON (8 values) on its own Check Document columns | ADR-DOC-010; db-script-doc.md BLOCK 8; contract-doc.md CON-DOC-001 | DOC · P2 · v1 | RPT (its P2 db-script) | OPEN |
-| PF-5 | INT's backend plan must list DOC's in-process rejection codes in its own error catalog and map them to ProblemDetail — DOC-400-INCOMPLETE-UPLOAD, DOC-404-SERVICE-VERSION-NOT-FOUND, DOC-422-FETCH-MODE-NOT-MANUAL, DOC-422-DOCUMENT-TYPE-NOT-OF-SERVICE, and since the revise DOC-409-CHECK-ENDED, DOC-422-UPLOAD-LIMIT-REACHED | ADR-DOC-012 (Consequences "recorded for INT"); ADR-DOC-015, ADR-DOC-016; backend-execution-plan-doc.md in-process rejection codes | DOC · P3.1 · v1 | INT (its P3.1 error catalog) | OPEN |
-| PF-6 | Ordering guarantee: no upload handover for a Check may reach DOC after that Check's end-of-Check notice — INT hands over only while the Check awaits documents, CHK sends the notice only once the Check accepts no more documents (DOC refuses and sweeps as a safety net) | ADR-DOC-015; contract-doc.md CON-DOC-003, CON-DOC-005 | DOC · P1 · v1 (analysis-gate finding G2) | CHK and INT (Check lifecycle / upload confirmation) | OPEN |
-| PF-7 | DOC must switch its fetch-time reads of fetch mode, document source and required document types from CON-REG-007 (current version) to CON-REG-009 (getServicePackageVersion) with the Check's pinned version in DOC v2, so every consumer of one Check uses the version CHK resolved; until then a load run during a running Check can make DOC v1 read a newer version than CHK's report records | ADR-REG-020; contract-reg.md CON-REG-007, CON-REG-009 (widened additively), REQ-REG-070 | REG · P1 · v1 (analysis-gate round 2, finding G1) | DOC (DOC v2 — its fetch step) | OPEN |
-| PF-8 | Check-limits hand-off: the platform-wide Check limits `aias.check.timeout` (Duration, default PT2M), `aias.check.max-rows` (int, default 100) and `aias.check.max-file-size` (DataSize, default 10MB) are declared and applied by the CORE phase of the modules that run Checks — CHK (timeout, rows) and DOC (file size, rows on document fetch); REG reads none of them and rejects them in a service definition (RULE-REG-012) | ADR-REG-019 (Context/Decision "recorded as a platform finding for CHK's and DOC's own gates"); ADR-REG-006 | REG · P1 · v1 (analysis-gate round 2, finding G12) | CHK and DOC (their CORE phases) | OPEN |
+| PF-1 | CHK must leave the `blob` document source query to DOC and never run or duplicate it (it returns BLOB content, which must not cross MCP — G14); duplicating the `path` query is harmless | ADR-DOC-001 (reviewer challenge "recorded for the CHK analysis"); contract-doc.md CON-DOC-004 | DOC · P0 · v1 | CHK (its analysis / backend plan) | FIXED (CHK v1 — srs-chk.md REQ-CHK-018: CHK opens no host file, BLOB column or upload; backend-execution-plan-chk.md `DocumentAccessAdapter` is the only way CHK gets documents) |
+| PF-2 | INT must pass the Check's service code and version number with every upload handover | ADR-DOC-006 (Consequences "recorded for the INT analysis"); contract-doc.md CON-DOC-003 | DOC · P1 · v1 | INT (its upload operation) | FIXED (INT v1 — backend-execution-plan-int.md `DocDocumentAccessAdapter.handOver(command, serviceCode, versionNumber)` calls `handOverUpload(checkId, serviceCode, versionNumber, …)`) |
+| PF-3 | CHK must send the end-of-Check notice (`endCheck`) on every ending path — report stored, failed, timed out | ADR-DOC-008 (Consequences "recorded for CHK"); contract-doc.md CON-DOC-005 | DOC · P1 · v1 | CHK (its pipeline end paths) | FIXED (CHK v1 — srs-chk.md REQ-CHK-061 end-of-Check notice on every ending path, REQ-CHK-062 retry; backend-execution-plan-chk.md `DocumentAccessAdapter.endCheck`) |
+| PF-4 | RPT's database must carry the CHECK constraints for DOCUMENT_READ_STATUS (3 values) and UNREADABLE_REASON (8 values) on its own Check Document columns | ADR-DOC-010; db-script-doc.md BLOCK 8; contract-doc.md CON-DOC-001 | DOC · P2 · v1 | RPT (its P2 db-script) | FIXED (RPT v1 — db-script-rpt.md BLOCK 5c CHK_RPT_CHECK_DOCUMENT_READ_STATUS (3 values), CHK_RPT_CHECK_DOCUMENT_UNREADABLE_REASON (8 values)) |
+| PF-5 | INT's backend plan must list DOC's in-process rejection codes in its own error catalog and map them to ProblemDetail — DOC-400-INCOMPLETE-UPLOAD, DOC-404-SERVICE-VERSION-NOT-FOUND, DOC-422-FETCH-MODE-NOT-MANUAL, DOC-422-DOCUMENT-TYPE-NOT-OF-SERVICE, and since the revise DOC-409-CHECK-ENDED, DOC-422-UPLOAD-LIMIT-REACHED | ADR-DOC-012 (Consequences "recorded for INT"); ADR-DOC-015, ADR-DOC-016; backend-execution-plan-doc.md in-process rejection codes | DOC · P3.1 · v1 | INT (its P3.1 error catalog) | FIXED (INT v1 — ADR-INT-025; registry-exec-be-int.md catalog: DOC pass-through 6; backend-execution-plan-int.md `DocDocumentAccessAdapter`, `IntegrationProblemAdvice`). INT is the sole owner; no other owner's part remains |
+| PF-6 | Ordering guarantee: no upload handover for a Check may reach DOC after that Check's end-of-Check notice — INT hands over only while the Check awaits documents, CHK sends the notice only once the Check accepts no more documents (DOC refuses and sweeps as a safety net) | ADR-DOC-015; contract-doc.md CON-DOC-003, CON-DOC-005 | DOC · P1 · v1 (analysis-gate finding G2) | CHK and INT (Check lifecycle / upload confirmation) | FIXED (INT v1 — RULE-INT-001 and backend-execution-plan-int.md upload concurrency note, ADR-INT-025: hand over only while AWAITING_DOCUMENTS, DOC-409-CHECK-ENDED passed through; CHK v1 — srs-chk.md REQ-CHK-061: notice sent only after the ending is handed to the result port) |
+| PF-7 | DOC must switch its fetch-time reads of fetch mode, document source and required document types from CON-REG-007 (current version) to CON-REG-009 (getServicePackageVersion) with the Check's pinned version in DOC v2, so every consumer of one Check uses the version CHK resolved; until then a load run during a running Check can make DOC v1 read a newer version than CHK's report records | ADR-REG-020; contract-reg.md CON-REG-007, CON-REG-009 (widened additively), REQ-REG-070 | REG · P1 · v1 (analysis-gate round 2, finding G1) | DOC (DOC v2 — its fetch step) | OPEN — follow-up for DOC v2; no DOC ADR closes it (DOC v1's backend-execution-plan-doc.md `RegVersionAdapter` already calls CON-REG-009, but srs-doc.md still cites CON-REG-007; confirmation is DOC's) |
+| PF-8 | Check-limits hand-off: the platform-wide Check limits `aias.check.timeout` (Duration, default PT2M), `aias.check.max-rows` (int, default 100) and `aias.check.max-file-size` (DataSize, default 10MB) are declared and applied by the CORE phase of the modules that run Checks — CHK (timeout, rows) and DOC (file size, rows on document fetch); REG reads none of them and rejects them in a service definition (RULE-REG-012) | ADR-REG-019 (Context/Decision "recorded as a platform finding for CHK's and DOC's own gates"); ADR-REG-006 | REG · P1 · v1 (analysis-gate round 2, finding G12) | CHK and DOC (their CORE phases) | FIXED (CHK v1 — backend-execution-plan-chk.md PHASE CORE declares `aias.check.timeout`, `aias.check.max-rows`, `aias.check.max-file-size`; DOC v1 — backend-execution-plan-doc.md PHASE CORE declares and applies the same three) |
 
 ---
 

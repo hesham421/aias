@@ -147,7 +147,7 @@
     {
       "from": "INT",
       "to": "CHK",
-      "state": "DECLARED",
+      "state": "CONTRACTED",
       "source": "platform"
     },
     {
@@ -165,7 +165,7 @@
     {
       "from": "RPT",
       "to": "CHK",
-      "state": "DECLARED",
+      "state": "CONTRACTED",
       "source": "platform"
     }
   ]

@@ -34,8 +34,8 @@ Traces    : ENT-REG-004, REQ-REG-037, REQ-REG-057
 
 ### CON-REG-005 — Connection: a named, read-only data source of this environment
 Entity    : ENT-REG-005 — key columns: connectionName (business key, `VARCHAR2(100 CHAR)`, unique), connectionId (identifier) · identifier type: NUMBER(19)
-Promise   : every registered connection is declared read-only (RULE-REG-015); `connectionType` is `mcp` or `jdbc` (lookup CONNECTION_TYPE, closed); `blob` documents are always read through a `jdbc` connection (RULE-REG-010). REG holds a credential reference, never the credential (REQ-REG-054).
-Traces    : ENT-REG-005, REQ-REG-046, REQ-REG-054, REQ-REG-055
+Promise   : every registered connection is declared read-only (RULE-REG-015); `connectionType` is `mcp` or `jdbc` (lookup CONNECTION_TYPE, closed); `blob` documents are always read through a `jdbc` connection (RULE-REG-010), and a connection that a stored `blob` version reads its documents through stays of type `jdbc` across every later activation (RULE-REG-025, ADR-REG-021). REG holds a credential reference, never the credential (REQ-REG-054).
+Traces    : ENT-REG-005, REQ-REG-046, REQ-REG-054, REQ-REG-055, REQ-REG-072
 
 ### CON-REG-006 — Lookups REG masters
 Entity    : ENT-REG-001 — key columns: SERVICE_CODE (open, values from ENT-REG-001.serviceCode), CONNECTION_TYPE (closed: mcp, jdbc), DOCUMENT_TYPE (open; seeded TRANSCRIPT, ID_CARD) · identifier type: NUMBER(19)
@@ -44,11 +44,13 @@ Traces    : ENT-REG-001, ENT-REG-004, ENT-REG-005, REQ-REG-036, REQ-REG-037
 
 ## Operations
 
+Version pinning across one Check (ADR-REG-020): the version of a Check is the one CHK resolves through CON-REG-007 at the start of that Check and pins as serviceCode + versionNumber. Every later read of service configuration inside that Check, by any consumer (CHK, DOC, RPT, INT), reads that pinned version through CON-REG-009 with that version number — never CON-REG-007 again, because a load run may make another version current while the Check runs (REQ-REG-070). CON-REG-007's "current version" read is the resolution step of a new Check and otherwise serves non-Check use only.
+
 ### CON-REG-007 — Supply the current service package of a service
 Signature : getCurrentServicePackage(serviceCode) → read-only package {serviceCode, versionNumber, serviceKnowledge (whole, unaltered), inputName, queries [queryName, connectionName, sqlText], fetchMode, document source {documentSourceQueryName, documentTypeColumn, documentPathColumn | documentContentColumn}, requiredDocumentTypes} · errors: service not available (unknown or withdrawn code — RULE-REG-016), connection not activated (RULE-REG-017)
 Entity    : ENT-REG-002
-Called by : CHK (Check pipeline — knowledge, queries, document settings); DOC (fetch mode, document source, required document types). Never the LLM: CHK passes the LLM only the service knowledge part.
-Notes     : the service knowledge is a separate part from the queries and document settings (REQ-REG-018, REQ-REG-030); the package carries no approval API definition (REQ-REG-044) and no request data (REQ-REG-059); it is immutable for the caller (REQ-REG-060).
+Called by : CHK (once, at the start of a Check — resolves and pins the Check's version, ADR-REG-020); DOC v1 (fetch mode, document source, required document types — delivered before ADR-REG-020; switches to CON-REG-009 with the pinned version in DOC v2, project-registry PF-7). Never the LLM: CHK passes the LLM only the service knowledge part.
+Notes     : the service knowledge is a separate part from the queries and document settings (REQ-REG-018, REQ-REG-030); the package carries no approval API definition (REQ-REG-044) and no request data (REQ-REG-059); it is immutable for the caller (REQ-REG-060). The answer is the version current at the moment of the call; it is not a source of a running Check's configuration — inside a Check use CON-REG-009 with the pinned version (ADR-REG-020). Signature unchanged in v1.
 Traces    : REQ-REG-024, REQ-REG-027, REQ-REG-029, REQ-REG-012, REQ-REG-053
 
 ### CON-REG-008 — List the available services
@@ -59,10 +61,11 @@ Notes     : lists available services only, so every row has available = true (AD
 Traces    : REQ-REG-013
 
 ### CON-REG-009 — Resolve a stored version
-Signature : getServicePackageVersion(serviceCode, versionNumber) → read-only full version {serviceKnowledge, serviceDefinition, queries, fetchMode, requiredDocumentTypes, approvalEnabled} · errors: not found (no such service code or version)
+Signature : getServicePackageVersion(serviceCode, versionNumber) → read-only full version {serviceCode, versionNumber, serviceKnowledge, serviceDefinition, inputName, queries [queryName, connectionName, sqlText], fetchMode, document source {documentSourceQueryName, documentTypeColumn, documentPathColumn | documentContentColumn}, requiredDocumentTypes, approvalEnabled} · errors: not found (no such service code or version)
 Entity    : ENT-REG-002
-Called by : RPT (resolving the version a stored report recorded — G11); CHK (re-reading the version of a running Check)
-Traces    : REQ-REG-025
+Called by : RPT (resolving the version a stored report recorded — G11); CHK (every read of a running Check's pinned version after the start); DOC (from DOC v2: fetch mode, document source and required document types of the Check's pinned version — PF-7); any consumer reading configuration inside a running Check (ADR-REG-020)
+Notes     : returns the exact stored version whatever version is current and whether or not the service has been withdrawn since (stored versions stay resolvable — ADR-REG-003); serviceCode, versionNumber, inputName, the query detail and the document source were added additively at the gate-analysis REVISE round 2 (ADR-REG-020), so the answer carries everything CON-REG-007 carries.
+Traces    : REQ-REG-025, REQ-REG-070
 
 ### CON-REG-010 — Read one service's current version summary
 Signature : getService(serviceCode) → {serviceCode, available, versionNumber, fetchMode, requiredDocumentTypes, approvalEnabled} · errors: not found (RULE-REG-016)
@@ -91,5 +94,5 @@ Called by : CHK (before starting a Check); INT (before offering a service to the
 Traces    : REQ-REG-012, REQ-REG-001
 
 ## Stability
-All 13 items are ADDITIVE in v1. The gate-analysis revision of 2026-10-01 added `available` to CON-REG-008 and CON-REG-010 (ADR-REG-016), the service-code canonical form to CON-REG-001 (ADR-REG-017) and a `Called by` line to every operation; no consumer had built against the earlier shape. Changing or removing one a consumer depends on requires a BREAKING version with an ADR.
+All 13 items are ADDITIVE in v1. The gate-analysis revision of 2026-10-01 added `available` to CON-REG-008 and CON-REG-010 (ADR-REG-016), the service-code canonical form to CON-REG-001 (ADR-REG-017) and a `Called by` line to every operation; no consumer had built against the earlier shape. The round-2 revision (ADR-REG-020) widened CON-REG-009's answer additively and stated the version-pinning rule; CON-REG-007's signature is unchanged because DOC v1 is delivered against it; CON-REG-005 promises RULE-REG-025 (ADR-REG-021). Changing or removing one a consumer depends on requires a BREAKING version with an ADR.
 ══════════════════════════════════════════════════════════════════

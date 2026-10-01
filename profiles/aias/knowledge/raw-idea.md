@@ -1,6 +1,6 @@
 # Request Verification Service — Raw Idea (project `aias`)
 
-As of 2026-10-01. Author: Hesham Ezzat.
+As of 2026-10-01. Author: Hesham Ezzat. Amended 2026-10-01 — see section 15.
 Save as: `governance-shared/profiles/aias/knowledge/raw-idea.md` and list it under `knowledge.files` in `profiles/aias.yaml`.
 
 ## 0. How the factory should read this file
@@ -28,6 +28,7 @@ In scope:
 - Document retrieval by file path, by database BLOB, or by manual upload.
 - Reading PDF, XLS and image documents (other extensions may appear).
 - A structured verification report, stored in a database and shown to the employee inside the host system.
+- A web frontend for the employee, embedded in the host screen (amendment A1, section 15).
 - Optional execution of an approval API, per service, triggered by the employee.
 
 Out of scope for now:
@@ -37,6 +38,7 @@ Out of scope for now:
 - RAG and a vector store.
 - Multi-agent orchestration.
 - A full administration UI and an internal permission system.
+- Caller authentication and the security phases, deferred to a later version (amendment A2, section 15).
 
 Memory is excluded because a check is one independent run, and carrying state between requests risks leaking one request's data into another. RAG is excluded because each service's knowledge fits whole in the prompt, which is more reliable for compliance than retrieving fragments. RAG becomes relevant only if one service's knowledge grows to hundreds of pages.
 
@@ -237,13 +239,14 @@ Decided:
 | Storage | Reports kept in the service's own database tables |
 | LLM | Cloud, free tier for testing, replaceable by configuration |
 | Memory, RAG, vector store | Not included |
-| Frontend | None. Backend service only; the user interface belongs to the host system |
+| Frontend | A web frontend for the employee, embedded in the host screen (amended — A1) |
+| Security | Caller authentication and security phases deferred to a later version; the section 12 guardrails stay (amended — A2) |
 
 Open:
 
 - Which MCP server to use for Oracle, confirmed against the requirements in section 6.
 - Which LLM provider is permitted for real request data.
-- How the host system authenticates to the service: API key or mTLS.
+- How the host system authenticates to the service: API key or mTLS. Deferred with A2 — not to be resolved in this version.
 - Report retention period and who may view stored reports.
 - The first service to implement as the pilot.
 
@@ -255,6 +258,13 @@ Open:
 | `CHK` | Check Engine | The fixed pipeline, deterministic checks, LLM comparison |
 | `DOC` | Document Access | `path`, `blob` and `manual` fetching; reading PDF, XLS and images |
 | `RPT` | Report Store | Runs, findings, documents, employee decision |
-| `INT` | Host Integration | REST API, server-rendered report page, optional approval API |
+| `INT` | Host Integration | REST API, optional approval API |
 
-Tracks: backend only. This project has no frontend track and no frontend modules; the factory must not produce a frontend execution plan. The report page is plain HTML rendered by the backend itself, and any upload form lives in the host system. The platform track covers the MCP connection, the LLM provider configuration and the service database.
+Tracks: backend and frontend (amended — A1). The platform track covers the MCP connection, the LLM provider configuration and the service database.
+
+## 15. Amendments
+
+| # | Date | Change | Supersedes |
+| --- | --- | --- | --- |
+| A1 | 2026-10-01 | A frontend track is added. A web frontend (React + TypeScript), embedded in the host screen, gives the employee: the checks of a request, the report (overall status, findings with evidence, documents read / missing / unreadable), manual document upload, and recording the decision. It consumes the same REST API as any host. It replaces the server-rendered report page (`GET /checks/{id}/view`) as the display path. A full administration UI stays out of scope. | Section 13 "Frontend: None"; the section 14 tracks paragraph; the server-rendered page in sections 8 and 11 |
+| A2 | 2026-10-01 | Caller authentication (API key or mTLS) and the security phases are deferred to a later version; the owner already has the solution and adds it then. The section 12 guardrails are NOT deferred: they are part of what the service does. | The auth item under section 13 "Open" |

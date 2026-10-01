@@ -4,7 +4,7 @@
 # Filled from profiles/aias/knowledge/raw-idea.md (2026-10-01). Values marked
 # ASSUMPTION are not stated in the raw idea and were chosen as the conventional
 # answer; correct them here, never in a generated artifact. The raw idea's §13
-# "Open" items are deliberately NOT answered here (e.g. stack.backend.api.auth).
+# "Open" items are deliberately NOT answered here; caller auth is deferred (raw-idea A2).
 # Validated by profiles/_schema.yaml.
 # ════════════════════════════════════════════════════════════════════════════
 schema_version: 6
@@ -70,19 +70,27 @@ tracks:
           - {key: DATA-DOM,  display: DATA+DOM,      sub_labels: [CONFIG, TRANSACTIONAL], no_tests: true}
           - {key: PORTS,     display: PORTS+ADAPTERS, sub_labels: [QUERY, DOCUMENT, MODEL]}  # QueryExecutor (MCP), DocumentFetcher/readers, ChatModel + vision — each behind an interface (raw-idea §3, §6, §10)
           - {key: SVC-API,   display: SVC+API,       split_threshold: {kind: API, count: 8, op: ">=", grouping: "COMMAND / QUERY / VIEW"}, sub_labels: [COMMAND, QUERY, VIEW]}
-          - {key: SEC-BE,    display: SEC-BE,        never_split: true}   # caller authentication + the §12 guardrails; tested, so no no_tests
+          # no SEC-BE phase: caller authentication is deferred (raw-idea A2); the §12 guardrails live in the
+          # phases that own them (PORTS, SVC-API) and are scored by review.extra_checks AIAS-3..8
           - {key: ALIGN-BE,  display: ALIGN-BE,      never_split: true, no_tests: true}
           - {key: CROSS-MOD, display: CROSS-MODULE,  integration: true}   # LAST: one block per XM edge, one package each (factory.yaml → integration)
       test:
         phases:
           - {key: TEST-PLAN-BE, split_threshold: {kind: TC, count: 12, op: ">", grouping: "RULE-SCENARIOS / API-SCENARIOS / MODEL-EVAL"}, sub_labels: [RULE-SCENARIOS, API-SCENARIOS, MODEL-EVAL]}   # MODEL-EVAL: the fixed known-result request set run on every model change (raw-idea §10)
           - {key: INT-XM,       display: INT-XM,     integration: true, split_threshold: {kind: TC, count: 8, op: ">", grouping: "per target module"}}
-  frontend:                         # raw-idea §13 Decided: NO frontend — the UI belongs to the host system.
-    plans:                          # The schema requires the key; no phases are declared.
+  frontend:                         # raw-idea A1: the employee frontend, embedded in the host screen
+    plans:
       exec:
-        phases: []
+        phases:                     # one SUB per screen (sub_bearing); no SEC-FE — security deferred (raw-idea A2)
+          - {key: F1, binds_api: true, display: "F1 — Models & Types",     sub_bearing: true}
+          - {key: F2, binds_api: true, display: "F2 — Data Hooks",         sub_bearing: true}
+          - {key: F3, binds_api: true, display: "F3 — Forms & Validators", sub_bearing: true}
+          - {key: F4,                  display: "F4 — Screens & Routes",   sub_bearing: true}
+          - {key: ALIGN-FE, never_split: true, no_tests: true}
       test:
-        phases: []
+        phases:
+          - {key: TEST-PLAN-FE, split_threshold: {kind: TC, count: 8, op: ">", grouping: "UI-FLOWS / INT-FLOW"}, sub_labels: [UI-FLOWS, INT-FLOW]}
+          - {key: INT-UXD,      display: INT-UXD, integration: true, split_threshold: {kind: TC, count: 8, op: ">", grouping: "per source module"}}
 
 stack:
   db:                               # the service's OWN schema (runs, findings, documents) — not the host data,
@@ -114,14 +122,21 @@ stack:
       http_statuses: [200, 201, 202, 400, 401, 403, 404, 409, 413, 415, 422, 500, 502, 504]
                                          # 202: a check is accepted and runs asynchronously (raw-idea §5);
                                          # 502/504: the host approval API failed / timed out at decision time
-      # auth: intentionally not declared — API key vs mTLS is raw-idea §13 Open
+      # auth: intentionally not declared — caller authentication is deferred (raw-idea A2)
     layers: [controller, service, domain, port, adapter, repository]   # every external dependency is a port with a replaceable adapter
   frontend:
-    framework: NONE                      # backend only; the report page is plain HTML rendered by the backend
+    framework: react-ts-vite             # raw-idea A1; same stack as the owner's other platform
+    libraries:
+      routing: react-router
+      server-state: tanstack-query       # also drives polling of a running check (raw-idea §5)
+      forms: react-hook-form
+      validation: zod
+    lazy_chunk_per: screen
   mobile:
     framework: NONE
   testing:
     backend: agnostic                    # the test stage emits framework-neutral TC specs
+    frontend: agnostic
 
 conventions:
   entity_defaults:
@@ -137,6 +152,7 @@ conventions:
   workflow_engine: forbidden             # the check pipeline is fixed code (raw-idea §5)
   module_interface: in_process           # one deployable: REG/CHK/DOC/RPT/INT reach each other through injected interfaces
   domain_behaviour_placement: domain_classes   # consistent with `domain` as its own layer
+  screen_composition: true               # one screen, one job, one submit — e.g. upload and decision never share a save
 
 plan_vocabulary:
   request_line: Request
@@ -162,8 +178,8 @@ knowledge:
 
 review:
   extra_checks:                          # raw-idea §12 guardrails, made gate-scored
-    - {id: AIAS-1, stage: P1,   check: "every guardrail of raw-idea §12 is a REQ with at least one AC, and no §13 Decided point is reopened", severity: CRITICAL}
-    - {id: AIAS-2, stage: P1,   check: "no requirement, screen or artifact introduces a frontend, multi-tenancy, conversation memory, RAG/vector store or multi-agent orchestration", severity: MAJOR}
+    - {id: AIAS-1, stage: P1,   check: "every guardrail of raw-idea §12 is a REQ with at least one AC, and no §13 Decided point (as amended in §15) is reopened", severity: CRITICAL}
+    - {id: AIAS-2, stage: P1,   check: "no requirement introduces multi-tenancy, conversation memory, RAG/vector store, multi-agent orchestration, a full administration UI, or caller authentication (deferred, raw-idea A2)", severity: MAJOR}
     - {id: AIAS-3, stage: P3.1, check: "the LLM is given no tool that runs SQL or triggers approval; queries run only through the query port from the service definition", severity: CRITICAL}
     - {id: AIAS-4, stage: P3.1, check: "the approval API is invoked only from the employee-decision operation, and only where the service enables it", severity: CRITICAL}
     - {id: AIAS-5, stage: P3.1, check: "query parameters are bound or strictly type-validated, and every file path is validated inside the allowed storage root before opening", severity: CRITICAL}
@@ -172,3 +188,4 @@ review:
     - {id: AIAS-8, stage: P3.1, check: "a missing or unreadable required document appears in the report and prevents COMPLIANT — never skipped silently", severity: MAJOR}
     - {id: AIAS-9, stage: P3.1, check: "the engine depends on Spring AI ChatModel only — no provider-specific feature — and document reading uses its own configurable model", severity: MAJOR}
     - {id: AIAS-10, stage: P4,  check: "a MODEL-EVAL set of requests with known expected results exists and is named as acceptance for model changes", severity: MAJOR}
+    - {id: AIAS-11, stage: P3.2, check: "every screen shows a finding's evidence beside it, and a report with a missing or unreadable required document is never displayed as COMPLIANT", severity: MAJOR}

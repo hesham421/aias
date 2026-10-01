@@ -35,7 +35,6 @@ differ (`folder`). The marker grammar (`shared/MARKER-PROTOCOL.md`) refuses an u
 | `DATA-DOM` | DATA+DOM | `DATA-DOM` | — | `CONFIG`, `TRANSACTIONAL` |
 | `PORTS` | PORTS+ADAPTERS | `PORTS` | — | `QUERY`, `DOCUMENT`, `MODEL` |
 | `SVC-API` | SVC+API | `SVC-API` | API >= 8 (COMMAND / QUERY / VIEW) | `COMMAND`, `QUERY`, `VIEW` |
-| `SEC-BE` | SEC-BE | `SEC-BE` | never | — |
 | `ALIGN-BE` | ALIGN-BE | `ALIGN-BE` | never | — |
 | `CROSS-MOD` | CROSS-MODULE _(integration — populated for `--modules`/`--scope project`)_ | `CROSS-MOD` | — | — |
 <!-- /RENDER:phases:backend:exec -->
@@ -50,11 +49,18 @@ differ (`folder`). The marker grammar (`shared/MARKER-PROTOCOL.md`) refuses an u
 <!-- RENDER:phases:frontend:exec -->
 | Key | Display | Folder | Split when | SUB labels |
 |---|---|---|---|---|
+| `F1` | F1 — Models & Types | `F1` | per screen | — |
+| `F2` | F2 — Data Hooks | `F2` | per screen | — |
+| `F3` | F3 — Forms & Validators | `F3` | per screen | — |
+| `F4` | F4 — Screens & Routes | `F4` | per screen | — |
+| `ALIGN-FE` | ALIGN-FE | `ALIGN-FE` | never | — |
 <!-- /RENDER:phases:frontend:exec -->
 ### `frontend` · `test` → package `frontend-test`
 <!-- RENDER:phases:frontend:test -->
 | Key | Display | Folder | Split when | SUB labels |
 |---|---|---|---|---|
+| `TEST-PLAN-FE` | TEST-PLAN-FE | `TEST-PLAN-FE` | TC > 8 (UI-FLOWS / INT-FLOW) | `UI-FLOWS`, `INT-FLOW` |
+| `INT-UXD` | INT-UXD _(integration — populated for `--modules`/`--scope project`)_ | `INT-UXD` | TC > 8 (per source module) | — |
 <!-- /RENDER:phases:frontend:test -->
 ## Where this project's governance lives
 <!-- RENDER:project-layout -->

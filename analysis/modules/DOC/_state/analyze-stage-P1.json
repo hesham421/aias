@@ -5,7 +5,7 @@
   "counts": {
     "CRITICAL": 0,
     "MAJOR": 0,
-    "MINOR": 11
+    "MINOR": 14
   },
   "clean": true,
   "blocking": [
@@ -19,16 +19,16 @@
   ],
   "skipped": [],
   "coverage": {
-    "C0.1": 5,
-    "C5.2": 59,
-    "C5.3": 59,
-    "C5.4": 59,
-    "C5.5": 62,
-    "C5.6": 8,
-    "C5.8": 130,
-    "C5.13": 129,
-    "C5.14": 62,
-    "C5.15": 1,
+    "C0.1": 15,
+    "C5.2": 63,
+    "C5.3": 63,
+    "C5.4": 63,
+    "C5.5": 68,
+    "C5.6": 10,
+    "C5.8": 143,
+    "C5.13": 141,
+    "C5.14": 68,
+    "C5.15": 2,
     "C5.16": 13,
     "C5.17": 1
   },
@@ -50,8 +50,8 @@
       "to": [
         "AC"
       ],
-      "total": 59,
-      "covered": 59,
+      "total": 63,
+      "covered": 63,
       "pct": 100.0
     },
     {
@@ -60,9 +60,9 @@
       "to": [
         "API"
       ],
-      "total": 59,
-      "covered": 0,
-      "pct": 0.0
+      "total": 63,
+      "covered": 4,
+      "pct": 6.3
     },
     {
       "id": "req-ux",
@@ -71,7 +71,7 @@
         "SCR",
         "UXD"
       ],
-      "total": 59,
+      "total": 63,
       "covered": 0,
       "pct": 0.0
     },
@@ -81,19 +81,35 @@
       "to": [
         "TC"
       ],
-      "total": 62,
-      "covered": 0,
-      "pct": 0.0
+      "total": 68,
+      "covered": 62,
+      "pct": 91.2
     }
   ],
   "findings": [
+    {
+      "severity": "MINOR",
+      "clause": "C5.13",
+      "check": "ambiguity",
+      "message": "`REQ-DOC-063` uses 'many' \u2014 a word two implementers read two ways; state the measure, the set or the rule instead",
+      "artifact": "srs",
+      "line": 987
+    },
+    {
+      "severity": "MINOR",
+      "clause": "C5.13",
+      "check": "ambiguity",
+      "message": "`RULE-DOC-010` uses 'many' \u2014 a word two implementers read two ways; state the measure, the set or the rule instead",
+      "artifact": "srs",
+      "line": 1090
+    },
     {
       "severity": "MINOR",
       "clause": "C5.14",
       "check": "ac-measurable",
       "message": "`AC-DOC-017` `Then: the outcome for ID_CARD has read status UNREADABLE with reason NOT_FOU` names no number, limit, id or enumerable outcome \u2014 no test can fail it; say what is created, rejected, returned or shown, and how much",
       "artifact": "srs",
-      "line": 301
+      "line": 314
     },
     {
       "severity": "MINOR",
@@ -101,7 +117,7 @@
       "check": "ac-measurable",
       "message": "`AC-DOC-026` `Then: it is read in the document-reading step as an image, not by text extra` names no number, limit, id or enumerable outcome \u2014 no test can fail it; say what is created, rejected, returned or shown, and how much",
       "artifact": "srs",
-      "line": 427
+      "line": 440
     },
     {
       "severity": "MINOR",
@@ -109,7 +125,7 @@
       "check": "ac-measurable",
       "message": "`AC-DOC-030` `Then: the outcome has read status UNREADABLE with reason UNSUPPORTED_FORMAT` names no number, limit, id or enumerable outcome \u2014 no test can fail it; say what is created, rejected, returned or shown, and how much",
       "artifact": "srs",
-      "line": 483
+      "line": 496
     },
     {
       "severity": "MINOR",
@@ -117,7 +133,7 @@
       "check": "ac-measurable",
       "message": "`AC-DOC-031` `Then: the outcome for TRANSCRIPT has read status UNREADABLE with reason READ` names no number, limit, id or enumerable outcome \u2014 no test can fail it; say what is created, rejected, returned or shown, and how much",
       "artifact": "srs",
-      "line": 497
+      "line": 510
     },
     {
       "severity": "MINOR",
@@ -125,7 +141,7 @@
       "check": "ac-measurable",
       "message": "`AC-DOC-033` `Then: the call goes to model C` names no number, limit, id or enumerable outcome \u2014 no test can fail it; say what is created, rejected, returned or shown, and how much",
       "artifact": "srs",
-      "line": 525
+      "line": 538
     },
     {
       "severity": "MINOR",
@@ -133,7 +149,7 @@
       "check": "ac-measurable",
       "message": "`AC-DOC-035` `Then: the PNG outcome has read status UNREADABLE with reason READING_FAILED ` names no number, limit, id or enumerable outcome \u2014 no test can fail it; say what is created, rejected, returned or shown, and how much",
       "artifact": "srs",
-      "line": 553
+      "line": 566
     },
     {
       "severity": "MINOR",
@@ -141,7 +157,7 @@
       "check": "ac-measurable",
       "message": "`AC-DOC-043` `Then: both outcomes have read status UNREADABLE with reason OUT_OF_TIME` names no number, limit, id or enumerable outcome \u2014 no test can fail it; say what is created, rejected, returned or shown, and how much",
       "artifact": "srs",
-      "line": 656
+      "line": 669
     },
     {
       "severity": "MINOR",
@@ -149,7 +165,7 @@
       "check": "ac-measurable",
       "message": "`AC-DOC-045` `Then: its outcome has read status UNREADABLE with reason TOO_LARGE` names no number, limit, id or enumerable outcome \u2014 no test can fail it; say what is created, rejected, returned or shown, and how much",
       "artifact": "srs",
-      "line": 684
+      "line": 697
     },
     {
       "severity": "MINOR",
@@ -157,7 +173,7 @@
       "check": "ac-measurable",
       "message": "`AC-DOC-047` `Then: the outcome for TRANSCRIPT has read status UNREADABLE with reason TOO_` names no number, limit, id or enumerable outcome \u2014 no test can fail it; say what is created, rejected, returned or shown, and how much",
       "artifact": "srs",
-      "line": 712
+      "line": 725
     },
     {
       "severity": "MINOR",
@@ -165,15 +181,23 @@
       "check": "ac-measurable",
       "message": "`AC-DOC-062` `Then: the PNG outcome has read status UNREADABLE with reason MODEL_NOT_PERMI` names no number, limit, id or enumerable outcome \u2014 no test can fail it; say what is created, rejected, returned or shown, and how much",
       "artifact": "srs",
-      "line": 922
+      "line": 935
+    },
+    {
+      "severity": "MINOR",
+      "clause": "C5.15",
+      "check": "crud-covered",
+      "message": "`ENT-DOC-002` has 3 requirement(s) and none of them states how it is updated \u2014 the plan will decide that lifecycle on its own",
+      "artifact": "srs",
+      "line": 84
     },
     {
       "severity": "MINOR",
       "clause": "C5.17",
       "check": "glossary",
-      "message": "`scan` appears 1\u00d7 where the glossary term is `Check` (lines 428)",
+      "message": "`scan` appears 1\u00d7 where the glossary term is `Check` (lines 441)",
       "artifact": "srs",
-      "line": 428
+      "line": 441
     }
   ],
   "provenance": {
@@ -183,25 +207,49 @@
       "policy": "f0051863173859c50eaa1091adddc83f9c46e4a33a735325d37acc31ffd51c3d"
     },
     "resolvable": [
+      "api-spec",
+      "backend-execution-plan",
+      "backend-test-plan",
       "business-policies",
+      "contract",
+      "db-script",
       "domain-profile",
+      "flow-diagram",
+      "frontend-execution-plan",
+      "frontend-test-plan",
       "module-registry",
       "platform-summary",
       "prd",
       "project-registry",
+      "registry-db",
+      "registry-exec-be",
+      "registry-exec-fe",
       "registry-srs",
-      "srs"
+      "srs",
+      "ui-ux-spec"
     ],
     "inputs": {
+      "api-spec": "2b81feba6bfa25dbc92cab4acf7efee984821593484ea5f8eef80db72e843fe2",
+      "backend-execution-plan": "5c0052ca9a30d2e9f53258ef06b471d91c67ef3bc1b6d83544a297406efe92a0",
+      "backend-test-plan": "c8ae997c7b23d6b36b91ec8b6ad62360e25075372efcea85c08e5d9538553cda",
       "business-policies": "1c9c196a92c06d174a9f075740c48d1954b7ab0c61f6437dc1566ca19c324ac6",
+      "contract": "9f4d2b84ddaa69569afbbc3de2f9882ee3626556f0244acd0618fa8672cc964e",
+      "db-script": "fc203a6ffcdbe6c88a5458b20c51fdf8131974677b401d391a9092dcd4975361",
       "domain-profile": "c9ffe7c45c917c5793e15b6fbc7151ccc4b9181c36a5aaf1ce2f15f6849e3cbd",
+      "flow-diagram": "cd4d58137eb14c8482bff3a8612cc85043c33f21f3d8c0f88f920b8ef028d5cd",
+      "frontend-execution-plan": "13dbae1ef5deb104457b8b4a368ed1ff824263ee991cbef3a599fa7b9adfddc1",
+      "frontend-test-plan": "faea4f643a94f95af70111a67505fce5fada641907e9aa36d41079f280f5c21f",
       "module-registry": "b8de43f6c9f01340d973219f0d250ef6886d8121f0cfc383e9960c1c464fdaed",
       "platform-summary": "2beb30eaa26a520522195bd01764073ec4b086ee85c0642849b0a3943a8f0986",
       "prd": "682c62b88bbd8f2df993120568162993c3b1b6cb64a8d0c92572cdd73e7ba976",
       "project-registry": "7652329cae1b5e14558ead423c4a0d157fcf3aead94176473c23adb034161a82",
-      "registry-srs": "04a71934e1b2c1f78aa2ef44dcf3cf6264c77597eca275382383b3ff02e8353a",
-      "srs": "8319c9397993687775f26a4e78f4a5fbbbdbe8a4d0296c1ea05d2eba0dfa4745"
+      "registry-db": "066e0e252d0c9610c9189ecfa7b4afdbc84eddb17d67b263fb5ee030d5871654",
+      "registry-exec-be": "b721a48d18605f8aaff3c37e2484577bba8715fb4260b4c39539f99d55a5892c",
+      "registry-exec-fe": "5cb0d78b9c937ea85f64f8b1e2b26bc741d3bd3329d91be6e70c92e05b24ff00",
+      "registry-srs": "bcfd440a12ab3c0e75d71e0e3b550325a2ed7a0bd9d3a444ceaf9fbbc544f243",
+      "srs": "dbc11a55efee360155c082614a979c5050eaec6134cdf9f261d147f42c498786",
+      "ui-ux-spec": "a573f4dc8407c342aa58a28a73cea0e915f088519dafea0bfe126780a746e4af"
     },
-    "at": "2026-10-01T12:12:06+00:00"
+    "at": "2026-10-01T14:45:14+00:00"
   }
 }

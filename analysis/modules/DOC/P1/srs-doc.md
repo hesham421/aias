@@ -2,7 +2,7 @@
 ══════════════════════════════════════════════════════════════════
 Module : DOC   Version : v1   Profile : aias
 Inputs : prd, domain-profile, project-registry (PRD approved 2026-10-01)
-Counts : REQ 59 · AC 62 · ENT 1 · RULE 8 · SCR-REQ 0 · ADR 5 (new: ADR-DOC-005 … ADR-DOC-009; applied: ADR-DOC-001 … ADR-DOC-009, ADR-REG-001, ADR-REG-004, ADR-REG-005, ADR-REG-006)
+Counts : REQ 63 · AC 68 · ENT 2 · RULE 10 · SCR-REQ 0 · ADR 7 (new: ADR-DOC-005 … ADR-DOC-009, ADR-DOC-015, ADR-DOC-016; applied: ADR-DOC-001 … ADR-DOC-009, ADR-DOC-015, ADR-DOC-016, ADR-REG-001, ADR-REG-004, ADR-REG-005, ADR-REG-006)
 ══════════════════════════════════════════════════════════════════
 
 # PART A — MODULE FOUNDATION
@@ -16,14 +16,14 @@ Counts : REQ 59 · AC 62 · ENT 1 · RULE 8 · SCR-REQ 0 · ADR 5 (new: ADR-DOC-
 | Date | 2026-10-01 |
 | Status | DRAFT — P1 output, PRD approved 2026-10-01 (gate prd-approval) |
 | Prepared by | P1 SRS engine (operator run, lane analysis) |
-| Decisions applied | 9 DOC ADRs (ADR-DOC-001 … ADR-DOC-009), 4 REG ADRs and 5 DEFAULTs — see Decisions applied |
+| Decisions applied | 11 DOC ADRs (ADR-DOC-001 … ADR-DOC-009, ADR-DOC-015, ADR-DOC-016), 4 REG ADRs and 6 DEFAULTs — see Decisions applied |
 
 ## A2 — Functional context
 
 ### In scope
 - Obtaining the documents of one Check by the Fetch Mode of its service package version: `path` (host file storage), `blob` (host BLOB columns over a read-only `jdbc` connection) or `manual` (files the employee uploaded, handed over by INT) (POL-DOC-001 … POL-DOC-007).
 - Running the document source query of the service definition for `path` and `blob`, exactly as written, with the request number bound (ADR-DOC-001).
-- Holding manual uploads as Uploaded Documents until their Check ends (ADR-DOC-003, ADR-DOC-006, ADR-DOC-008).
+- Holding manual uploads as Uploaded Documents until their Check ends, at most the maximum uploads per Check, and refusing uploads for a Check already ended (ADR-DOC-003, ADR-DOC-006, ADR-DOC-008, ADR-DOC-015, ADR-DOC-016).
 - Reading each document by its format: text extraction for PDF, table extraction for `.xls` / `.xlsx`, the document-reading step with its own configurable model for scanned documents and images (POL-DOC-008, POL-DOC-009, ADR-DOC-004).
 - One outcome per document — READ, MISSING or UNREADABLE with a reason — handed to the Check Engine with the read content as data (POL-DOC-010, POL-DOC-011, ADR-DOC-002, ADR-DOC-007).
 - The raw-idea §12 guardrails at DOC's surface (ADR-DOC-005).
@@ -39,7 +39,7 @@ Counts : REQ 59 · AC 62 · ENT 1 · RULE 8 · SCR-REQ 0 · ADR 5 (new: ADR-DOC-
 Document Access gives a Check its documents: it obtains them only in the Fetch Mode the service chose, reads each one by its format, and accounts for every document — read, missing or unreadable and why — handing the read content to the Check Engine as data. It reads host storage and host BLOB columns read-only, opens no file outside the storage root, and keeps nothing from one Check for another.
 
 ### Detailed description
-When the Check Engine runs a Check it asks DOC for the documents of that Check, naming the Check's identifier, the request number and the service package version (service code + version number). DOC resolves the version through the REG interface. In `path` mode it runs the document source query through the platform MCP query channel, takes each row's document type and path, checks the path against the storage root and reads the file. In `blob` mode it runs the query over the read-only `jdbc` connection and reads each row's content column. In `manual` mode it reads the Uploaded Documents of that Check, which INT handed over earlier when the employee uploaded them from the embedded frontend. Each document is then read by format; each required document type with no document is MISSING; every failure becomes UNREADABLE with a reason, and the remaining documents continue. When the Check ends, the Check Engine tells DOC, and DOC deletes that Check's Uploaded Documents. Roles: the Employee (relies on the outcomes; uploads in `manual` mode through INT) and the Service Administrator (chooses the Fetch Mode in the Service Package, sets the storage root, the data class and the document-reading model of the environment).
+When the Check Engine runs a Check it asks DOC for the documents of that Check, naming the Check's identifier, the request number and the service package version (service code + version number). DOC resolves the version through the REG interface. In `path` mode it runs the document source query through the platform MCP query channel, takes each row's document type and path, checks the path against the storage root and reads the file. In `blob` mode it runs the query over the read-only `jdbc` connection and reads each row's content column. In `manual` mode it reads the Uploaded Documents of that Check, which INT handed over earlier when the employee uploaded them from the embedded frontend. Each document is then read by format; each required document type with no document is MISSING; every failure becomes UNREADABLE with a reason, and the remaining documents continue. When the Check ends, the Check Engine tells DOC, and DOC deletes that Check's Uploaded Documents and records the Check as ended, so that a late upload for it is refused (ADR-DOC-015). Roles: the Employee (relies on the outcomes; uploads in `manual` mode through INT) and the Service Administrator (chooses the Fetch Mode in the Service Package, sets the storage root, the data class and the document-reading model of the environment).
 
 ### Current situation
 | Step | Party | Notes |
@@ -54,7 +54,7 @@ Every document of every Check is fetched the way its service allows and read by 
 
 ### General notes
 - Logical types only; physical types and tables belong to P2.
-- The allowed storage root, the data class and the document-reading model are environment settings; the maximum file size, the maximum rows and the Check timeout are platform configuration (ADR-REG-006). None of them is an entity.
+- The allowed storage root, the data class and the document-reading model are environment settings; the maximum file size, the maximum rows, the maximum uploads per Check and the Check timeout are platform configuration (ADR-REG-006, ADR-DOC-016). None of them is an entity.
 - The Document Outcome DOC returns to the Check Engine (document type, source mode, read status, reason, detail, content) is a transient result, never stored by DOC; RPT stores the Check Document row it receives through CHK (ADR-REG-001).
 
 ## A3 — Entities and fields
@@ -80,6 +80,19 @@ Kind reason: transactional — one row per file uploaded for one Check, held onl
 | content | binary | no | the uploaded file | absent when oversized (RULE-DOC-005) | File |
 | oversized | flag | yes | system | true when fileSize exceeds the maximum file size | Oversized |
 | createdAt, updatedAt | date-time | yes | system | standard fields — per profile; createdAt is the upload time | Created at, Updated at |
+
+### ENT-DOC-002 — Ended Check
+Kind reason: transactional — one row per Check whose end the Check Engine has reported to DOC; the marker that lets DOC refuse a late upload for that Check (ADR-DOC-015).
+
+| Kind | Ownership | Business number | Operations | Cross-module | Source |
+|---|---|---|---|---|---|
+| transactional | PRIVATE | no | create (end-of-Check notice from CHK; once per Check), read (on upload handover and on the end-of-Check sweep); never updated, not deleted in this version | — (the Check identifier is a value) | POL-DOC-015; ADR-DOC-003, ADR-DOC-015 |
+
+| Field | Logical type | Required | Values / source | Notes | Label |
+|---|---|---|---|---|---|
+| endedCheckId | number (identifier) | yes | identity | system key | Ended check id |
+| checkId | number | yes | the Check's identifier, as handed in by CHK with the end-of-Check notice | value only — no foreign key, no read of RPT (ADR-DOC-003); one row per Check | Check |
+| createdAt, updatedAt | date-time | yes | system | standard fields — per profile; createdAt is the time the end was reported | Created at, Updated at |
 
 ## A4 — Functional requirements (EARS) and acceptance criteria
 
@@ -924,6 +937,72 @@ Kind reason: transactional — one row per file uploaded for one Check, held onl
   When   : the documents are read
   Then   : the PNG outcome has read status UNREADABLE with reason MODEL_NOT_PERMITTED and the PDF outcome has read status READ
 
+### REQ-DOC-060 — Ended Check recorded
+  Pattern    : event
+  Statement  : When the Check Engine reports that a Check has ended, the system shall record that Check's identifier as an Ended Check unless it is already recorded.
+  Traces     : US-DOC-012
+  Entities   : ENT-DOC-002
+  Rationale  : DOC cannot read the Check's state (tier 1), so it remembers which Checks it was told have ended.
+  Source     : POL-DOC-015; ADR-DOC-015
+  Priority   : HIGH
+
+#### AC-DOC-063 — [REQ-DOC-060]
+  Given  : no Ended Check exists for Check 501
+  When   : the Check Engine reports that Check 501 has ended
+  Then   : exactly 1 Ended Check with checkId = 501 exists
+
+#### AC-DOC-064 — [REQ-DOC-060]
+  Given  : an Ended Check exists for Check 501
+  When   : the Check Engine reports a second time that Check 501 has ended
+  Then   : exactly 1 Ended Check with checkId = 501 exists and the call completes without an error
+
+### REQ-DOC-061 — Upload for an ended Check refused
+  Pattern    : unwanted
+  Statement  : If an upload is handed over for a Check that is recorded as an Ended Check, then the system shall reject the upload.
+  Traces     : US-DOC-005, US-DOC-012
+  Entities   : ENT-DOC-001, ENT-DOC-002
+  Rationale  : An upload stored after its Check's end would have no deletion trigger and would outlive its Check.
+  Source     : POL-DOC-007, POL-DOC-015; RULE-DOC-009; ADR-DOC-015
+  Priority   : HIGH
+
+#### AC-DOC-065 — [REQ-DOC-061]
+  Given  : Check 501 runs `manual-service` version 1 and is recorded as an Ended Check
+  When   : INT hands over `transcript.pdf` (80 KB) with document type TRANSCRIPT for Check 501
+  Then   : the upload is rejected with the message of RULE-DOC-009 and 0 Uploaded Documents exist for Check 501
+
+### REQ-DOC-062 — Late uploads of ended Checks swept
+  Pattern    : event
+  Statement  : When the Check Engine reports that a Check has ended, the system shall delete every Uploaded Document whose Check identifier is recorded as an Ended Check.
+  Traces     : US-DOC-012
+  Entities   : ENT-DOC-001, ENT-DOC-002
+  Rationale  : A handover racing the end of its Check can commit after that Check's delete; the next end of any Check removes it.
+  Source     : POL-DOC-015; ADR-DOC-015
+  Priority   : HIGH
+
+#### AC-DOC-066 — [REQ-DOC-062]
+  Given  : Check 501 is recorded as an Ended Check and 1 Uploaded Document still carries checkId = 501, and Check 502 has 1 Uploaded Document
+  When   : the Check Engine reports that Check 503 has ended
+  Then   : 0 Uploaded Documents remain for Check 501 and 1 remains for Check 502
+
+### REQ-DOC-063 — Maximum uploads per Check
+  Pattern    : unwanted
+  Statement  : If an upload is handed over for a Check that already has as many Uploaded Documents as the maximum uploads per Check, then the system shall reject the upload.
+  Traces     : US-DOC-005, US-DOC-009
+  Entities   : ENT-DOC-001
+  Rationale  : Each Check has limits; an unbounded number of uploads would grow the stored file content of one Check without limit.
+  Source     : POL-DOC-012; RULE-DOC-010; ADR-DOC-016, ADR-REG-006
+  Priority   : —
+
+#### AC-DOC-067 — [REQ-DOC-063]
+  Given  : the maximum uploads per Check is 20 and Check 501 on `manual-service` version 1 has 20 Uploaded Documents
+  When   : INT hands over `id.png` with document type ID_CARD for Check 501
+  Then   : the upload is rejected with the message of RULE-DOC-010 and 20 Uploaded Documents exist for Check 501
+
+#### AC-DOC-068 — [REQ-DOC-063]
+  Given  : the maximum uploads per Check is 20 and Check 501 on `manual-service` version 1 has 19 Uploaded Documents
+  When   : INT hands over `id.png` with document type ID_CARD for Check 501
+  Then   : the upload is accepted and 20 Uploaded Documents exist for Check 501
+
 ## A5 — Business rules
 
 ### RULE-DOC-001 — Upload only for a manual service
@@ -999,6 +1078,25 @@ Kind reason: transactional — one row per file uploaded for one Check, held onl
   Data source: ENT-DOC-001.checkId
   Source     : POL-DOC-007, POL-DOC-015; ADR-DOC-003
 
+### RULE-DOC-009 — No upload for an ended Check
+  Scope      : ENT-DOC-001
+  Trigger    : on upload handover
+  Statement  : The system shall reject an upload when its Check identifier is recorded as an Ended Check.
+  Message    : The Check {checkId} has already ended; documents can no longer be uploaded for it. Start a new check to provide these documents.
+  Traces     : REQ-DOC-061
+  Data source: ENT-DOC-001.checkId, ENT-DOC-002.checkId
+  Source     : POL-DOC-015; ADR-DOC-015
+
+### RULE-DOC-010 — Maximum uploads per Check
+  Scope      : ENT-DOC-001
+  Trigger    : on upload handover
+  Statement  : The system shall reject an upload when its Check already has as many Uploaded Documents as the maximum uploads per Check.
+  Message    : The Check {checkId} already has the maximum of {maxUploads} uploaded documents; no further file can be uploaded for it.
+  Traces     : REQ-DOC-063
+  Data source: ENT-DOC-001.checkId
+  Source     : POL-DOC-012; ADR-DOC-016
+  Test-Hint  : the maximum uploads per Check is platform configuration; set it low in the test environment
+
 ## A6 — Lookups
 
 ```yaml name=lookups
@@ -1019,7 +1117,7 @@ lookups:
 | SERVICE_CODE | the code itself | Consumed from REG (reference to ENT-REG-001); never hardcoded |
 
 ## A7 — Status lifecycle
-Not applicable: ENT-DOC-001 has no status field; it is created, read by its Check and deleted when the Check ends (REQ-DOC-017, REQ-DOC-018, REQ-DOC-054). The oversized flag is set once at creation.
+Not applicable: ENT-DOC-001 has no status field; it is created, read by its Check and deleted when the Check ends (REQ-DOC-017, REQ-DOC-018, REQ-DOC-054, REQ-DOC-062). The oversized flag is set once at creation. ENT-DOC-002 has no status field either; it is created once when the Check ends and never changed (REQ-DOC-060).
 
 ## A8 — Module dependencies
 ```yaml name=module-dependencies
@@ -1049,9 +1147,9 @@ Errors    : ProblemDetail (RFC 9457) → {type, title, status, detail, code} —
 
 | Operation | Verb | Path (per base path) | Inputs | Outputs | RULEs | Traces (REQ) |
 |---|---|---|---|---|---|---|
-| hand over an upload (in-process, called by INT) | — | — | checkId, serviceCode, versionNumber, documentType, fileName, file content | Uploaded Document summary (id, documentType, fileName, fileSize, oversized) or rejection | RULE-DOC-001, RULE-DOC-002, RULE-DOC-003, RULE-DOC-005 | REQ-DOC-017, REQ-DOC-020, REQ-DOC-021, REQ-DOC-022, REQ-DOC-043 |
-| fetch and read the documents of a Check (in-process, called by CHK) | — | — | checkId, requestNumber, serviceCode, versionNumber | list of Document Outcomes (documentType, sourceMode, readStatus, reason, detail, content) | RULE-DOC-005, RULE-DOC-006, RULE-DOC-007, RULE-DOC-008 | REQ-DOC-001 … REQ-DOC-016, REQ-DOC-018, REQ-DOC-019, REQ-DOC-024 … REQ-DOC-042, REQ-DOC-044 … REQ-DOC-048, REQ-DOC-056 … REQ-DOC-059 |
-| end a Check (in-process, called by CHK) | — | — | checkId | count of Uploaded Documents deleted | — | REQ-DOC-054 |
+| hand over an upload (in-process, called by INT) | — | — | checkId, serviceCode, versionNumber, documentType, fileName, file content | Uploaded Document summary (id, documentType, fileName, fileSize, oversized) or rejection | RULE-DOC-001, RULE-DOC-002, RULE-DOC-003, RULE-DOC-005, RULE-DOC-009, RULE-DOC-010 | REQ-DOC-017, REQ-DOC-020, REQ-DOC-021, REQ-DOC-022, REQ-DOC-043, REQ-DOC-061, REQ-DOC-063 |
+| fetch and read the documents of a Check (in-process, called by CHK) | — | — | checkId, requestNumber, serviceCode, versionNumber, the Check's deadline (REQ-DOC-040) | list of Document Outcomes (documentType, sourceMode, readStatus, reason, detail, content) | RULE-DOC-005, RULE-DOC-006, RULE-DOC-007, RULE-DOC-008 | REQ-DOC-001 … REQ-DOC-016, REQ-DOC-018, REQ-DOC-019, REQ-DOC-024 … REQ-DOC-042, REQ-DOC-044 … REQ-DOC-048, REQ-DOC-056 … REQ-DOC-059 |
+| end a Check (in-process, called by CHK) | — | — | checkId | count of Uploaded Documents deleted | — | REQ-DOC-054, REQ-DOC-060, REQ-DOC-062 |
 
 # STANDALONE
 
@@ -1062,17 +1160,17 @@ Errors    : ProblemDetail (RFC 9457) → {type, title, status, detail, code} —
 | US-DOC-002 | REQ-DOC-004, REQ-DOC-005, REQ-DOC-006, REQ-DOC-007 | AC-DOC-004, AC-DOC-005, AC-DOC-006, AC-DOC-007 | — | ENT-REG-002, ENT-REG-003, ENT-REG-004, ENT-REG-005 | — |
 | US-DOC-003 | REQ-DOC-008, REQ-DOC-009, REQ-DOC-010, REQ-DOC-011 | AC-DOC-008, AC-DOC-009, AC-DOC-010, AC-DOC-011, AC-DOC-012, AC-DOC-013 | — | — | — |
 | US-DOC-004 | REQ-DOC-006, REQ-DOC-012, REQ-DOC-013, REQ-DOC-014, REQ-DOC-015, REQ-DOC-016 | AC-DOC-006, AC-DOC-014, AC-DOC-015, AC-DOC-016, AC-DOC-017, AC-DOC-018 | RULE-DOC-006 | ENT-REG-002, ENT-REG-003, ENT-REG-004, ENT-REG-005 | — |
-| US-DOC-005 | REQ-DOC-017, REQ-DOC-018, REQ-DOC-019, REQ-DOC-020, REQ-DOC-021, REQ-DOC-022, REQ-DOC-023, REQ-DOC-043 | AC-DOC-019, AC-DOC-020, AC-DOC-021, AC-DOC-022, AC-DOC-023, AC-DOC-024, AC-DOC-025, AC-DOC-046 | RULE-DOC-001, RULE-DOC-002, RULE-DOC-003, RULE-DOC-004, RULE-DOC-005, RULE-DOC-008 | ENT-DOC-001, ENT-REG-002, ENT-REG-004 | — |
+| US-DOC-005 | REQ-DOC-017, REQ-DOC-018, REQ-DOC-019, REQ-DOC-020, REQ-DOC-021, REQ-DOC-022, REQ-DOC-023, REQ-DOC-043, REQ-DOC-061, REQ-DOC-063 | AC-DOC-019, AC-DOC-020, AC-DOC-021, AC-DOC-022, AC-DOC-023, AC-DOC-024, AC-DOC-025, AC-DOC-046, AC-DOC-065, AC-DOC-067, AC-DOC-068 | RULE-DOC-001, RULE-DOC-002, RULE-DOC-003, RULE-DOC-004, RULE-DOC-005, RULE-DOC-008, RULE-DOC-009, RULE-DOC-010 | ENT-DOC-001, ENT-DOC-002, ENT-REG-002, ENT-REG-004 | — |
 | US-DOC-006 | REQ-DOC-024, REQ-DOC-025, REQ-DOC-026, REQ-DOC-027, REQ-DOC-028, REQ-DOC-029 | AC-DOC-026, AC-DOC-027, AC-DOC-028, AC-DOC-029, AC-DOC-030, AC-DOC-031 | — | — | — |
 | US-DOC-007 | REQ-DOC-030, REQ-DOC-031, REQ-DOC-032, REQ-DOC-033 | AC-DOC-032, AC-DOC-033, AC-DOC-034, AC-DOC-035 | — | — | — |
 | US-DOC-008 | REQ-DOC-034, REQ-DOC-035, REQ-DOC-036, REQ-DOC-037, REQ-DOC-038, REQ-DOC-039, REQ-DOC-040 | AC-DOC-036, AC-DOC-037, AC-DOC-038, AC-DOC-039, AC-DOC-040, AC-DOC-041, AC-DOC-042, AC-DOC-043 | — | ENT-DOC-001, ENT-REG-003, ENT-REG-004 | — |
-| US-DOC-009 | REQ-DOC-041, REQ-DOC-042, REQ-DOC-043, REQ-DOC-044 | AC-DOC-044, AC-DOC-045, AC-DOC-046, AC-DOC-047 | RULE-DOC-005 | ENT-DOC-001 | — |
+| US-DOC-009 | REQ-DOC-041, REQ-DOC-042, REQ-DOC-043, REQ-DOC-044, REQ-DOC-063 | AC-DOC-044, AC-DOC-045, AC-DOC-046, AC-DOC-047, AC-DOC-067, AC-DOC-068 | RULE-DOC-005, RULE-DOC-010 | ENT-DOC-001 | — |
 | US-DOC-010 | REQ-DOC-045, REQ-DOC-046, REQ-DOC-047, REQ-DOC-048 | AC-DOC-048, AC-DOC-049, AC-DOC-050, AC-DOC-051 | — | — | — |
 | US-DOC-011 | REQ-DOC-049, REQ-DOC-050, REQ-DOC-051, REQ-DOC-052, REQ-DOC-053 | AC-DOC-052, AC-DOC-053, AC-DOC-054, AC-DOC-055, AC-DOC-056 | RULE-DOC-007 | ENT-REG-003, ENT-REG-005 | — |
-| US-DOC-012 | REQ-DOC-018, REQ-DOC-054, REQ-DOC-055, REQ-DOC-056, REQ-DOC-057 | AC-DOC-020, AC-DOC-057, AC-DOC-058, AC-DOC-059, AC-DOC-060 | RULE-DOC-008 | ENT-DOC-001 | — |
+| US-DOC-012 | REQ-DOC-018, REQ-DOC-054, REQ-DOC-055, REQ-DOC-056, REQ-DOC-057, REQ-DOC-060, REQ-DOC-061, REQ-DOC-062 | AC-DOC-020, AC-DOC-057, AC-DOC-058, AC-DOC-059, AC-DOC-060, AC-DOC-063, AC-DOC-064, AC-DOC-065, AC-DOC-066 | RULE-DOC-008, RULE-DOC-009 | ENT-DOC-001, ENT-DOC-002 | — |
 | US-DOC-013 | REQ-DOC-058, REQ-DOC-059 | AC-DOC-061, AC-DOC-062 | — | — | — |
 
-Raw-idea §12 guardrails (AIAS-1): (1) LLM analyses only → REQ-DOC-048 · (2) approval only on the employee's action → REQ-DOC-053 · (3) read-only host access → REQ-DOC-049, REQ-DOC-050, REQ-DOC-052 · (4) bound parameters → REQ-DOC-004, REQ-DOC-012, REQ-DOC-051 · (5) storage root → REQ-DOC-009 · (6) nothing skipped silently → REQ-DOC-034, REQ-DOC-036, REQ-DOC-037 · (7) content is data → REQ-DOC-045, REQ-DOC-047 · (8) limits → REQ-DOC-039, REQ-DOC-040, REQ-DOC-042 · (9) nothing carried between Checks → REQ-DOC-054, REQ-DOC-055, REQ-DOC-057 (ADR-DOC-005).
+Raw-idea §12 guardrails (AIAS-1): (1) LLM analyses only → REQ-DOC-048 · (2) approval only on the employee's action → REQ-DOC-053 · (3) read-only host access → REQ-DOC-049, REQ-DOC-050, REQ-DOC-052 · (4) bound parameters → REQ-DOC-004, REQ-DOC-012, REQ-DOC-051 · (5) storage root → REQ-DOC-009 · (6) nothing skipped silently → REQ-DOC-034, REQ-DOC-036, REQ-DOC-037 · (7) content is data → REQ-DOC-045, REQ-DOC-047 · (8) limits → REQ-DOC-039, REQ-DOC-040, REQ-DOC-042, REQ-DOC-063 · (9) nothing carried between Checks → REQ-DOC-054, REQ-DOC-055, REQ-DOC-057, REQ-DOC-060, REQ-DOC-061, REQ-DOC-062 (ADR-DOC-005, ADR-DOC-015, ADR-DOC-016).
 
 ## Decisions applied
 | DEFAULT / ADR | What | Source | Override / status |
@@ -1090,17 +1188,20 @@ Raw-idea §12 guardrails (AIAS-1): (1) LLM analyses only → REQ-DOC-048 · (2) 
 | ADR-DOC-007 | Closed UNREADABLE_REASON list; failed / over-limit document source query → required types UNREADABLE | P1 (this stage) | ACCEPTED — non-breaking |
 | ADR-DOC-008 | Uploads deleted on the Check Engine's end-of-Check notice; fetched content lives only for the call | P1 (this stage) | ACCEPTED — non-breaking |
 | ADR-DOC-009 | Free-tier rule enforced from model tier + environment data class | P1 (this stage) | ACCEPTED — non-breaking |
+| ADR-DOC-015 | Ended Checks recorded; a handover for an ended Check refused; late uploads of ended Checks swept at every end of a Check | P1 (analysis-gate revise, finding G2) | ACCEPTED — non-breaking |
+| ADR-DOC-016 | Maximum uploads per Check is platform configuration, default 20 | P1 (analysis-gate revise, finding G3) | ACCEPTED — non-breaking |
 | DEFAULT — format by content signature | A document's format is detected from its content, not its file name | domain best practice; `blob` documents have no file name | Override: trust the file extension for `path` and `manual` |
 | DEFAULT — supported image formats | JPEG, PNG and TIFF go to the document-reading step | [KB:raw-idea.md §2, §5 step 4]; ADR-DOC-004 | Override: add a format to the reader list |
 | DEFAULT — model tier FREE when not declared | An undeclared document-reading model tier counts as FREE | ADR-DOC-009; domain-profile G13 | Override: declare APPROVED after the D3 go-live gate |
 | DEFAULT — data class REAL when not declared | An undeclared environment data class counts as REAL | ADR-DOC-009 | Override: declare SYNTHETIC in test environments |
 | DEFAULT — several uploads per document type | Each upload is its own Uploaded Document and gets its own outcome | ADR-DOC-006 | Override: replace the earlier upload of the same type |
+| DEFAULT — maximum uploads per Check 20 | No owner value exists; 20 allows corrections of the pilot's 2 required types while bounding stored content | ADR-DOC-016; ADR-REG-006 | Override: set the platform configuration value |
 
 ## Access summary
 | Role | Screens | Operations |
 |---|---|---|
 | Employee | none in DOC (uploads from the embedded frontend through INT) | upload handover (via INT); reads outcomes in the report (RPT/INT) |
 | Service Administrator | none | sets the storage root, the data class and the document-reading model of the environment; chooses the fetch mode in the Service Package (REG) |
-| CHK, INT (in-process) | — | CHK: fetch and read the documents of a Check, end a Check · INT: hand over an upload |
+| CHK, INT (in-process) | — | CHK: fetch and read the documents of a Check, end a Check · INT: hand over an upload (only while its Check is awaiting documents — ADR-DOC-015) |
 Caller authentication is deferred (raw-idea A2); no role check is specified in this version.
 ══════════════════════════════════════════════════════════════════

@@ -4,6 +4,7 @@
 | ENT | Name | Kind | Ownership | Status |
 |---|---|---|---|---|
 | ENT-DOC-001 | Uploaded Document | transactional | PRIVATE | REGISTERED |
+| ENT-DOC-002 | Ended Check | transactional | PRIVATE | REGISTERED |
 
 ### Consumed
 | Module | ENT | Type |
@@ -30,7 +31,7 @@
 None — no SCR-REQ in this version (DOC has no screen, ADR-DOC-003).
 
 ### Requirements
-REQ count 59 · AC count 62 · RULE count 8 · last sequence per atom (REQ: 59, AC: 62, ENT: 1, RULE: 8, SCR-REQ: 0)
+REQ count 63 · AC count 68 · RULE count 10 · last sequence per atom (REQ: 63, AC: 68, ENT: 2, RULE: 10, SCR-REQ: 0)
 
 | REQ | AC |
 |---|---|
@@ -93,6 +94,10 @@ REQ count 59 · AC count 62 · RULE count 8 · last sequence per atom (REQ: 59, 
 | REQ-DOC-057 | AC-DOC-060 |
 | REQ-DOC-058 | AC-DOC-061 |
 | REQ-DOC-059 | AC-DOC-062 |
+| REQ-DOC-060 | AC-DOC-063, AC-DOC-064 |
+| REQ-DOC-061 | AC-DOC-065 |
+| REQ-DOC-062 | AC-DOC-066 |
+| REQ-DOC-063 | AC-DOC-067, AC-DOC-068 |
 
 | RULE | Traces |
 |---|---|
@@ -104,9 +109,11 @@ REQ count 59 · AC count 62 · RULE count 8 · last sequence per atom (REQ: 59, 
 | RULE-DOC-006 | REQ-DOC-014 |
 | RULE-DOC-007 | REQ-DOC-052 |
 | RULE-DOC-008 | REQ-DOC-018, REQ-DOC-056 |
+| RULE-DOC-009 | REQ-DOC-061 |
+| RULE-DOC-010 | REQ-DOC-063 |
 
 ### Decisions
-ADR-DOC-005, ADR-DOC-006, ADR-DOC-007, ADR-DOC-008, ADR-DOC-009 (new, ACCEPTED); applied ADR-DOC-001 … ADR-DOC-004, ADR-REG-001, ADR-REG-004, ADR-REG-005, ADR-REG-006. BLOCKED: none.
+ADR-DOC-005, ADR-DOC-006, ADR-DOC-007, ADR-DOC-008, ADR-DOC-009, ADR-DOC-015, ADR-DOC-016 (new, ACCEPTED); applied ADR-DOC-001 … ADR-DOC-004, ADR-REG-001, ADR-REG-004, ADR-REG-005, ADR-REG-006. BLOCKED: none.
 
 ### Event
-"P1 completed: DOC v1 — REQ 59 · AC 62 · ENT 1 · RULE 8 · SCR-REQ 0 · ADR 5"
+"P1 completed: DOC v1 — REQ 63 · AC 68 · ENT 2 · RULE 10 · SCR-REQ 0 · ADR 7 (analysis-gate revise: ADR-DOC-015, ADR-DOC-016)"

@@ -78,7 +78,7 @@
       "REG": "done",
       "DOC": "done",
       "CHK": "done",
-      "RPT": "failed",
+      "RPT": "done",
       "INT": "ready"
     }
   }

@@ -69,14 +69,14 @@
     "1": {
       "REG": "done",
       "DOC": "ready",
-      "CHK": "waiting",
+      "CHK": "ready",
       "RPT": "waiting",
       "INT": "waiting"
     },
     "2": {
       "REG": "ready",
       "DOC": "ready",
-      "CHK": "waiting",
+      "CHK": "ready",
       "RPT": "waiting",
       "INT": "waiting"
     }

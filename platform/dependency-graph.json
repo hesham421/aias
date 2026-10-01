@@ -36,7 +36,7 @@
     {
       "from": "CHK",
       "to": "DOC",
-      "state": "DECLARED",
+      "state": "CONTRACTED",
       "source": "platform"
     },
     {
@@ -86,7 +86,7 @@
     {
       "from": "INT",
       "to": "DOC",
-      "state": "DECLARED",
+      "state": "CONTRACTED",
       "source": "platform"
     },
     {

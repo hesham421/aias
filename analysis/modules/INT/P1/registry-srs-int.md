@@ -36,7 +36,7 @@ None — `lookups: []` (ADR-INT-013).
 | SCR-REQ-INT-005 | Employee decision | — |
 
 ### Requirements
-REQ count 60 · AC count 66 · RULE count 4 · last sequence per atom (REQ: 60, AC: 66, ENT: 0, RULE: 4, SCR-REQ: 5)
+REQ count 64 · AC count 74 · RULE count 4 · last sequence per atom (REQ: 64, AC: 74, ENT: 0, RULE: 4, SCR-REQ: 5)
 
 | REQ | AC |
 |---|---|
@@ -100,6 +100,10 @@ REQ count 60 · AC count 66 · RULE count 4 · last sequence per atom (REQ: 60, 
 | REQ-INT-058 | AC-INT-064 |
 | REQ-INT-059 | AC-INT-065 |
 | REQ-INT-060 | AC-INT-066 |
+| REQ-INT-061 | AC-INT-067, AC-INT-068 |
+| REQ-INT-062 | AC-INT-069, AC-INT-070 |
+| REQ-INT-063 | AC-INT-071, AC-INT-072 |
+| REQ-INT-064 | AC-INT-073, AC-INT-074 |
 
 ### Rules
 | RULE | Traces |
@@ -110,7 +114,7 @@ REQ count 60 · AC count 66 · RULE count 4 · last sequence per atom (REQ: 60, 
 | RULE-INT-004 | REQ-INT-041 |
 
 ### Decisions
-ADR-INT-010, ADR-INT-011, ADR-INT-012, ADR-INT-013, ADR-INT-016 (new, ACCEPTED); applied ADR-INT-001 … ADR-INT-009. No BLOCKED ADR.
+ADR-INT-010, ADR-INT-011, ADR-INT-012, ADR-INT-013, ADR-INT-016, ADR-INT-020 (new, ACCEPTED — ADR-INT-020 adds REQ-INT-061 … REQ-INT-064 in a revision); applied ADR-INT-001 … ADR-INT-009. No BLOCKED ADR.
 
 ### Event
-P1 completed: INT v1 — 60 REQ · 66 AC · 0 ENT · 4 RULE · 5 SCR-REQ · 5 ADR
+P1 completed: INT v1 — 64 REQ · 74 AC · 0 ENT · 4 RULE · 5 SCR-REQ · 6 ADR (revision: +4 REQ, +8 AC — ADR-INT-020)

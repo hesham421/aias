@@ -13,7 +13,7 @@ Extracted: 0 entities → 0 tables (SRS A3 declares none — ADR-INT-007, ADR-IN
 
 ## 2. DB field traceability matrix
 
-Every row is a READ BINDING (ADR-INT-015): the column belongs to the owner's table, is created and written only by the owner's script and code, and reaches INT only as a value returned by the owner's in-process operation (the Report Store's CON-RPT-003 / CON-RPT-006 over the platform edge INT → RPT; the Service Registry's CON-REG-012 through XM-INT-001). INT creates, alters and writes none of them and never queries the owner's table.
+Every row is a READ BINDING (ADR-INT-015): the column belongs to the owner's table, is created and written only by the owner's script and code, and reaches INT only as a value returned by the owner's in-process operation (the Report Store's CON-RPT-003 / CON-RPT-004 / CON-RPT-006 over the platform edge INT → RPT; the Service Registry's CON-REG-012 and CON-REG-009 through XM-INT-001 — ADR-INT-020). INT creates, alters and writes none of them and never queries the owner's table.
 
 ```yaml name=dbf-matrix
 rows:
@@ -36,10 +36,10 @@ RULE data-source bindings (C6.9): RULE-INT-001 reads ENT-RPT-001.checkStatus (DB
 
 ```yaml name=xm-register
 records:
-  - {id: XM-INT-001, type: SOFT-READ, target_module: REG, target_entity: ENT-REG-002, traces: [REQ-INT-025, REQ-INT-028, REQ-INT-030], state: CONTRACTED, contract_ref: "CON-REG-002", column: "in-process REG interface (CON-REG-012 getApprovalApi) — reads ENT-REG-002.approvalEnabled and ENT-REG-002.approvalApi by serviceCode + versionNumber of the Check, only on the Employee Decision path; no column, no FK"}
+  - {id: XM-INT-001, type: SOFT-READ, target_module: REG, target_entity: ENT-REG-002, traces: [REQ-INT-025, REQ-INT-028, REQ-INT-030, REQ-INT-064], state: CONTRACTED, contract_ref: "CON-REG-002", column: "in-process REG interfaces by serviceCode + versionNumber of the Check — CON-REG-012 getApprovalApi (ENT-REG-002.approvalEnabled, approvalApi) only on the Employee Decision path; CON-REG-009 getServicePackageVersion (required document types of the version, ENT-REG-004 via ENT-REG-002) only on the required-document-types read (ADR-INT-020); no column, no FK"}
 ```
 
-SOFT-READ over the in-process REG interface: INT holds no column that references another module's table (it holds no column at all). The Report Store, the Check Engine and Document Access are reached through their operations (CON-RPT-003, CON-RPT-006, CON-CHK-004, CON-CHK-005, CON-DOC-003) and the Check identifier is held only as a value, as CHK and DOC hold it, so they are the platform edges INT → RPT, INT → CHK and INT → DOC, not XM records (SRS A8; ADR-INT-016).
+SOFT-READ over the in-process REG interface: INT holds no column that references another module's table (it holds no column at all). The Report Store, the Check Engine and Document Access are reached through their operations (CON-RPT-003, CON-RPT-004, CON-RPT-006, CON-CHK-004, CON-CHK-005, CON-DOC-003; Document Access's uploaded-documents listing is pending in its contract — ADR-INT-020 (4)) and the Check identifier is held only as a value, as CHK and DOC hold it, so they are the platform edges INT → RPT, INT → CHK and INT → DOC, not XM records (SRS A8; ADR-INT-016).
 
 ## 4. FULL_DATABASE_SCRIPT
 
@@ -60,9 +60,10 @@ SOFT-READ over the in-process REG interface: INT holds no column that references
 -- BLOCK 10 FUNCTIONS/PROCEDURES : none
 --
 -- XM-INT-001 SOFT-READ — Host Integration's decision handling reads the approval flag and the
--- approval API of the Check's service package version from REG through CON-REG-012, without an FK.
--- Rationale: SRS A8; ADR-INT-008. Risk: a change to the approval API definition requires impact
--- assessment on REQ-INT-025, REQ-INT-028, REQ-INT-030, REQ-INT-031.
+-- approval API of the Check's service package version from REG through CON-REG-012, and the
+-- required-document-types read reads that version's required document types through CON-REG-009,
+-- without an FK. Rationale: SRS A8; ADR-INT-008, ADR-INT-020. Risk: a change to the approval API definition requires impact
+-- assessment on REQ-INT-025, REQ-INT-028, REQ-INT-030, REQ-INT-031, REQ-INT-064.
 -- ════════════════════════════════════════════════════════════════
 ```
 

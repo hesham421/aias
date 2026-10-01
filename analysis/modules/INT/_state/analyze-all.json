@@ -3,11 +3,11 @@
   "version": 1,
   "scope": "all",
   "counts": {
-    "CRITICAL": 3,
-    "MAJOR": 73,
+    "CRITICAL": 0,
+    "MAJOR": 0,
     "MINOR": 16
   },
-  "clean": false,
+  "clean": true,
   "blocking": [
     "CRITICAL",
     "MAJOR"
@@ -33,21 +33,21 @@
     "C7.20 (operation-resolves): the profile declares nothing at `conventions.security_model.actions` \u2014 the operation vocabulary \u2014 this clause enforced nothing"
   ],
   "coverage": {
-    "C0.1": 12,
+    "C0.1": 15,
     "C1.4": 3,
     "C2.2": 10,
     "C3.7": 18,
     "C3.8": 18,
     "C4.4": 12,
     "C4.7": 1,
-    "C5.2": 60,
-    "C5.3": 60,
-    "C5.4": 60,
-    "C5.5": 66,
+    "C5.2": 64,
+    "C5.3": 64,
+    "C5.4": 64,
+    "C5.5": 74,
     "C5.6": 4,
-    "C5.8": 130,
-    "C5.13": 130,
-    "C5.14": 66,
+    "C5.8": 142,
+    "C5.13": 142,
+    "C5.14": 74,
     "C5.15": 0,
     "C5.16": 12,
     "C5.17": 1,
@@ -61,12 +61,12 @@
     "C6.13": 5,
     "C6.14": 5,
     "C6.15": 1,
-    "C7.2": 11,
-    "C7.3": 4,
-    "C7.4": 4,
+    "C7.2": 17,
+    "C7.3": 8,
+    "C7.4": 8,
     "C7.5": 1,
     "C7.5b": 1,
-    "C7.6": 60,
+    "C7.6": 64,
     "C7.22": 0,
     "C7.23": 0,
     "C7.20": 0,
@@ -77,35 +77,32 @@
     "C7.26": 1,
     "C7.27": 14,
     "C7.28": 0,
-    "C7.29": 8,
-    "C7.30": 20,
-    "C7.31": 4,
-    "C9.2": 0,
-    "C9.3": 0,
-    "C9.4": 0,
-    "C9.5": 0,
-    "C9.6": 0,
-    "C9.7": 0,
-    "C9.8": 0,
-    "C9.15": 0,
-    "C9.17": 0,
-    "C9.16": 0,
-    "C9.24": 0,
-    "C9.22": 0,
+    "C7.29": 16,
+    "C7.30": 21,
+    "C7.31": 8,
+    "C9.2": 25,
+    "C9.3": 8,
+    "C9.4": 5,
+    "C9.5": 8,
+    "C9.6": 8,
+    "C9.7": 5,
+    "C9.8": 13,
+    "C9.15": 5,
+    "C9.17": 5,
+    "C9.16": 2,
+    "C9.24": 9,
+    "C9.22": 5,
     "C9.23": 6,
-    "C10.1": 0,
-    "C10.2": 66,
-    "C10.7": 0,
+    "C10.1": 94,
+    "C10.2": 74,
+    "C10.7": 2,
     "C10.8": 0,
     "C10.9": 0,
-    "C10.10": 0,
-    "C10.11": 6,
-    "C13.5": 4
+    "C10.10": 94,
+    "C10.11": 28,
+    "C13.5": 8
   },
   "vacuous": [
-    "C10.1",
-    "C10.10",
-    "C10.7",
     "C10.8",
     "C10.9",
     "C5.15",
@@ -116,19 +113,7 @@
     "C7.22",
     "C7.23",
     "C7.24",
-    "C7.28",
-    "C9.15",
-    "C9.16",
-    "C9.17",
-    "C9.2",
-    "C9.22",
-    "C9.24",
-    "C9.3",
-    "C9.4",
-    "C9.5",
-    "C9.6",
-    "C9.7",
-    "C9.8"
+    "C7.28"
   ],
   "metrics": [
     {
@@ -147,8 +132,8 @@
       "to": [
         "AC"
       ],
-      "total": 60,
-      "covered": 60,
+      "total": 64,
+      "covered": 64,
       "pct": 100.0
     },
     {
@@ -157,9 +142,9 @@
       "to": [
         "API"
       ],
-      "total": 60,
-      "covered": 46,
-      "pct": 76.7
+      "total": 64,
+      "covered": 63,
+      "pct": 98.4
     },
     {
       "id": "req-ux",
@@ -168,9 +153,9 @@
         "SCR",
         "UXD"
       ],
-      "total": 60,
-      "covered": 0,
-      "pct": 0.0
+      "total": 64,
+      "covered": 46,
+      "pct": 71.9
     },
     {
       "id": "ac-tc",
@@ -178,627 +163,19 @@
       "to": [
         "TC"
       ],
-      "total": 66,
-      "covered": 0,
-      "pct": 0.0
+      "total": 74,
+      "covered": 74,
+      "pct": 100.0
     }
   ],
   "findings": [
-    {
-      "severity": "CRITICAL",
-      "clause": "C10.3",
-      "check": "markers",
-      "message": "`backend-test-plan` missing",
-      "artifact": "backend-test-plan",
-      "line": 0
-    },
-    {
-      "severity": "CRITICAL",
-      "clause": "C10.4",
-      "check": "markers",
-      "message": "`frontend-test-plan` missing",
-      "artifact": "frontend-test-plan",
-      "line": 0
-    },
-    {
-      "severity": "CRITICAL",
-      "clause": "C9.1",
-      "check": "markers",
-      "message": "`frontend-execution-plan` missing",
-      "artifact": "frontend-execution-plan",
-      "line": 0
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.11",
-      "check": "package-has-tests",
-      "message": "`PORTS` (PHASE) of `backend-execution-plan` leaves the factory with no test case naming it on its `Package` line \u2014 a package with no acceptance; derive one in `backend-test-plan`, or flag its phase `no_tests` in the profile",
-      "artifact": "backend-test-plan",
-      "line": 0
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.11",
-      "check": "package-has-tests",
-      "message": "`SVC-API` (PHASE) of `backend-execution-plan` leaves the factory with no test case naming it on its `Package` line \u2014 a package with no acceptance; derive one in `backend-test-plan`, or flag its phase `no_tests` in the profile",
-      "artifact": "backend-test-plan",
-      "line": 0
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.11",
-      "check": "package-has-tests",
-      "message": "`XM-INT-001` (XM) of `backend-execution-plan` leaves the factory with no test case naming it on its `Package` line \u2014 a package with no acceptance; derive one in `backend-test-plan`, or flag its phase `no_tests` in the profile",
-      "artifact": "backend-test-plan",
-      "line": 0
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-001` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 89
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-002` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 94
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-003` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 108
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-004` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 122
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-005` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 136
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-006` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 150
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-007` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 164
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-008` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 169
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-009` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 174
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-010` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 179
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-011` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 193
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-012` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 207
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-013` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 221
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-014` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 235
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-015` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 249
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-016` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 263
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-017` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 277
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-018` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 291
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-019` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 305
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-020` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 319
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-021` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 333
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-022` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 347
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-023` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 361
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-024` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 375
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-025` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 389
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-026` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 403
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-027` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 417
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-028` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 431
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-029` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 445
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-030` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 459
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-031` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 473
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-032` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 487
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-033` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 501
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-034` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 515
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-035` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 529
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-036` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 543
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-037` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 557
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-038` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 571
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-039` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 585
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-040` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 590
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-041` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 604
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-042` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 618
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-043` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 632
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-044` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 646
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-045` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 660
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-046` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 674
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-047` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 688
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-048` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 702
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-049` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 716
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-050` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 730
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-051` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 744
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-052` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 758
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-053` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 772
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-054` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 786
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-055` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 791
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-056` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 805
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-057` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 819
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-058` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 833
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-059` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 847
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-060` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 861
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-061` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 875
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-062` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 889
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-063` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 903
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-064` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 917
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-065` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 931
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C10.2",
-      "check": "orphans",
-      "message": "`AC-INT-066` is referenced by 0 of ['TC'], needs \u22651",
-      "artifact": "",
-      "line": 945
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C9.2",
-      "check": "traces",
-      "message": "`frontend-execution-plan` missing",
-      "artifact": "frontend-execution-plan",
-      "line": 0
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C9.23",
-      "check": "publication-fresh",
-      "message": "`api-specs` in the project repo is stale \u2014 api-spec-int.yaml differ from what the factory derives now. Run `gov.py publish` (the version, split and gate steps do it themselves)",
-      "artifact": "governance-shared/backend/modules/INT/packages/api-spec-int.yaml",
-      "line": 0
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C9.23",
-      "check": "publication-fresh",
-      "message": "`build-order` in the project repo is stale \u2014 status.1 differ from what the factory derives now. Run `gov.py publish` (the version, split and gate steps do it themselves)",
-      "artifact": "governance-shared/platform/build-order.json",
-      "line": 0
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C9.8",
-      "check": "registry-agree",
-      "message": "registry `registry-exec-fe` missing",
-      "artifact": "registry-exec-fe",
-      "line": 0
-    },
     {
       "severity": "MINOR",
       "clause": "C5.13",
       "check": "ambiguity",
       "message": "`AC-INT-011` uses 'could' \u2014 a word two implementers read two ways; state the measure, the set or the rule instead",
       "artifact": "srs",
-      "line": 193
+      "line": 194
     },
     {
       "severity": "MINOR",
@@ -806,7 +183,7 @@
       "check": "ambiguity",
       "message": "`AC-INT-012` uses 'could' \u2014 a word two implementers read two ways; state the measure, the set or the rule instead",
       "artifact": "srs",
-      "line": 207
+      "line": 208
     },
     {
       "severity": "MINOR",
@@ -814,7 +191,7 @@
       "check": "ambiguity",
       "message": "`AC-INT-019` uses 'etc' \u2014 a word two implementers read two ways; state the measure, the set or the rule instead",
       "artifact": "srs",
-      "line": 305
+      "line": 306
     },
     {
       "severity": "MINOR",
@@ -822,7 +199,7 @@
       "check": "ambiguity",
       "message": "`REQ-INT-048` uses 'could' \u2014 a word two implementers read two ways; state the measure, the set or the rule instead",
       "artifact": "srs",
-      "line": 763
+      "line": 764
     },
     {
       "severity": "MINOR",
@@ -830,7 +207,7 @@
       "check": "ambiguity",
       "message": "`REQ-INT-057` uses 'may' \u2014 a word two implementers read two ways; state the measure, the set or the rule instead",
       "artifact": "srs",
-      "line": 894
+      "line": 895
     },
     {
       "severity": "MINOR",
@@ -838,7 +215,7 @@
       "check": "ac-measurable",
       "message": "`AC-INT-020` `Then: the document type choices are exactly TRANSCRIPT and ID_CARD` names no number, limit, id or enumerable outcome \u2014 no test can fail it; say what is created, rejected, returned or shown, and how much",
       "artifact": "srs",
-      "line": 319
+      "line": 320
     },
     {
       "severity": "MINOR",
@@ -846,7 +223,7 @@
       "check": "ac-measurable",
       "message": "`AC-INT-033` `Then: the host receives no Approval API call` names no number, limit, id or enumerable outcome \u2014 no test can fail it; say what is created, rejected, returned or shown, and how much",
       "artifact": "srs",
-      "line": 501
+      "line": 502
     },
     {
       "severity": "MINOR",
@@ -854,7 +231,7 @@
       "check": "ac-measurable",
       "message": "`AC-INT-037` `Then: the host receives exactly one call` names no number, limit, id or enumerable outcome \u2014 no test can fail it; say what is created, rejected, returned or shown, and how much",
       "artifact": "srs",
-      "line": 557
+      "line": 558
     },
     {
       "severity": "MINOR",
@@ -862,7 +239,7 @@
       "check": "ac-measurable",
       "message": "`AC-INT-059` `Then: the document upload and the upload confirmation are offered and the de` names no number, limit, id or enumerable outcome \u2014 no test can fail it; say what is created, rejected, returned or shown, and how much",
       "artifact": "srs",
-      "line": 847
+      "line": 848
     },
     {
       "severity": "MINOR",
@@ -876,7 +253,7 @@
       "severity": "MINOR",
       "clause": "C5.16",
       "check": "feature-unwanted",
-      "message": "`US-INT-004` is covered by 4 requirement(s) and none states an `unwanted` path \u2014 what the system does when the input, state or sequence is wrong is unspecified for this feature",
+      "message": "`US-INT-004` is covered by 6 requirement(s) and none states an `unwanted` path \u2014 what the system does when the input, state or sequence is wrong is unspecified for this feature",
       "artifact": "srs",
       "line": 38
     },
@@ -900,7 +277,7 @@
       "severity": "MINOR",
       "clause": "C5.16",
       "check": "feature-unwanted",
-      "message": "`US-INT-011` is covered by 2 requirement(s) and none states an `unwanted` path \u2014 what the system does when the input, state or sequence is wrong is unspecified for this feature",
+      "message": "`US-INT-011` is covered by 6 requirement(s) and none states an `unwanted` path \u2014 what the system does when the input, state or sequence is wrong is unspecified for this feature",
       "artifact": "srs",
       "line": 101
     },
@@ -916,9 +293,9 @@
       "severity": "MINOR",
       "clause": "C5.17",
       "check": "glossary",
-      "message": "`job` appears 1\u00d7 where the glossary term is `Check` (lines 427)",
+      "message": "`job` appears 1\u00d7 where the glossary term is `Check` (lines 428)",
       "artifact": "srs",
-      "line": 427
+      "line": 428
     }
   ],
   "provenance": {
@@ -930,35 +307,47 @@
     "resolvable": [
       "api-spec",
       "backend-execution-plan",
+      "backend-test-plan",
       "business-policies",
       "contract",
       "db-script",
       "domain-profile",
+      "flow-diagram",
+      "frontend-execution-plan",
+      "frontend-test-plan",
       "module-registry",
       "platform-summary",
       "prd",
       "project-registry",
       "registry-db",
       "registry-exec-be",
+      "registry-exec-fe",
       "registry-srs",
-      "srs"
+      "srs",
+      "ui-ux-spec"
     ],
     "inputs": {
-      "api-spec": "ba85ff2f9819ddf52494b1d23291ecb46a05d5a97593eb329ab7081936330cc1",
-      "backend-execution-plan": "7f7d715c62424b6a466b394f79d165c5d2c2576ffaf16022a76bb96d8c4451bb",
+      "api-spec": "e6c2a43bc53d93f5c425e679ada03108f2fe68185619762b5aaeea6a6ae3cc0b",
+      "backend-execution-plan": "2a6edbf10444003c29b3d40330bbd16248d91ebf5117d99492b7b279eec28506",
+      "backend-test-plan": "41e46cbeb2aa498eb686beb783a8b753fc1ab26cd52053c69e132a664999e718",
       "business-policies": "b3d3c54c9491ed1e4dd712c776861a342ebdbf00781122e295730f38ca465118",
-      "contract": "57107c7a3c3e434d8991c9d4614cd204f106136fdb008562416e84fe44b919b7",
-      "db-script": "ba000c15e7f63d30aedb46cdc617d35308eb1a30f4b0cf097096fde12b34f4ab",
+      "contract": "7cfb87f1809ce3a686ba68ac51c176c6bbc498af3c6ffe7c7c15e2ca62b95d7d",
+      "db-script": "7590b37229f64856fc2dfa4d95ea83a289112ca7aa4215c53b25f73a9b766d6c",
       "domain-profile": "c9ffe7c45c917c5793e15b6fbc7151ccc4b9181c36a5aaf1ce2f15f6849e3cbd",
+      "flow-diagram": "07ac104ef2394998cf482d29d28ac12e130b4d8b6df5618e3898da177103648d",
+      "frontend-execution-plan": "aec8af337a7baccbfcca5e8909b83bb12f204a82cd03268c72ad58d70b37c9d2",
+      "frontend-test-plan": "2b1724dd89d0241d84f62da93313a3bb57d54bdd7e8f1f8fafbdb256a0c622d0",
       "module-registry": "88bb2f37bcfca903bb7b7847860c342cb5c9d59eca14dafffedf5fb84e6075a6",
       "platform-summary": "f37b801d053b9f3fc47378f11eee1d9a8350520a0ae1db83d39d19133c46ddfc",
       "prd": "d39662755a943b101ca970c40fb6b50438c24238f6a7e9e78d70be208445ad5c",
       "project-registry": "7652329cae1b5e14558ead423c4a0d157fcf3aead94176473c23adb034161a82",
       "registry-db": "debc0367bd2d407a947d278fe17423107847ef426d16cb1442b7cb235273278e",
-      "registry-exec-be": "51eb9d86fec3d3c83ce7629ca40dd100285e28e56974eb03ba2ba1e454d04151",
-      "registry-srs": "dad527a2ccef01ebc49564b6bbd474cc18487bd6eb33cbc81408d5321b0e410a",
-      "srs": "14d09173ba93a08503be5f2b54872be2ef2fb3c01082ec8594fb034c1981bcca"
+      "registry-exec-be": "62b143db6248cb2cc29c9a7c03e0dcf3105f5146f20e54cdd2848b3fe8d209d8",
+      "registry-exec-fe": "ba817d01543b57614474d40d7752ba96cb55b222112086a398764d7f528cef19",
+      "registry-srs": "ca156ef15f984f939c315a3a72df5d7874bf7c458b70afdc9117d42b55d804ca",
+      "srs": "f6fbdf9aa7884aa1a132818ba5f31625126981455cefdc18e6fa42e4330ca99a",
+      "ui-ux-spec": "14691f89a9605767ee67982c0cd3bac67bde2541a87fbc669d648846e1a837d2"
     },
-    "at": "2026-10-01T14:11:12+00:00"
+    "at": "2026-10-01T14:46:41+00:00"
   }
 }

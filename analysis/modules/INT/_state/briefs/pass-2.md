@@ -1,0 +1,5773 @@
+# PASS 2 — module INT v1 — bundled session (2 stages, one commit per stage)
+
+- `P3.2` Frontend — UX Design + Execution Plan — questions forbidden
+- `P4` Test Plan — questions forbidden
+
+==============================================================================
+# BRIEF — stage `P3.2` (Frontend — UX Design + Execution Plan) · module INT · v1 · profile `aias`
+
+Lane `analysis` · implementer ['claude:opus'] · effort high · round 1
+
+## Rules that bind this run
+- Questions: **forbidden**. A `[QUESTION]` block is refused. Ambiguity → ADR in `analysis/decisions/INT/` (`ADR-{MOD}-{seq:03d}.md`): non-breaking → continue; breaking → status BLOCKED and stop.
+- Owns IDs: UXD, SCR — ID grammar `{prefix}-{MOD}-{seq}` (seq width 3); never re-number, never restart a sequence.
+- ADRs continue the module's stream: the next free id is `ADR-INT-018`; an existing ADR is never rewritten under its id.
+- Read only what this brief contains (generated current state); never open version folders yourself.
+- Write exactly these files (complete files):
+- `governance-shared/analysis/modules/INT/P3_2/flow-diagram-int.md`
+- `governance-shared/analysis/modules/INT/P3_2/ui-ux-spec-int.md`
+- `governance-shared/analysis/modules/INT/P3_2/frontend-execution-plan-int.md`
+- `governance-shared/analysis/modules/INT/P3_2/registry-exec-fe-int.md` (registry)
+- Write the files directly into the project checkout (you are the operator); the orchestrator reads them on `--complete`.
+
+## Contracts checked by `gov.py analyze` after this stage
+- **C8** API document (the backend plan's endpoints) → frontend: C8.1 exists {'artifact': 'api-spec'} [CRITICAL]
+- **C9** frontend design + execution plan → split: C9.1 markers {'artifact': 'frontend-execution-plan', 'track': 'frontend', 'plan': 'exec'} [CRITICAL]; C9.2 traces {'from': 'frontend-execution-plan', 'blocks': ['PHASE', 'SUB'], 'min': 1} [MAJOR]; C9.3 traces {'from': 'UXD', 'to': ['REQ', 'AC'], 'min': 1} [MAJOR]; C9.4 traces {'from': 'SCR', 'to': ['REQ', 'UXD'], 'min': 1, 'mode': 'any'} [MAJOR]; C9.5 traces {'from': 'frontend-execution-plan', 'to': ['API'], 'defined_in': 'api-spec'} [CRITICAL]; C9.6 orphans {'kind': 'UXD', 'referenced_by': ['frontend-execution-plan'], 'min': 1} [MAJOR]; C9.7 orphans {'kind': 'SCR', 'referenced_by': ['frontend-execution-plan'], 'min': 1} [MAJOR]; C9.8 registry-agree {'artifact': ['ui-ux-spec', 'frontend-execution-plan'], 'registry': 'registry-exec-fe', 'kinds': ['UXD', 'SCR']} [MAJOR]; C9.9 ids-owned {'stage': 'P3.2'} [CRITICAL]; C9.10 no-questions {'stage': 'P3.2'} [CRITICAL]; C9.11 ids-continue {'stage': 'P3.2'} [CRITICAL]; C9.13 xref-surface {'artifact': ['frontend-execution-plan'], 'locator': 'stack.backend.api.base_path', 'kinds': ['API']} [MAJOR]; C9.14 languages {'stage': 'P3.2'} [MAJOR]; C9.15 screen-states {'artifact': 'ui-ux-spec', 'kind': 'SCR', 'spec': 'analyze.maturity.screen_states'} [MINOR]; C9.17 screen-composition {'artifact': 'ui-ux-spec', 'kind': 'SCR', 'spec': 'analyze.maturity.screen_composition', 'when': 'profile.conventions.screen_composition'} [MINOR]; C9.16 glossary {'artifact': ['flow-diagram', 'ui-ux-spec'], 'glossary': 'vocabulary.glossary', 'synonyms': 'vocabulary.glossary_synonyms'} [MINOR]; C9.24 ux-reads-spec {'plan': 'frontend-execution-plan', 'spec': 'api-spec', 'reads': 'analyze.plan_reads', 'kind': 'API', 'screen': 'SCR'} [CRITICAL]; C9.22 composition-rule {'artifact': 'ui-ux-spec', 'plan': 'frontend-execution-plan', 'kind': 'SCR', 'spec': 'analyze.maturity.screen_composition', 'reads': 'analyze.plan_reads', 'when': 'profile.conventions.screen_composition'} [MAJOR]; C9.23 publication-fresh {'when': 'factory.publications'} [MAJOR]; C9.12 verdict-agrees {'artifact': ['frontend-execution-plan'], 'spec': 'self_check', 'when': 'profile.self_check'} [CRITICAL]
+
+## Blocks this stage emits — each a ```yaml name={name} fence, held to its schema by C0.1 (`gov.py analyze`)
+- `self-check` in `backend-execution-plan`, `frontend-execution-plan` (optional) — JSON Schema, verbatim:
+  ```json
+  {"$schema":"https://json-schema.org/draft/2020-12/schema","title":"self-check","description":"an execution plan's verdict about itself — written by the orchestrator from the analyze report, never by the author (analyze: verdict-agrees)","type":"object","required":["findings","clean"],"additionalProperties":false,"properties":{"findings":{"type":"integer","minimum":0},"clean":{"type":"boolean"},"examined_nothing":{"type":"array","items":{"type":"string"}}}}
+  ```
+- `api-surface` in `frontend-execution-plan` — JSON Schema, verbatim:
+  ```json
+  {"$schema":"https://json-schema.org/draft/2020-12/schema","title":"api-surface","description":"P3.2 frontend plan §3.0: the API document the plan is bound to and a mock server serves (`mock`), the REQ → API bindings, the operations mapped to nothing, and the runtime code → RULE links","type":"object","required":["mock"],"additionalProperties":false,"properties":{"mock":{"type":"string","minLength":1},"bindings":{"type":"array","items":{"type":"object","required":["req","api"],"additionalProperties":false,"properties":{"req":{"type":"string","pattern":"^[A-Z][A-Z0-9-]*-[A-Z][A-Z0-9]*-\\d{3,}$"},"api":{"type":"array","items":{"type":"string","pattern":"^[A-Z][A-Z0-9-]*-[A-Z][A-Z0-9]*-\\d{3,}$"}}}}},"unmapped":{"type":"array","items":{"type":"string"}},"codes":{"type":"array","items":{"type":"object","required":["code","rule"],"additionalProperties":false,"properties":{"code":{"type":"string"},"rule":{"type":"string","pattern":"^[A-Z][A-Z0-9-]*-[A-Z][A-Z0-9]*-\\d{3,}$"}}}}}}
+  ```
+- `screen-hooks` in `frontend-execution-plan` (one per screen) — JSON Schema, verbatim:
+  ```json
+  {"$schema":"https://json-schema.org/draft/2020-12/schema","title":"screen-hooks","description":"P3.2 frontend plan, one per screen SUB of the data phase: what the screen reads and mutates, each hook bound to the API operation(s) it calls (analyze: ux-reads-spec)","type":"object","required":["screen","hooks"],"additionalProperties":false,"properties":{"screen":{"type":"string","pattern":"^[A-Z][A-Z0-9-]*-[A-Z][A-Z0-9]*-\\d{3,}$"},"hooks":{"type":"array","items":{"type":"object","required":["hook","kind"],"additionalProperties":false,"properties":{"hook":{"type":"string","minLength":1},"kind":{"type":"string","enum":["read","mutation","lookup","init","facade"]},"api":{"type":"array","items":{"type":"string","pattern":"^[A-Z][A-Z0-9-]*-[A-Z][A-Z0-9]*-\\d{3,}$"}},"cache_key":{"type":"string"},"errors":{"type":"string"},"loading":{"type":"string"},"invalidation":{"type":"string"}}}}}}
+  ```
+
+---
+# ENGINE
+```
+ENGINE        : P3.2 — Frontend — UX Design + Execution Plan
+PASS / TRACK  : pass 2 · track frontend · lane analysis · questions forbidden
+MODULE        : INT · v1 · profile aias (Request Verification Service)
+READS         : srs · prd · api-spec · registry-srs · registry-exec-be
+                (_state/ for current state — `_state/current-api-spec.yaml` is the API surface: the backend PLAN's document, not a delivered backend)
+PRODUCES      : flow-diagram-int.md · ui-ux-spec-int.md · frontend-execution-plan-int.md · registry-exec-fe-int.md   — ONE run, ONE input set
+OWNS IDS      : UXD, SCR
+NEXT          : P4   (the orchestrator owns the completion protocol — shared/GOVERNANCE-CORE.md)
+BOUNDARY      : analysis-only — design artifacts and specifications, not a build [G]
+```
+
+# Frontend — UX Design + Execution Plan — engine reference
+
+## 0. Position and authority
+
+One engine, one run, two internal parts that share the same input set:
+
+- **Part A — UX design** (§2): from the SRS (functional ceiling) and the PRD (priority and
+  intent) it produces the flow diagram and the ui-ux-spec, minting `SCR-*` and `UXD-*`.
+- **Part B — frontend execution plan** (§3): bound to the API surface in `_state/current-api-spec.yaml` —
+  the OPENAPI 3.1.0 document the backend stage DERIVED from its plan
+  (`factory.api_spec`, proved against the plan by C7.29–C7.31). No backend is built, delivered
+  or fetched before this stage runs: the frontend executor serves the same document from a
+  mock server, and `api-verify` later holds what the backend publishes to it.
+
+Authority order: SRS `REQ/AC` are the functional ceiling; the API document is the only source [C:C9.5]
+for endpoint shape; the PRD informs sequencing and priority; Part A's spec is strong design
+intent for Part B — not a licence to add a field, rule or permission the SRS does not [G]
+have. A conflict is a finding (ADR — §7), not a silent resolution. The backend execution [G]
+plan's prose is **never** read as an API source (it may be opened for `DBF`/catalog code [C:C9.5]
+lookup only) — the document is the one statement of an endpoint's shape. [C:C9.5]
+
+Questions are `forbidden`. Ambiguity → `factory.yaml → ambiguity` (§7). No human
+approval sits inside this engine: the human decision is the `P4` gate.
+
+**Delta versions** (v2+) emit only ADDED / MODIFIED / REMOVED blocks + [C:C12.2]
+`change-manifest.md` against `_state/`; `SCR/UXD` sequences continue,
+never renumbered. Rules: shared/VERSIONING.md. [C:C9.11]
+
+## 1. Inputs and entry check
+
+| Input | Read from | Use |
+|---|---|---|
+| `srs` | `_state/current-srs.md` | REQ/AC (EARS + Given/When/Then), ENT, RULE with messages, screen entries, permission matrix, lookup keys |
+| `prd` | `_state/current-prd.md` | US-* priority, intent, navigation expectations |
+| `api-spec` | `_state/current-api-spec.yaml` | every operation by `x-api-id`: method, path, parameters, request/response schemas, error responses with their catalog codes (`x-error-codes`), paging (`x-paginated`), the security scheme |
+| `registry-srs` | `_state/current-registry-srs.md` | ID ranges, screen entries, shared entities |
+| `registry-exec-be` | `_state/current-registry-exec-be.md` | API-* ranges, catalog codes, XM status, permission names declared by the backend plan |
+
+Entry: the orchestrator refuses the stage while `api-spec` is absent (C8.1) — this [T:inputs-missing]
+engine does not re-gate. It does run one **reconciliation of the API document against the
+SRS** (§3.0) before any F-content.
+
+## 2. Part A — UX design (flow diagram + ui-ux-spec)
+
+### A.0 Role
+
+Translate the approved functional truth into navigation and component **intent**. Never
+invent scope, business rules or permissions; do not fix an SRS↔PRD contradiction by choosing [G]
+an interpretation (§7 decides). Final component names, code and routing are Part B's.
+
+### A.1 Screens — `SCR-*`
+
+Mint one `SCR-*` per screen the SRS declares (`SCR-INT-{seq}`,
+traces → REQ + UXD).
+`profile.conventions.composite_screen` is not set: each SRS screen entry is one `SCR-*`.
+
+### A.2 Flow diagram — `flow-diagram-int.md`
+
+One flow block per navigation path (identified by its starting `SCR-*` + a short name; flows
+carry no atom of their own):
+```
+FLOW — <name>                                   traces=US-INT-<seq>,REQ-INT-<seq>,SCR-INT-<seq>
+Screens   : SCR-INT-<seq> [, SCR-INT-<seq> …]
+Sequence  : <entry> → <screen A> → <screen B> → <exit>
+Trigger   : <what gets the user here>
+Priority  : <from the PRD, if stated>
+```
+Every flow cites a `US-*` **and** an `SCR-*`. A flow with no SRS-backed screen is inventing
+navigation → ADR, not silently included.
+
+### A.3 UI/UX spec — `ui-ux-spec-int.md`
+
+One block per `SCR-*`, fields and permissions copied from the SRS (no additions, no omissions):
+```
+## SCR-INT-<seq> — <name>                 traces=REQ-INT-<seq>,AC-INT-<seq>[,UXD-INT-<seq>]
+UI pattern        : <from the SRS screen entry — do not change>
+Sub-views         : as the SRS declares
+Fields shown      : <every SRS field of the owning ENT the screen RENDERS — label per language (en/ar), read-only flags; an id carried only to navigate to another screen goes on the Navigation line, not here> [G]
+Composition       : container <page | drawer> · <part> → <none | inline | summary row + second level> · submits: one
+ [G]Permissions       : <SRS matrix rows for this screen — reference only>
+Cross-module data : <field → UXD-INT-<seq> (owner module)> | none
+Navigation        : <routes; every jump to or from another SCR with the exact filter it seeds> | none
+States            : empty · loading · error (generic — catalog codes are Part B's) · offline (if the SRS says so)
+```
+
+### A.4 One screen, one job, one submit — the `Composition` line
+
+`profile.conventions.screen_composition` is set, so every `SCR-*` block commits to a placement.
+A screen opened to create or edit ONE record has ONE save. Secondary detail — an entity picker,
+a repeating child-row editor, a permissions matrix, an attachment list, a tag selector — is a
+SECOND job, and this line says where it goes:
+
+- `none` — the screen has no secondary detail (a report, a search, a confirmation). Still an answer.
+- `inline` — only when it is SHORTER than the primary field group and adds no save of its own. [G]
+- `summary row + second level` — otherwise. The record's surface keeps a label, an edit trigger and
+  a capped preview; the picking happens in a second-level view opened from that row. Four
+  properties that view must have, stated here because each one failed in the field:
+  1. it RETURNS A VALUE and does not save — confirm feeds the screen's own form state, cancel [G]
+     discards a local draft, and the ONE save stays where the screen's primary action already is;
+  2. its open state lives where the rest of the application's navigation state lives, so going back
+     closes it, dismissing closes only it, and a deep link opens it; [G]
+  3. it carries no scroll region of its own — the list scrolls with the body it sits in;
+  4. it renders as a SIBLING of the first level, not inside its element. [G]
+
+A screen whose parts differ names more than one: a full-page form can hold its child collection
+`inline` and still open a `second level` for a picker over an unbounded set. Name each part.
+
+**The container decides the collection's place.** The line opens with `container <kind>`
+— where the record is created and edited — and every part that is a child collection
+takes the place that container prescribes:
+- `page` → the collection is `inline`: a record page keeps its header inline and its child collection in a pane beneath it; one child line is added in a one-line drawer. A screen whose routes carry `/new` or `/:` is a `page`.
+- `drawer` → the collection is `summary row`: an entry drawer shows the collection as a summary row and edits it in a second-level drawer that returns the set.
+A journal entry edited on a route page was once given the drawer shape (summary row + lines drawer);
+the implementer kept the project's page rule and recorded the contradiction. A departure from the
+container's shape is an ADR, never a silent choice; `analyze` (composition-rule) refuses the mismatch. [C:C9.22]
+
+Never two saves on one screen; never a height-capped scrolling region inside a surface that already [C:C9.17]
+scrolls; no inline control taller than the fields beside it. These three are one defect wearing [G]
+three faces, and the third is the one a user loses work to: an administrator set a subject's
+assignments in an inline picker that carried its own save, pressed the screen's Save, and left
+believing both had been saved.
+
+Collapsing two saves into one can leave a single action owning TWO calls (update the record, then
+replace its child set). Part B (RF2) declares them ORDERED — the second sent only after the first [G]
+succeeded, so a rejected update cannot leave the record carrying children not saved with it — and [G]
+declares that the second is not sent at all when the child set is unchanged.
+
+
+### A.5 Cross-module display dependencies — `UXD-*`
+
+`UXD-*` (`UXD-INT-{seq}`, traces → REQ + AC)
+names an application-layer need: a screen owned by **this** module displays data whose
+authoritative source is another module's real API. It is minted the moment such a field is
+drafted, keyed by the module owning the **screen**, recorded in the spec block and in the
+registry. It is not a DB constraint, shares nothing with `XM-*`, and never appears in [C:C7.7]
+backend artifacts.
+
+Lifecycle: minted here → cited (never reassigned) by the F-blocks of Part B → verified at the [C:C9.9]
+`P4` gate by `gov.py analyze`: every `UXD-*` must be referenced by an F-block and
+every referenced one must exist (unreferenced or dangling = MAJOR).
+
+### A.6 Reconciliation self-check (SRS B1–B4 ↔ draft) — no human gate
+
+Run before Part B, on the whole draft:
+```
+RECONCILIATION — INT v1
+B1 every US-* used in a flow has an SRS counterpart (REQ/AC/screen)   → none: ADR (no invented screen), flow excluded
+B2 no RULE-* contradicts a flow/spec outcome                           → contradiction: both texts verbatim in an ADR (breaking → BLOCKED)
+B3 every field/permission on a screen exists in the SRS               → extra: removed; missing: added
+B4 every screen entry of the SRS has exactly one SCR-* block          → gap: block added [G]
+RESULT  reconciled <n> · reworked <n> (bounded to flagged blocks) · ADRs <list>
+```
+
+## 3. Part B — frontend execution plan
+
+### 3.0 Binding to the API document
+
+Before writing any phase, bind this plan to `_state/current-api-spec.yaml`. Record only what exists in [G]
+neither source alone — the shapes stay in the document, cited by `API-*` id (its
+`x-api-id`), not restated: [G]
+ONE block (data, not prose — `gov.py analyze` → `ux-reads-spec` reads `mock`; C0.1 holds it to its schema):
+```yaml name=api-surface
+mock: api-spec-int.yaml                         # the document the frontend executor's mock server serves (C9.24)
+bindings:                                       # the binding only; method, path, request/response schema, paging and envelope are read in the document, not copied here [G]
+  - {req: REQ-INT-<seq>, api: [API-INT-<seq>]}
+unmapped: []                                    # a REQ needing an operation that has none · an operation mapping to no REQ → ADR
+codes:                                          # runtime error code (x-error-codes) → RULE — the link neither the document nor the SRS carries
+  - {code: "<code>", rule: RULE-INT-<seq>}
+```
+Reconcile once against the SRS: every REQ that needs an operation has one (missing/renamed
+→ ADR — naming diffs continue, a missing core operation is breaking); every operation maps
+to a REQ (unknown → ADR, not silently used). A value not in the document is not [G]
+invented — mark `PENDING ADR-<id>`: the gap belongs to the backend plan the document was
+derived from, and the ADR names it.
+
+### 3.1 Markers, thresholds, traces
+
+Grammar: `factory.markers` (schema v2, syntax `html-comment`) —
+`<!-- KIND:ID:START [traces=…] -->` … `<!-- KIND:ID:END -->`. Kinds allowed in a `frontend` execution plan:
+
+| Kind | Level | Allowed parents | Notes |
+|---|---|---|---|
+| `PHASE` | 1 | — (top level) [T:marker-foreign-kind] | keys from `profile.tracks.<track>.plans.<plan>.phases` |
+| `SUB` | 2 | PHASE [T:marker-foreign-kind] | id = `{PHASE-KEY}-{SCR-ID}` — always phase-qualified |
+
+- No atom kind is carried by this track: `API-*` and `XM-*` are backend-owned and only cited. [C:C9.9]
+  The unit of addressing here is the **SUB per screen** in `sub_bearing` phases.
+- `traces=` on **every** PHASE and SUB block: the
+  `REQ/AC/API/UXD/SCR` IDs the block implements (grammar `{prefix}-{MOD}-{seq}`,
+  3-digit seq). A PHASE traces to the union of its SUBs.
+- The same screen legitimately appears under several phases; without the `{PHASE-KEY}-`
+  prefix the SUB ids would collide — the prefix is mandatory, always. [T:sub-unqualified]
+- First line of a phase = its START marker; last = END. Threshold checked **while** writing.
+  Unknown key → the toolkit refuses (`refuse`). [T:phase-unknown]
+- Headings with the word PHASE use a profile key only; index, ALIGN table (unless a phase), [T:phase-unknown]
+  registry and hand-off are trailing content after the last END. Protocol: shared/MARKER-PROTOCOL.md.
+
+Phase table for `profile.tracks.frontend.plans.exec` (plan order):
+
+| # | Key | Display | Split rule | Per-screen SUB |
+|---|---|---|---|---|
+| 1 | `F1` | F1 — Models & Types [T:never-split] | always — one SUB per screen | yes — `SUB:F1-SCR-INT-<seq>` |
+| 2 | `F2` | F2 — Data Hooks [T:never-split] | always — one SUB per screen | yes — `SUB:F2-SCR-INT-<seq>` |
+| 3 | `F3` | F3 — Forms & Validators [T:never-split] | always — one SUB per screen | yes — `SUB:F3-SCR-INT-<seq>` |
+| 4 | `F4` | F4 — Screens & Routes [T:never-split] | always — one SUB per screen | yes — `SUB:F4-SCR-INT-<seq>` |
+| 5 | `ALIGN-FE` | ALIGN-FE [T:never-split] | never split | no |
+
+
+### 3.2 Content roles
+
+The profile names the phases; the engine supplies content **by role**, matched on the words
+in the phase display ("Models & Types", "Data Hooks", "Screens & Routes",
+security, alignment). A phase matching no role is filled as the profile describes it. Stack
+facts come from `profile.stack.frontend`: framework `react-ts-vite`; libraries — routing: `react-router`, server-state: `tanstack-query`, forms: `react-hook-form`, validation: `zod`; lazy chunk per `screen`.
+
+**RF1 — Models & types.**
+Field/DTO binding : see `_state/current-api-spec.yaml` — the request/response schemas of this module's
+                     operations are the source, not restated here.
+
+**RF2 — Data hooks.** Declares WHAT each screen needs from the API — not hook code. One `screen-hooks`
+block per screen SUB (data, not prose — `gov.py analyze` → `ux-reads-spec` reads it; C0.1 holds it to its schema);
+a hook whose `kind` is `read` binds an operation of the document:
+```yaml name=screen-hooks
+screen: SCR-INT-<seq>
+hooks:
+  - {hook: <role>-QUERY, kind: read, api: [API-INT-<seq>], cache_key: "[resource, filters]", errors: "<code → routing>", loading: NONE, invalidation: "—"}
+  - {hook: <role>-SAVE, kind: mutation, api: [API-INT-<seq>], invalidation: "<keys refreshed on success>"}
+```
+The prose beside each block explains the row roles:
+```
+### <role>-QUERY — API-INT-<seq>            traces=API-…,REQ-…
+Kind (read query | mutation) — method, path and request/response schema are cited by the API-* id above (an operation of api-spec-int.yaml — C9.24), never restated [C:C9.24]
+Cache key    : [resource, filters] — every filter that changes the response is in the key
+Errors       : catalog code → routing (field validation → inline · business rule → user message · unauthenticated → login · forbidden → unauthorized · server → generic) [G]
+Loading      : NONE | LOCAL | GLOBAL (GLOBAL only when the SRS says the call is slow → ADR) [G]
+Cache policy : defaults | <stale/gc values> (deviation → ADR)
+Invalidation : keys refreshed on success (mutations declare this) [G]
+### <role>-LOOKUP — <lookup key>     endpoint · key · options shape (code + label per language) · ONE hook per key, shared across screens · long-lived cache
+### <role>-SCREEN-INIT — SCR-INT-<seq>   permission read for the screen · lookups used · entity-by-id when editing
+### <role>-FACADE — SCR-INT-<seq>         composes the queries above · state it owns (list from query data, selection, filters incl. page/size, derived loading) · imperative operations (create/update/deactivate with usage check first)
+```
+**What a screen must be able to READ.** Every read row binds an operation of the document
+(`ux-reads-spec`): a control that chooses a foreign record has the read that feeds it in the same
+table, a foreign id the screen renders has the read that labels it, a child option list names the
+parent it is scoped by, a cross-screen jump seeds a filter that identifies ONE record. None of
+these four is checked mechanically any more (ADR-FACTORY-003) — state them in the table, and the
+gate's adversarial reading looks for them.
+5. **A routed refusal carries its words** (msg-bound). Every server code routed to a control in the
+   `Errors` column is bound to its text by reference, in every language the catalogue carries:
+   `CODE → inline on <field>, text: <RULE-INT-<seq> message (SRS) | catalogue CODE>`. Routing
+   without the text leaves each implementer to write it — and a test quoting the SRS to disagree.
+
+State rule: page and page size live **inside** the filter object that forms the cache key —
+not as independent state. Components use the facade only; the facade uses the declared [G]
+queries only (server-state library: `tanstack-query`). [G]
+
+**RF4 — Screens & routes.** One block per `SCR-*`:
+```
+### <role>-SCREEN — SCR-INT-<seq>            traces=REQ-…,UXD-…,API-…
+Guard        : every route element guarded by its permission [G]
+Facade       : the RF2 facade of this screen · pages do not call queries directly [G]
+Cross-module : UXD-* cited for every foreign-data field (missing → ADR, never minted here) [C:C9.9]
+Composition  : the spec's `Composition` line resolved to components — a `second level` is its own
+               component, a SIBLING of the first, opened from navigation state and not from a [G]
+               boolean the screen holds; its value returns to the screen's form state
+Saves        : ONE. When it owns two calls, they are ordered and the second is skipped unchanged
+```
+
+**RF5 — Security (frontend half).** [G] No security model in the profile: write "no permission model — screens open per the SRS" and cite the REQs.
+
+**RF6 — Alignment.** The ALIGN table (§4) as the alignment-role phase content (never [T:never-split]
+split); trailing content if the profile has no such phase.
+
+### 3.3 Phase-by-phase
+
+#### PHASE 1 — `F1` (F1 — Models & Types)
+- `<!-- PHASE:F1:START traces=… -->` … `<!-- PHASE:F1:END -->`; content = the roles whose words appear in "F1 — Models & Types", else as the profile describes.
+- [C:C9.7] Per-screen SUB: `<!-- SUB:F1-SCR-INT-<seq>:START traces=… -->` for **every** `SCR-*`.
+
+#### PHASE 2 — `F2` (F2 — Data Hooks)
+- `<!-- PHASE:F2:START traces=… -->` … `<!-- PHASE:F2:END -->`; content = the roles whose words appear in "F2 — Data Hooks", else as the profile describes.
+- [C:C9.7] Per-screen SUB: `<!-- SUB:F2-SCR-INT-<seq>:START traces=… -->` for **every** `SCR-*`.
+
+#### PHASE 3 — `F3` (F3 — Forms & Validators)
+- `<!-- PHASE:F3:START traces=… -->` … `<!-- PHASE:F3:END -->`; content = the roles whose words appear in "F3 — Forms & Validators", else as the profile describes.
+- [C:C9.7] Per-screen SUB: `<!-- SUB:F3-SCR-INT-<seq>:START traces=… -->` for **every** `SCR-*`.
+
+#### PHASE 4 — `F4` (F4 — Screens & Routes)
+- `<!-- PHASE:F4:START traces=… -->` … `<!-- PHASE:F4:END -->`; content = the roles whose words appear in "F4 — Screens & Routes", else as the profile describes.
+- [C:C9.7] Per-screen SUB: `<!-- SUB:F4-SCR-INT-<seq>:START traces=… -->` for **every** `SCR-*`.
+
+#### PHASE 5 — `ALIGN-FE` (ALIGN-FE)
+- `<!-- PHASE:ALIGN-FE:START traces=… -->` … `<!-- PHASE:ALIGN-FE:END -->`; content = the roles whose words appear in "ALIGN-FE", else as the profile describes.
+- [C:C9.7] Never split — level-1 only.
+
+### 3.4 Mutual consistency rule
+
+Every `SCR-*` in the ui-ux-spec has an F-block in **each** `sub_bearing` phase
+(`F1`, `F2`, `F3`, `F4`) and every F-block names an
+`SCR-*` that exists in the spec; every `UXD-*` in the spec is cited by an F-block. `gov.py
+analyze` checks this at the gate — a mismatch is MAJOR.
+
+## 4. ALIGN self-check
+
+Against the plan itself, the API document and the SRS ceiling (cross-artifact = `gov.py analyze`).
+
+**Every row names the check that backs it, and there are no other rows.** The block used to
+assert screen coverage, validation, routing and security in prose no check could falsify, and a
+sibling plan shipped four such rows false under a verdict that read clean. A row
+nothing can falsify manufactures confidence and is worse than no row, so every unbacked row was
+**deleted** rather than softened — if a dimension matters and no check covers it, the fix is a
+clause in `shared/ARTIFACT-CONTRACTS.md`, not a sentence here. Each mark is the analyze report's
+result for that check, copied; a clause the report says examined nothing is written
+`— examined nothing`, never ✓. [C:C9.12]
+
+```
+ALIGN — INT v1
+row           backing check   assertion
+SCREENS       orphans         every SCR is referenced by a plan block
+COMPOSITION   screen-composition  every SCR names where its secondary detail sits and that it saves once
+CONTAINER     composition-rule    every SCR names its container, and a child collection sits where that container puts it
+READS         ux-reads-spec   every read a screen binds is an operation of api-spec-int.yaml, and the plan names the document its mock server serves
+UXD           orphans         every UXD is cited by a plan block — this is where a UX decision closes
+TRACES        traces          every PHASE/SUB carries traces=, every UXD traces to its REQ/AC, every SCR to its REQ/UXD
+API           traces          every API this plan cites is an operation of api-spec-int.yaml — never a line of the backend plan's prose [C:C9.5]
+FOREIGN       xref-surface    every reference to another module's surface resolves in that module's own artifacts
+REGISTRY      registry-agree  every UXD and SCR defined here is in the stage registry, and nothing else is
+LANGUAGES     languages       labels and messages in en + ar
+MARKERS       markers         the parser reports no structural or semantic error for this track and plan
+DECISIONS     refs-exist      every ADR this plan cites exists on disk in analysis/decisions/INT/
+COVERAGE      (the report)    the clauses the analyze report lists as having examined nothing — verbatim, or `none`
+```
+```yaml name=self-check
+findings: 0          # written by the orchestrator from the analyze report — leave it alone
+clean: true
+```
+Operations coverage table (operation │ API │ SCR action │ route │ status) closes the section —
+a row with an empty route is a ✗.
+
+## 5. Registry update — `registry-exec-fe-int.md`
+
+```
+REGISTRY — P3.2 — INT v1
+ID RANGES     UXD-INT-<first>..<last> · SCR-INT-<first>..<last>
+SCREENS       SCR │ name │ owning ENT │ permissions
+UXD INDEX     UXD │ screen │ field │ owner module · API used
+API COVERAGE  documented endpoints used / unused (with ADR)
+ALIGN      verdict as stamped · findings fixed
+ADRs          decisions/INT/ADR-INT-<seq> … (status)
+TRACEABILITY  REQ covered by ≥1 SCR/F-block: <n>/<total> · orphan REQ: <list — a gate blocker>
+```
+
+## 6. Structural self-check (toolkit)
+
+```
+[ ] every profile key has exactly one PHASE START/END pair, in profile order [T:marker-duplicate]
+[ ] every SUB id is {PHASE-KEY}-SCR-…; the same screen under different phases carries different prefixes
+[ ] every PHASE/SUB carries traces=
+[ ] no heading repeats; trailing content sits after the last PHASE END
+[ ] §3.4 mutual consistency holds
+```
+Then (non-zero exit is blocking):
+```
+gov.py split --track frontend --module INT --version 1 --dry-run
+```
+`gov.py analyze` runs before `P4`; CRITICAL keeps the gate closed.
+
+## 7. Ambiguity rule
+
+`factory.yaml → ambiguity` (shared/GOVERNANCE-CORE.md): non-breaking → ADR
+`analysis/decisions/INT/ADR-INT-{seq:03d}.md` and
+**continue**; breaking (contradicts a locked decision or a
+REQ, including an SRS↔PRD contradiction) → ADR `BLOCKED`,
+**stop**. Use `profile.knowledge.files` and `analysis/domain/` steering
+for the best-practice choice. No question is raised at this stage.
+
+## 8. Boundaries and hand-off
+
+| Owns (mints) | References (read-only) | Never touches |
+|---|---|---|
+| `UXD-*`, `SCR-*`; flow diagram; ui-ux-spec; F-blocks; ALIGN; ADRs it raises | `REQ/AC/ENT/RULE` (P1), `API` (P3.1 — shape from api-spec-int.yaml), catalog codes, permission names, `US` (P0.5) | `DBF/XM` (P2 — backend-only), `QR`, `TC` (P4), any code, any build |
+
+Hand-off (the orchestrator prints it): plan + registry split by the toolkit into
+`/frontend-execution/` inside the
+shared repo after the `P4` verdict, then tagged `{mod}-v{version}`. Nothing is
+copied anywhere: the implementer reads it where it was written, at the commit its own repo pins. The implementer reads the plan in profile-phase order, the spec for
+intent, `api-spec-int.yaml` for shapes (served by its mock server until the backend is delivered), and does not invent a route, component, permission or field [G]
+not traceable to an F-block (a gap → ADR, not an invention).
+
+
+---
+# INPUTS (generated current state)
+
+<<<INPUT: srs>>>
+# SRS — Host Integration (INT)
+══════════════════════════════════════════════════════════════════
+Module : INT   Version : v1   Profile : aias
+Inputs : prd, domain-profile, project-registry (PRD approved 2026-10-01)
+Counts : REQ 60 · AC 66 · ENT 0 · RULE 4 · SCR-REQ 5 · ADR 5 (new: ADR-INT-010 … ADR-INT-013, ADR-INT-016; applied: ADR-INT-001 … ADR-INT-013, ADR-INT-016, ADR-REG-001, ADR-REG-006, ADR-REG-008, ADR-CHK-018, ADR-DOC-006, ADR-DOC-012, ADR-RPT-003, ADR-RPT-005, ADR-RPT-006, ADR-RPT-013)
+══════════════════════════════════════════════════════════════════
+
+# PART A — MODULE FOUNDATION
+
+## A1 — Document information
+| Item | Value |
+|---|---|
+| Module | INT — Host Integration |
+| Feature code | INT |
+| Version | v1 |
+| Date | 2026-10-01 |
+| Status | DRAFT — P1 output, PRD approved 2026-10-01 (gate prd-approval) |
+| Prepared by | P1 SRS engine (operator run, lane analysis) |
+| Decisions applied | 14 INT ADRs (ADR-INT-001 … ADR-INT-013 and ADR-INT-016, of which 5 new), 3 REG, 1 CHK, 2 DOC and 4 RPT ADRs, and 4 DEFAULTs — see Decisions applied |
+
+## A2 — Functional context
+
+### In scope
+- Starting a Check at a host system's or the employee frontend's request and answering at once (POL-INT-001, POL-INT-002; ADR-INT-002).
+- Handing a manual upload to Document Access with the Check's service code and version, only while the Check waits for documents (POL-INT-004, POL-INT-005; ADR-INT-005).
+- Confirming the uploads of a `manual` Check to the Check Engine (POL-INT-006).
+- Recording the Employee Decision in the Report Store, calling the host Approval API first only for an APPROVED decision where the Check's version enables it (POL-INT-007 … POL-INT-011; ADR-INT-004, ADR-INT-009, ADR-INT-010).
+- Answering every refusal in the standard error form with the refusing module's code (POL-INT-003; ADR-INT-003).
+- The employee frontend embedded in the host screen: the Checks of a request, the report, the document upload, the upload confirmation and the decision (POL-INT-012 … POL-INT-016, POL-INT-018; ADR-INT-006, ADR-INT-011).
+- The raw-idea §12 guardrails at INT's surface (see Traceability — guardrails).
+
+### Out of scope
+- Reading a Check, its report, the Checks of a request or the decision agreement — served by the Report Store (ADR-RPT-005, ADR-RPT-006; ADR-INT-001).
+- The service reads (REG), the list of uploaded documents (DOC) and the active-Check read (CHK) — served by their owners.
+- The server-rendered report page `GET /checks/{id}/view` — superseded by the employee frontend (A1; ADR-INT-001).
+- Caller authentication (API key or mTLS) and who may view stored reports — deferred (raw-idea A2; domain-profile D4, D7); no role check is specified.
+- Running a Check, fetching or reading documents, storing reports — CHK, DOC, RPT.
+- Multi-tenancy, conversation memory, RAG, multi-agent orchestration, an administration UI.
+
+### Module function
+Host Integration is the door of the service: host systems and the employee frontend reach the service through it to start a Check, to hand over the documents of a `manual` Check and confirm them, and to record the employee's decision — with the host's Approval API called on the employee's behalf where the service enables it. It owns the employee frontend that shows the Checks of a request and their reports, and it keeps nothing of its own.
+
+### Detailed description
+The host screen opens the embedded frontend for one request, passing the service code, the request number and the employee identity. The frontend lists the Checks of that request (from the Report Store) and lets the employee start a new one; Host Integration has the Check Engine start it and answers at once with the Check's identifier and its first status — RUNNING, or AWAITING_DOCUMENTS for a `manual` service. The frontend follows a Check that has not ended by reading it every few seconds. For a `manual` Check the employee uploads each document — Host Integration reads the Check to learn its service code, version and status, and hands the file to Document Access — and then confirms, as a separate action, that the uploads are complete; Host Integration asks the Check Engine to continue. When the Check is COMPLETED the employee reads the report — the Overall Status, each finding beside its evidence, the documents read, missing or unreadable, the service queries that could not be read — and records a decision. For an APPROVED decision on a version that enables the Approval API, Host Integration checks that the decision is complete and the Check is COMPLETED and undecided, calls the host's Approval API once, and only after it succeeds hands the decision to the Report Store marked as executed; a failed or timed-out call records nothing and the employee can try again. A REJECTED decision, or any decision on a version without the Approval API, goes straight to the Report Store. Every refusal reaches the caller in the standard error form with the refusing module's code. Roles: the Employee (all screens) and the Host System (the REST API).
+
+### Current situation
+| Step | Party | Notes |
+|---|---|---|
+| Employee checks the request by hand and approves it in the host system | Employee | No service to start a check from the host screen, no report beside the request, no record of the decision against a report [KB:raw-idea.md §1, §11] |
+
+### Current difficulties
+The host systems have no way to ask for a verification and show its evidence inside their screens, and an approval taken in the host leaves no link to the facts it was based on [KB:raw-idea.md §1, §9, §11].
+
+### Proposed system and benefits
+A host starts a Check with one call and the employee follows it in the embedded frontend (US-INT-001, US-INT-008, US-INT-010), verifies each finding against its evidence (US-INT-009), and records the decision beside the report — executed through the host's Approval API where the host offers one (US-INT-005, US-INT-006). Hosts can build their own display on the same API (US-INT-011).
+
+### General notes
+- INT declares no entity (ADR-INT-007, ADR-INT-013); the fields it reads belong to the Report Store's Check Run (ENT-RPT-001) and the Service Registry's Service Package Version (ENT-REG-002), reached only through their contracts (ADR-INT-016).
+- The Approval API timeout, the upload request limit and the host Approval API base address are platform configuration (ADR-INT-012); the frontend's polling interval is frontend configuration (ADR-INT-011).
+- Codes follow the profile format `{MOD}-{http}[-{SLUG}]`; refusals raised by CHK, DOC and RPT keep their owner's code (ADR-INT-003, ADR-INT-010).
+- No role check is specified in this version (raw-idea A2).
+
+## A3 — Entities and fields
+
+Standard fields — per profile: kind `transactional` carries `createdAt, updatedAt`. Not applicable here: Host Integration declares no entity of its own (ADR-INT-007, ADR-INT-013). Host identifiers (request number, employee identity) are handed on as text exactly as the host sent them and are never foreign keys.
+
+### Consumed fields (read through the owners' contracts — not redefined)
+| Owner entity | Field | Read through | Used for |
+|---|---|---|---|
+| ENT-RPT-001 — Check Run (RPT) | checkRunId | the Check identifier `checkId` (CON-RPT-001) | addressing every write on a Check |
+| ENT-RPT-001 | checkStatus | CON-RPT-003 | upload only while AWAITING_DOCUMENTS (RULE-INT-001); approval guard (RULE-INT-003); screen actions |
+| ENT-RPT-001 | serviceCode, versionNumber | CON-RPT-003 | handed to Document Access with an upload (REQ-INT-010); approval API of the Check's version (REQ-INT-030) |
+| ENT-RPT-001 | requestNumber | CON-RPT-003 | filled into the Approval API path (REQ-INT-031) |
+| ENT-RPT-001 | employeeDecision, decidedBy | CON-RPT-003, CON-RPT-006 | approval guard (RULE-INT-003); the decision request (RULE-INT-002) |
+| ENT-RPT-001 | serviceCode, requestNumber, employeeId | the launch context of the frontend; CON-RPT-004 | the Checks of a request (RULE-INT-004) |
+| ENT-REG-002 — Service Package Version (REG) | approvalEnabled, approvalApi | CON-REG-012 | whether and where the Approval API is called (REQ-INT-025, REQ-INT-030) |
+
+## A4 — Functional requirements (EARS) and acceptance criteria
+
+### REQ-INT-001 — A Check started on request
+  Pattern    : event
+  Statement  : When a host system asks to start a Check with a service code, a request number and an employee identity, the system shall have the Check Engine start the Check and answer that it is accepted, with the Check's identifier and status.
+  Traces     : US-INT-001
+  Entities   : ENT-RPT-001
+  Rationale  : The host starts a Check and follows it by its identifier.
+  Source     : POL-INT-001; [KB:raw-idea.md §5, §8]; CON-CHK-004; ADR-INT-002
+  Priority   : HIGH
+
+#### AC-INT-001 — [REQ-INT-001]
+  Given  : service `scholarship-request` is available with fetch mode `path`
+  When   : a host asks to start a Check for `scholarship-request`, request `REQ-2026-0042`, employee `E-3307`
+  Then   : the answer is accepted (HTTP 202) with a new Check identifier and status RUNNING
+
+#### AC-INT-002 — [REQ-INT-001]
+  Given  : service `manual-service` is available with fetch mode `manual`
+  When   : a host asks to start a Check for `manual-service`, request `M-77`, employee `E-3307`
+  Then   : the answer is accepted (HTTP 202) with a new Check identifier and status AWAITING_DOCUMENTS
+
+### REQ-INT-002 — The start answered without waiting for the report
+  Pattern    : ubiquitous
+  Statement  : The system shall answer a Check start as soon as the Check Engine has created the Check, without waiting for its report.
+  Traces     : US-INT-001
+  Entities   : ENT-RPT-001
+  Rationale  : A Check takes time; the host polls for the result.
+  Source     : POL-INT-001; [KB:raw-idea.md §5]; ADR-INT-002
+  Priority   : HIGH
+
+#### AC-INT-003 — [REQ-INT-002]
+  Given  : a `path` Check whose pipeline takes 40 seconds
+  When   : a host starts it
+  Then   : the answer arrives with status RUNNING before the Check's report exists, and a read of the Check right after shows no Overall Status
+
+### REQ-INT-003 — Host identifiers handed on as sent
+  Pattern    : ubiquitous
+  Statement  : The system shall hand the request number and the employee identity of a Check start to the Check Engine exactly as the host sent them.
+  Traces     : US-INT-001
+  Entities   : ENT-RPT-001
+  Rationale  : The report must show the identifiers the host knows.
+  Source     : POL-INT-002; profile `conventions.identifiers`; CON-CHK-004
+  Priority   : HIGH
+
+#### AC-INT-004 — [REQ-INT-003]
+  Given  : service `scholarship-request` is available
+  When   : a host starts a Check for request `0042/B` and employee `e.ahmed@moe`
+  Then   : the Check's read shows request number "0042/B" and employee "e.ahmed@moe", unchanged
+
+### REQ-INT-004 — No directory check of the employee
+  Pattern    : ubiquitous
+  Statement  : The system shall accept the employee identity of a request without checking it against any user directory.
+  Traces     : US-INT-001
+  Entities   : ENT-RPT-001
+  Rationale  : The host identifies the employee; caller authentication is deferred.
+  Source     : POL-INT-002; [KB:raw-idea.md §15 A2]; ADR-INT-002
+  Priority   : —
+
+#### AC-INT-005 — [REQ-INT-004]
+  Given  : employee identity `X-999` is known to no directory of the service
+  When   : a host starts a Check for an available service with employee `X-999`
+  Then   : the Check is accepted (HTTP 202) and its read shows employee "X-999"
+
+### REQ-INT-005 — The accepted start points to the Check's read
+  Pattern    : event
+  Statement  : When a Check start is accepted, the system shall give the caller the address at which the Check is read.
+  Traces     : US-INT-001
+  Entities   : ENT-RPT-001
+  Rationale  : The host polls the Check's read for its status and report.
+  Source     : POL-INT-001; [KB:raw-idea.md §5, §8] `GET /checks/{id}`; ADR-INT-001
+  Priority   : —
+
+#### AC-INT-006 — [REQ-INT-005]
+  Given  : a host starts a Check that receives identifier 611
+  When   : the start is accepted
+  Then   : the answer names `/api/v1/checks/611` as the address of the Check's read
+
+### REQ-INT-006 — Refusals of the owning module passed through
+  Pattern    : unwanted
+  Statement  : If the Check Engine, Document Access or the Report Store refuses a request, then the system shall answer with that refusal's code, HTTP status and message unchanged in the standard error form.
+  Traces     : US-INT-002
+  Entities   : ENT-RPT-001
+  Rationale  : The caller learns why nothing happened in the owner's words.
+  Source     : POL-INT-003; CON-CHK-004, CON-CHK-005, CON-DOC-003, CON-RPT-006; ADR-INT-003, ADR-INT-010
+  Priority   : —
+
+#### AC-INT-007 — [REQ-INT-006]
+  Given  : service `old-service` is withdrawn
+  When   : a host starts a Check for `old-service`
+  Then   : the answer is HTTP 422 with code `CHK-422-SERVICE-NOT-AVAILABLE` and detail "The service "old-service" is not available for Checks."; no Check is created
+
+#### AC-INT-008 — [REQ-INT-006]
+  Given  : Check 612 of `manual-service` is AWAITING_DOCUMENTS and `manual-service` requires TRANSCRIPT and ID_CARD
+  When   : the employee uploads a file of type PASSPORT for Check 612
+  Then   : the answer is HTTP 422 with code `DOC-422-DOCUMENT-TYPE-NOT-OF-SERVICE` and detail ""PASSPORT" is not a document type of the service "manual-service"; choose one of: TRANSCRIPT, ID_CARD."
+
+#### AC-INT-009 — [REQ-INT-006]
+  Given  : Check 613 is COMPLETED with decision REJECTED and its version does not enable the Approval API
+  When   : the employee records decision APPROVED for Check 613
+  Then   : the answer is HTTP 409 with code `RPT-409-DECISION-ALREADY-RECORDED` and detail "Check 613 already has an Employee Decision."
+
+#### AC-INT-010 — [REQ-INT-006]
+  Given  : Check 614 is RUNNING
+  When   : the employee confirms the uploads of Check 614
+  Then   : the answer is HTTP 409 with code `CHK-409-CHECK-NOT-AWAITING-DOCUMENTS` and detail "Check 614 is not waiting for documents; its status is RUNNING."
+
+### REQ-INT-007 — An unreadable request refused
+  Pattern    : unwanted
+  Statement  : If a request's body or Check identifier cannot be read, then the system shall refuse it with code INT-400-REQUEST-INVALID and hand nothing to another module.
+  Traces     : US-INT-002
+  Entities   : —
+  Rationale  : A malformed request must fail visibly before any module acts on it.
+  Source     : POL-INT-003; profile error envelope; ADR-INT-003
+  Priority   : —
+
+#### AC-INT-011 — [REQ-INT-007]
+  Given  : any state
+  When   : a caller confirms the uploads of Check `abc`
+  Then   : the answer is HTTP 400 with code `INT-400-REQUEST-INVALID` and detail "The request could not be read: checkId must be a number."; no module is called
+
+### REQ-INT-008 — An unexpected failure answered without internals
+  Pattern    : unwanted
+  Statement  : If an unexpected failure occurs while a request is handled, then the system shall answer with code INT-500 in the standard error form without exposing internal details.
+  Traces     : US-INT-002
+  Entities   : —
+  Rationale  : The caller needs a stable error; internals stay in the service log.
+  Source     : POL-INT-003; profile error envelope; ADR-INT-003
+  Priority   : —
+
+#### AC-INT-012 — [REQ-INT-008]
+  Given  : the Report Store is unreachable because of a database outage
+  When   : the employee records a decision on Check 615
+  Then   : the answer is HTTP 500 with code `INT-500` and detail "The request could not be completed because of an unexpected error."; the answer contains no stack trace
+
+### REQ-INT-009 — An upload handed to Document Access
+  Pattern    : event
+  Statement  : When the employee uploads a file for a Check that is AWAITING_DOCUMENTS, the system shall hand the file, its file name and its document type to Document Access.
+  Traces     : US-INT-003
+  Entities   : ENT-RPT-001
+  Rationale  : In `manual` mode the employee provides the documents.
+  Source     : POL-INT-004; [KB:raw-idea.md §6, §8]; CON-DOC-003; ADR-INT-005
+  Priority   : HIGH
+
+#### AC-INT-013 — [REQ-INT-009]
+  Given  : Check 616 of `manual-service` version 1 is AWAITING_DOCUMENTS
+  When   : the employee uploads `transcript.pdf` (300 KB) as TRANSCRIPT for Check 616
+  Then   : the answer is HTTP 201 with the uploaded document's identifier, type TRANSCRIPT, file name "transcript.pdf", file size 307200 and oversized false
+
+### REQ-INT-010 — Service code and version taken from the Check
+  Pattern    : ubiquitous
+  Statement  : The system shall hand every upload to Document Access with the service code and service package version of the Check as the Report Store holds them.
+  Traces     : US-INT-003
+  Entities   : ENT-RPT-001
+  Rationale  : Document Access checks an upload against the Check's own version; the uploader never names it.
+  Source     : POL-INT-004; CON-DOC-003; ADR-DOC-006; ADR-INT-005
+  Priority   : HIGH
+
+#### AC-INT-014 — [REQ-INT-010]
+  Given  : Check 617 runs `manual-service` version 1 and version 2 is now current
+  When   : the employee uploads an ID_CARD for Check 617
+  Then   : Document Access receives service `manual-service` and version 1 with the file
+
+### REQ-INT-011 — Uploads only while the Check waits for documents
+  Pattern    : unwanted
+  Statement  : If a file is uploaded for a Check whose status is not AWAITING_DOCUMENTS, then the system shall refuse the upload and hand nothing to Document Access.
+  Traces     : US-INT-003
+  Entities   : ENT-RPT-001
+  Rationale  : A file uploaded to a running or ended Check would never be read.
+  Source     : POL-INT-005; RULE-INT-001; ADR-INT-005
+  Priority   : HIGH
+
+#### AC-INT-015 — [REQ-INT-011]
+  Given  : Check 618 of `manual-service` is RUNNING
+  When   : the employee uploads a TRANSCRIPT for Check 618
+  Then   : the answer is HTTP 409 with code `INT-409-CHECK-NOT-AWAITING-DOCUMENTS` and detail "Documents can be uploaded only while Check 618 is waiting for documents; its status is RUNNING."; Document Access receives nothing
+
+### REQ-INT-012 — An upload for an unknown Check refused
+  Pattern    : unwanted
+  Statement  : If a file is uploaded for a Check the Report Store does not hold, then the system shall refuse it with the Report Store's not-found refusal and hand nothing to Document Access.
+  Traces     : US-INT-003
+  Entities   : ENT-RPT-001
+  Rationale  : An upload must belong to an existing Check.
+  Source     : POL-INT-003, POL-INT-005; CON-RPT-003; ADR-INT-003
+  Priority   : —
+
+#### AC-INT-016 — [REQ-INT-012]
+  Given  : no Check 99999 exists
+  When   : the employee uploads a TRANSCRIPT for Check 99999
+  Then   : the answer is HTTP 404 with code `RPT-404-CHECK-NOT-FOUND` and detail "Check 99999 was not found."
+
+### REQ-INT-013 — The oversized-file notice passed on
+  Pattern    : event
+  Statement  : When Document Access accepts an uploaded file as oversized, the system shall answer the upload with Document Access's notice that the file will be reported unreadable.
+  Traces     : US-INT-003
+  Entities   : ENT-RPT-001
+  Rationale  : Anything that cannot be read is said, never skipped silently.
+  Source     : POL-INT-004; [KB:raw-idea.md §12]; CON-DOC-003 (RULE-DOC-005 notice)
+  Priority   : —
+
+#### AC-INT-017 — [REQ-INT-013]
+  Given  : the maximum file size is 10 MB and Check 619 of `manual-service` is AWAITING_DOCUMENTS
+  When   : the employee uploads a 12 MB ID_CARD for Check 619
+  Then   : the answer is HTTP 201 with oversized true and Document Access's notice text
+
+### REQ-INT-014 — The upload request limit
+  Pattern    : unwanted
+  Statement  : If an upload request is larger than the upload request limit of the platform configuration, then the system shall refuse it with code INT-413-UPLOAD-TOO-LARGE and hand nothing to Document Access.
+  Traces     : US-INT-003
+  Entities   : —
+  Rationale  : Every request has a size limit; the limit is set at or above the maximum file size so oversized files still reach the report.
+  Source     : POL-INT-004; [KB:raw-idea.md §12] "Each check has limits"; ADR-INT-012
+  Priority   : —
+
+#### AC-INT-018 — [REQ-INT-014]
+  Given  : the upload request limit is 50 MB and Check 620 is AWAITING_DOCUMENTS
+  When   : the employee uploads a 60 MB file for Check 620
+  Then   : the answer is HTTP 413 with code `INT-413-UPLOAD-TOO-LARGE` and detail "The upload is larger than the 50 MB the service accepts in one request."; Document Access receives nothing
+
+### REQ-INT-015 — An uploaded file passed as content only
+  Pattern    : ubiquitous
+  Statement  : The system shall pass an uploaded file to Document Access as content with its file name as text, and shall never open a file path named by a request.
+  Traces     : US-INT-003
+  Entities   : —
+  Rationale  : File paths are opened only inside the storage root, by Document Access; Host Integration opens none.
+  Source     : [KB:raw-idea.md §12] "File paths are validated to be inside the allowed storage root before opening"; domain-profile §5 G5; POL-INT-004
+  Priority   : —
+
+#### AC-INT-019 — [REQ-INT-015]
+  Given  : Check 621 is AWAITING_DOCUMENTS
+  When   : the employee uploads a file named `../../etc/passwd` as TRANSCRIPT
+  Then   : Document Access receives the file's bytes with file name "../../etc/passwd" as text, and no file of the server's file system is opened by Host Integration
+
+### REQ-INT-016 — Document type choices of an upload
+  Pattern    : event
+  Statement  : When the employee opens the document upload of a Check, the system shall offer the required document types of the Check's service as the only document type choices.
+  Traces     : US-INT-003
+  Entities   : ENT-RPT-001
+  Rationale  : The employee uploads only documents the service asks for.
+  Source     : POL-INT-004; CON-REG-010 (required document types); ADR-INT-011
+  Priority   : —
+
+#### AC-INT-020 — [REQ-INT-016]
+  Given  : Check 622 runs `manual-service`, which requires TRANSCRIPT and ID_CARD
+  When   : the employee opens the document upload of Check 622
+  Then   : the document type choices are exactly TRANSCRIPT and ID_CARD
+
+### REQ-INT-017 — Documents already uploaded listed
+  Pattern    : event
+  Statement  : When the employee opens the document upload of a Check, the system shall list the documents already uploaded for that Check with their document type, file name and size.
+  Traces     : US-INT-003
+  Entities   : ENT-RPT-001
+  Rationale  : The employee sees what was handed over before uploading more or confirming.
+  Source     : POL-INT-004; DOC uploaded-documents read; ADR-INT-011
+  Priority   : —
+
+#### AC-INT-021 — [REQ-INT-017]
+  Given  : Check 623 has one uploaded TRANSCRIPT `t.pdf` of 300 KB
+  When   : the employee opens the document upload of Check 623
+  Then   : the list shows one entry: TRANSCRIPT, "t.pdf", 300 KB
+
+### REQ-INT-018 — Confirmed uploads continue the Check
+  Pattern    : event
+  Statement  : When the employee confirms the uploads of a Check, the system shall ask the Check Engine to continue the Check and answer that it is accepted, with the Check's status.
+  Traces     : US-INT-004
+  Entities   : ENT-RPT-001
+  Rationale  : A `manual` Check runs only on the documents the employee says are complete.
+  Source     : POL-INT-006; CON-CHK-005; ADR-INT-005
+  Priority   : HIGH
+
+#### AC-INT-022 — [REQ-INT-018]
+  Given  : Check 624 of `manual-service` is AWAITING_DOCUMENTS with a TRANSCRIPT and an ID_CARD uploaded
+  When   : the employee confirms the uploads of Check 624
+  Then   : the answer is accepted (HTTP 202) with Check 624 and status RUNNING
+
+### REQ-INT-019 — An upload never continues the Check
+  Pattern    : ubiquitous
+  Statement  : The system shall continue a `manual` Check only on the employee's confirmation and never as part of an upload.
+  Traces     : US-INT-004
+  Entities   : ENT-RPT-001
+  Rationale  : One action, one effect: an upload never starts the pipeline by accident.
+  Source     : POL-INT-006, POL-INT-018; profile `conventions.screen_composition`; ADR-INT-005
+  Priority   : HIGH
+
+#### AC-INT-023 — [REQ-INT-019]
+  Given  : Check 625 of `manual-service`, which requires TRANSCRIPT and ID_CARD, is AWAITING_DOCUMENTS
+  When   : the employee uploads both documents and does not confirm
+  Then   : a read of Check 625 still shows status AWAITING_DOCUMENTS
+
+### REQ-INT-020 — The uploads shown before confirming
+  Pattern    : state
+  Statement  : While the employee is confirming the uploads of a Check, the system shall show the documents uploaded for the Check and the required document types that have no upload.
+  Traces     : US-INT-004
+  Entities   : ENT-RPT-001
+  Rationale  : The employee confirms knowing which required documents will be reported missing.
+  Source     : POL-INT-006; [KB:raw-idea.md §7] "what is missing"; ADR-INT-011
+  Priority   : —
+
+#### AC-INT-024 — [REQ-INT-020]
+  Given  : Check 626 requires TRANSCRIPT and ID_CARD and only a TRANSCRIPT was uploaded
+  When   : the employee opens the upload confirmation of Check 626
+  Then   : the screen shows the TRANSCRIPT as uploaded and ID_CARD as having no upload, before the confirmation is submitted
+
+### REQ-INT-021 — The decision handed to the Report Store
+  Pattern    : event
+  Statement  : When the employee records a decision on a Check whose version does not enable the Approval API, the system shall hand the decision and the deciding employee's identity, exactly as sent, to the Report Store as not executed through the Approval API.
+  Traces     : US-INT-005
+  Entities   : ENT-RPT-001
+  Rationale  : The decision beside the result is the measure of the service's accuracy.
+  Source     : POL-INT-007, POL-INT-002; [KB:raw-idea.md §9, §11 option 1]; CON-RPT-006
+  Priority   : HIGH
+
+#### AC-INT-025 — [REQ-INT-021]
+  Given  : Check 627 is COMPLETED, NOT_COMPLIANT, undecided, and its version does not enable the Approval API
+  When   : the employee records decision REJECTED by `E-3307` on Check 627
+  Then   : the answer is HTTP 201 and Check 627 holds decision REJECTED, decided by "E-3307", executed through the Approval API false
+
+### REQ-INT-022 — The recorded decision answered
+  Pattern    : event
+  Statement  : When the Report Store records a decision, the system shall answer with the recorded decision, the deciding employee, the recording time and whether it was executed through the Approval API.
+  Traces     : US-INT-005
+  Entities   : ENT-RPT-001
+  Rationale  : The employee sees what was recorded.
+  Source     : POL-INT-007; CON-RPT-006
+  Priority   : HIGH
+
+#### AC-INT-026 — [REQ-INT-022]
+  Given  : Check 628 is COMPLETED and undecided, without the Approval API
+  When   : the employee records decision APPROVED by `E-4410`
+  Then   : the answer carries Check 628, decision APPROVED, decided by "E-4410", a recording time and executed through the Approval API false
+
+### REQ-INT-023 — The deciding employee from the host
+  Pattern    : event
+  Statement  : When the employee records a decision in the frontend, the system shall send the employee identity the host passed when it opened the frontend as the deciding employee.
+  Traces     : US-INT-005
+  Entities   : ENT-RPT-001
+  Rationale  : The host identifies the employee; the frontend never asks for it.
+  Source     : POL-INT-002, POL-INT-007; ADR-INT-011
+  Priority   : HIGH
+
+#### AC-INT-027 — [REQ-INT-023]
+  Given  : the host opened the frontend with employee `E-5120` and Check 629 is COMPLETED and undecided
+  When   : the employee records decision APPROVED in the frontend
+  Then   : the decision request carries deciding employee "E-5120"
+
+### REQ-INT-024 — A decision only from its own request
+  Pattern    : ubiquitous
+  Statement  : The system shall record an Employee Decision only from a decision request and never from an upload or an upload confirmation.
+  Traces     : US-INT-005
+  Entities   : ENT-RPT-001
+  Rationale  : One screen, one job, one submit.
+  Source     : POL-INT-018; profile `conventions.screen_composition`; ADR-INT-005, ADR-INT-006
+  Priority   : —
+
+#### AC-INT-028 — [REQ-INT-024]
+  Given  : Check 630 of `manual-service` is AWAITING_DOCUMENTS
+  When   : the employee uploads a TRANSCRIPT and confirms the uploads
+  Then   : Check 630 holds no Employee Decision
+
+### REQ-INT-025 — The Approval API called where the version enables it
+  Pattern    : state
+  Statement  : While the service package version of a Check enables the Approval API, when the employee records an APPROVED decision on that Check, the system shall call the Approval API before handing the decision to the Report Store.
+  Traces     : US-INT-006
+  Entities   : ENT-RPT-001, ENT-REG-002
+  Rationale  : The service executes the approval the employee confirmed, then records the report it was based on.
+  Source     : POL-INT-009; [KB:raw-idea.md §11 option 2]; CON-REG-012; ADR-INT-004
+  Priority   : HIGH
+
+#### AC-INT-029 — [REQ-INT-025]
+  Given  : Check 631 of `approve-service` version 2 is COMPLETED, COMPLIANT, undecided, request `R-631`, and version 2 enables the Approval API `POST /requests/{requestId}/approve`
+  When   : the employee records decision APPROVED by `E-3307`
+  Then   : the host receives one `POST /requests/R-631/approve` before the Report Store receives the decision
+
+### REQ-INT-026 — An executed approval recorded as executed
+  Pattern    : event
+  Statement  : When the Approval API call succeeds, the system shall hand the decision to the Report Store as executed through the Approval API.
+  Traces     : US-INT-006
+  Entities   : ENT-RPT-001
+  Rationale  : The record shows which approvals the service carried out for the host.
+  Source     : POL-INT-009; CON-RPT-006; ADR-RPT-003; ADR-INT-004
+  Priority   : HIGH
+
+#### AC-INT-030 — [REQ-INT-026]
+  Given  : AC-INT-029's call answers HTTP 200
+  When   : the decision is handed to the Report Store
+  Then   : the answer is HTTP 201 and Check 631 holds decision APPROVED, decided by "E-3307", executed through the Approval API true
+
+### REQ-INT-027 — A rejection never calls the Approval API
+  Pattern    : unwanted
+  Statement  : If the employee's decision is REJECTED, then the system shall hand it to the Report Store without calling any Approval API.
+  Traces     : US-INT-006
+  Entities   : ENT-RPT-001
+  Rationale  : The Approval API executes approvals only.
+  Source     : POL-INT-011; CON-RPT-006 (RULE-RPT-014); ADR-INT-004
+  Priority   : HIGH
+
+#### AC-INT-031 — [REQ-INT-027]
+  Given  : Check 632 of `approve-service` version 2 (Approval API enabled) is COMPLETED and undecided
+  When   : the employee records decision REJECTED
+  Then   : the host receives no call and Check 632 holds decision REJECTED, executed through the Approval API false
+
+### REQ-INT-028 — No call where the version does not enable it
+  Pattern    : unwanted
+  Statement  : If the service package version of a Check does not enable the Approval API, then the system shall hand an APPROVED decision to the Report Store without calling any Approval API.
+  Traces     : US-INT-006
+  Entities   : ENT-RPT-001, ENT-REG-002
+  Rationale  : By default the employee approves in the host system as today.
+  Source     : POL-INT-009; [KB:raw-idea.md §11 option 1]; ADR-INT-004
+  Priority   : HIGH
+
+#### AC-INT-032 — [REQ-INT-028]
+  Given  : Check 633 of `scholarship-request` version 3 (Approval API not enabled) is COMPLETED and undecided
+  When   : the employee records decision APPROVED
+  Then   : no Approval API is called and Check 633 holds decision APPROVED, executed through the Approval API false
+
+### REQ-INT-029 — The Approval API called only from the decision
+  Pattern    : ubiquitous
+  Statement  : The system shall call an Approval API only from the handling of an employee's decision request, and from no other request, schedule or model output.
+  Traces     : US-INT-006
+  Entities   : ENT-REG-002
+  Rationale  : The LLM never triggers approval; approval is executed only as a result of the employee's action.
+  Source     : POL-INT-008; [KB:raw-idea.md §12]; domain-profile §5 G1, G2; CON-REG-012; review AIAS-4
+  Priority   : HIGH
+
+#### AC-INT-033 — [REQ-INT-029]
+  Given  : `approve-service` version 2 enables the Approval API
+  When   : a host starts a Check of `approve-service`, the Check runs to COMPLETED with Overall Status COMPLIANT, and no decision is recorded
+  Then   : the host receives no Approval API call
+
+### REQ-INT-030 — The approval definition of the Check's own version
+  Pattern    : ubiquitous
+  Statement  : The system shall take whether the Approval API is enabled, and its method and path, from the service package version the Check ran on.
+  Traces     : US-INT-006
+  Entities   : ENT-RPT-001, ENT-REG-002
+  Rationale  : The decision is executed under the configuration the report was built on.
+  Source     : POL-INT-009; CON-REG-012; CON-REG-002; ADR-INT-008
+  Priority   : HIGH
+
+#### AC-INT-034 — [REQ-INT-030]
+  Given  : Check 634 ran on `approve-service` version 2 (Approval API enabled); version 3, now current, does not enable it; Check 634 is COMPLETED and undecided
+  When   : the employee records decision APPROVED
+  Then   : the Approval API of version 2 is called
+
+### REQ-INT-031 — The request number as one encoded value
+  Pattern    : ubiquitous
+  Statement  : The system shall place the Check's request number into the Approval API path as one URL-encoded value and shall never build the call from other free text.
+  Traces     : US-INT-006
+  Entities   : ENT-RPT-001
+  Rationale  : Parameters are bound or strictly typed; nothing is built from free text.
+  Source     : [KB:raw-idea.md §12] "Query parameters are bound or strictly type-validated"; domain-profile §5 G4; ADR-INT-009
+  Priority   : HIGH
+
+#### AC-INT-035 — [REQ-INT-031]
+  Given  : Check 635 of `approve-service` version 2 has request number `2026/77 A` and is COMPLETED and undecided
+  When   : the employee records decision APPROVED
+  Then   : the host receives `POST /requests/2026%2F77%20A/approve`
+
+### REQ-INT-032 — The call carries the Check and the deciding employee
+  Pattern    : event
+  Statement  : When the system calls the Approval API, the system shall send the Check identifier and the deciding employee's identity with the call.
+  Traces     : US-INT-006
+  Entities   : ENT-RPT-001
+  Rationale  : The host can link the approval to the report it was based on.
+  Source     : POL-INT-009; [KB:raw-idea.md §11] "records the report the approval was based on"; ADR-INT-009
+  Priority   : —
+
+#### AC-INT-036 — [REQ-INT-032]
+  Given  : Check 636 of `approve-service` version 2 is COMPLETED and undecided
+  When   : the employee `E-3307` records decision APPROVED
+  Then   : the Approval API call carries Check identifier 636 and deciding employee "E-3307"
+
+### REQ-INT-033 — One call, never retried on its own
+  Pattern    : ubiquitous
+  Statement  : The system shall call the Approval API at most once per decision request and shall never repeat the call on its own.
+  Traces     : US-INT-006
+  Entities   : —
+  Rationale  : An approval may not be safe to repeat on the host; a retry is the employee's choice.
+  Source     : POL-INT-008; ADR-INT-009
+  Priority   : HIGH
+
+#### AC-INT-037 — [REQ-INT-033]
+  Given  : the Approval API of `approve-service` answers HTTP 503 and Check 637 is COMPLETED and undecided
+  When   : the employee records decision APPROVED once
+  Then   : the host receives exactly one call
+
+### REQ-INT-034 — An incomplete decision refused before any call
+  Pattern    : unwanted
+  Statement  : If a decision request lacks a decision code of EMPLOYEE_DECISION or the deciding employee's identity, then the system shall refuse it without calling any Approval API.
+  Traces     : US-INT-006
+  Entities   : ENT-RPT-001
+  Rationale  : The Approval API is never called for a decision the Report Store would refuse.
+  Source     : POL-INT-008; RULE-INT-002; ADR-INT-010
+  Priority   : HIGH
+
+#### AC-INT-038 — [REQ-INT-034]
+  Given  : Check 638 of `approve-service` version 2 is COMPLETED and undecided
+  When   : the employee records decision APPROVED with no deciding employee
+  Then   : the answer is HTTP 400 with code `RPT-400-DECISION-INCOMPLETE` and detail "The decision was not recorded: the deciding employee is missing."; the host receives no call
+
+### REQ-INT-035 — No approval call on a Check not completed or already decided
+  Pattern    : unwanted
+  Statement  : If an APPROVED decision would be executed through the Approval API for a Check that is not COMPLETED or already holds a decision, then the system shall refuse it without calling the Approval API.
+  Traces     : US-INT-006
+  Entities   : ENT-RPT-001
+  Rationale  : An approval must stand beside one completed report and be recorded once.
+  Source     : POL-INT-008, POL-INT-009; RULE-INT-003; ADR-INT-004, ADR-INT-010
+  Priority   : HIGH
+
+#### AC-INT-039 — [REQ-INT-035]
+  Given  : Check 639 of `approve-service` version 2 is RUNNING
+  When   : the employee records decision APPROVED
+  Then   : the answer is HTTP 409 with code `RPT-409-CHECK-NOT-COMPLETED` and detail "Check 639 is not completed; a decision can only be recorded on a completed Check."; the host receives no call
+
+#### AC-INT-040 — [REQ-INT-035]
+  Given  : Check 640 of `approve-service` version 2 is COMPLETED with decision REJECTED
+  When   : the employee records decision APPROVED
+  Then   : the answer is HTTP 409 with code `RPT-409-DECISION-ALREADY-RECORDED` and detail "Check 640 already has an Employee Decision."; the host receives no call
+
+### REQ-INT-036 — A failed approval records nothing
+  Pattern    : unwanted
+  Statement  : If the Approval API answers with a status outside 200–299 or cannot be reached, then the system shall record no decision and refuse with code INT-502-APPROVAL-API-FAILED.
+  Traces     : US-INT-007
+  Entities   : ENT-RPT-001
+  Rationale  : A decision recorded as executed when the host never approved would mislead every reader.
+  Source     : POL-INT-010; profile 502; ADR-INT-004
+  Priority   : HIGH
+
+#### AC-INT-041 — [REQ-INT-036]
+  Given  : Check 641 of `approve-service` version 2 is COMPLETED and undecided and the Approval API answers HTTP 500
+  When   : the employee records decision APPROVED
+  Then   : the answer is HTTP 502 with code `INT-502-APPROVAL-API-FAILED` and detail "The approval was not executed: the host Approval API answered 500. Nothing was recorded; you can try again."; Check 641 holds no decision
+
+### REQ-INT-037 — A timed-out approval records nothing
+  Pattern    : unwanted
+  Statement  : If the Approval API does not answer within the approval timeout of the platform configuration, then the system shall record no decision and refuse with code INT-504-APPROVAL-API-TIMED-OUT.
+  Traces     : US-INT-007
+  Entities   : ENT-RPT-001
+  Rationale  : Every outbound call has a limit; the employee learns the approval was not confirmed.
+  Source     : POL-INT-010; [KB:raw-idea.md §12] limits; profile 504; ADR-INT-012
+  Priority   : HIGH
+
+#### AC-INT-042 — [REQ-INT-037]
+  Given  : the approval timeout is 10 seconds, Check 642 of `approve-service` version 2 is COMPLETED and undecided, and the Approval API does not answer
+  When   : the employee records decision APPROVED
+  Then   : after 10 seconds the answer is HTTP 504 with code `INT-504-APPROVAL-API-TIMED-OUT` and detail "The approval was not executed: the host Approval API did not answer within 10 seconds. Nothing was recorded; you can try again."; Check 642 holds no decision
+
+### REQ-INT-038 — A retry is a new decision request
+  Pattern    : event
+  Statement  : When the employee records a decision again after a failed or timed-out Approval API call, the system shall handle it as a new decision request.
+  Traces     : US-INT-007
+  Entities   : ENT-RPT-001
+  Rationale  : Nothing was recorded, so the employee can decide again.
+  Source     : POL-INT-010; ADR-RPT-003; ADR-INT-004
+  Priority   : HIGH
+
+#### AC-INT-043 — [REQ-INT-038]
+  Given  : AC-INT-041 happened and the Approval API now answers HTTP 200
+  When   : the employee records decision APPROVED on Check 641 again
+  Then   : the host receives one call and Check 641 holds decision APPROVED, executed through the Approval API true
+
+### REQ-INT-039 — A refusal after an executed approval logged
+  Pattern    : unwanted
+  Statement  : If the Report Store refuses a decision after the Approval API call succeeded, then the system shall answer with the Report Store's refusal and log the executed approval with the Check identifier and request number.
+  Traces     : US-INT-007
+  Entities   : ENT-RPT-001
+  Rationale  : A decision recorded by another request in between leaves an approval the operator must reconcile with the host.
+  Source     : POL-INT-003, POL-INT-010; ADR-INT-004
+  Priority   : —
+
+#### AC-INT-044 — [REQ-INT-039]
+  Given  : Check 643 of `approve-service` version 2, request `R-643`, is COMPLETED and undecided; while its Approval API call is answering HTTP 200, another request records decision REJECTED on Check 643
+  When   : the employee's APPROVED decision is handed to the Report Store
+  Then   : the answer is HTTP 409 with code `RPT-409-DECISION-ALREADY-RECORDED`, and the service log holds an entry naming Check 643, request "R-643" and the executed approval
+
+### REQ-INT-040 — The Checks of the request the host opened
+  Pattern    : event
+  Statement  : When the host screen opens the employee frontend with a service code, a request number and an employee identity, the system shall show the Checks of that service code and request number, newest first.
+  Traces     : US-INT-008
+  Entities   : ENT-RPT-001
+  Rationale  : The employee works on one request at a time, inside the host screen.
+  Source     : POL-INT-012; [KB:raw-idea.md §15 A1]; CON-RPT-004; ADR-INT-006, ADR-INT-011
+  Priority   : HIGH
+
+#### AC-INT-045 — [REQ-INT-040]
+  Given  : request `REQ-2026-0042` of `scholarship-request` has Checks 701 (started 09:00) and 702 (started 10:30)
+  When   : the host opens the frontend with `scholarship-request`, `REQ-2026-0042` and employee `E-3307`
+  Then   : the list shows Check 702 first and Check 701 second
+
+### REQ-INT-041 — The frontend needs the request it is opened for
+  Pattern    : unwanted
+  Statement  : If the employee frontend is opened without a service code, a request number or an employee identity, then the system shall show no Check and tell the employee that the screen must be opened from the host system for one request.
+  Traces     : US-INT-008
+  Entities   : ENT-RPT-001
+  Rationale  : Without its launch context the frontend cannot know which request, or which employee, it serves.
+  Source     : POL-INT-012; RULE-INT-004; ADR-INT-011
+  Priority   : HIGH
+
+#### AC-INT-046 — [REQ-INT-041]
+  Given  : the frontend is opened with service `scholarship-request` and employee `E-3307` but no request number
+  When   : the screen loads
+  Then   : no Check is listed and the screen shows "Open this screen from the host system for one request."
+
+### REQ-INT-042 — What each Check of the request shows
+  Pattern    : ubiquitous
+  Statement  : The system shall show, for each Check of the request, its identifier, status, Overall Status, start time, end time and Employee Decision.
+  Traces     : US-INT-008
+  Entities   : ENT-RPT-001
+  Rationale  : The employee picks the Check to open from its state and result.
+  Source     : POL-INT-012; CON-RPT-004
+  Priority   : —
+
+#### AC-INT-047 — [REQ-INT-042]
+  Given  : Check 703 of the opened request is COMPLETED, NOT_COMPLIANT, started 09:00, ended 09:01, decision REJECTED
+  When   : the Checks of the request are shown
+  Then   : the entry of Check 703 shows status COMPLETED, Overall Status NOT_COMPLIANT, start 09:00, end 09:01 and decision REJECTED
+
+### REQ-INT-043 — The total when not every Check is listed
+  Pattern    : unwanted
+  Statement  : If a request has more Checks than the list shows, then the system shall show the total number of Checks of the request.
+  Traces     : US-INT-008
+  Entities   : ENT-RPT-001
+  Rationale  : The Report Store lists 100 Checks at most; the employee must know when more exist.
+  Source     : POL-INT-012; CON-RPT-004 (at most 100, with total)
+  Priority   : —
+
+#### AC-INT-048 — [REQ-INT-043]
+  Given  : the opened request has 104 Checks
+  When   : the Checks of the request are shown
+  Then   : 100 Checks are listed and the screen states that the request has 104 Checks
+
+### REQ-INT-044 — A Check started from the frontend
+  Pattern    : event
+  Statement  : When the employee starts a Check from the Checks of a request, the system shall start it for the service code and request number of the request under the employee identity the host passed.
+  Traces     : US-INT-001, US-INT-008
+  Entities   : ENT-RPT-001
+  Rationale  : The employee starts a Check for the request on the host screen without typing its identifiers.
+  Source     : POL-INT-001, POL-INT-002; ADR-INT-006, ADR-INT-011
+  Priority   : HIGH
+
+#### AC-INT-049 — [REQ-INT-044]
+  Given  : the frontend was opened with `scholarship-request`, `REQ-2026-0042` and employee `E-3307`
+  When   : the employee starts a Check
+  Then   : a Check of `scholarship-request` for request "REQ-2026-0042" by employee "E-3307" is accepted and appears first in the list
+
+### REQ-INT-045 — The report's header
+  Pattern    : event
+  Statement  : When the employee opens a Check, the system shall show its status, service code, service package version, fetch mode, request number, employee and start time, and once it has ended its end time.
+  Traces     : US-INT-009
+  Entities   : ENT-RPT-001
+  Rationale  : The metadata tells the employee what the report was built on.
+  Source     : POL-INT-013; [KB:raw-idea.md §7] metadata; domain-profile §5 G11; CON-RPT-003
+  Priority   : HIGH
+
+#### AC-INT-050 — [REQ-INT-045]
+  Given  : Check 704 is COMPLETED on `scholarship-request` version 3, fetch mode `path`, request `REQ-2026-0042`, employee `E-3307`, model `gemini-flash-lite`
+  When   : the employee opens Check 704
+  Then   : the screen shows COMPLETED, `scholarship-request`, version 3, `path`, "REQ-2026-0042", "E-3307", its start and end times, its Overall Status and model "gemini-flash-lite"
+
+### REQ-INT-046 — Every finding beside its evidence
+  Pattern    : ubiquitous
+  Statement  : The system shall show every finding of a report as one entry holding its condition, outcome, evidence and note side by side.
+  Traces     : US-INT-009
+  Entities   : ENT-RPT-001
+  Rationale  : Every finding carries its evidence so the employee can verify it.
+  Source     : POL-INT-013; [KB:raw-idea.md §7]; domain-profile §5 G10; review AIAS-11
+  Priority   : HIGH
+
+#### AC-INT-051 — [REQ-INT-046]
+  Given  : Check 705 has a finding "GPA at least 3.0", NOT_SATISFIED, evidence "2.7", note "Below the minimum"
+  When   : the employee opens Check 705
+  Then   : one entry shows "GPA at least 3.0", NOT_SATISFIED, "2.7" and "Below the minimum" together
+
+### REQ-INT-047 — Documents read, missing and unreadable
+  Pattern    : ubiquitous
+  Statement  : The system shall show every document outcome of a report with its document type, source mode and read status, and for an unreadable document its reason and detail.
+  Traces     : US-INT-009
+  Entities   : ENT-RPT-001
+  Rationale  : The report says what was read, what is missing and what could not be read.
+  Source     : POL-INT-013; [KB:raw-idea.md §7] "Documents: What was read, what is missing, what could not be read"; domain-profile §5 G6
+  Priority   : HIGH
+
+#### AC-INT-052 — [REQ-INT-047]
+  Given  : Check 706 has TRANSCRIPT READ, ID_CARD UNREADABLE with reason TOO_LARGE and detail "12 MB exceeds 10 MB"
+  When   : the employee opens Check 706
+  Then   : the documents show TRANSCRIPT as read and ID_CARD as unreadable with reason TOO_LARGE and detail "12 MB exceeds 10 MB"
+
+### REQ-INT-048 — Unread service queries shown
+  Pattern    : ubiquitous
+  Statement  : The system shall show every service query of a report whose data could not be read, with its detail.
+  Traces     : US-INT-009
+  Entities   : ENT-RPT-001
+  Rationale  : Nothing that could not be read is skipped silently.
+  Source     : POL-INT-013; [KB:raw-idea.md §12]; domain-profile §5 G6; CON-RPT-003 unreadQueries
+  Priority   : —
+
+#### AC-INT-053 — [REQ-INT-048]
+  Given  : Check 707 has unread query `request_details` with detail "query timed out"
+  When   : the employee opens Check 707
+  Then   : the screen shows `request_details` as not read with "query timed out"
+
+### REQ-INT-049 — Never presented as COMPLIANT with a missing document
+  Pattern    : unwanted
+  Statement  : If a report holds a MISSING document outcome, then the system shall not present its Overall Status as COMPLIANT.
+  Traces     : US-INT-009
+  Entities   : ENT-RPT-001
+  Rationale  : A missing required document prevents COMPLIANT; the display never contradicts that.
+  Source     : POL-INT-014; [KB:raw-idea.md §7]; domain-profile §5 G6; review AIAS-11; ADR-INT-011
+  Priority   : HIGH
+
+#### AC-INT-054 — [REQ-INT-049]
+  Given  : Check 708 is COMPLETED with Overall Status NEEDS_MANUAL_REVIEW and ID_CARD MISSING
+  When   : the employee opens Check 708
+  Then   : the screen shows Overall Status NEEDS_MANUAL_REVIEW and ID_CARD as missing
+
+#### AC-INT-055 — [REQ-INT-049]
+  Given  : a report reaches the frontend with Overall Status COMPLIANT and a MISSING ID_CARD outcome
+  When   : the employee opens it
+  Then   : the screen shows "Not verified — a required document is missing" instead of COMPLIANT, with ID_CARD as missing
+
+### REQ-INT-050 — A failed Check shows its reason
+  Pattern    : event
+  Statement  : When the employee opens a FAILED Check, the system shall show its failure reason and failure detail and no Overall Status.
+  Traces     : US-INT-009
+  Entities   : ENT-RPT-001
+  Rationale  : A failed Check must be visible as failed, never as a result.
+  Source     : POL-INT-013; CON-RPT-003; CON-CHK-003
+  Priority   : —
+
+#### AC-INT-056 — [REQ-INT-050]
+  Given  : Check 709 is FAILED with reason TIMED_OUT and detail "The Check exceeded 120 seconds."
+  When   : the employee opens Check 709
+  Then   : the screen shows FAILED, TIMED_OUT and "The Check exceeded 120 seconds." and no Overall Status
+
+### REQ-INT-051 — Report texts shown as plain text
+  Pattern    : ubiquitous
+  Statement  : The system shall show every condition, evidence, note, detail and file name text as plain text and shall never interpret it as markup or follow it as a link.
+  Traces     : US-INT-009
+  Entities   : ENT-RPT-001
+  Rationale  : Document content is data, never instructions.
+  Source     : [KB:raw-idea.md §12] "Document content is treated as data, never as instructions"; domain-profile §5 G7; ADR-INT-011
+  Priority   : HIGH
+
+#### AC-INT-057 — [REQ-INT-051]
+  Given  : Check 710 has a finding whose evidence is `<script>alert(1)</script> <a href="x">here</a>`
+  When   : the employee opens Check 710
+  Then   : the evidence is shown literally as the characters `<script>alert(1)</script> <a href="x">here</a>`; no script runs and no link is shown
+
+### REQ-INT-052 — A recorded decision shown
+  Pattern    : event
+  Statement  : When the opened Check holds an Employee Decision, the system shall show the decision, who took it, when, and whether it was executed through the Approval API.
+  Traces     : US-INT-009
+  Entities   : ENT-RPT-001
+  Rationale  : The employee sees the decision beside the report it was based on.
+  Source     : POL-INT-013, POL-INT-007; CON-RPT-003
+  Priority   : —
+
+#### AC-INT-058 — [REQ-INT-052]
+  Given  : Check 711 holds decision APPROVED by `E-3307` at 11:05, executed through the Approval API true
+  When   : the employee opens Check 711
+  Then   : the screen shows APPROVED, "E-3307", 11:05 and "executed through the Approval API"
+
+### REQ-INT-053 — Upload offered while documents are awaited
+  Pattern    : state
+  Statement  : While an opened Check is AWAITING_DOCUMENTS, the system shall offer the employee the document upload and the upload confirmation of that Check.
+  Traces     : US-INT-003, US-INT-004
+  Entities   : ENT-RPT-001
+  Rationale  : The employee reaches the two manual-mode actions from the Check they belong to.
+  Source     : POL-INT-004, POL-INT-006; ADR-INT-006
+  Priority   : —
+
+#### AC-INT-059 — [REQ-INT-053]
+  Given  : Check 712 is AWAITING_DOCUMENTS
+  When   : the employee opens Check 712
+  Then   : the document upload and the upload confirmation are offered and the decision is not
+
+### REQ-INT-054 — Decision offered on a completed, undecided Check
+  Pattern    : state
+  Statement  : While an opened Check is COMPLETED and holds no Employee Decision, the system shall offer the employee the decision on that Check.
+  Traces     : US-INT-005
+  Entities   : ENT-RPT-001
+  Rationale  : A decision stands beside one completed report and is recorded once.
+  Source     : POL-INT-007; CON-RPT-006; ADR-INT-006
+  Priority   : —
+
+#### AC-INT-060 — [REQ-INT-054]
+  Given  : Check 713 is COMPLETED with no decision and Check 714 is COMPLETED with decision APPROVED
+  When   : the employee opens each of them
+  Then   : the decision is offered on Check 713 and not on Check 714
+
+### REQ-INT-055 — A Check that has not ended kept current
+  Pattern    : state
+  Statement  : While an opened Check is AWAITING_DOCUMENTS or RUNNING, the system shall read it again at the polling interval of the frontend configuration.
+  Traces     : US-INT-010
+  Entities   : ENT-RPT-001
+  Rationale  : The Check runs asynchronously and is polled for its result.
+  Source     : POL-INT-015; [KB:raw-idea.md §5]; profile `stack.frontend.libraries.server-state`; ADR-INT-011
+  Priority   : MEDIUM
+
+#### AC-INT-061 — [REQ-INT-055]
+  Given  : the polling interval is 5 seconds and Check 715 is RUNNING
+  When   : the employee keeps Check 715 open for 20 seconds
+  Then   : Check 715 is read 4 more times without the employee reloading
+
+### REQ-INT-056 — The report shown when the Check ends
+  Pattern    : event
+  Statement  : When an opened Check becomes COMPLETED or FAILED, the system shall stop reading it again and show its report or its failure.
+  Traces     : US-INT-010
+  Entities   : ENT-RPT-001
+  Rationale  : An ended Check never changes; further reads are useless.
+  Source     : POL-INT-015; CON-CHK-001 "COMPLETED and FAILED are final"
+  Priority   : MEDIUM
+
+#### AC-INT-062 — [REQ-INT-056]
+  Given  : Check 716 is RUNNING and open on the screen
+  When   : a read shows Check 716 COMPLETED
+  Then   : the report of Check 716 is shown and no further read of Check 716 is made while it stays open
+
+### REQ-INT-057 — The frontend uses only the REST API
+  Pattern    : ubiquitous
+  Statement  : The system shall give the employee frontend only operations of the REST API that every host system may call.
+  Traces     : US-INT-011
+  Entities   : —
+  Rationale  : A host can show the same Checks and reports with its own components without changing the service.
+  Source     : POL-INT-016; [KB:raw-idea.md §11, §15 A1]; ADR-INT-001
+  Priority   : —
+
+#### AC-INT-063 — [REQ-INT-057]
+  Given  : the operations the frontend calls are listed from its network traffic
+  When   : each is compared with the published API document of the service
+  Then   : every operation the frontend calls appears in the published API document
+
+### REQ-INT-058 — No server-rendered report page
+  Pattern    : ubiquitous
+  Statement  : The system shall offer no server-rendered report page and shall offer the report only as data through the REST API.
+  Traces     : US-INT-011
+  Entities   : —
+  Rationale  : The employee frontend replaces the report page as the display path.
+  Source     : POL-INT-016; [KB:raw-idea.md §15 A1]; domain-profile D6; ADR-INT-001
+  Priority   : —
+
+#### AC-INT-064 — [REQ-INT-058]
+  Given  : Check 717 exists
+  When   : a caller requests `/api/v1/checks/717/view`
+  Then   : the answer is HTTP 404 and no HTML report is returned
+
+### REQ-INT-059 — Host Integration keeps nothing
+  Pattern    : ubiquitous
+  Statement  : The system shall keep no request data, uploaded file, report or decision in Host Integration after a request has been answered.
+  Traces     : US-INT-012
+  Entities   : —
+  Rationale  : Each fact lives once, with its owner; nothing is carried from one Check to another.
+  Source     : POL-INT-017; [KB:raw-idea.md §12]; domain-profile §5 G9; ADR-INT-007
+  Priority   : —
+
+#### AC-INT-065 — [REQ-INT-059]
+  Given  : the employee uploaded a TRANSCRIPT for Check 718 and recorded a decision on Check 719
+  When   : both requests have been answered
+  Then   : Host Integration holds no copy of the file, the request data or the decision; they exist only in Document Access and the Report Store
+
+### REQ-INT-060 — No host database reached
+  Pattern    : ubiquitous
+  Statement  : The system shall reach no host database from Host Integration; its only outbound host call is the Approval API.
+  Traces     : US-INT-012
+  Entities   : —
+  Rationale  : All access to host data is read-only and belongs to the modules that run Checks.
+  Source     : [KB:raw-idea.md §12] "All access to host data uses a read-only database user"; domain-profile §5 G3; POL-INT-017
+  Priority   : —
+
+#### AC-INT-066 — [REQ-INT-060]
+  Given  : the service runs a full decision with the Approval API on Check 720
+  When   : the outbound connections opened by Host Integration are listed
+  Then   : the only host connection is the HTTP call to the Approval API; no database connection is opened by Host Integration
+
+## A5 — Business rules
+
+### RULE-INT-001 — Uploads only while the Check waits for documents
+  Scope      : ENT-RPT-001
+  Trigger    : on upload
+  Statement  : The system shall prevent handing an upload to Document Access when the Check's status is not AWAITING_DOCUMENTS.
+  Message    : Documents can be uploaded only while Check {checkId} is waiting for documents; its status is {status}.
+  Traces     : REQ-INT-011
+  Data source: ENT-RPT-001.checkStatus
+  Source     : POL-INT-005; ADR-INT-005
+  Test-Hint  : a RUNNING, a COMPLETED and a FAILED Check each refuse the upload
+
+### RULE-INT-002 — A decision is complete before any Approval API call
+  Scope      : ENT-RPT-001
+  Trigger    : on record decision (before the Approval API call)
+  Statement  : The system shall prevent calling the Approval API when the decision request carries no decision code of EMPLOYEE_DECISION or no deciding employee.
+  Message    : The decision was not recorded: `{value}` is not APPROVED or REJECTED. / The decision was not recorded: the deciding employee is missing.
+  Traces     : REQ-INT-034
+  Data source: ENT-RPT-001.employeeDecision, ENT-RPT-001.decidedBy
+  Source     : POL-INT-008; RULE-RPT-013 (same code and message — ADR-INT-010)
+
+### RULE-INT-003 — Approval only on a completed, undecided Check
+  Scope      : ENT-RPT-001
+  Trigger    : on record decision (before the Approval API call)
+  Statement  : The system shall prevent calling the Approval API when the Check's status is not COMPLETED or the Check already holds an Employee Decision.
+  Message    : Check {checkId} is not completed; a decision can only be recorded on a completed Check. / Check {checkId} already has an Employee Decision.
+  Traces     : REQ-INT-035
+  Data source: ENT-RPT-001.checkStatus, ENT-RPT-001.employeeDecision
+  Source     : POL-INT-008, POL-INT-009; RULE-RPT-011, RULE-RPT-012 (same codes and messages — ADR-INT-010)
+
+### RULE-INT-004 — The frontend is opened for one request
+  Scope      : ENT-RPT-001
+  Trigger    : on opening the employee frontend
+  Statement  : The system shall prevent showing any Check when the frontend was opened without a service code, a request number or an employee identity.
+  Message    : Open this screen from the host system for one request.
+  Traces     : REQ-INT-041
+  Data source: ENT-RPT-001.serviceCode, ENT-RPT-001.requestNumber, ENT-RPT-001.employeeId
+  Source     : POL-INT-012; ADR-INT-011
+
+## A6 — Lookups
+```yaml name=lookups
+lookups: []
+```
+Host Integration owns no lookup (ADR-INT-013). Consumed, not redefined: CHECK_STATUS, OVERALL_STATUS, FINDING_OUTCOME, CHECK_FAILURE_REASON (CHK); FETCH_MODE, DOCUMENT_READ_STATUS, UNREADABLE_REASON (DOC); EMPLOYEE_DECISION (RPT); SERVICE_CODE, DOCUMENT_TYPE (REG).
+
+## A7 — Status lifecycle
+Not applicable — Host Integration owns no entity with a status. The Check status it reads moves only forward as the Check Engine and the Report Store define it (CON-CHK-001; ADR-RPT-002); INT's rules read it (RULE-INT-001, RULE-INT-003).
+
+## A8 — Module dependencies
+```yaml name=module-dependencies
+consumes:
+  - {module: REG, entity: ENT-REG-002, type: SOFT-READ}
+```
+The Service Package Version's approval API is read through REG's published contract over the in-process interface (CON-REG-012); no foreign key crosses modules. It is the finer edge ADR-INT-008 declares, because REG is not in INT's platform row; the owner's platform row INT depends_on [CHK, RPT, DOC] is unchanged. The Report Store, the Check Engine and Document Access are reached through their operations — CON-RPT-003 (read a Check) and CON-RPT-006 (record a decision), CON-CHK-004 and CON-CHK-005, CON-DOC-003 — and INT holds the Check identifier only as a value (CON-RPT-001), as CHK and DOC do; so the INT → RPT, INT → CHK and INT → DOC edges are the platform edges (ADR-INT-016).
+
+| External service | Purpose | Integration kind |
+|---|---|---|
+| Host systems (Oracle ADF, others) | call the REST API; open the employee frontend in the host screen with the launch context | inbound REST; embedding |
+| Host Approval API (per service version, optional) | executes an APPROVED decision the employee confirmed | outbound HTTP, one call, configured timeout (ADR-INT-009, ADR-INT-012) |
+| Check Engine (CHK, in-process) | start a Check; confirm the uploads | CON-CHK-004, CON-CHK-005 |
+| Document Access (DOC, in-process) | hand over an uploaded file | CON-DOC-003 |
+| Report Store (RPT, in-process) | read a Check; record a decision | CON-RPT-003, CON-RPT-006 |
+| Service Registry (REG, in-process) | the approval API of a version | CON-REG-012 |
+
+# PART B — SCREEN REQUIREMENTS
+
+## SCR-REQ-INT-001 — Checks of a request
+### B1 — Definition
+  Purpose      : See the Checks of the request the host screen is showing, open one, and start a new one.
+  Entities     : ENT-RPT-001
+  Operations   : list, create (start a Check)
+  Users        : Employee
+  Navigation   : INT → host screen (embedded) → Checks of a request; from: host screen; to: SCR-REQ-INT-002
+  Content shape: flat list of records
+  Traces       : REQ-INT-040, REQ-INT-041, REQ-INT-042, REQ-INT-043, REQ-INT-044
+### B2 — Search / list
+  No filter — the list is scoped by the launch context (service code, request number) the host passes; applies RULE-INT-004. Columns: Check identifier, status (CHECK_STATUS), Overall Status (OVERALL_STATUS), start time, end time, Employee Decision (EMPLOYEE_DECISION) (REQ-INT-042); newest first, with the total when not all are listed (REQ-INT-043).
+### B3 — Input
+  No field is typed. Action "Start a Check" → start a Check with the launch context (REQ-INT-044, REQ-INT-001); refusals per REQ-INT-006. Selecting a Check → SCR-REQ-INT-002.
+### B4 — Access
+  Employee — list, start. No role check in this version (raw-idea A2).
+### B5 — API expectations
+| Operation | Verb | Path (per base path) | Inputs | Outputs | RULEs | Traces (REQ) |
+|---|---|---|---|---|---|---|
+| list the Checks of a request (RPT's read) | GET | /api/v1/checks | serviceCode, requestNumber | up to 100 Checks newest first + total | — | REQ-INT-040, REQ-INT-042, REQ-INT-043 |
+| start a Check | POST | /api/v1/checks | serviceCode, requestNumber, employeeId | accepted: checkId, status, address of the Check's read | — | REQ-INT-001 … REQ-INT-006, REQ-INT-044 |
+
+## SCR-REQ-INT-002 — Check report
+### B1 — Definition
+  Purpose      : Follow a Check until it ends and read its report — the Overall Status, each finding beside its evidence, the documents read, missing or unreadable, the unread queries — or its failure, and any recorded decision.
+  Entities     : ENT-RPT-001
+  Operations   : read
+  Users        : Employee
+  Navigation   : INT → host screen (embedded) → Check report; from: SCR-REQ-INT-001; to: SCR-REQ-INT-003, SCR-REQ-INT-004 (while AWAITING_DOCUMENTS), SCR-REQ-INT-005 (while COMPLETED and undecided)
+  Content shape: header + repeating lines (findings, documents, unread queries)
+  Traces       : REQ-INT-045, REQ-INT-046, REQ-INT-047, REQ-INT-048, REQ-INT-049, REQ-INT-050, REQ-INT-051, REQ-INT-052, REQ-INT-053, REQ-INT-054, REQ-INT-055, REQ-INT-056
+### B2 — Search / list
+  Not applicable — one Check, addressed by its identifier.
+### B3 — Input
+  No input. Header per REQ-INT-045; findings per REQ-INT-046; documents per REQ-INT-047; unread queries per REQ-INT-048; status presentation per REQ-INT-049; failure per REQ-INT-050; texts per REQ-INT-051; decision per REQ-INT-052. Actions: "Upload documents" and "Confirm uploads" while AWAITING_DOCUMENTS (REQ-INT-053); "Record decision" while COMPLETED and undecided (REQ-INT-054). Refresh per REQ-INT-055, REQ-INT-056.
+### B4 — Access
+  Employee — read. No role check in this version (raw-idea A2).
+### B5 — API expectations
+| Operation | Verb | Path (per base path) | Inputs | Outputs | RULEs | Traces (REQ) |
+|---|---|---|---|---|---|---|
+| read a Check and its report (RPT's read) | GET | /api/v1/checks/{checkId} | checkId | Check with status and, once ended, report or failure, and decision | — | REQ-INT-045 … REQ-INT-056 |
+
+## SCR-REQ-INT-003 — Document upload
+### B1 — Definition
+  Purpose      : Upload, one at a time, the documents of a Check whose service obtains them from the employee.
+  Entities     : ENT-RPT-001
+  Operations   : create (hand over an upload), list (uploaded documents)
+  Users        : Employee
+  Navigation   : INT → host screen (embedded) → Document upload; from: SCR-REQ-INT-002; to: SCR-REQ-INT-004, SCR-REQ-INT-002
+  Content shape: flat record (one upload) + list of uploaded documents
+  Traces       : REQ-INT-009, REQ-INT-010, REQ-INT-011, REQ-INT-012, REQ-INT-013, REQ-INT-014, REQ-INT-015, REQ-INT-016, REQ-INT-017
+### B2 — Search / list
+  Uploaded documents of the Check: document type (DOCUMENT_TYPE), file name, size (REQ-INT-017). No filter.
+### B3 — Input
+  Document type — choice of the required document types of the Check's service (DOCUMENT_TYPE; REQ-INT-016); file — one file (REQ-INT-009). Action "Upload" → hand over an upload; applies RULE-INT-001; the oversized notice per REQ-INT-013; the size limit per REQ-INT-014; refusals per REQ-INT-006, REQ-INT-012. The upload never confirms (REQ-INT-019).
+### B4 — Access
+  Employee — upload. No role check in this version (raw-idea A2).
+### B5 — API expectations
+| Operation | Verb | Path (per base path) | Inputs | Outputs | RULEs | Traces (REQ) |
+|---|---|---|---|---|---|---|
+| hand over an upload | POST | /api/v1/checks/{checkId}/documents | checkId, documentType, file | uploaded document (identifier, type, file name, size, oversized, notice) | RULE-INT-001 | REQ-INT-009 … REQ-INT-015 |
+| list the uploaded documents of a Check (DOC's read) | GET | /api/v1/uploaded-documents | checkId | uploaded documents | — | REQ-INT-017 |
+| read the service's required document types (REG's read) | GET | /api/v1/services/{serviceCode} | serviceCode | service summary with required document types | — | REQ-INT-016 |
+
+## SCR-REQ-INT-004 — Upload confirmation
+### B1 — Definition
+  Purpose      : Confirm, as a separate action, that every document of a `manual` Check has been uploaded, so that the Check continues.
+  Entities     : ENT-RPT-001
+  Operations   : custom (confirm uploads)
+  Users        : Employee
+  Navigation   : INT → host screen (embedded) → Upload confirmation; from: SCR-REQ-INT-002, SCR-REQ-INT-003; to: SCR-REQ-INT-002
+  Content shape: flat record
+  Traces       : REQ-INT-018, REQ-INT-019, REQ-INT-020
+### B2 — Search / list
+  Not applicable — the uploaded documents and the required types without an upload are shown read-only (REQ-INT-020).
+### B3 — Input
+  No field. Action "Confirm uploads" → confirm the uploads (REQ-INT-018); refusals per REQ-INT-006.
+### B4 — Access
+  Employee — confirm. No role check in this version (raw-idea A2).
+### B5 — API expectations
+| Operation | Verb | Path (per base path) | Inputs | Outputs | RULEs | Traces (REQ) |
+|---|---|---|---|---|---|---|
+| confirm the uploads | POST | /api/v1/checks/{checkId}/upload-confirmation | checkId | accepted: checkId, status | — | REQ-INT-018, REQ-INT-019 |
+| list the uploaded documents of a Check (DOC's read) | GET | /api/v1/uploaded-documents | checkId | uploaded documents | — | REQ-INT-020 |
+
+## SCR-REQ-INT-005 — Employee decision
+### B1 — Definition
+  Purpose      : Record the approve or reject decision on a completed Check — executed through the host's Approval API where the Check's version enables it.
+  Entities     : ENT-RPT-001, ENT-REG-002
+  Operations   : create (record a decision)
+  Users        : Employee
+  Navigation   : INT → host screen (embedded) → Employee decision; from: SCR-REQ-INT-002; to: SCR-REQ-INT-002
+  Content shape: flat record
+  Traces       : REQ-INT-021, REQ-INT-022, REQ-INT-023, REQ-INT-024, REQ-INT-025, REQ-INT-026, REQ-INT-027, REQ-INT-028, REQ-INT-034, REQ-INT-035, REQ-INT-036, REQ-INT-037, REQ-INT-038
+### B2 — Search / list
+  Not applicable.
+### B3 — Input
+  Decision — EMPLOYEE_DECISION (APPROVED / REJECTED); deciding employee — the launch identity, not typed (REQ-INT-023). Action "Record decision" → record a decision; applies RULE-INT-002, RULE-INT-003; Approval API per REQ-INT-025 … REQ-INT-028; failures per REQ-INT-036, REQ-INT-037 (the employee may submit again — REQ-INT-038); refusals per REQ-INT-006. The decision is the only submit of the screen (REQ-INT-024).
+### B4 — Access
+  Employee — decide. No role check in this version (raw-idea A2).
+### B5 — API expectations
+| Operation | Verb | Path (per base path) | Inputs | Outputs | RULEs | Traces (REQ) |
+|---|---|---|---|---|---|---|
+| record a decision | POST | /api/v1/checks/{checkId}/decision | checkId, employeeDecision, decidedBy | recorded decision (decision, decided by, decided at, executed through the Approval API) | RULE-INT-002, RULE-INT-003 | REQ-INT-021 … REQ-INT-039 |
+
+# STANDALONE
+
+## Traceability matrix
+| P0.5 | REQ | AC | RULE | ENT | SCR-REQ |
+|---|---|---|---|---|---|
+| US-INT-001 | REQ-INT-001, REQ-INT-002, REQ-INT-003, REQ-INT-004, REQ-INT-005, REQ-INT-044 | AC-INT-001, AC-INT-002, AC-INT-003, AC-INT-004, AC-INT-005, AC-INT-006, AC-INT-049 | — | ENT-RPT-001 | SCR-REQ-INT-001 |
+| US-INT-002 | REQ-INT-006, REQ-INT-007, REQ-INT-008 | AC-INT-007, AC-INT-008, AC-INT-009, AC-INT-010, AC-INT-011, AC-INT-012 | — | ENT-RPT-001 | SCR-REQ-INT-001, SCR-REQ-INT-003, SCR-REQ-INT-004, SCR-REQ-INT-005 |
+| US-INT-003 | REQ-INT-009, REQ-INT-010, REQ-INT-011, REQ-INT-012, REQ-INT-013, REQ-INT-014, REQ-INT-015, REQ-INT-016, REQ-INT-017, REQ-INT-053 | AC-INT-013, AC-INT-014, AC-INT-015, AC-INT-016, AC-INT-017, AC-INT-018, AC-INT-019, AC-INT-020, AC-INT-021, AC-INT-059 | RULE-INT-001 | ENT-RPT-001 | SCR-REQ-INT-003 |
+| US-INT-004 | REQ-INT-018, REQ-INT-019, REQ-INT-020, REQ-INT-053 | AC-INT-022, AC-INT-023, AC-INT-024, AC-INT-059 | — | ENT-RPT-001 | SCR-REQ-INT-004 |
+| US-INT-005 | REQ-INT-021, REQ-INT-022, REQ-INT-023, REQ-INT-024, REQ-INT-054 | AC-INT-025, AC-INT-026, AC-INT-027, AC-INT-028, AC-INT-060 | — | ENT-RPT-001 | SCR-REQ-INT-005 |
+| US-INT-006 | REQ-INT-025, REQ-INT-026, REQ-INT-027, REQ-INT-028, REQ-INT-029, REQ-INT-030, REQ-INT-031, REQ-INT-032, REQ-INT-033, REQ-INT-034, REQ-INT-035 | AC-INT-029, AC-INT-030, AC-INT-031, AC-INT-032, AC-INT-033, AC-INT-034, AC-INT-035, AC-INT-036, AC-INT-037, AC-INT-038, AC-INT-039, AC-INT-040 | RULE-INT-002, RULE-INT-003 | ENT-RPT-001, ENT-REG-002 | SCR-REQ-INT-005 |
+| US-INT-007 | REQ-INT-036, REQ-INT-037, REQ-INT-038, REQ-INT-039 | AC-INT-041, AC-INT-042, AC-INT-043, AC-INT-044 | — | ENT-RPT-001 | SCR-REQ-INT-005 |
+| US-INT-008 | REQ-INT-040, REQ-INT-041, REQ-INT-042, REQ-INT-043, REQ-INT-044 | AC-INT-045, AC-INT-046, AC-INT-047, AC-INT-048, AC-INT-049 | RULE-INT-004 | ENT-RPT-001 | SCR-REQ-INT-001 |
+| US-INT-009 | REQ-INT-045, REQ-INT-046, REQ-INT-047, REQ-INT-048, REQ-INT-049, REQ-INT-050, REQ-INT-051, REQ-INT-052 | AC-INT-050, AC-INT-051, AC-INT-052, AC-INT-053, AC-INT-054, AC-INT-055, AC-INT-056, AC-INT-057, AC-INT-058 | — | ENT-RPT-001 | SCR-REQ-INT-002 |
+| US-INT-010 | REQ-INT-055, REQ-INT-056 | AC-INT-061, AC-INT-062 | — | ENT-RPT-001 | SCR-REQ-INT-002 |
+| US-INT-011 | REQ-INT-057, REQ-INT-058 | AC-INT-063, AC-INT-064 | — | — | — |
+| US-INT-012 | REQ-INT-059, REQ-INT-060 | AC-INT-065, AC-INT-066 | — | — | — |
+
+Raw-idea §12 guardrails at INT's surface (AIAS-1; same approach as ADR-REG-008, ADR-RPT-008): (1) the LLM never triggers approval → REQ-INT-029 · (2) approval only as a result of the employee's action → REQ-INT-025, REQ-INT-027, REQ-INT-029, REQ-INT-035 · (3) read-only host access → REQ-INT-060 · (4) bound or typed parameters, nothing built from free text → REQ-INT-031 · (5) file paths inside the storage root → REQ-INT-015 · (6) nothing skipped silently → REQ-INT-013, REQ-INT-047, REQ-INT-048 · (7) document content is data → REQ-INT-051, REQ-INT-015 · (8) limits → REQ-INT-014, REQ-INT-037 · (9) nothing carried between Checks → REQ-INT-059.
+
+## Decisions applied
+| DEFAULT / ADR | What | Source | Override / status |
+|---|---|---|---|
+| ADR-REG-001 | RPT owns the run records; INT owns none | P0 (REG) | ACCEPTED by owner |
+| ADR-REG-006 | Limits are platform configuration (pattern for INT's limits) | P0 (REG) | ACCEPTED by owner |
+| ADR-REG-008 | Each module states the §12 guardrails at its own surface | P1 (REG) | ACCEPTED |
+| ADR-CHK-018 | CHK's in-process refusal codes INT passes through | P3.1 (CHK) | ACCEPTED |
+| ADR-DOC-006 | INT passes the Check's service code and version with every upload | DOC | ACCEPTED by owner |
+| ADR-DOC-012 | DOC's in-process refusal codes INT passes through | P3.1 (DOC) | ACCEPTED |
+| ADR-RPT-003 | Decision on the Check Run; call the Approval API first; a failed call records nothing | P0 (RPT) | Confirmed at RPT prd-approval |
+| ADR-RPT-005, ADR-RPT-006 | RPT serves the reads over HTTP; its writes are in-process | RPT | ACCEPTED |
+| ADR-RPT-013 | RPT's decision refusal codes INT maps to ProblemDetail | P3.1 (RPT) | ACCEPTED |
+| ADR-INT-001 | Four write operations; reads stay with their owners; no report page | P0 | Confirmed at prd-approval |
+| ADR-INT-002 | Asynchronous start; identity as sent; no caller authentication | P0 | Confirmed at prd-approval |
+| ADR-INT-003 | Owner's refusal codes passed through; INT codes for INT's own decisions | P0 | Confirmed at prd-approval |
+| ADR-INT-004 | Approval API: APPROVED only, COMPLETED and undecided, where enabled; call first; failure records nothing | P0 | Confirmed at prd-approval |
+| ADR-INT-005 | One file per upload, only while AWAITING_DOCUMENTS; confirmation separate | P0 | Confirmed at prd-approval |
+| ADR-INT-006 | The employee frontend: launch context, four jobs, REST API only | P0 | Confirmed at prd-approval |
+| ADR-INT-007 | INT keeps no records | P0 | Confirmed at prd-approval |
+| ADR-INT-008 | INT reads CON-REG-012; platform row unchanged; entity-level edge | P0 | Confirmed at prd-approval |
+| ADR-INT-009 | Approval API call shape: method + path, encoded request number, base address per environment, one call | P0 | Confirmed at prd-approval |
+| ADR-INT-010 | Pre-call checks refuse with the Report Store's own codes | P1 (this stage) | ACCEPTED — non-breaking |
+| ADR-INT-011 | Frontend launch context, stored status with the MISSING safeguard, plain text, 5-second refresh, owners' reads | P1 (this stage) | ACCEPTED — non-breaking |
+| ADR-INT-012 | Approval timeout 10 s, upload request limit 50 MB, approval base address per environment | P1 (this stage) | ACCEPTED — non-breaking |
+| ADR-INT-013 | No ENT-INT; rules read the owners' fields; no lookup owned | P1 (this stage) | ACCEPTED — non-breaking |
+| ADR-INT-016 | INT → RPT is the platform edge (operations, Check identifier by value); only INT → REG is an entity-level edge — supersedes the RPT part of ADR-INT-013 (3) | P1 (this stage) | ACCEPTED — non-breaking |
+| DEFAULT — approval timeout 10 seconds | The Approval API call waits at most 10 seconds | ADR-INT-012; domain best practice | Override: set the approval timeout in the platform configuration |
+| DEFAULT — upload request limit 50 MB | An upload request above 50 MB is refused before it is read | ADR-INT-012 | Override: set the upload request limit (never below the maximum file size) |
+| DEFAULT — polling interval 5 seconds | A Check that has not ended is read again every 5 seconds | ADR-INT-011; [KB:raw-idea.md §5] | Override: set the polling interval in the frontend configuration |
+| DEFAULT — any 2xx answer is a successful approval | The Approval API succeeded when it answers 200–299 | ADR-INT-009 | Override: a per-host success rule in a later version |
+
+## Access summary
+| Role | Screens | Operations |
+|---|---|---|
+| Employee | SCR-REQ-INT-001 … SCR-REQ-INT-005 | start a Check, upload, confirm uploads, record a decision (INT); read Checks and reports (RPT), uploaded documents (DOC), required document types (REG) |
+| Host System | — (embeds the frontend) | the same REST API: start a Check, upload, confirm, record a decision, and the owners' reads |
+Caller authentication and who may view stored reports are deferred (raw-idea A2, domain-profile D4); no role check is specified in this version.
+══════════════════════════════════════════════════════════════════
+
+<<<END INPUT>>>
+
+<<<INPUT: prd>>>
+# PRD — Host Integration (INT)
+══════════════════════════════════════════════════════════════════
+Module          : INT     Version : v1
+Source artifacts: platform-summary, module-registry, business-policies
+Stories         : 12   Policies covered : 18/18   Deferred : 0
+Status          : DRAFT — awaiting prd-approval
+══════════════════════════════════════════════════════════════════
+
+## USER STORIES
+
+US-INT-001
+  Title          : Start a Check from the host screen and keep working
+  Story          : As an employee, I need to start a Check for the request on my host screen — naming the service, the request and myself as the host knows me — and get its identifier back straight away, so that I can carry on while the Check runs and come back to its result.
+  Priority       : HIGH
+  Success metric : —
+  Traces         : POL-INT-001, POL-INT-002
+  Source         : [KB:raw-idea.md §5] "The host system sends the service code, the request number and the employee's identity … the host starts it and then polls for the result"; §8 `POST /checks`; ADR-INT-002
+  Status         : DRAFT
+
+US-INT-002
+  Title          : Know why nothing happened
+  Story          : As a host system, I need every refused request to come back in one standard error form carrying the refusing module's own code and explanation, so that the employee is told in the same words why the Check, upload or decision did not go through.
+  Priority       : —
+  Success metric : —
+  Traces         : POL-INT-003
+  Source         : profile `stack.backend.api.error_envelope`; CON-CHK-004, CON-CHK-005, CON-DOC-003, CON-RPT-006; ADR-INT-003
+  Status         : DRAFT
+
+US-INT-003
+  Title          : Upload the documents of a manual Check
+  Story          : As an employee, I need to upload the documents of a Check whose service obtains them from me, one document at a time and only while the Check is waiting for them, so that the Check reads exactly the files I provided and no file I upload is lost unnoticed.
+  Priority       : HIGH
+  Success metric : —
+  Traces         : POL-INT-004, POL-INT-005
+  Source         : [KB:raw-idea.md §6] "`manual` — The employee uploads the files; the report is marked accordingly"; §8 `POST /checks/{id}/documents`; §12 "never skipped silently"; ADR-INT-005
+  Status         : DRAFT
+
+US-INT-004
+  Title          : Say my uploads are complete
+  Story          : As an employee, I need to tell the service, as a separate action, that I have uploaded every document of a manual Check, so that the Check continues only when I am ready and an upload never starts it by accident.
+  Priority       : HIGH
+  Success metric : —
+  Traces         : POL-INT-006, POL-INT-018
+  Source         : [KB:raw-idea.md §6]; CON-CHK-005; profile `conventions.screen_composition`; ADR-INT-005
+  Status         : DRAFT
+
+US-INT-005
+  Title          : Record my decision beside the report
+  Story          : As an employee, I need to record my approve or reject decision on a completed Check, under my identity as the host knows me and as an action of its own, so that my decision stands beside the report it was based on.
+  Priority       : HIGH
+  Success metric : —
+  Traces         : POL-INT-007, POL-INT-002, POL-INT-018
+  Source         : [KB:raw-idea.md §8] `POST /checks/{id}/decision`; §9 "Storing the employee's decision beside the report result gives a direct measure of accuracy"; §11 option 1; CON-RPT-006; ADR-INT-004
+  Status         : DRAFT
+
+US-INT-006
+  Title          : Approval executed for me where the host allows it
+  Story          : As an employee, I need my confirmed approval to be executed through the host's Approval API when the service enables it — and never otherwise, never for a rejection and never without my action — so that I do not approve twice while the decision always stays mine.
+  Priority       : HIGH
+  Success metric : —
+  Traces         : POL-INT-008, POL-INT-009, POL-INT-011
+  Source         : [KB:raw-idea.md §11] "Optional: where the host exposes an approval API, the service calls it after the employee confirms"; §12 "Approval is executed only as a result of the employee's action"; domain-profile §5 G2; ADR-INT-004, ADR-INT-009
+  Status         : DRAFT
+
+US-INT-007
+  Title          : A failed approval leaves nothing half-done
+  Story          : As an employee, I need to be told when the host's Approval API failed or did not answer, with nothing recorded, so that I can try again knowing the request was not approved.
+  Priority       : HIGH
+  Success metric : —
+  Traces         : POL-INT-010
+  Source         : ADR-RPT-003 "a failed approval call records nothing so the employee can retry"; profile `http_statuses` 502 / 504; ADR-INT-004
+  Status         : DRAFT
+
+US-INT-008
+  Title          : The Checks of the request I am working on
+  Story          : As an employee, I need the frontend opened from my host screen to show the Checks of the request I am working on, newest first, so that I can open the latest report or an earlier one.
+  Priority       : HIGH
+  Success metric : —
+  Traces         : POL-INT-012
+  Source         : [KB:raw-idea.md §15 A1] "gives the employee: the checks of a request"; ADR-INT-006; CON-RPT-004
+  Status         : DRAFT
+
+US-INT-009
+  Title          : Verify each finding against its evidence
+  Story          : As an employee, I need to see a report's Overall Status, every finding with its evidence beside it and every document that was read, missing or unreadable — and never see a report presented as compliant when a required document is missing or unreadable — so that I decide on verified facts.
+  Priority       : HIGH
+  Success metric : —
+  Traces         : POL-INT-013, POL-INT-014
+  Source         : [KB:raw-idea.md §7] "Every finding carries its evidence so the employee can verify it. A required document that is missing or unreadable prevents a `COMPLIANT` status"; §15 A1; domain-profile §5 G6, G10; review AIAS-11
+  Status         : DRAFT
+
+US-INT-010
+  Title          : Follow a running Check without reloading
+  Story          : As an employee, I need the status of a Check that is waiting for documents or running to stay current on my screen until it ends, so that I see the report as soon as it is ready without reloading.
+  Priority       : MEDIUM
+  Success metric : —
+  Traces         : POL-INT-015
+  Source         : [KB:raw-idea.md §5] "the host starts it and then polls for the result"; profile `stack.frontend.libraries.server-state`; ADR-INT-006
+  Status         : DRAFT
+
+US-INT-011
+  Title          : The same API for my own display
+  Story          : As a host system, I need the employee frontend to use only the REST API offered to me, so that I can later show the same Checks and reports with my own components without changing the service.
+  Priority       : —
+  Success metric : —
+  Traces         : POL-INT-016
+  Source         : [KB:raw-idea.md §11] "The same report is available as JSON, so it can later be rendered with ADF components … without changing the service"; §15 A1 "It consumes the same REST API as any host"; ADR-INT-001
+  Status         : DRAFT
+
+US-INT-012
+  Title          : No second copy of a request
+  Story          : As a service administrator, I need Host Integration to keep no request data, documents, reports or decisions of its own, so that each fact lives in one place and nothing passes from one Check to another.
+  Priority       : —
+  Success metric : —
+  Traces         : POL-INT-017
+  Source         : [KB:raw-idea.md §12] "No data is carried from one check to another"; domain-profile §5 G9; ADR-INT-007
+  Status         : DRAFT
+
+## TRACEABILITY — story → policy
+| US | Traces (POL) | Source |
+|---|---|---|
+| US-INT-001 | POL-INT-001, POL-INT-002 | [KB:raw-idea.md §5, §8] |
+| US-INT-002 | POL-INT-003 | profile error envelope; ADR-INT-003 |
+| US-INT-003 | POL-INT-004, POL-INT-005 | [KB:raw-idea.md §6, §8, §12] |
+| US-INT-004 | POL-INT-006, POL-INT-018 | [KB:raw-idea.md §6]; CON-CHK-005 |
+| US-INT-005 | POL-INT-007, POL-INT-002, POL-INT-018 | [KB:raw-idea.md §8, §9, §11] |
+| US-INT-006 | POL-INT-008, POL-INT-009, POL-INT-011 | [KB:raw-idea.md §11, §12] |
+| US-INT-007 | POL-INT-010 | ADR-RPT-003; profile 502 / 504 |
+| US-INT-008 | POL-INT-012 | [KB:raw-idea.md §15 A1] |
+| US-INT-009 | POL-INT-013, POL-INT-014 | [KB:raw-idea.md §7, §15 A1] |
+| US-INT-010 | POL-INT-015 | [KB:raw-idea.md §5] |
+| US-INT-011 | POL-INT-016 | [KB:raw-idea.md §11, §15 A1] |
+| US-INT-012 | POL-INT-017 | [KB:raw-idea.md §12] |
+
+Every policy POL-INT-001 … POL-INT-018 appears in at least one row.
+
+## RESOLVED DECISIONS (dialogue)
+| # | Question | Recommended | Confirmed by user | Sources |
+|---|---|---|---|---|
+| 1 | Who the stories speak for | The employee (all frontend and decision needs), the host system (the API and its errors) and the service administrator (no second copy of data); no story for a caller check (A2) | recommended — confirmed at prd-approval | domain-profile §7.1; [KB:raw-idea.md §15 A2] |
+| 2 | Is the server-rendered report page a story | No — superseded by the employee frontend (A1); not planned (ADR-INT-001) | yes — owner A1 | [KB:raw-idea.md §15 A1]; domain-profile D6 |
+| 3 | Are the reads the frontend needs INT stories | No — the reads are RPT's, REG's and DOC's and already served; INT's stories cover what the employee does and sees through them (ADR-INT-001, ADR-INT-006) | recommended — confirmed at prd-approval | ADR-RPT-005 |
+| 4 | Priorities | HIGH for starting, uploading, confirming, deciding, approving, reading the report and the Checks of a request — the A1 jobs and the §11/§12 approval path; MEDIUM for following a running Check; the rest unstated | recommended — confirmed at prd-approval | [KB:raw-idea.md §5, §11, §12, §15 A1] |
+
+## DEFERRED
+| US | Reason | Activation trigger |
+|---|---|---|
+| — | No story is deferred. Caller authentication is scope, not a story, and is deferred by the owner (A2). | Security version |
+
+## APPROVAL
+Approved by : —   Date : —
+Once approved, no stage may raise a question; P1 onward self-resolve
+per the ambiguity rule (shared/GOVERNANCE-CORE.md).
+══════════════════════════════════════════════════════════════════
+
+<<<END INPUT>>>
+
+<<<INPUT: api-spec>>>
+openapi: 3.1.0
+info:
+  title: Host Integration (INT) API
+  version: 1.0.0
+  description: 'Derived from backend-execution-plan-int.md (API-INT-001 … API-INT-004). Write operations
+    only; the reads of a Check, its report and the Checks of a request are served by the Report Store
+    (api-spec-rpt.yaml), the service reads by the Service Registry and the uploaded documents by Document
+    Access (ADR-INT-001). Refusals of other modules keep their own code (ADR-INT-003). No security scheme:
+    caller authentication is deferred (raw-idea A2).'
+paths:
+  /api/v1/checks:
+    post:
+      operationId: startCheck
+      summary: Start a Check
+      x-api-id: API-INT-001
+      x-traces:
+      - REQ-INT-001
+      - REQ-INT-002
+      - REQ-INT-003
+      - REQ-INT-004
+      - REQ-INT-005
+      - REQ-INT-006
+      - REQ-INT-007
+      - REQ-INT-008
+      - REQ-INT-044
+      - REQ-INT-057
+      - REQ-INT-058
+      - REQ-INT-059
+      - REQ-INT-060
+      - DBF-INT-001
+      - DBF-INT-002
+      - DBF-INT-003
+      - DBF-INT-005
+      - DBF-INT-006
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartCheckRequest'
+      responses:
+        '202':
+          description: The Check is accepted and runs asynchronously
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StartedCheckResponse'
+          headers:
+            Location:
+              description: Address of the Check's read (/api/v1/checks/{checkId})
+              schema:
+                type: string
+        '400':
+          description: the body, a multipart part or the checkId cannot be read (REQ-INT-007) / the Check
+            Engine refuses a start with a value absent or blank
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - INT-400-REQUEST-INVALID
+          - CHK-400-START-INCOMPLETE
+        '422':
+          description: the Check Engine refuses a start for an unknown or withdrawn service / the Check
+            Engine refuses a start whose connection is not activated
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - CHK-422-SERVICE-NOT-AVAILABLE
+          - CHK-422-CONNECTION-NOT-ACTIVATED
+        '500':
+          description: an unexpected server failure (REQ-INT-008)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - INT-500
+  /api/v1/checks/{checkId}/documents:
+    post:
+      operationId: uploadDocument
+      summary: Hand over an uploaded document
+      x-api-id: API-INT-002
+      x-traces:
+      - REQ-INT-006
+      - REQ-INT-007
+      - REQ-INT-008
+      - REQ-INT-009
+      - REQ-INT-010
+      - REQ-INT-011
+      - REQ-INT-012
+      - REQ-INT-013
+      - REQ-INT-014
+      - REQ-INT-015
+      - REQ-INT-016
+      - REQ-INT-017
+      - REQ-INT-019
+      - REQ-INT-053
+      - DBF-INT-001
+      - DBF-INT-002
+      - DBF-INT-003
+      - DBF-INT-004
+      parameters:
+      - &id001
+        name: checkId
+        in: path
+        required: true
+        description: The Check identifier (DBF-INT-001)
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UploadRequest'
+      responses:
+        '201':
+          description: The file was handed over to Document Access
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadReceiptResponse'
+        '400':
+          description: the body, a multipart part or the checkId cannot be read (REQ-INT-007) / Document
+            Access refuses an upload without a document type or with an empty file
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - INT-400-REQUEST-INVALID
+          - DOC-400-INCOMPLETE-UPLOAD
+        '404':
+          description: Document Access cannot resolve the Check's service package version / the Report
+            Store holds no Check with this identifier
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - DOC-404-SERVICE-VERSION-NOT-FOUND
+          - RPT-404-CHECK-NOT-FOUND
+        '409':
+          description: a file is uploaded for a Check whose status is not AWAITING_DOCUMENTS (REQ-INT-011)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - INT-409-CHECK-NOT-AWAITING-DOCUMENTS
+        '413':
+          description: the upload request exceeds the upload request limit (REQ-INT-014)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - INT-413-UPLOAD-TOO-LARGE
+        '422':
+          description: Document Access refuses an upload for a service whose fetch mode is not manual
+            / Document Access refuses a document type the version does not require
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - DOC-422-FETCH-MODE-NOT-MANUAL
+          - DOC-422-DOCUMENT-TYPE-NOT-OF-SERVICE
+        '500':
+          description: an unexpected server failure (REQ-INT-008)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - INT-500
+  /api/v1/checks/{checkId}/upload-confirmation:
+    post:
+      operationId: confirmUploads
+      summary: Confirm the uploads
+      x-api-id: API-INT-003
+      x-traces:
+      - REQ-INT-006
+      - REQ-INT-007
+      - REQ-INT-008
+      - REQ-INT-018
+      - REQ-INT-019
+      - REQ-INT-020
+      - REQ-INT-053
+      - DBF-INT-001
+      - DBF-INT-002
+      parameters:
+      - *id001
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UploadConfirmationRequest'
+      responses:
+        '202':
+          description: The uploads are confirmed and the Check continues asynchronously
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfirmedCheckResponse'
+        '400':
+          description: the body, a multipart part or the checkId cannot be read (REQ-INT-007)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - INT-400-REQUEST-INVALID
+        '404':
+          description: the Check Engine knows no Check with this identifier on confirmation
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - CHK-404-CHECK-NOT-FOUND
+        '409':
+          description: the Check Engine refuses a confirmation of a Check not waiting for documents
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - CHK-409-CHECK-NOT-AWAITING-DOCUMENTS
+        '500':
+          description: an unexpected server failure (REQ-INT-008)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - INT-500
+  /api/v1/checks/{checkId}/decision:
+    post:
+      operationId: recordEmployeeDecision
+      summary: Record an Employee Decision
+      x-api-id: API-INT-004
+      x-traces:
+      - REQ-INT-006
+      - REQ-INT-007
+      - REQ-INT-008
+      - REQ-INT-021
+      - REQ-INT-022
+      - REQ-INT-023
+      - REQ-INT-024
+      - REQ-INT-025
+      - REQ-INT-026
+      - REQ-INT-027
+      - REQ-INT-028
+      - REQ-INT-029
+      - REQ-INT-030
+      - REQ-INT-031
+      - REQ-INT-032
+      - REQ-INT-033
+      - REQ-INT-034
+      - REQ-INT-035
+      - REQ-INT-036
+      - REQ-INT-037
+      - REQ-INT-038
+      - REQ-INT-039
+      - REQ-INT-054
+      - DBF-INT-001
+      - DBF-INT-002
+      - DBF-INT-003
+      - DBF-INT-004
+      - DBF-INT-005
+      - DBF-INT-007
+      - DBF-INT-008
+      - DBF-INT-009
+      - DBF-INT-010
+      parameters:
+      - *id001
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DecisionRequest'
+      responses:
+        '201':
+          description: The decision was recorded beside the Check's result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecordedDecisionResponse'
+        '400':
+          description: the body, a multipart part or the checkId cannot be read (REQ-INT-007) / the decision
+            code is not APPROVED or REJECTED or the deciding employee is missing — raised by INT before
+            an Approval API call, otherwise by the Report Store
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - INT-400-REQUEST-INVALID
+          - RPT-400-DECISION-INCOMPLETE
+        '404':
+          description: the Report Store holds no Check with this identifier
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - RPT-404-CHECK-NOT-FOUND
+        '409':
+          description: the Check is not COMPLETED — raised by INT before an Approval API call, otherwise
+            by the Report Store / the Check already holds an Employee Decision — raised by INT before
+            an Approval API call, otherwise by the Report Store
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - RPT-409-CHECK-NOT-COMPLETED
+          - RPT-409-DECISION-ALREADY-RECORDED
+        '422':
+          description: the Report Store refuses an executed rejection (INT never sends one — REQ-INT-027)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - RPT-422-APPROVAL-FLAG-ON-REJECTION
+        '500':
+          description: an unexpected server failure (REQ-INT-008)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - INT-500
+        '502':
+          description: the host Approval API answers outside 2xx, cannot be reached or has no configured
+            address (REQ-INT-036)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - INT-502-APPROVAL-API-FAILED
+        '504':
+          description: the host Approval API does not answer within the approval timeout (REQ-INT-037)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - INT-504-APPROVAL-API-TIMED-OUT
+components:
+  schemas:
+    StartCheckRequest:
+      type: object
+      required:
+      - serviceCode
+      - requestNumber
+      - employeeId
+      properties:
+        serviceCode:
+          type: string
+          maxLength: 100
+          description: DBF-INT-003 — SERVICE_CODE, never hardcoded
+        requestNumber:
+          type: string
+          maxLength: 100
+          description: DBF-INT-005 — exactly as the host sent it
+        employeeId:
+          type: string
+          maxLength: 100
+          description: DBF-INT-006 — exactly as the host sent it
+    StartedCheckResponse:
+      type: object
+      required:
+      - checkId
+      - status
+      - checkUrl
+      properties:
+        checkId:
+          type: integer
+          format: int64
+          description: DBF-INT-001
+        status:
+          type: string
+          enum:
+          - RUNNING
+          - AWAITING_DOCUMENTS
+          description: DBF-INT-002 — CHECK_STATUS
+        checkUrl:
+          type: string
+          description: Address of the Check's read
+    UploadRequest:
+      type: object
+      required:
+      - documentType
+      - file
+      properties:
+        documentType:
+          type: string
+          maxLength: 100
+          description: DOCUMENT_TYPE code — one of the service's required document types
+        file:
+          type: string
+          format: binary
+          description: Exactly one file
+    UploadReceiptResponse:
+      type: object
+      required:
+      - uploadedDocumentId
+      - documentType
+      - fileName
+      - fileSize
+      - oversized
+      properties:
+        uploadedDocumentId:
+          type: integer
+          format: int64
+        documentType:
+          type: string
+          maxLength: 100
+        fileName:
+          type: string
+          maxLength: 255
+        fileSize:
+          type: integer
+          format: int64
+        oversized:
+          type: boolean
+        notice:
+          type: string
+          description: Present only when oversized — the file will be reported unreadable
+    ConfirmedCheckResponse:
+      type: object
+      required:
+      - checkId
+      - status
+      properties:
+        checkId:
+          type: integer
+          format: int64
+          description: DBF-INT-001
+        status:
+          type: string
+          enum:
+          - RUNNING
+          description: DBF-INT-002
+    DecisionRequest:
+      type: object
+      required:
+      - employeeDecision
+      - decidedBy
+      properties:
+        employeeDecision:
+          type: string
+          enum:
+          - APPROVED
+          - REJECTED
+          description: DBF-INT-007 — EMPLOYEE_DECISION
+        decidedBy:
+          type: string
+          maxLength: 100
+          description: DBF-INT-008 — exactly as the host sent it
+    RecordedDecisionResponse:
+      type: object
+      required:
+      - checkId
+      - employeeDecision
+      - decidedBy
+      - decidedAt
+      - approvalApiExecuted
+      properties:
+        checkId:
+          type: integer
+          format: int64
+        employeeDecision:
+          type: string
+          enum:
+          - APPROVED
+          - REJECTED
+        decidedBy:
+          type: string
+          maxLength: 100
+        decidedAt:
+          type: string
+          format: date-time
+        approvalApiExecuted:
+          type: boolean
+    ProblemDetail:
+      type: object
+      required:
+      - type
+      - title
+      - status
+      - code
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        code:
+          type: string
+    UploadConfirmationRequest:
+      type: object
+      properties: {}
+      additionalProperties: false
+      description: An empty object — the confirmation carries no field
+
+<<<END INPUT>>>
+
+<<<INPUT: registry-srs>>>
+## REGISTRY — P1 — INT v1
+
+### Entities
+None — Host Integration declares no entity (ADR-INT-007, ADR-INT-013).
+
+### Consumed
+Only the A8 block's ids (ADR-INT-016 — RPT, CHK and DOC are platform edges):
+| Module | Entity | Type |
+|---|---|---|
+| REG | ENT-REG-002 | SOFT-READ |
+
+### Lookups owned
+None — `lookups: []` (ADR-INT-013).
+
+### Lookups consumed
+| Key | Owner |
+|---|---|
+| CHECK_STATUS | CHK |
+| OVERALL_STATUS | CHK |
+| FINDING_OUTCOME | CHK |
+| CHECK_FAILURE_REASON | CHK |
+| FETCH_MODE | DOC |
+| DOCUMENT_READ_STATUS | DOC |
+| UNREADABLE_REASON | DOC |
+| EMPLOYEE_DECISION | RPT |
+| SERVICE_CODE | REG |
+| DOCUMENT_TYPE | REG |
+
+### Screens
+| SCR-REQ | Name | Page code |
+|---|---|---|
+| SCR-REQ-INT-001 | Checks of a request | — |
+| SCR-REQ-INT-002 | Check report | — |
+| SCR-REQ-INT-003 | Document upload | — |
+| SCR-REQ-INT-004 | Upload confirmation | — |
+| SCR-REQ-INT-005 | Employee decision | — |
+
+### Requirements
+REQ count 60 · AC count 66 · RULE count 4 · last sequence per atom (REQ: 60, AC: 66, ENT: 0, RULE: 4, SCR-REQ: 5)
+
+| REQ | AC |
+|---|---|
+| REQ-INT-001 | AC-INT-001, AC-INT-002 |
+| REQ-INT-002 | AC-INT-003 |
+| REQ-INT-003 | AC-INT-004 |
+| REQ-INT-004 | AC-INT-005 |
+| REQ-INT-005 | AC-INT-006 |
+| REQ-INT-006 | AC-INT-007, AC-INT-008, AC-INT-009, AC-INT-010 |
+| REQ-INT-007 | AC-INT-011 |
+| REQ-INT-008 | AC-INT-012 |
+| REQ-INT-009 | AC-INT-013 |
+| REQ-INT-010 | AC-INT-014 |
+| REQ-INT-011 | AC-INT-015 |
+| REQ-INT-012 | AC-INT-016 |
+| REQ-INT-013 | AC-INT-017 |
+| REQ-INT-014 | AC-INT-018 |
+| REQ-INT-015 | AC-INT-019 |
+| REQ-INT-016 | AC-INT-020 |
+| REQ-INT-017 | AC-INT-021 |
+| REQ-INT-018 | AC-INT-022 |
+| REQ-INT-019 | AC-INT-023 |
+| REQ-INT-020 | AC-INT-024 |
+| REQ-INT-021 | AC-INT-025 |
+| REQ-INT-022 | AC-INT-026 |
+| REQ-INT-023 | AC-INT-027 |
+| REQ-INT-024 | AC-INT-028 |
+| REQ-INT-025 | AC-INT-029 |
+| REQ-INT-026 | AC-INT-030 |
+| REQ-INT-027 | AC-INT-031 |
+| REQ-INT-028 | AC-INT-032 |
+| REQ-INT-029 | AC-INT-033 |
+| REQ-INT-030 | AC-INT-034 |
+| REQ-INT-031 | AC-INT-035 |
+| REQ-INT-032 | AC-INT-036 |
+| REQ-INT-033 | AC-INT-037 |
+| REQ-INT-034 | AC-INT-038 |
+| REQ-INT-035 | AC-INT-039, AC-INT-040 |
+| REQ-INT-036 | AC-INT-041 |
+| REQ-INT-037 | AC-INT-042 |
+| REQ-INT-038 | AC-INT-043 |
+| REQ-INT-039 | AC-INT-044 |
+| REQ-INT-040 | AC-INT-045 |
+| REQ-INT-041 | AC-INT-046 |
+| REQ-INT-042 | AC-INT-047 |
+| REQ-INT-043 | AC-INT-048 |
+| REQ-INT-044 | AC-INT-049 |
+| REQ-INT-045 | AC-INT-050 |
+| REQ-INT-046 | AC-INT-051 |
+| REQ-INT-047 | AC-INT-052 |
+| REQ-INT-048 | AC-INT-053 |
+| REQ-INT-049 | AC-INT-054, AC-INT-055 |
+| REQ-INT-050 | AC-INT-056 |
+| REQ-INT-051 | AC-INT-057 |
+| REQ-INT-052 | AC-INT-058 |
+| REQ-INT-053 | AC-INT-059 |
+| REQ-INT-054 | AC-INT-060 |
+| REQ-INT-055 | AC-INT-061 |
+| REQ-INT-056 | AC-INT-062 |
+| REQ-INT-057 | AC-INT-063 |
+| REQ-INT-058 | AC-INT-064 |
+| REQ-INT-059 | AC-INT-065 |
+| REQ-INT-060 | AC-INT-066 |
+
+### Rules
+| RULE | Traces |
+|---|---|
+| RULE-INT-001 | REQ-INT-011 |
+| RULE-INT-002 | REQ-INT-034 |
+| RULE-INT-003 | REQ-INT-035 |
+| RULE-INT-004 | REQ-INT-041 |
+
+### Decisions
+ADR-INT-010, ADR-INT-011, ADR-INT-012, ADR-INT-013, ADR-INT-016 (new, ACCEPTED); applied ADR-INT-001 … ADR-INT-009. No BLOCKED ADR.
+
+### Event
+P1 completed: INT v1 — 60 REQ · 66 AC · 0 ENT · 4 RULE · 5 SCR-REQ · 5 ADR
+
+<<<END INPUT>>>
+
+<<<INPUT: registry-exec-be>>>
+## REGISTRY — P3.1 — INT v1
+
+ID RANGES        API-INT-001 … API-INT-004 · QR: none (INT has no repository — ADR-INT-017)
+ENTITIES / TABLES bound: none of INT's own (ADR-INT-007, ADR-INT-015) · read bindings DBF-INT-001 … DBF-INT-010 (owners' columns) · lookups reused: CHECK_STATUS (CHK), EMPLOYEE_DECISION (RPT), SERVICE_CODE, DOCUMENT_TYPE (consumed) · new: none
+INTEGRATION      XM-INT-001 — one block in CROSS-MOD · requires REG:DELIVERED; INT → CHK, INT → DOC and INT → RPT are platform edges reached through their in-process operations (ADR-INT-016)
+CATALOG          20 codes — 6 INT codes (INT-400-REQUEST-INVALID, INT-409-CHECK-NOT-AWAITING-DOCUMENTS, INT-413-UPLOAD-TOO-LARGE, INT-500, INT-502-APPROVAL-API-FAILED, INT-504-APPROVAL-API-TIMED-OUT) · 14 pass-through codes of CHK (5), DOC (4) and RPT (5) · ar messages PENDING ADR-INT-017
+API DOCUMENT     api-spec-int.yaml · operations 4 = API blocks 4 · error responses 20 catalog rows answered
+ALIGN            verdict as stamped by the orchestrator
+ADRs             ADR-INT-017 (ACCEPTED)
+CONTRACT         Honours: CON-INT-001 (API-INT-001), CON-INT-002 (API-INT-002), CON-INT-003 (API-INT-003), CON-INT-004 (API-INT-004)
+TRACEABILITY     REQ covered by ≥1 API/DBF: 60/60 · orphan REQ: none
+
+| API | Operation | Verb | Path |
+|---|---|---|---|
+| API-INT-001 | Start a Check | POST | /api/v1/checks |
+| API-INT-002 | Hand over an uploaded document | POST | /api/v1/checks/{checkId}/documents |
+| API-INT-003 | Confirm the uploads | POST | /api/v1/checks/{checkId}/upload-confirmation |
+| API-INT-004 | Record an Employee Decision | POST | /api/v1/checks/{checkId}/decision |
+
+<<<END INPUT>>>
+
+---
+# KNOWLEDGE (profile primary sources — cite as [KB:<file> §n])
+
+<<<KB: profiles/aias/knowledge/raw-idea.md>>>
+# Request Verification Service — Raw Idea (project `aias`)
+
+As of 2026-10-01. Author: Hesham Ezzat. Amended 2026-10-01 — see section 15.
+Save as: `governance-shared/profiles/aias/knowledge/raw-idea.md` and list it under `knowledge.files` in `profiles/aias.yaml`.
+
+## 0. How the factory should read this file
+
+- Section 13 "Decided" is locked input. `domain-profile`, P0 and the PRD must not reopen those points.
+- Section 13 "Open" is the complete set of questions to resolve, by research and a recommended answer.
+- Section 12 "Guardrails" are non-negotiable and should become formal requirements in P1.
+- YAML and endpoint examples illustrate intent. Final names, schemas and contracts are for the analysis stages to define.
+
+## 1. Purpose
+
+A standalone service that verifies a government service request before an employee approves it. It collects the request's data and attached documents, compares them with the conditions of the service, and returns a short report: compliant or not, and where the problems are.
+
+The employee stays the decision maker. The service informs the decision and never makes it.
+
+The service is generic. It covers many services, each with its own conditions, data queries and documents, all defined in configuration. It supersedes the earlier "Reusable Agentic AI Library" idea, which was broader than the first real need.
+
+## 2. Scope
+
+In scope:
+
+- A standalone Spring Boot service, called by host systems over REST.
+- Per-service configuration: a knowledge file plus a structured definition, maintained by the service administrator. Employees never supply knowledge files.
+- Read-only access to request data through an MCP server (Oracle expected).
+- Document retrieval by file path, by database BLOB, or by manual upload.
+- Reading PDF, XLS and image documents (other extensions may appear).
+- A structured verification report, stored in a database and shown to the employee inside the host system.
+- A web frontend for the employee, embedded in the host screen (amendment A1, section 15).
+- Optional execution of an approval API, per service, triggered by the employee.
+
+Out of scope for now:
+
+- Multi-tenancy.
+- Conversation memory.
+- RAG and a vector store.
+- Multi-agent orchestration.
+- A full administration UI and an internal permission system.
+- Caller authentication and the security phases, deferred to a later version (amendment A2, section 15).
+
+Memory is excluded because a check is one independent run, and carrying state between requests risks leaking one request's data into another. RAG is excluded because each service's knowledge fits whole in the prompt, which is more reliable for compliance than retrieving fragments. RAG becomes relevant only if one service's knowledge grows to hundreds of pages.
+
+## 3. Architecture
+
+Stack: Java 21, Spring Boot 4, Spring AI 2.0.
+
+```text
+Host system (Oracle ADF or other)
+        |  REST
+        v
+Request Verification Service
+  - Service Registry   loads each service package
+  - Check Engine       fixed pipeline (the only fixed logic)
+  - Report Store       saves the report and the employee decision
+        |
+        +--> MCP server        read-only queries on Oracle
+        +--> Documents         storage path, BLOB or manual upload
+        +--> LLM provider      through Spring AI, replaceable
+        +--> Service database  runs, findings, documents
+```
+
+Each dependency sits behind an interface so it can be replaced without touching the engine.
+
+## 4. Service package (the variable part)
+
+Everything that differs between services lives in one package per service. Adding a service needs no code as long as it uses existing check types.
+
+```text
+services/<service-code>/
+  knowledge.md     conditions and rules in natural language (read by the LLM)
+  service.yaml     queries, required documents, fetch mode, optional approval API
+```
+
+The two files are separate on purpose. SQL and file locations are executed literally by the engine; only the conditions are interpreted by the LLM. Each package carries a version, and every report records the version it was built on.
+
+```yaml
+service: scholarship-request
+version: 3
+input: requestId
+
+queries:
+  request_details:
+    connection: main-db
+    sql: >
+      SELECT r.status, r.gpa, s.national_id
+      FROM requests r JOIN students s ON s.id = r.student_id
+      WHERE r.id = :requestId
+  attachments:
+    connection: main-db
+    sql: >
+      SELECT a.doc_type, a.file_path
+      FROM request_attachments a
+      WHERE a.request_id = :requestId
+
+documents:
+  source: attachments
+  type_column: doc_type
+  fetch: path            # path | blob | manual
+  path_column: file_path
+  required: [TRANSCRIPT, ID_CARD]
+
+approval:
+  enabled: false
+  api: POST /requests/{requestId}/approve
+```
+
+Connections are defined once, outside the service packages, and set at activation time for each environment.
+
+```yaml
+connections:
+  main-db:
+    type: mcp
+    endpoint: ...
+    query_tool: run_query
+    dialect: oracle
+```
+
+## 5. Check flow (the fixed part)
+
+1. The host system sends the service code, the request number and the employee's identity.
+2. The engine loads the service package and runs its queries through the MCP connection.
+3. It fetches the documents using the service's fetch mode.
+4. It reads each document by type: text extraction for PDF, table extraction for XLS, OCR or a vision model for scans and images.
+5. It runs the deterministic checks in code: required documents present, explicit values and dates.
+6. The LLM compares the data and document content with the service knowledge.
+7. The engine stores the structured report and makes it available to the host system.
+8. The employee takes the action in the host system, or through the approval API where it is enabled.
+
+A check takes time, so it runs asynchronously: the host starts it and then polls for the result.
+
+## 6. Data and document access
+
+Queries and documents use separate channels, each behind its own interface.
+
+Queries go through `QueryExecutor`. The first implementation, `McpQueryExecutor`, calls the MCP server's query tool using the Spring AI MCP client. The engine calls MCP to run the queries written in `service.yaml`. The LLM is never given a tool that runs SQL.
+
+Documents go through `DocumentFetcher`. All three modes are available, chosen per service.
+
+| Mode | Used when | How |
+| --- | --- | --- |
+| `path` | The file is in storage and its path is in the database | Read from storage by the path the query returns |
+| `blob` | The file is stored inside the database | Read the column directly over JDBC with a read-only user |
+| `manual` | The service is not allowed direct access | The employee uploads the files; the report is marked accordingly |
+
+BLOBs are not moved through MCP, because binary content would travel as Base64 text inside a message, which is slow and size-limited.
+
+Requirements for the MCP server chosen at activation: bind-variable support or strict parameter type validation in the engine, structured (JSON) results, a row limit and a timeout.
+
+## 7. Report model
+
+The report has a fixed structure for every service, produced as structured output and stored as data.
+
+| Part | Content |
+| --- | --- |
+| Overall status | `COMPLIANT`, `NOT_COMPLIANT` or `NEEDS_MANUAL_REVIEW` |
+| Findings | One per condition: satisfied or not, the evidence (actual value found), and a note for the employee |
+| Documents | What was read, what is missing, what could not be read |
+| Metadata | Service version, document source mode, model used, time, employee |
+
+Every finding carries its evidence so the employee can verify it. A required document that is missing or unreadable prevents a `COMPLIANT` status.
+
+## 8. API
+
+| Endpoint | Purpose |
+| --- | --- |
+| `POST /checks` | Start a check for a service code and request number |
+| `GET /checks/{id}` | Return the status and the report as JSON |
+| `GET /checks/{id}/view` | Return a ready report page to embed in the host screen |
+| `POST /checks/{id}/documents` | Upload documents in manual mode |
+| `POST /checks/{id}/decision` | Record the employee's decision; call the approval API if the service enables it |
+
+The calling system authenticates itself (API key or mTLS) and passes the employee's identity, which is recorded with the check.
+
+## 9. Persistence
+
+Reports are stored in database tables in a schema owned by the service, separate from the read-only user that reaches host data.
+
+| Table | Holds |
+| --- | --- |
+| `CHECK_RUN` | One row per check: service, request number, employee, status, result, service version, model, timestamps, employee decision |
+| `CHECK_FINDING` | One row per condition: satisfied flag, evidence, note |
+| `CHECK_DOCUMENT` | One row per document: type, source mode, read status |
+
+Storing the employee's decision beside the report result gives a direct measure of accuracy: where the two disagree, the service knowledge or a check needs attention.
+
+## 10. LLM strategy
+
+The provider is cloud-based for now and must be replaceable through configuration alone.
+
+- Testing: a free cloud tier. Gemini Flash-Lite through Google AI Studio is the starting candidate. Free-tier limits change often.
+- Test data only: free tiers may use submitted data for model training. Only synthetic or anonymised requests and documents are sent while a free provider is in use.
+- Real data: the provider for real requests, cloud or inside the network, is decided before go-live.
+
+Rules that keep the provider replaceable:
+
+- The engine depends on Spring AI's `ChatModel` only, with no provider-specific features.
+- Document reading (OCR or vision) is a separate step with its own configurable model.
+- A fixed set of test requests with known expected results is run on every model change.
+
+## 11. Host integration
+
+The service is reached from Oracle ADF applications, and from other government systems later, over HTTP only. It is not embedded in ADF.
+
+Display. The first version embeds the ready report page (`/checks/{id}/view`) inside the ADF screen. The same report is available as JSON, so it can later be rendered with ADF components or shown in the request log without changing the service.
+
+Approval. Two options, chosen per service:
+
+1. Default: the employee approves in the host system as today. The host notifies the service of the decision for the record. The service needs no write access to any system.
+2. Optional: where the host exposes an approval API, the service calls it after the employee confirms, and records the report the approval was based on.
+
+## 12. Guardrails
+
+- The LLM analyses and summarises. It does not write SQL and does not trigger approval.
+- Approval is executed only as a result of the employee's action.
+- All access to host data uses a read-only database user, preferably limited to specific views.
+- Query parameters are bound or strictly type-validated; SQL is never built from free text.
+- File paths are validated to be inside the allowed storage root before opening.
+- Anything that could not be read appears in the report. It is never skipped silently.
+- Document content is treated as data, never as instructions to the model.
+- Each check has limits: timeout, maximum rows, maximum file size.
+- No data is carried from one check to another.
+
+## 13. Decisions and open items
+
+Decided:
+
+| Topic | Decision |
+| --- | --- |
+| Form | A standalone service, not a library |
+| Stack | Java 21, Spring Boot 4, Spring AI 2.0 |
+| Tenancy | Single tenant |
+| Configuration | One package per service, maintained by the administrator |
+| Database access | Read-only through an MCP server, specified at activation |
+| Documents | `path`, `blob` and `manual` modes all available |
+| Decision maker | The employee; approval API is an optional second path |
+| Display | The frontend (A1) embedded in the host screen; JSON available for native display or the request log (amended — A1) |
+| Storage | Reports kept in the service's own database tables |
+| LLM | Cloud, free tier for testing, replaceable by configuration |
+| Memory, RAG, vector store | Not included |
+| Frontend | A web frontend for the employee, embedded in the host screen (amended — A1) |
+| Security | Caller authentication and security phases deferred to a later version; the section 12 guardrails stay (amended — A2) |
+
+Open:
+
+- Which MCP server to use for Oracle, confirmed against the requirements in section 6.
+- Which LLM provider is permitted for real request data.
+- How the host system authenticates to the service: API key or mTLS. Deferred with A2 — not to be resolved in this version.
+- Report retention period and who may view stored reports.
+- The first service to implement as the pilot.
+
+## 14. Proposed module split (for `domain-profile` to confirm)
+
+| Code | Module | Scope |
+| --- | --- | --- |
+| `REG` | Service Registry | Service packages, versions, connections |
+| `CHK` | Check Engine | The fixed pipeline, deterministic checks, LLM comparison |
+| `DOC` | Document Access | `path`, `blob` and `manual` fetching; reading PDF, XLS and images |
+| `RPT` | Report Store | Runs, findings, documents, employee decision |
+| `INT` | Host Integration | REST API, optional approval API |
+
+Tracks: backend and frontend (amended — A1). The platform track covers the MCP connection, the LLM provider configuration and the service database.
+
+## 15. Amendments
+
+| # | Date | Change | Supersedes |
+| --- | --- | --- | --- |
+| A1 | 2026-10-01 | A frontend track is added. A web frontend (React + TypeScript), embedded in the host screen, gives the employee: the checks of a request, the report (overall status, findings with evidence, documents read / missing / unreadable), manual document upload, and recording the decision. It consumes the same REST API as any host. It replaces the server-rendered report page (`GET /checks/{id}/view`) as the display path. A full administration UI stays out of scope. | Section 13 "Frontend: None" and "Display"; the section 14 tracks paragraph; the server-rendered page in sections 8 and 11 |
+| A2 | 2026-10-01 | Caller authentication (API key or mTLS) and the security phases are deferred to a later version; the owner already has the solution and adds it then. The section 12 guardrails are NOT deferred: they are part of what the service does. | The auth item under section 13 "Open" |
+
+<<<END KB>>>
+
+
+==============================================================================
+# BRIEF — stage `P4` (Test Plan) · module INT · v1 · profile `aias`
+
+Lane `test-gen` · implementer ['claude:opus'] · effort high · round 1
+
+## Rules that bind this run
+- Questions: **forbidden**. A `[QUESTION]` block is refused. Ambiguity → ADR in `analysis/decisions/INT/` (`ADR-{MOD}-{seq:03d}.md`): non-breaking → continue; breaking → status BLOCKED and stop.
+- Owns IDs: TC — ID grammar `{prefix}-{MOD}-{seq}` (seq width 3); never re-number, never restart a sequence.
+- ADRs continue the module's stream: the next free id is `ADR-INT-018`; an existing ADR is never rewritten under its id.
+- Read only what this brief contains (generated current state); never open version folders yourself.
+- Write exactly these files (complete files):
+- `governance-shared/analysis/modules/INT/P4/backend-test-plan-int.md`
+- `governance-shared/analysis/modules/INT/P4/frontend-test-plan-int.md`
+- Write the files directly into the project checkout (you are the operator); the orchestrator reads them on `--complete`.
+
+## Contracts checked by `gov.py analyze` after this stage
+- **C10** test plans (every TC an acceptance of one package) → split: C10.1 traces {'from': 'TC', 'to': ['AC', 'XM', 'UXD'], 'min': 1, 'mode': 'any'} [CRITICAL]; C10.2 orphans {'kind': 'AC', 'referenced_by': ['TC'], 'min': 1} [MAJOR]; C10.3 markers {'artifact': 'backend-test-plan', 'track': 'backend', 'plan': 'test'} [CRITICAL]; C10.4 markers {'artifact': 'frontend-test-plan', 'track': 'frontend', 'plan': 'test'} [CRITICAL]; C10.5 ids-owned {'stage': 'P4'} [CRITICAL]; C10.7 msg-bound {'plan': 'frontend-execution-plan', 'tests': ['frontend-test-plan'], 'spec': 'analyze.messages', 'format': 'stack.backend.api.error_code_format', 'rule_kind': 'RULE', 'kind': 'TC'} [MAJOR]; C10.8 tc-data {'srs': 'srs', 'tests': ['frontend-test-plan', 'backend-test-plan'], 'spec': 'analyze.catalogue', 'kind': 'TC'} [MAJOR]; C10.9 tc-consistency {'srs': 'srs', 'tests': ['frontend-test-plan', 'backend-test-plan'], 'spec': 'analyze.catalogue', 'kind': 'TC'} [MAJOR]; C10.10 tc-package-resolves {'tests': ['backend-test-plan', 'frontend-test-plan'], 'spec': 'test_plan', 'kind': 'TC'} [MAJOR]; C10.11 package-has-tests {'tests': ['backend-test-plan', 'frontend-test-plan'], 'spec': 'test_plan', 'kind': 'TC'} [MAJOR]
+
+---
+# ENGINE
+```
+ENGINE        : P4 — Test Plan   (the LAST analysis stage — pass 2, before the one gate)
+LANE          : test-gen · questions forbidden · derives from `AC-*` + `XM-*` + `UXD-*` (ids.atoms.TC.traces_to)
+MODULE        : INT · v1 · profile aias (Request Verification Service)
+READS         : srs · registry-srs · registry-db · backend-execution-plan · frontend-execution-plan · api-spec · dependency-graph?   (from _state/ — "?" = optional)
+PRODUCES      : backend-test-plan-int.md · frontend-test-plan-int.md
+OWNS IDS      : TC
+NEXT          : gate:analysis   (the one review gate over backend + frontend + tests)
+FRAMEWORK     : backend `agnostic` · frontend `agnostic`   (profile.stack.testing)
+BOUNDARY      : analysis-only — test PLANS, not test code; the factory runs nothing [G]
+```
+
+# Test Plan — engine reference
+
+## 0. Position
+
+This engine is the **last stage of the analysis** (`factory.passes.2`): it runs after
+both execution plans and the API document exist in `_state/`, and the one review gate
+(`gate:analysis`) reads its plans together with the backend and frontend plans. Every package
+the split emits after that gate carries the test cases derived here as its acceptance
+(`Package` line, §6; C10.10). It **invents nothing**: no rule, error, endpoint,
+field, screen or cross-module flow — it only adds test cases. The factory runs none of them: [C:C10.5]
+a test plan is data for the executor.
+
+Questions are `forbidden`; ambiguity → `factory.yaml → ambiguity` (ADR, then
+`continue`; breaking → `BLOCKED`,
+`stop`) — shared/GOVERNANCE-CORE.md.
+
+Delta versions: read `_state/` as the baseline, emit only ADDED / MODIFIED / REMOVED [C:C12.2]
+test cases, continue the `TC` sequence — shared/VERSIONING.md.
+
+The API document (`_state/current-api-spec.yaml`) is the source of every endpoint shape a backend TC
+asserts on (method, path, request/response schema, the error responses' codes): a TC cites
+the `API-*` id and the executor reads the shape there.
+
+## 1. Inputs
+
+| Input | Read from | Use |
+|---|---|---|
+| `srs` [G] | `_state/current-srs.md` | **the derivation source**: every `REQ-*` with its `AC-*` (Given / When / Then), `RULE-*` messages, screens, permissions |
+| `registry-srs` [G] | `_state/current-registry-srs.md` | ID ranges, coverage of REQ by API/SCR |
+| `registry-db` [G] | `_state/current-registry-db.md` | the module's `XM-*` register (target module, type) — cross-checked against the `XM` blocks above, not restated |
+| `backend-execution-plan` [G] | `_state/current-backend-execution-plan.md` | `API-*` (verb, path, request/response, catalog codes) to bind backend steps to endpoints; the integration blocks of its last phase (`XM-*`: target, type, requires, tests, traces — shared/XM-PROTOCOL.md §6) are the **integration derivation source** on the backend track |
+| `frontend-execution-plan` [G] | `_state/current-frontend-execution-plan.md` | `SCR-*`, routes, F-blocks to bind frontend steps to screens; its `UXD-*` references (screen, foreign field, owner module) are the **integration derivation source** on the frontend track |
+| `api-spec` [G] | `_state/current-api-spec.md` | ID ranges, coverage of REQ by API/SCR |
+| `dependency-graph` [G] (optional) | `_state/current-dependency-graph.md` | ID ranges, coverage of REQ by API/SCR |
+
+Both execution plans and the API document are mandatory inputs here: every backend TC binds [T:inputs-missing]
+an `API-*` whose shape the document states, every frontend TC a `SCR-*` the frontend plan
+places, and every TC names the split unit it is acceptance for — none of that can be
+derived from the SRS alone.
+
+## 2. Derivations — this module, both tracks, its own edges
+
+One run, one module, one file per track. Three derivations, each from what THIS module's
+artifacts state:
+
+| Derivation | Source | Phases populated |
+|---|---|---|
+| module (§3) | every `AC-*` of the SRS | the module test phases of each track |
+| integration (§4, §5) | every `XM-*` block of the last phase of this module's backend plan (`integration` — the edge, its target, its `requires`, its tests line) and every `UXD-*` its frontend plan cites | the integration phase(s) (`profile…phases[*].integration: true`) — populated when the module has such an edge or such a field, **absent** otherwise: not an empty `PHASE` block [G] |
+| platform | — | nothing: the rollup is `analyze.coverage` (`ac-tc`), computed by the factory from the traceability matrix, not written by hand [G] |
+
+Rules:
+1. the **declaring** module owns an edge's TCs and the **displaying** module owns a foreign
+   field's TCs — this module's plan carries its own integration blocks, so nothing about
+   another module has to be selected or waited for; the target's shape is cited by id only; [G]
+2. an integration TC exercises this module's own `API-*` / `SCR-*` against the edge's
+   `requires` state — present, and absent (the block's `if_not_met` path);
+3. every TC names the package it is acceptance for (§6, `Package`).
+
+## 3. Derivation (module) — every `TC-*` comes from an `AC-*`
+
+`TC-*` (`TC-INT-{seq}`, 3-digit seq,
+one continuous sequence across the module — both plans share it, so no TC id repeats) traces → AC + XM + UXD. The
+module-scope derivation is **mechanical**:
+
+| AC part | becomes |
+|---|---|
+| **Given** | preconditions — data state, role/permission, system state (bound to real entities/screens from the plans) |
+| **When** | the step list — for backend: the endpoint call (`API-*`, verb, path, payload from the AC); for frontend: navigation + user actions on `SCR-*` |
+| **Then** | expected result — status/response (per `ProblemDetail (RFC 9457) → {type, title, status, detail, code}` when a RULE fires) or UI state; message asserted in every language (en, ar) |
+
+Rules:
+1. one `TC-*` per `AC-*`, always — an AC without a TC is a coverage gap (✗), never skipped; [C:C10.2]
+2. an AC whose Then names a `RULE-*` violation yields the **violation** TC; its happy-path
+   twin exists only if another AC states it — do not fabricate happy paths; [G]
+3. a **boundary** TC is added only when the AC (or the RULE it cites) states a numeric limit; [G]
+4. every TC cites, besides its AC: the `REQ-*`, and the `API-*` (backend) or `SCR-*`
+   (frontend) it exercises, plus the `RULE-*` / catalog code when a violation is expected;
+5. do not reword a rule, message or endpoint — reference by ID/code; message text is copied [G]
+   character-perfect from the SRS in every language. A case that asserts a refusal by its TEXT
+   needs the frontend plan to bind that text (`text: <source>` on the row routing the code —
+   `analyze` msg-bound); a plan that routes the code without its words is a plan gap to record in an
+   ADR, never a message to paraphrase here; [C:C10.7]
+6. **catalogue values are seeded or created** (`analyze` tc-data). The SRS lookup section
+   (the `lookups` block: `seeded` per key, `open: true` when the host may add values) says which values each key SEEDS and which are host data.
+   A case whose data names a value the section does not seed carries a `Host data` line creating it —
+   the key, the value, the state the case needs (active / inactive) and the call the OWNER of the
+   lookup publishes for adding a value, by verb and path. Host data is site data: it is never moved [C:C10.8]
+   into a product seed, and a case never assumes it exists; [C:C10.8]
+7. **no two cases demand opposite states of one catalogue value** (`analyze` tc-consistency). One
+   case needing a value absent and another holding it inactive, or one asserting an option set that
+   leaves out a value another case needs, cannot share a catalogue. Give each such case its OWN host
+   value (`<VALUE>_<TC seq>`), created by its own `Host data` line — the one departure from `Test data`'s "the values
+   named in the AC" this engine allows, and the case's `Test data` line says so;
+8. over-engineering guard: if a track's TC count exceeds ~2× its AC count, review — the
+   extra TCs are mostly fabricated variants; remove them. [G]
+
+Scenario tags (one per TC): `HAPPY | VIOLATION | BOUNDARY | PERMISSION | STATE | INTEGRATION`;
+data class: `VALID | INVALID | BOUNDARY | EDGE | ATTACK`.
+
+
+## 4. XM → TC derivation (integration, backend)
+
+Runs for every `XM-*` block of this module's `backend-execution-plan` — its last phase carries
+one per edge (XM-PROTOCOL.md §6), with the target, the type, the contract item, `requires`
+and the `if_not_met` path. The target module is not read: the block states everything the [G]
+test needs, and the executor decides when the edge's package runs.
+
+Source: those blocks (cross-checked against `registry-db`, not restated). [G]
+The **declaring module owns the resulting TC** — one continuous `TC-{MOD}-<seq>` sequence,
+same rule as module scope (design decision: integration TC ownership follows declaration,
+not the target).
+
+| XM type | TC scenario |
+|---|---|
+| `HARD-FK` | one `EXISTS` TC (the referenced row is present — request/flow succeeds) **and** one `MISSING` TC (the referenced row is absent — the physical constraint is honoured: the documented rejection, not a silent pass) [G] |
+| `SOFT-READ` | one `GRACEFUL-DEGRADATION` TC — the target read fails or returns empty and the declaring module's flow still returns a defined result (not a 500 / unhandled state) [G] |
+
+Rules:
+1. do not invent the target entity's shape — bind by `ENT`/`DBF` ID only, as the `XM` block [G]
+   already does; the TC exercises the declaring module's own `API-*`, not the target's;
+2. tag every such TC `INTEGRATION`, data class per the row above;
+3. `traces=` carries the `XM-*` id plus the `REQ-*` the XM itself traces to (and the `API-*`
+   exercised, when the plan binds one) — never an `AC-*` that does not exist for it; [C:C10.1]
+4. one `XM-*` yields at most the two/one TC(s) in the table above — no fabricated [G]
+   extra scenarios ("over-engineering guard" of §3 applies here too).
+
+## 5. UXD → TC derivation (integration, frontend)
+
+Runs for every `UXD-*` this module's `frontend-execution-plan` cites — a foreign-owned field
+one of its screens renders. The owner module is not read. [G]
+
+Source: the `UXD-*` references of the **displaying** module's `frontend-execution-plan`
+F4 blocks (cross-checked against its `registry-exec-fe`, not restated). The **displaying [G]
+module owns the resulting TC** (it is the one whose screen renders the foreign field).
+
+| UXD case | TC scenario |
+|---|---|
+| foreign field rendered | one TC: navigate to the `SCR-*`, the foreign-owned field renders the value the owner module's API returns |
+| foreign field empty / owner API failure | one TC: the screen shows its declared empty/error state (§A.3 `States` of the ui-ux-spec) — not a blank crash, no invented copy [G] |
+
+Rules:
+1. do not invent the owner module's field shape or a new permission — the UXD block and the [G]
+   operation the screen's read binds in `_state/current-api-spec.yaml` are the only sources; [G]
+2. tag every such TC `INTEGRATION`; `traces=` carries the `UXD-*` id plus its `REQ-*`/`AC-*`
+   and the `SCR-*` it renders on;
+3. one `UXD-*` yields at most the two TCs in the table above. [G]
+
+## 6. TC block — framework-agnostic form
+
+```
+<!-- TC:TC-INT-<seq>:START traces=AC-INT-<seq>,REQ-INT-<seq>[,API-INT-<seq>|SCR-INT-<seq>|XM-INT-<seq>|UXD-INT-<seq>] -->
+### TC-INT-<seq> — <title>
+Derived from : AC-INT-<seq>  (REQ-INT-<seq>)   |   XM-INT-<seq> (REQ-INT-<seq>)   |   UXD-INT-<seq> (REQ-INT-<seq>, AC-INT-<seq>)
+Exercises    : API-INT-<seq> <verb path>   |   SCR-INT-<seq> <route>
+Rule / code  : RULE-INT-<seq> → <catalog code> | —
+Package      : <the split unit this TC is acceptance for — see below>
+Scenario     : <tag> · data class <class> · language <en|ar|ALL>
+Preconditions: <from Given — concrete entities, role, state | for XM/UXD: the target/owner entity present or absent>
+Host data    : <KEY VALUE — state — created by <verb path of the owner's add-value call>> | none
+Steps        : 1. … 2. … (from When — one observable action per step)
+Expected     : <from Then — status / body shape / message per language / UI state>
+Test data    : <values named in the AC; placeholders marked, no invented business data> [G]
+<!-- TC:TC-INT-<seq>:END -->
+```
+**`Package` — the package this TC is acceptance for**, derived from the traces, never chosen: [C:C10.10]
+an AC-derived TC names the split unit of the track's execution plan that implements the AC's
+REQ — the `SUB` id (`{PHASE-KEY}-{LABEL}` / `{PHASE-KEY}-SCR-*`) holding the `API-*` / the screen it
+exercises, or the `PHASE` key when that phase carries no SUB; an XM-derived TC names its
+`XM-*` block (the edge's own package); a UXD-derived TC names the frontend SUB of the
+screen that renders the field. One unit per TC. `gov.py analyze` refuses a unit the plan does not [C:C10.10]
+split into (C10.10), and after the gate `gov.py split` writes every TC into its package's manifest
+(`tests`) — a unit no TC names is a finding (C10.11) unless its phase is flagged
+`no_tests` in the profile.
+
+Framework: `profile.stack.testing` is **agnostic** on both tracks — the block above is the whole
+contract; the consumer repo chooses its tool and turns each TC into a test. No framework
+name, annotation or file layout is mentioned anywhere in the plan.
+
+## 7. Test plans — organised by the profile's test phases
+
+Each track with a `test` plan in the profile gets one file per module, wrapped in the
+profile's test phases with `TC` atoms (kind `TC`, level 3, parents PHASE/SUB,
+plans test). Test-plan SUB ids are **bare** labels
+(`factory.markers.rules.sub_unqualified_exempt_plans` = test).
+A phase flagged `integration: true` in the profile is populated when this module has an
+`XM-*` block (backend) or cites a `UXD-*` (frontend) — §4/§5 — and is **absent** otherwise.
+
+### Track `backend` — `backend-test-plan-int.md`
+
+| Phase key | Split rule | SUB labels |
+|---|---|---|
+| `TEST-PLAN-BE` [T:never-split] | SUB when TC count > 12 — grouped RULE-SCENARIOS / API-SCENARIOS / MODEL-EVAL | `RULE-SCENARIOS`, `API-SCENARIOS`, `MODEL-EVAL` |
+| `INT-XM` [T:never-split] _(integration — when the module has an edge / a foreign field)_ | SUB when TC count > 8 — grouped per target module | — |
+Layout:
+```
+<header>   sources (_state files + versions) · framework note (§3) · open ADRs
+<!-- PHASE:TEST-PLAN-BE:START traces=<union of the TCs' REQ/AC> -->
+  <!-- SUB:RULE-SCENARIOS:START traces=… -->  …TC blocks…  <!-- SUB:RULE-SCENARIOS:END -->
+  <!-- SUB:API-SCENARIOS:START traces=… -->  …TC blocks…  <!-- SUB:API-SCENARIOS:END -->
+  <!-- SUB:MODEL-EVAL:START traces=… -->  …TC blocks…  <!-- SUB:MODEL-EVAL:END -->
+  (SUBs only when the threshold is met — decide WHILE writing, from the TC count) [G]
+<!-- PHASE:TEST-PLAN-BE:END -->
+<!-- PHASE:INT-XM:START traces=<union of the TCs' REQ/AC/XM/UXD> -->
+  (populate ONLY when this module has an edge / cites a foreign field — §4/§5; omit this PHASE entirely when it has none, not an empty block) [G]
+  …TC blocks…
+<!-- PHASE:INT-XM:END -->
+TC TRACEABILITY INDEX   AC → TC · REQ → TC · API → TC · RULE/code → TC · XM → TC · Package → TC
+COVERAGE                AC covered <n>/<total> (a gap is ✗ and blocks the run) · REQ covered · API covered · every XM edge covered <n>/<total> (an integration gap is ✗ exactly like an AC gap — recorded, not silently dropped) [G]
+```
+Backend grouping hint: rule-driven ACs (violations, state transitions) vs endpoint-driven ACs
+(happy paths, permission, paging/empty-result per `the documented envelope`); integration TCs (§4) group by target module inside `INT-XM`.
+
+### Track `frontend` — `frontend-test-plan-int.md`
+
+| Phase key | Split rule | SUB labels |
+|---|---|---|
+| `TEST-PLAN-FE` [T:never-split] | SUB when TC count > 8 — grouped UI-FLOWS / INT-FLOW | `UI-FLOWS`, `INT-FLOW` |
+| `INT-UXD` [T:never-split] _(integration — when the module has an edge / a foreign field)_ | SUB when TC count > 8 — grouped per source module | — |
+Layout:
+```
+<header>   sources (_state files + versions) · framework note (§3) · open ADRs
+<!-- PHASE:TEST-PLAN-FE:START traces=<union of the TCs' REQ/AC> -->
+  <!-- SUB:UI-FLOWS:START traces=… -->  …TC blocks…  <!-- SUB:UI-FLOWS:END -->
+  <!-- SUB:INT-FLOW:START traces=… -->  …TC blocks…  <!-- SUB:INT-FLOW:END -->
+  (SUBs only when the threshold is met — decide WHILE writing, from the TC count) [G]
+<!-- PHASE:TEST-PLAN-FE:END -->
+<!-- PHASE:INT-UXD:START traces=<union of the TCs' REQ/AC/XM/UXD> -->
+  (populate ONLY when this module has an edge / cites a foreign field — §4/§5; omit this PHASE entirely when it has none, not an empty block) [G]
+  …TC blocks…
+<!-- PHASE:INT-UXD:END -->
+TC TRACEABILITY INDEX   AC → TC · REQ → TC · SCR → TC · RULE/code → TC · UXD → TC · Package → TC
+COVERAGE                AC covered <n>/<total> (a gap is ✗ and blocks the run) · REQ covered · SCR covered · every UXD covered <n>/<total> (an integration gap is ✗ exactly like an AC gap — recorded, not silently dropped) [G]
+```
+Frontend grouping hint: per-screen flows (search, create/edit, violation shown on screen,
+permission-hidden affordance) vs the single module lifecycle flow (create → search → update →
+deactivate → gone from active results); integration TCs (§5) group by source (owner) module inside `INT-UXD`. [G]
+
+## 8. Split
+
+The same toolkit splits test plans, with plan key `test`
+(`factory.tracks.<track>.packages.test` → `backend-test`, `frontend-test`), after the `gate:analysis` gate, with the execution plans:
+```
+gov.py split --track <track> --module <MOD> --version <v> --plan test --dry-run   # validate, non-zero exit = fix first
+gov.py split --track <track> --module <MOD> --version <v> --plan test
+```
+Every TC atom is verified by content hash (`factory.markers.rules.verify` = sha256) after the split,
+and every execution package's manifest lists the TCs whose `Package` names it — the package's acceptance.
+
+## 9. Self-check before finishing
+
+```
+[ ] every AC-* in the SRS has ≥1 TC-* (coverage ✗ = not done)
+[ ] every TC-* carries traces= with its AC-*/XM-*/UXD-* source (+ the upstream ids the plan names) and the atom marker pair
+[ ] every TC names one of AC/XM/UXD as its source; no reworded rule/message/endpoint; no invented test data [G]
+[ ] phases = the profile's test phases, in order; SUB labels bare; thresholds checked while writing
+[ ] framework wording matches §6; every TC carries a `Package` line naming ONE split unit of its track's plan
+[ ] every XM-* block and every cited UXD-* has ≥1 TC or is recorded as a gap (✗) — never silently [C:C10.11]
+    dropped, not fabricated when absent; the integration phase is absent when there is none [G]
+[ ] every host-data value a case names has a `Host data` line with the owner's add-value call;
+    no two cases share a host value in opposite states (tc-data, tc-consistency)
+[ ] every refusal a case asserts by its text is bound in the frontend plan (msg-bound) — or an ADR
+    records the plan gap
+[ ] ADRs written for every derivation choice that was not mechanical
+```
+
+## 10. Boundaries
+
+| Owns | References (never redefines) | Never [C:C10.5] |
+|---|---|---|
+| `TC-*`, the test plans | `REQ/AC/RULE` (P1), `API` (P3.1), `SCR/UXD` (P3.2 — `UXD` is `P3.2`'s, cited never redefined), `DBF/XM` (P2 — `XM` is `P2`'s, cited never redefined), catalog codes | test code, framework scaffolding, any edit to a line artifact, any gate or verdict, a TC about another module's own behaviour [C:C10.5] |
+
+
+---
+# INPUTS (generated current state)
+
+<<<INPUT: srs>>>
+# SRS — Host Integration (INT)
+══════════════════════════════════════════════════════════════════
+Module : INT   Version : v1   Profile : aias
+Inputs : prd, domain-profile, project-registry (PRD approved 2026-10-01)
+Counts : REQ 60 · AC 66 · ENT 0 · RULE 4 · SCR-REQ 5 · ADR 5 (new: ADR-INT-010 … ADR-INT-013, ADR-INT-016; applied: ADR-INT-001 … ADR-INT-013, ADR-INT-016, ADR-REG-001, ADR-REG-006, ADR-REG-008, ADR-CHK-018, ADR-DOC-006, ADR-DOC-012, ADR-RPT-003, ADR-RPT-005, ADR-RPT-006, ADR-RPT-013)
+══════════════════════════════════════════════════════════════════
+
+# PART A — MODULE FOUNDATION
+
+## A1 — Document information
+| Item | Value |
+|---|---|
+| Module | INT — Host Integration |
+| Feature code | INT |
+| Version | v1 |
+| Date | 2026-10-01 |
+| Status | DRAFT — P1 output, PRD approved 2026-10-01 (gate prd-approval) |
+| Prepared by | P1 SRS engine (operator run, lane analysis) |
+| Decisions applied | 14 INT ADRs (ADR-INT-001 … ADR-INT-013 and ADR-INT-016, of which 5 new), 3 REG, 1 CHK, 2 DOC and 4 RPT ADRs, and 4 DEFAULTs — see Decisions applied |
+
+## A2 — Functional context
+
+### In scope
+- Starting a Check at a host system's or the employee frontend's request and answering at once (POL-INT-001, POL-INT-002; ADR-INT-002).
+- Handing a manual upload to Document Access with the Check's service code and version, only while the Check waits for documents (POL-INT-004, POL-INT-005; ADR-INT-005).
+- Confirming the uploads of a `manual` Check to the Check Engine (POL-INT-006).
+- Recording the Employee Decision in the Report Store, calling the host Approval API first only for an APPROVED decision where the Check's version enables it (POL-INT-007 … POL-INT-011; ADR-INT-004, ADR-INT-009, ADR-INT-010).
+- Answering every refusal in the standard error form with the refusing module's code (POL-INT-003; ADR-INT-003).
+- The employee frontend embedded in the host screen: the Checks of a request, the report, the document upload, the upload confirmation and the decision (POL-INT-012 … POL-INT-016, POL-INT-018; ADR-INT-006, ADR-INT-011).
+- The raw-idea §12 guardrails at INT's surface (see Traceability — guardrails).
+
+### Out of scope
+- Reading a Check, its report, the Checks of a request or the decision agreement — served by the Report Store (ADR-RPT-005, ADR-RPT-006; ADR-INT-001).
+- The service reads (REG), the list of uploaded documents (DOC) and the active-Check read (CHK) — served by their owners.
+- The server-rendered report page `GET /checks/{id}/view` — superseded by the employee frontend (A1; ADR-INT-001).
+- Caller authentication (API key or mTLS) and who may view stored reports — deferred (raw-idea A2; domain-profile D4, D7); no role check is specified.
+- Running a Check, fetching or reading documents, storing reports — CHK, DOC, RPT.
+- Multi-tenancy, conversation memory, RAG, multi-agent orchestration, an administration UI.
+
+### Module function
+Host Integration is the door of the service: host systems and the employee frontend reach the service through it to start a Check, to hand over the documents of a `manual` Check and confirm them, and to record the employee's decision — with the host's Approval API called on the employee's behalf where the service enables it. It owns the employee frontend that shows the Checks of a request and their reports, and it keeps nothing of its own.
+
+### Detailed description
+The host screen opens the embedded frontend for one request, passing the service code, the request number and the employee identity. The frontend lists the Checks of that request (from the Report Store) and lets the employee start a new one; Host Integration has the Check Engine start it and answers at once with the Check's identifier and its first status — RUNNING, or AWAITING_DOCUMENTS for a `manual` service. The frontend follows a Check that has not ended by reading it every few seconds. For a `manual` Check the employee uploads each document — Host Integration reads the Check to learn its service code, version and status, and hands the file to Document Access — and then confirms, as a separate action, that the uploads are complete; Host Integration asks the Check Engine to continue. When the Check is COMPLETED the employee reads the report — the Overall Status, each finding beside its evidence, the documents read, missing or unreadable, the service queries that could not be read — and records a decision. For an APPROVED decision on a version that enables the Approval API, Host Integration checks that the decision is complete and the Check is COMPLETED and undecided, calls the host's Approval API once, and only after it succeeds hands the decision to the Report Store marked as executed; a failed or timed-out call records nothing and the employee can try again. A REJECTED decision, or any decision on a version without the Approval API, goes straight to the Report Store. Every refusal reaches the caller in the standard error form with the refusing module's code. Roles: the Employee (all screens) and the Host System (the REST API).
+
+### Current situation
+| Step | Party | Notes |
+|---|---|---|
+| Employee checks the request by hand and approves it in the host system | Employee | No service to start a check from the host screen, no report beside the request, no record of the decision against a report [KB:raw-idea.md §1, §11] |
+
+### Current difficulties
+The host systems have no way to ask for a verification and show its evidence inside their screens, and an approval taken in the host leaves no link to the facts it was based on [KB:raw-idea.md §1, §9, §11].
+
+### Proposed system and benefits
+A host starts a Check with one call and the employee follows it in the embedded frontend (US-INT-001, US-INT-008, US-INT-010), verifies each finding against its evidence (US-INT-009), and records the decision beside the report — executed through the host's Approval API where the host offers one (US-INT-005, US-INT-006). Hosts can build their own display on the same API (US-INT-011).
+
+### General notes
+- INT declares no entity (ADR-INT-007, ADR-INT-013); the fields it reads belong to the Report Store's Check Run (ENT-RPT-001) and the Service Registry's Service Package Version (ENT-REG-002), reached only through their contracts (ADR-INT-016).
+- The Approval API timeout, the upload request limit and the host Approval API base address are platform configuration (ADR-INT-012); the frontend's polling interval is frontend configuration (ADR-INT-011).
+- Codes follow the profile format `{MOD}-{http}[-{SLUG}]`; refusals raised by CHK, DOC and RPT keep their owner's code (ADR-INT-003, ADR-INT-010).
+- No role check is specified in this version (raw-idea A2).
+
+## A3 — Entities and fields
+
+Standard fields — per profile: kind `transactional` carries `createdAt, updatedAt`. Not applicable here: Host Integration declares no entity of its own (ADR-INT-007, ADR-INT-013). Host identifiers (request number, employee identity) are handed on as text exactly as the host sent them and are never foreign keys.
+
+### Consumed fields (read through the owners' contracts — not redefined)
+| Owner entity | Field | Read through | Used for |
+|---|---|---|---|
+| ENT-RPT-001 — Check Run (RPT) | checkRunId | the Check identifier `checkId` (CON-RPT-001) | addressing every write on a Check |
+| ENT-RPT-001 | checkStatus | CON-RPT-003 | upload only while AWAITING_DOCUMENTS (RULE-INT-001); approval guard (RULE-INT-003); screen actions |
+| ENT-RPT-001 | serviceCode, versionNumber | CON-RPT-003 | handed to Document Access with an upload (REQ-INT-010); approval API of the Check's version (REQ-INT-030) |
+| ENT-RPT-001 | requestNumber | CON-RPT-003 | filled into the Approval API path (REQ-INT-031) |
+| ENT-RPT-001 | employeeDecision, decidedBy | CON-RPT-003, CON-RPT-006 | approval guard (RULE-INT-003); the decision request (RULE-INT-002) |
+| ENT-RPT-001 | serviceCode, requestNumber, employeeId | the launch context of the frontend; CON-RPT-004 | the Checks of a request (RULE-INT-004) |
+| ENT-REG-002 — Service Package Version (REG) | approvalEnabled, approvalApi | CON-REG-012 | whether and where the Approval API is called (REQ-INT-025, REQ-INT-030) |
+
+## A4 — Functional requirements (EARS) and acceptance criteria
+
+### REQ-INT-001 — A Check started on request
+  Pattern    : event
+  Statement  : When a host system asks to start a Check with a service code, a request number and an employee identity, the system shall have the Check Engine start the Check and answer that it is accepted, with the Check's identifier and status.
+  Traces     : US-INT-001
+  Entities   : ENT-RPT-001
+  Rationale  : The host starts a Check and follows it by its identifier.
+  Source     : POL-INT-001; [KB:raw-idea.md §5, §8]; CON-CHK-004; ADR-INT-002
+  Priority   : HIGH
+
+#### AC-INT-001 — [REQ-INT-001]
+  Given  : service `scholarship-request` is available with fetch mode `path`
+  When   : a host asks to start a Check for `scholarship-request`, request `REQ-2026-0042`, employee `E-3307`
+  Then   : the answer is accepted (HTTP 202) with a new Check identifier and status RUNNING
+
+#### AC-INT-002 — [REQ-INT-001]
+  Given  : service `manual-service` is available with fetch mode `manual`
+  When   : a host asks to start a Check for `manual-service`, request `M-77`, employee `E-3307`
+  Then   : the answer is accepted (HTTP 202) with a new Check identifier and status AWAITING_DOCUMENTS
+
+### REQ-INT-002 — The start answered without waiting for the report
+  Pattern    : ubiquitous
+  Statement  : The system shall answer a Check start as soon as the Check Engine has created the Check, without waiting for its report.
+  Traces     : US-INT-001
+  Entities   : ENT-RPT-001
+  Rationale  : A Check takes time; the host polls for the result.
+  Source     : POL-INT-001; [KB:raw-idea.md §5]; ADR-INT-002
+  Priority   : HIGH
+
+#### AC-INT-003 — [REQ-INT-002]
+  Given  : a `path` Check whose pipeline takes 40 seconds
+  When   : a host starts it
+  Then   : the answer arrives with status RUNNING before the Check's report exists, and a read of the Check right after shows no Overall Status
+
+### REQ-INT-003 — Host identifiers handed on as sent
+  Pattern    : ubiquitous
+  Statement  : The system shall hand the request number and the employee identity of a Check start to the Check Engine exactly as the host sent them.
+  Traces     : US-INT-001
+  Entities   : ENT-RPT-001
+  Rationale  : The report must show the identifiers the host knows.
+  Source     : POL-INT-002; profile `conventions.identifiers`; CON-CHK-004
+  Priority   : HIGH
+
+#### AC-INT-004 — [REQ-INT-003]
+  Given  : service `scholarship-request` is available
+  When   : a host starts a Check for request `0042/B` and employee `e.ahmed@moe`
+  Then   : the Check's read shows request number "0042/B" and employee "e.ahmed@moe", unchanged
+
+### REQ-INT-004 — No directory check of the employee
+  Pattern    : ubiquitous
+  Statement  : The system shall accept the employee identity of a request without checking it against any user directory.
+  Traces     : US-INT-001
+  Entities   : ENT-RPT-001
+  Rationale  : The host identifies the employee; caller authentication is deferred.
+  Source     : POL-INT-002; [KB:raw-idea.md §15 A2]; ADR-INT-002
+  Priority   : —
+
+#### AC-INT-005 — [REQ-INT-004]
+  Given  : employee identity `X-999` is known to no directory of the service
+  When   : a host starts a Check for an available service with employee `X-999`
+  Then   : the Check is accepted (HTTP 202) and its read shows employee "X-999"
+
+### REQ-INT-005 — The accepted start points to the Check's read
+  Pattern    : event
+  Statement  : When a Check start is accepted, the system shall give the caller the address at which the Check is read.
+  Traces     : US-INT-001
+  Entities   : ENT-RPT-001
+  Rationale  : The host polls the Check's read for its status and report.
+  Source     : POL-INT-001; [KB:raw-idea.md §5, §8] `GET /checks/{id}`; ADR-INT-001
+  Priority   : —
+
+#### AC-INT-006 — [REQ-INT-005]
+  Given  : a host starts a Check that receives identifier 611
+  When   : the start is accepted
+  Then   : the answer names `/api/v1/checks/611` as the address of the Check's read
+
+### REQ-INT-006 — Refusals of the owning module passed through
+  Pattern    : unwanted
+  Statement  : If the Check Engine, Document Access or the Report Store refuses a request, then the system shall answer with that refusal's code, HTTP status and message unchanged in the standard error form.
+  Traces     : US-INT-002
+  Entities   : ENT-RPT-001
+  Rationale  : The caller learns why nothing happened in the owner's words.
+  Source     : POL-INT-003; CON-CHK-004, CON-CHK-005, CON-DOC-003, CON-RPT-006; ADR-INT-003, ADR-INT-010
+  Priority   : —
+
+#### AC-INT-007 — [REQ-INT-006]
+  Given  : service `old-service` is withdrawn
+  When   : a host starts a Check for `old-service`
+  Then   : the answer is HTTP 422 with code `CHK-422-SERVICE-NOT-AVAILABLE` and detail "The service "old-service" is not available for Checks."; no Check is created
+
+#### AC-INT-008 — [REQ-INT-006]
+  Given  : Check 612 of `manual-service` is AWAITING_DOCUMENTS and `manual-service` requires TRANSCRIPT and ID_CARD
+  When   : the employee uploads a file of type PASSPORT for Check 612
+  Then   : the answer is HTTP 422 with code `DOC-422-DOCUMENT-TYPE-NOT-OF-SERVICE` and detail ""PASSPORT" is not a document type of the service "manual-service"; choose one of: TRANSCRIPT, ID_CARD."
+
+#### AC-INT-009 — [REQ-INT-006]
+  Given  : Check 613 is COMPLETED with decision REJECTED and its version does not enable the Approval API
+  When   : the employee records decision APPROVED for Check 613
+  Then   : the answer is HTTP 409 with code `RPT-409-DECISION-ALREADY-RECORDED` and detail "Check 613 already has an Employee Decision."
+
+#### AC-INT-010 — [REQ-INT-006]
+  Given  : Check 614 is RUNNING
+  When   : the employee confirms the uploads of Check 614
+  Then   : the answer is HTTP 409 with code `CHK-409-CHECK-NOT-AWAITING-DOCUMENTS` and detail "Check 614 is not waiting for documents; its status is RUNNING."
+
+### REQ-INT-007 — An unreadable request refused
+  Pattern    : unwanted
+  Statement  : If a request's body or Check identifier cannot be read, then the system shall refuse it with code INT-400-REQUEST-INVALID and hand nothing to another module.
+  Traces     : US-INT-002
+  Entities   : —
+  Rationale  : A malformed request must fail visibly before any module acts on it.
+  Source     : POL-INT-003; profile error envelope; ADR-INT-003
+  Priority   : —
+
+#### AC-INT-011 — [REQ-INT-007]
+  Given  : any state
+  When   : a caller confirms the uploads of Check `abc`
+  Then   : the answer is HTTP 400 with code `INT-400-REQUEST-INVALID` and detail "The request could not be read: checkId must be a number."; no module is called
+
+### REQ-INT-008 — An unexpected failure answered without internals
+  Pattern    : unwanted
+  Statement  : If an unexpected failure occurs while a request is handled, then the system shall answer with code INT-500 in the standard error form without exposing internal details.
+  Traces     : US-INT-002
+  Entities   : —
+  Rationale  : The caller needs a stable error; internals stay in the service log.
+  Source     : POL-INT-003; profile error envelope; ADR-INT-003
+  Priority   : —
+
+#### AC-INT-012 — [REQ-INT-008]
+  Given  : the Report Store is unreachable because of a database outage
+  When   : the employee records a decision on Check 615
+  Then   : the answer is HTTP 500 with code `INT-500` and detail "The request could not be completed because of an unexpected error."; the answer contains no stack trace
+
+### REQ-INT-009 — An upload handed to Document Access
+  Pattern    : event
+  Statement  : When the employee uploads a file for a Check that is AWAITING_DOCUMENTS, the system shall hand the file, its file name and its document type to Document Access.
+  Traces     : US-INT-003
+  Entities   : ENT-RPT-001
+  Rationale  : In `manual` mode the employee provides the documents.
+  Source     : POL-INT-004; [KB:raw-idea.md §6, §8]; CON-DOC-003; ADR-INT-005
+  Priority   : HIGH
+
+#### AC-INT-013 — [REQ-INT-009]
+  Given  : Check 616 of `manual-service` version 1 is AWAITING_DOCUMENTS
+  When   : the employee uploads `transcript.pdf` (300 KB) as TRANSCRIPT for Check 616
+  Then   : the answer is HTTP 201 with the uploaded document's identifier, type TRANSCRIPT, file name "transcript.pdf", file size 307200 and oversized false
+
+### REQ-INT-010 — Service code and version taken from the Check
+  Pattern    : ubiquitous
+  Statement  : The system shall hand every upload to Document Access with the service code and service package version of the Check as the Report Store holds them.
+  Traces     : US-INT-003
+  Entities   : ENT-RPT-001
+  Rationale  : Document Access checks an upload against the Check's own version; the uploader never names it.
+  Source     : POL-INT-004; CON-DOC-003; ADR-DOC-006; ADR-INT-005
+  Priority   : HIGH
+
+#### AC-INT-014 — [REQ-INT-010]
+  Given  : Check 617 runs `manual-service` version 1 and version 2 is now current
+  When   : the employee uploads an ID_CARD for Check 617
+  Then   : Document Access receives service `manual-service` and version 1 with the file
+
+### REQ-INT-011 — Uploads only while the Check waits for documents
+  Pattern    : unwanted
+  Statement  : If a file is uploaded for a Check whose status is not AWAITING_DOCUMENTS, then the system shall refuse the upload and hand nothing to Document Access.
+  Traces     : US-INT-003
+  Entities   : ENT-RPT-001
+  Rationale  : A file uploaded to a running or ended Check would never be read.
+  Source     : POL-INT-005; RULE-INT-001; ADR-INT-005
+  Priority   : HIGH
+
+#### AC-INT-015 — [REQ-INT-011]
+  Given  : Check 618 of `manual-service` is RUNNING
+  When   : the employee uploads a TRANSCRIPT for Check 618
+  Then   : the answer is HTTP 409 with code `INT-409-CHECK-NOT-AWAITING-DOCUMENTS` and detail "Documents can be uploaded only while Check 618 is waiting for documents; its status is RUNNING."; Document Access receives nothing
+
+### REQ-INT-012 — An upload for an unknown Check refused
+  Pattern    : unwanted
+  Statement  : If a file is uploaded for a Check the Report Store does not hold, then the system shall refuse it with the Report Store's not-found refusal and hand nothing to Document Access.
+  Traces     : US-INT-003
+  Entities   : ENT-RPT-001
+  Rationale  : An upload must belong to an existing Check.
+  Source     : POL-INT-003, POL-INT-005; CON-RPT-003; ADR-INT-003
+  Priority   : —
+
+#### AC-INT-016 — [REQ-INT-012]
+  Given  : no Check 99999 exists
+  When   : the employee uploads a TRANSCRIPT for Check 99999
+  Then   : the answer is HTTP 404 with code `RPT-404-CHECK-NOT-FOUND` and detail "Check 99999 was not found."
+
+### REQ-INT-013 — The oversized-file notice passed on
+  Pattern    : event
+  Statement  : When Document Access accepts an uploaded file as oversized, the system shall answer the upload with Document Access's notice that the file will be reported unreadable.
+  Traces     : US-INT-003
+  Entities   : ENT-RPT-001
+  Rationale  : Anything that cannot be read is said, never skipped silently.
+  Source     : POL-INT-004; [KB:raw-idea.md §12]; CON-DOC-003 (RULE-DOC-005 notice)
+  Priority   : —
+
+#### AC-INT-017 — [REQ-INT-013]
+  Given  : the maximum file size is 10 MB and Check 619 of `manual-service` is AWAITING_DOCUMENTS
+  When   : the employee uploads a 12 MB ID_CARD for Check 619
+  Then   : the answer is HTTP 201 with oversized true and Document Access's notice text
+
+### REQ-INT-014 — The upload request limit
+  Pattern    : unwanted
+  Statement  : If an upload request is larger than the upload request limit of the platform configuration, then the system shall refuse it with code INT-413-UPLOAD-TOO-LARGE and hand nothing to Document Access.
+  Traces     : US-INT-003
+  Entities   : —
+  Rationale  : Every request has a size limit; the limit is set at or above the maximum file size so oversized files still reach the report.
+  Source     : POL-INT-004; [KB:raw-idea.md §12] "Each check has limits"; ADR-INT-012
+  Priority   : —
+
+#### AC-INT-018 — [REQ-INT-014]
+  Given  : the upload request limit is 50 MB and Check 620 is AWAITING_DOCUMENTS
+  When   : the employee uploads a 60 MB file for Check 620
+  Then   : the answer is HTTP 413 with code `INT-413-UPLOAD-TOO-LARGE` and detail "The upload is larger than the 50 MB the service accepts in one request."; Document Access receives nothing
+
+### REQ-INT-015 — An uploaded file passed as content only
+  Pattern    : ubiquitous
+  Statement  : The system shall pass an uploaded file to Document Access as content with its file name as text, and shall never open a file path named by a request.
+  Traces     : US-INT-003
+  Entities   : —
+  Rationale  : File paths are opened only inside the storage root, by Document Access; Host Integration opens none.
+  Source     : [KB:raw-idea.md §12] "File paths are validated to be inside the allowed storage root before opening"; domain-profile §5 G5; POL-INT-004
+  Priority   : —
+
+#### AC-INT-019 — [REQ-INT-015]
+  Given  : Check 621 is AWAITING_DOCUMENTS
+  When   : the employee uploads a file named `../../etc/passwd` as TRANSCRIPT
+  Then   : Document Access receives the file's bytes with file name "../../etc/passwd" as text, and no file of the server's file system is opened by Host Integration
+
+### REQ-INT-016 — Document type choices of an upload
+  Pattern    : event
+  Statement  : When the employee opens the document upload of a Check, the system shall offer the required document types of the Check's service as the only document type choices.
+  Traces     : US-INT-003
+  Entities   : ENT-RPT-001
+  Rationale  : The employee uploads only documents the service asks for.
+  Source     : POL-INT-004; CON-REG-010 (required document types); ADR-INT-011
+  Priority   : —
+
+#### AC-INT-020 — [REQ-INT-016]
+  Given  : Check 622 runs `manual-service`, which requires TRANSCRIPT and ID_CARD
+  When   : the employee opens the document upload of Check 622
+  Then   : the document type choices are exactly TRANSCRIPT and ID_CARD
+
+### REQ-INT-017 — Documents already uploaded listed
+  Pattern    : event
+  Statement  : When the employee opens the document upload of a Check, the system shall list the documents already uploaded for that Check with their document type, file name and size.
+  Traces     : US-INT-003
+  Entities   : ENT-RPT-001
+  Rationale  : The employee sees what was handed over before uploading more or confirming.
+  Source     : POL-INT-004; DOC uploaded-documents read; ADR-INT-011
+  Priority   : —
+
+#### AC-INT-021 — [REQ-INT-017]
+  Given  : Check 623 has one uploaded TRANSCRIPT `t.pdf` of 300 KB
+  When   : the employee opens the document upload of Check 623
+  Then   : the list shows one entry: TRANSCRIPT, "t.pdf", 300 KB
+
+### REQ-INT-018 — Confirmed uploads continue the Check
+  Pattern    : event
+  Statement  : When the employee confirms the uploads of a Check, the system shall ask the Check Engine to continue the Check and answer that it is accepted, with the Check's status.
+  Traces     : US-INT-004
+  Entities   : ENT-RPT-001
+  Rationale  : A `manual` Check runs only on the documents the employee says are complete.
+  Source     : POL-INT-006; CON-CHK-005; ADR-INT-005
+  Priority   : HIGH
+
+#### AC-INT-022 — [REQ-INT-018]
+  Given  : Check 624 of `manual-service` is AWAITING_DOCUMENTS with a TRANSCRIPT and an ID_CARD uploaded
+  When   : the employee confirms the uploads of Check 624
+  Then   : the answer is accepted (HTTP 202) with Check 624 and status RUNNING
+
+### REQ-INT-019 — An upload never continues the Check
+  Pattern    : ubiquitous
+  Statement  : The system shall continue a `manual` Check only on the employee's confirmation and never as part of an upload.
+  Traces     : US-INT-004
+  Entities   : ENT-RPT-001
+  Rationale  : One action, one effect: an upload never starts the pipeline by accident.
+  Source     : POL-INT-006, POL-INT-018; profile `conventions.screen_composition`; ADR-INT-005
+  Priority   : HIGH
+
+#### AC-INT-023 — [REQ-INT-019]
+  Given  : Check 625 of `manual-service`, which requires TRANSCRIPT and ID_CARD, is AWAITING_DOCUMENTS
+  When   : the employee uploads both documents and does not confirm
+  Then   : a read of Check 625 still shows status AWAITING_DOCUMENTS
+
+### REQ-INT-020 — The uploads shown before confirming
+  Pattern    : state
+  Statement  : While the employee is confirming the uploads of a Check, the system shall show the documents uploaded for the Check and the required document types that have no upload.
+  Traces     : US-INT-004
+  Entities   : ENT-RPT-001
+  Rationale  : The employee confirms knowing which required documents will be reported missing.
+  Source     : POL-INT-006; [KB:raw-idea.md §7] "what is missing"; ADR-INT-011
+  Priority   : —
+
+#### AC-INT-024 — [REQ-INT-020]
+  Given  : Check 626 requires TRANSCRIPT and ID_CARD and only a TRANSCRIPT was uploaded
+  When   : the employee opens the upload confirmation of Check 626
+  Then   : the screen shows the TRANSCRIPT as uploaded and ID_CARD as having no upload, before the confirmation is submitted
+
+### REQ-INT-021 — The decision handed to the Report Store
+  Pattern    : event
+  Statement  : When the employee records a decision on a Check whose version does not enable the Approval API, the system shall hand the decision and the deciding employee's identity, exactly as sent, to the Report Store as not executed through the Approval API.
+  Traces     : US-INT-005
+  Entities   : ENT-RPT-001
+  Rationale  : The decision beside the result is the measure of the service's accuracy.
+  Source     : POL-INT-007, POL-INT-002; [KB:raw-idea.md §9, §11 option 1]; CON-RPT-006
+  Priority   : HIGH
+
+#### AC-INT-025 — [REQ-INT-021]
+  Given  : Check 627 is COMPLETED, NOT_COMPLIANT, undecided, and its version does not enable the Approval API
+  When   : the employee records decision REJECTED by `E-3307` on Check 627
+  Then   : the answer is HTTP 201 and Check 627 holds decision REJECTED, decided by "E-3307", executed through the Approval API false
+
+### REQ-INT-022 — The recorded decision answered
+  Pattern    : event
+  Statement  : When the Report Store records a decision, the system shall answer with the recorded decision, the deciding employee, the recording time and whether it was executed through the Approval API.
+  Traces     : US-INT-005
+  Entities   : ENT-RPT-001
+  Rationale  : The employee sees what was recorded.
+  Source     : POL-INT-007; CON-RPT-006
+  Priority   : HIGH
+
+#### AC-INT-026 — [REQ-INT-022]
+  Given  : Check 628 is COMPLETED and undecided, without the Approval API
+  When   : the employee records decision APPROVED by `E-4410`
+  Then   : the answer carries Check 628, decision APPROVED, decided by "E-4410", a recording time and executed through the Approval API false
+
+### REQ-INT-023 — The deciding employee from the host
+  Pattern    : event
+  Statement  : When the employee records a decision in the frontend, the system shall send the employee identity the host passed when it opened the frontend as the deciding employee.
+  Traces     : US-INT-005
+  Entities   : ENT-RPT-001
+  Rationale  : The host identifies the employee; the frontend never asks for it.
+  Source     : POL-INT-002, POL-INT-007; ADR-INT-011
+  Priority   : HIGH
+
+#### AC-INT-027 — [REQ-INT-023]
+  Given  : the host opened the frontend with employee `E-5120` and Check 629 is COMPLETED and undecided
+  When   : the employee records decision APPROVED in the frontend
+  Then   : the decision request carries deciding employee "E-5120"
+
+### REQ-INT-024 — A decision only from its own request
+  Pattern    : ubiquitous
+  Statement  : The system shall record an Employee Decision only from a decision request and never from an upload or an upload confirmation.
+  Traces     : US-INT-005
+  Entities   : ENT-RPT-001
+  Rationale  : One screen, one job, one submit.
+  Source     : POL-INT-018; profile `conventions.screen_composition`; ADR-INT-005, ADR-INT-006
+  Priority   : —
+
+#### AC-INT-028 — [REQ-INT-024]
+  Given  : Check 630 of `manual-service` is AWAITING_DOCUMENTS
+  When   : the employee uploads a TRANSCRIPT and confirms the uploads
+  Then   : Check 630 holds no Employee Decision
+
+### REQ-INT-025 — The Approval API called where the version enables it
+  Pattern    : state
+  Statement  : While the service package version of a Check enables the Approval API, when the employee records an APPROVED decision on that Check, the system shall call the Approval API before handing the decision to the Report Store.
+  Traces     : US-INT-006
+  Entities   : ENT-RPT-001, ENT-REG-002
+  Rationale  : The service executes the approval the employee confirmed, then records the report it was based on.
+  Source     : POL-INT-009; [KB:raw-idea.md §11 option 2]; CON-REG-012; ADR-INT-004
+  Priority   : HIGH
+
+#### AC-INT-029 — [REQ-INT-025]
+  Given  : Check 631 of `approve-service` version 2 is COMPLETED, COMPLIANT, undecided, request `R-631`, and version 2 enables the Approval API `POST /requests/{requestId}/approve`
+  When   : the employee records decision APPROVED by `E-3307`
+  Then   : the host receives one `POST /requests/R-631/approve` before the Report Store receives the decision
+
+### REQ-INT-026 — An executed approval recorded as executed
+  Pattern    : event
+  Statement  : When the Approval API call succeeds, the system shall hand the decision to the Report Store as executed through the Approval API.
+  Traces     : US-INT-006
+  Entities   : ENT-RPT-001
+  Rationale  : The record shows which approvals the service carried out for the host.
+  Source     : POL-INT-009; CON-RPT-006; ADR-RPT-003; ADR-INT-004
+  Priority   : HIGH
+
+#### AC-INT-030 — [REQ-INT-026]
+  Given  : AC-INT-029's call answers HTTP 200
+  When   : the decision is handed to the Report Store
+  Then   : the answer is HTTP 201 and Check 631 holds decision APPROVED, decided by "E-3307", executed through the Approval API true
+
+### REQ-INT-027 — A rejection never calls the Approval API
+  Pattern    : unwanted
+  Statement  : If the employee's decision is REJECTED, then the system shall hand it to the Report Store without calling any Approval API.
+  Traces     : US-INT-006
+  Entities   : ENT-RPT-001
+  Rationale  : The Approval API executes approvals only.
+  Source     : POL-INT-011; CON-RPT-006 (RULE-RPT-014); ADR-INT-004
+  Priority   : HIGH
+
+#### AC-INT-031 — [REQ-INT-027]
+  Given  : Check 632 of `approve-service` version 2 (Approval API enabled) is COMPLETED and undecided
+  When   : the employee records decision REJECTED
+  Then   : the host receives no call and Check 632 holds decision REJECTED, executed through the Approval API false
+
+### REQ-INT-028 — No call where the version does not enable it
+  Pattern    : unwanted
+  Statement  : If the service package version of a Check does not enable the Approval API, then the system shall hand an APPROVED decision to the Report Store without calling any Approval API.
+  Traces     : US-INT-006
+  Entities   : ENT-RPT-001, ENT-REG-002
+  Rationale  : By default the employee approves in the host system as today.
+  Source     : POL-INT-009; [KB:raw-idea.md §11 option 1]; ADR-INT-004
+  Priority   : HIGH
+
+#### AC-INT-032 — [REQ-INT-028]
+  Given  : Check 633 of `scholarship-request` version 3 (Approval API not enabled) is COMPLETED and undecided
+  When   : the employee records decision APPROVED
+  Then   : no Approval API is called and Check 633 holds decision APPROVED, executed through the Approval API false
+
+### REQ-INT-029 — The Approval API called only from the decision
+  Pattern    : ubiquitous
+  Statement  : The system shall call an Approval API only from the handling of an employee's decision request, and from no other request, schedule or model output.
+  Traces     : US-INT-006
+  Entities   : ENT-REG-002
+  Rationale  : The LLM never triggers approval; approval is executed only as a result of the employee's action.
+  Source     : POL-INT-008; [KB:raw-idea.md §12]; domain-profile §5 G1, G2; CON-REG-012; review AIAS-4
+  Priority   : HIGH
+
+#### AC-INT-033 — [REQ-INT-029]
+  Given  : `approve-service` version 2 enables the Approval API
+  When   : a host starts a Check of `approve-service`, the Check runs to COMPLETED with Overall Status COMPLIANT, and no decision is recorded
+  Then   : the host receives no Approval API call
+
+### REQ-INT-030 — The approval definition of the Check's own version
+  Pattern    : ubiquitous
+  Statement  : The system shall take whether the Approval API is enabled, and its method and path, from the service package version the Check ran on.
+  Traces     : US-INT-006
+  Entities   : ENT-RPT-001, ENT-REG-002
+  Rationale  : The decision is executed under the configuration the report was built on.
+  Source     : POL-INT-009; CON-REG-012; CON-REG-002; ADR-INT-008
+  Priority   : HIGH
+
+#### AC-INT-034 — [REQ-INT-030]
+  Given  : Check 634 ran on `approve-service` version 2 (Approval API enabled); version 3, now current, does not enable it; Check 634 is COMPLETED and undecided
+  When   : the employee records decision APPROVED
+  Then   : the Approval API of version 2 is called
+
+### REQ-INT-031 — The request number as one encoded value
+  Pattern    : ubiquitous
+  Statement  : The system shall place the Check's request number into the Approval API path as one URL-encoded value and shall never build the call from other free text.
+  Traces     : US-INT-006
+  Entities   : ENT-RPT-001
+  Rationale  : Parameters are bound or strictly typed; nothing is built from free text.
+  Source     : [KB:raw-idea.md §12] "Query parameters are bound or strictly type-validated"; domain-profile §5 G4; ADR-INT-009
+  Priority   : HIGH
+
+#### AC-INT-035 — [REQ-INT-031]
+  Given  : Check 635 of `approve-service` version 2 has request number `2026/77 A` and is COMPLETED and undecided
+  When   : the employee records decision APPROVED
+  Then   : the host receives `POST /requests/2026%2F77%20A/approve`
+
+### REQ-INT-032 — The call carries the Check and the deciding employee
+  Pattern    : event
+  Statement  : When the system calls the Approval API, the system shall send the Check identifier and the deciding employee's identity with the call.
+  Traces     : US-INT-006
+  Entities   : ENT-RPT-001
+  Rationale  : The host can link the approval to the report it was based on.
+  Source     : POL-INT-009; [KB:raw-idea.md §11] "records the report the approval was based on"; ADR-INT-009
+  Priority   : —
+
+#### AC-INT-036 — [REQ-INT-032]
+  Given  : Check 636 of `approve-service` version 2 is COMPLETED and undecided
+  When   : the employee `E-3307` records decision APPROVED
+  Then   : the Approval API call carries Check identifier 636 and deciding employee "E-3307"
+
+### REQ-INT-033 — One call, never retried on its own
+  Pattern    : ubiquitous
+  Statement  : The system shall call the Approval API at most once per decision request and shall never repeat the call on its own.
+  Traces     : US-INT-006
+  Entities   : —
+  Rationale  : An approval may not be safe to repeat on the host; a retry is the employee's choice.
+  Source     : POL-INT-008; ADR-INT-009
+  Priority   : HIGH
+
+#### AC-INT-037 — [REQ-INT-033]
+  Given  : the Approval API of `approve-service` answers HTTP 503 and Check 637 is COMPLETED and undecided
+  When   : the employee records decision APPROVED once
+  Then   : the host receives exactly one call
+
+### REQ-INT-034 — An incomplete decision refused before any call
+  Pattern    : unwanted
+  Statement  : If a decision request lacks a decision code of EMPLOYEE_DECISION or the deciding employee's identity, then the system shall refuse it without calling any Approval API.
+  Traces     : US-INT-006
+  Entities   : ENT-RPT-001
+  Rationale  : The Approval API is never called for a decision the Report Store would refuse.
+  Source     : POL-INT-008; RULE-INT-002; ADR-INT-010
+  Priority   : HIGH
+
+#### AC-INT-038 — [REQ-INT-034]
+  Given  : Check 638 of `approve-service` version 2 is COMPLETED and undecided
+  When   : the employee records decision APPROVED with no deciding employee
+  Then   : the answer is HTTP 400 with code `RPT-400-DECISION-INCOMPLETE` and detail "The decision was not recorded: the deciding employee is missing."; the host receives no call
+
+### REQ-INT-035 — No approval call on a Check not completed or already decided
+  Pattern    : unwanted
+  Statement  : If an APPROVED decision would be executed through the Approval API for a Check that is not COMPLETED or already holds a decision, then the system shall refuse it without calling the Approval API.
+  Traces     : US-INT-006
+  Entities   : ENT-RPT-001
+  Rationale  : An approval must stand beside one completed report and be recorded once.
+  Source     : POL-INT-008, POL-INT-009; RULE-INT-003; ADR-INT-004, ADR-INT-010
+  Priority   : HIGH
+
+#### AC-INT-039 — [REQ-INT-035]
+  Given  : Check 639 of `approve-service` version 2 is RUNNING
+  When   : the employee records decision APPROVED
+  Then   : the answer is HTTP 409 with code `RPT-409-CHECK-NOT-COMPLETED` and detail "Check 639 is not completed; a decision can only be recorded on a completed Check."; the host receives no call
+
+#### AC-INT-040 — [REQ-INT-035]
+  Given  : Check 640 of `approve-service` version 2 is COMPLETED with decision REJECTED
+  When   : the employee records decision APPROVED
+  Then   : the answer is HTTP 409 with code `RPT-409-DECISION-ALREADY-RECORDED` and detail "Check 640 already has an Employee Decision."; the host receives no call
+
+### REQ-INT-036 — A failed approval records nothing
+  Pattern    : unwanted
+  Statement  : If the Approval API answers with a status outside 200–299 or cannot be reached, then the system shall record no decision and refuse with code INT-502-APPROVAL-API-FAILED.
+  Traces     : US-INT-007
+  Entities   : ENT-RPT-001
+  Rationale  : A decision recorded as executed when the host never approved would mislead every reader.
+  Source     : POL-INT-010; profile 502; ADR-INT-004
+  Priority   : HIGH
+
+#### AC-INT-041 — [REQ-INT-036]
+  Given  : Check 641 of `approve-service` version 2 is COMPLETED and undecided and the Approval API answers HTTP 500
+  When   : the employee records decision APPROVED
+  Then   : the answer is HTTP 502 with code `INT-502-APPROVAL-API-FAILED` and detail "The approval was not executed: the host Approval API answered 500. Nothing was recorded; you can try again."; Check 641 holds no decision
+
+### REQ-INT-037 — A timed-out approval records nothing
+  Pattern    : unwanted
+  Statement  : If the Approval API does not answer within the approval timeout of the platform configuration, then the system shall record no decision and refuse with code INT-504-APPROVAL-API-TIMED-OUT.
+  Traces     : US-INT-007
+  Entities   : ENT-RPT-001
+  Rationale  : Every outbound call has a limit; the employee learns the approval was not confirmed.
+  Source     : POL-INT-010; [KB:raw-idea.md §12] limits; profile 504; ADR-INT-012
+  Priority   : HIGH
+
+#### AC-INT-042 — [REQ-INT-037]
+  Given  : the approval timeout is 10 seconds, Check 642 of `approve-service` version 2 is COMPLETED and undecided, and the Approval API does not answer
+  When   : the employee records decision APPROVED
+  Then   : after 10 seconds the answer is HTTP 504 with code `INT-504-APPROVAL-API-TIMED-OUT` and detail "The approval was not executed: the host Approval API did not answer within 10 seconds. Nothing was recorded; you can try again."; Check 642 holds no decision
+
+### REQ-INT-038 — A retry is a new decision request
+  Pattern    : event
+  Statement  : When the employee records a decision again after a failed or timed-out Approval API call, the system shall handle it as a new decision request.
+  Traces     : US-INT-007
+  Entities   : ENT-RPT-001
+  Rationale  : Nothing was recorded, so the employee can decide again.
+  Source     : POL-INT-010; ADR-RPT-003; ADR-INT-004
+  Priority   : HIGH
+
+#### AC-INT-043 — [REQ-INT-038]
+  Given  : AC-INT-041 happened and the Approval API now answers HTTP 200
+  When   : the employee records decision APPROVED on Check 641 again
+  Then   : the host receives one call and Check 641 holds decision APPROVED, executed through the Approval API true
+
+### REQ-INT-039 — A refusal after an executed approval logged
+  Pattern    : unwanted
+  Statement  : If the Report Store refuses a decision after the Approval API call succeeded, then the system shall answer with the Report Store's refusal and log the executed approval with the Check identifier and request number.
+  Traces     : US-INT-007
+  Entities   : ENT-RPT-001
+  Rationale  : A decision recorded by another request in between leaves an approval the operator must reconcile with the host.
+  Source     : POL-INT-003, POL-INT-010; ADR-INT-004
+  Priority   : —
+
+#### AC-INT-044 — [REQ-INT-039]
+  Given  : Check 643 of `approve-service` version 2, request `R-643`, is COMPLETED and undecided; while its Approval API call is answering HTTP 200, another request records decision REJECTED on Check 643
+  When   : the employee's APPROVED decision is handed to the Report Store
+  Then   : the answer is HTTP 409 with code `RPT-409-DECISION-ALREADY-RECORDED`, and the service log holds an entry naming Check 643, request "R-643" and the executed approval
+
+### REQ-INT-040 — The Checks of the request the host opened
+  Pattern    : event
+  Statement  : When the host screen opens the employee frontend with a service code, a request number and an employee identity, the system shall show the Checks of that service code and request number, newest first.
+  Traces     : US-INT-008
+  Entities   : ENT-RPT-001
+  Rationale  : The employee works on one request at a time, inside the host screen.
+  Source     : POL-INT-012; [KB:raw-idea.md §15 A1]; CON-RPT-004; ADR-INT-006, ADR-INT-011
+  Priority   : HIGH
+
+#### AC-INT-045 — [REQ-INT-040]
+  Given  : request `REQ-2026-0042` of `scholarship-request` has Checks 701 (started 09:00) and 702 (started 10:30)
+  When   : the host opens the frontend with `scholarship-request`, `REQ-2026-0042` and employee `E-3307`
+  Then   : the list shows Check 702 first and Check 701 second
+
+### REQ-INT-041 — The frontend needs the request it is opened for
+  Pattern    : unwanted
+  Statement  : If the employee frontend is opened without a service code, a request number or an employee identity, then the system shall show no Check and tell the employee that the screen must be opened from the host system for one request.
+  Traces     : US-INT-008
+  Entities   : ENT-RPT-001
+  Rationale  : Without its launch context the frontend cannot know which request, or which employee, it serves.
+  Source     : POL-INT-012; RULE-INT-004; ADR-INT-011
+  Priority   : HIGH
+
+#### AC-INT-046 — [REQ-INT-041]
+  Given  : the frontend is opened with service `scholarship-request` and employee `E-3307` but no request number
+  When   : the screen loads
+  Then   : no Check is listed and the screen shows "Open this screen from the host system for one request."
+
+### REQ-INT-042 — What each Check of the request shows
+  Pattern    : ubiquitous
+  Statement  : The system shall show, for each Check of the request, its identifier, status, Overall Status, start time, end time and Employee Decision.
+  Traces     : US-INT-008
+  Entities   : ENT-RPT-001
+  Rationale  : The employee picks the Check to open from its state and result.
+  Source     : POL-INT-012; CON-RPT-004
+  Priority   : —
+
+#### AC-INT-047 — [REQ-INT-042]
+  Given  : Check 703 of the opened request is COMPLETED, NOT_COMPLIANT, started 09:00, ended 09:01, decision REJECTED
+  When   : the Checks of the request are shown
+  Then   : the entry of Check 703 shows status COMPLETED, Overall Status NOT_COMPLIANT, start 09:00, end 09:01 and decision REJECTED
+
+### REQ-INT-043 — The total when not every Check is listed
+  Pattern    : unwanted
+  Statement  : If a request has more Checks than the list shows, then the system shall show the total number of Checks of the request.
+  Traces     : US-INT-008
+  Entities   : ENT-RPT-001
+  Rationale  : The Report Store lists 100 Checks at most; the employee must know when more exist.
+  Source     : POL-INT-012; CON-RPT-004 (at most 100, with total)
+  Priority   : —
+
+#### AC-INT-048 — [REQ-INT-043]
+  Given  : the opened request has 104 Checks
+  When   : the Checks of the request are shown
+  Then   : 100 Checks are listed and the screen states that the request has 104 Checks
+
+### REQ-INT-044 — A Check started from the frontend
+  Pattern    : event
+  Statement  : When the employee starts a Check from the Checks of a request, the system shall start it for the service code and request number of the request under the employee identity the host passed.
+  Traces     : US-INT-001, US-INT-008
+  Entities   : ENT-RPT-001
+  Rationale  : The employee starts a Check for the request on the host screen without typing its identifiers.
+  Source     : POL-INT-001, POL-INT-002; ADR-INT-006, ADR-INT-011
+  Priority   : HIGH
+
+#### AC-INT-049 — [REQ-INT-044]
+  Given  : the frontend was opened with `scholarship-request`, `REQ-2026-0042` and employee `E-3307`
+  When   : the employee starts a Check
+  Then   : a Check of `scholarship-request` for request "REQ-2026-0042" by employee "E-3307" is accepted and appears first in the list
+
+### REQ-INT-045 — The report's header
+  Pattern    : event
+  Statement  : When the employee opens a Check, the system shall show its status, service code, service package version, fetch mode, request number, employee and start time, and once it has ended its end time.
+  Traces     : US-INT-009
+  Entities   : ENT-RPT-001
+  Rationale  : The metadata tells the employee what the report was built on.
+  Source     : POL-INT-013; [KB:raw-idea.md §7] metadata; domain-profile §5 G11; CON-RPT-003
+  Priority   : HIGH
+
+#### AC-INT-050 — [REQ-INT-045]
+  Given  : Check 704 is COMPLETED on `scholarship-request` version 3, fetch mode `path`, request `REQ-2026-0042`, employee `E-3307`, model `gemini-flash-lite`
+  When   : the employee opens Check 704
+  Then   : the screen shows COMPLETED, `scholarship-request`, version 3, `path`, "REQ-2026-0042", "E-3307", its start and end times, its Overall Status and model "gemini-flash-lite"
+
+### REQ-INT-046 — Every finding beside its evidence
+  Pattern    : ubiquitous
+  Statement  : The system shall show every finding of a report as one entry holding its condition, outcome, evidence and note side by side.
+  Traces     : US-INT-009
+  Entities   : ENT-RPT-001
+  Rationale  : Every finding carries its evidence so the employee can verify it.
+  Source     : POL-INT-013; [KB:raw-idea.md §7]; domain-profile §5 G10; review AIAS-11
+  Priority   : HIGH
+
+#### AC-INT-051 — [REQ-INT-046]
+  Given  : Check 705 has a finding "GPA at least 3.0", NOT_SATISFIED, evidence "2.7", note "Below the minimum"
+  When   : the employee opens Check 705
+  Then   : one entry shows "GPA at least 3.0", NOT_SATISFIED, "2.7" and "Below the minimum" together
+
+### REQ-INT-047 — Documents read, missing and unreadable
+  Pattern    : ubiquitous
+  Statement  : The system shall show every document outcome of a report with its document type, source mode and read status, and for an unreadable document its reason and detail.
+  Traces     : US-INT-009
+  Entities   : ENT-RPT-001
+  Rationale  : The report says what was read, what is missing and what could not be read.
+  Source     : POL-INT-013; [KB:raw-idea.md §7] "Documents: What was read, what is missing, what could not be read"; domain-profile §5 G6
+  Priority   : HIGH
+
+#### AC-INT-052 — [REQ-INT-047]
+  Given  : Check 706 has TRANSCRIPT READ, ID_CARD UNREADABLE with reason TOO_LARGE and detail "12 MB exceeds 10 MB"
+  When   : the employee opens Check 706
+  Then   : the documents show TRANSCRIPT as read and ID_CARD as unreadable with reason TOO_LARGE and detail "12 MB exceeds 10 MB"
+
+### REQ-INT-048 — Unread service queries shown
+  Pattern    : ubiquitous
+  Statement  : The system shall show every service query of a report whose data could not be read, with its detail.
+  Traces     : US-INT-009
+  Entities   : ENT-RPT-001
+  Rationale  : Nothing that could not be read is skipped silently.
+  Source     : POL-INT-013; [KB:raw-idea.md §12]; domain-profile §5 G6; CON-RPT-003 unreadQueries
+  Priority   : —
+
+#### AC-INT-053 — [REQ-INT-048]
+  Given  : Check 707 has unread query `request_details` with detail "query timed out"
+  When   : the employee opens Check 707
+  Then   : the screen shows `request_details` as not read with "query timed out"
+
+### REQ-INT-049 — Never presented as COMPLIANT with a missing document
+  Pattern    : unwanted
+  Statement  : If a report holds a MISSING document outcome, then the system shall not present its Overall Status as COMPLIANT.
+  Traces     : US-INT-009
+  Entities   : ENT-RPT-001
+  Rationale  : A missing required document prevents COMPLIANT; the display never contradicts that.
+  Source     : POL-INT-014; [KB:raw-idea.md §7]; domain-profile §5 G6; review AIAS-11; ADR-INT-011
+  Priority   : HIGH
+
+#### AC-INT-054 — [REQ-INT-049]
+  Given  : Check 708 is COMPLETED with Overall Status NEEDS_MANUAL_REVIEW and ID_CARD MISSING
+  When   : the employee opens Check 708
+  Then   : the screen shows Overall Status NEEDS_MANUAL_REVIEW and ID_CARD as missing
+
+#### AC-INT-055 — [REQ-INT-049]
+  Given  : a report reaches the frontend with Overall Status COMPLIANT and a MISSING ID_CARD outcome
+  When   : the employee opens it
+  Then   : the screen shows "Not verified — a required document is missing" instead of COMPLIANT, with ID_CARD as missing
+
+### REQ-INT-050 — A failed Check shows its reason
+  Pattern    : event
+  Statement  : When the employee opens a FAILED Check, the system shall show its failure reason and failure detail and no Overall Status.
+  Traces     : US-INT-009
+  Entities   : ENT-RPT-001
+  Rationale  : A failed Check must be visible as failed, never as a result.
+  Source     : POL-INT-013; CON-RPT-003; CON-CHK-003
+  Priority   : —
+
+#### AC-INT-056 — [REQ-INT-050]
+  Given  : Check 709 is FAILED with reason TIMED_OUT and detail "The Check exceeded 120 seconds."
+  When   : the employee opens Check 709
+  Then   : the screen shows FAILED, TIMED_OUT and "The Check exceeded 120 seconds." and no Overall Status
+
+### REQ-INT-051 — Report texts shown as plain text
+  Pattern    : ubiquitous
+  Statement  : The system shall show every condition, evidence, note, detail and file name text as plain text and shall never interpret it as markup or follow it as a link.
+  Traces     : US-INT-009
+  Entities   : ENT-RPT-001
+  Rationale  : Document content is data, never instructions.
+  Source     : [KB:raw-idea.md §12] "Document content is treated as data, never as instructions"; domain-profile §5 G7; ADR-INT-011
+  Priority   : HIGH
+
+#### AC-INT-057 — [REQ-INT-051]
+  Given  : Check 710 has a finding whose evidence is `<script>alert(1)</script> <a href="x">here</a>`
+  When   : the employee opens Check 710
+  Then   : the evidence is shown literally as the characters `<script>alert(1)</script> <a href="x">here</a>`; no script runs and no link is shown
+
+### REQ-INT-052 — A recorded decision shown
+  Pattern    : event
+  Statement  : When the opened Check holds an Employee Decision, the system shall show the decision, who took it, when, and whether it was executed through the Approval API.
+  Traces     : US-INT-009
+  Entities   : ENT-RPT-001
+  Rationale  : The employee sees the decision beside the report it was based on.
+  Source     : POL-INT-013, POL-INT-007; CON-RPT-003
+  Priority   : —
+
+#### AC-INT-058 — [REQ-INT-052]
+  Given  : Check 711 holds decision APPROVED by `E-3307` at 11:05, executed through the Approval API true
+  When   : the employee opens Check 711
+  Then   : the screen shows APPROVED, "E-3307", 11:05 and "executed through the Approval API"
+
+### REQ-INT-053 — Upload offered while documents are awaited
+  Pattern    : state
+  Statement  : While an opened Check is AWAITING_DOCUMENTS, the system shall offer the employee the document upload and the upload confirmation of that Check.
+  Traces     : US-INT-003, US-INT-004
+  Entities   : ENT-RPT-001
+  Rationale  : The employee reaches the two manual-mode actions from the Check they belong to.
+  Source     : POL-INT-004, POL-INT-006; ADR-INT-006
+  Priority   : —
+
+#### AC-INT-059 — [REQ-INT-053]
+  Given  : Check 712 is AWAITING_DOCUMENTS
+  When   : the employee opens Check 712
+  Then   : the document upload and the upload confirmation are offered and the decision is not
+
+### REQ-INT-054 — Decision offered on a completed, undecided Check
+  Pattern    : state
+  Statement  : While an opened Check is COMPLETED and holds no Employee Decision, the system shall offer the employee the decision on that Check.
+  Traces     : US-INT-005
+  Entities   : ENT-RPT-001
+  Rationale  : A decision stands beside one completed report and is recorded once.
+  Source     : POL-INT-007; CON-RPT-006; ADR-INT-006
+  Priority   : —
+
+#### AC-INT-060 — [REQ-INT-054]
+  Given  : Check 713 is COMPLETED with no decision and Check 714 is COMPLETED with decision APPROVED
+  When   : the employee opens each of them
+  Then   : the decision is offered on Check 713 and not on Check 714
+
+### REQ-INT-055 — A Check that has not ended kept current
+  Pattern    : state
+  Statement  : While an opened Check is AWAITING_DOCUMENTS or RUNNING, the system shall read it again at the polling interval of the frontend configuration.
+  Traces     : US-INT-010
+  Entities   : ENT-RPT-001
+  Rationale  : The Check runs asynchronously and is polled for its result.
+  Source     : POL-INT-015; [KB:raw-idea.md §5]; profile `stack.frontend.libraries.server-state`; ADR-INT-011
+  Priority   : MEDIUM
+
+#### AC-INT-061 — [REQ-INT-055]
+  Given  : the polling interval is 5 seconds and Check 715 is RUNNING
+  When   : the employee keeps Check 715 open for 20 seconds
+  Then   : Check 715 is read 4 more times without the employee reloading
+
+### REQ-INT-056 — The report shown when the Check ends
+  Pattern    : event
+  Statement  : When an opened Check becomes COMPLETED or FAILED, the system shall stop reading it again and show its report or its failure.
+  Traces     : US-INT-010
+  Entities   : ENT-RPT-001
+  Rationale  : An ended Check never changes; further reads are useless.
+  Source     : POL-INT-015; CON-CHK-001 "COMPLETED and FAILED are final"
+  Priority   : MEDIUM
+
+#### AC-INT-062 — [REQ-INT-056]
+  Given  : Check 716 is RUNNING and open on the screen
+  When   : a read shows Check 716 COMPLETED
+  Then   : the report of Check 716 is shown and no further read of Check 716 is made while it stays open
+
+### REQ-INT-057 — The frontend uses only the REST API
+  Pattern    : ubiquitous
+  Statement  : The system shall give the employee frontend only operations of the REST API that every host system may call.
+  Traces     : US-INT-011
+  Entities   : —
+  Rationale  : A host can show the same Checks and reports with its own components without changing the service.
+  Source     : POL-INT-016; [KB:raw-idea.md §11, §15 A1]; ADR-INT-001
+  Priority   : —
+
+#### AC-INT-063 — [REQ-INT-057]
+  Given  : the operations the frontend calls are listed from its network traffic
+  When   : each is compared with the published API document of the service
+  Then   : every operation the frontend calls appears in the published API document
+
+### REQ-INT-058 — No server-rendered report page
+  Pattern    : ubiquitous
+  Statement  : The system shall offer no server-rendered report page and shall offer the report only as data through the REST API.
+  Traces     : US-INT-011
+  Entities   : —
+  Rationale  : The employee frontend replaces the report page as the display path.
+  Source     : POL-INT-016; [KB:raw-idea.md §15 A1]; domain-profile D6; ADR-INT-001
+  Priority   : —
+
+#### AC-INT-064 — [REQ-INT-058]
+  Given  : Check 717 exists
+  When   : a caller requests `/api/v1/checks/717/view`
+  Then   : the answer is HTTP 404 and no HTML report is returned
+
+### REQ-INT-059 — Host Integration keeps nothing
+  Pattern    : ubiquitous
+  Statement  : The system shall keep no request data, uploaded file, report or decision in Host Integration after a request has been answered.
+  Traces     : US-INT-012
+  Entities   : —
+  Rationale  : Each fact lives once, with its owner; nothing is carried from one Check to another.
+  Source     : POL-INT-017; [KB:raw-idea.md §12]; domain-profile §5 G9; ADR-INT-007
+  Priority   : —
+
+#### AC-INT-065 — [REQ-INT-059]
+  Given  : the employee uploaded a TRANSCRIPT for Check 718 and recorded a decision on Check 719
+  When   : both requests have been answered
+  Then   : Host Integration holds no copy of the file, the request data or the decision; they exist only in Document Access and the Report Store
+
+### REQ-INT-060 — No host database reached
+  Pattern    : ubiquitous
+  Statement  : The system shall reach no host database from Host Integration; its only outbound host call is the Approval API.
+  Traces     : US-INT-012
+  Entities   : —
+  Rationale  : All access to host data is read-only and belongs to the modules that run Checks.
+  Source     : [KB:raw-idea.md §12] "All access to host data uses a read-only database user"; domain-profile §5 G3; POL-INT-017
+  Priority   : —
+
+#### AC-INT-066 — [REQ-INT-060]
+  Given  : the service runs a full decision with the Approval API on Check 720
+  When   : the outbound connections opened by Host Integration are listed
+  Then   : the only host connection is the HTTP call to the Approval API; no database connection is opened by Host Integration
+
+## A5 — Business rules
+
+### RULE-INT-001 — Uploads only while the Check waits for documents
+  Scope      : ENT-RPT-001
+  Trigger    : on upload
+  Statement  : The system shall prevent handing an upload to Document Access when the Check's status is not AWAITING_DOCUMENTS.
+  Message    : Documents can be uploaded only while Check {checkId} is waiting for documents; its status is {status}.
+  Traces     : REQ-INT-011
+  Data source: ENT-RPT-001.checkStatus
+  Source     : POL-INT-005; ADR-INT-005
+  Test-Hint  : a RUNNING, a COMPLETED and a FAILED Check each refuse the upload
+
+### RULE-INT-002 — A decision is complete before any Approval API call
+  Scope      : ENT-RPT-001
+  Trigger    : on record decision (before the Approval API call)
+  Statement  : The system shall prevent calling the Approval API when the decision request carries no decision code of EMPLOYEE_DECISION or no deciding employee.
+  Message    : The decision was not recorded: `{value}` is not APPROVED or REJECTED. / The decision was not recorded: the deciding employee is missing.
+  Traces     : REQ-INT-034
+  Data source: ENT-RPT-001.employeeDecision, ENT-RPT-001.decidedBy
+  Source     : POL-INT-008; RULE-RPT-013 (same code and message — ADR-INT-010)
+
+### RULE-INT-003 — Approval only on a completed, undecided Check
+  Scope      : ENT-RPT-001
+  Trigger    : on record decision (before the Approval API call)
+  Statement  : The system shall prevent calling the Approval API when the Check's status is not COMPLETED or the Check already holds an Employee Decision.
+  Message    : Check {checkId} is not completed; a decision can only be recorded on a completed Check. / Check {checkId} already has an Employee Decision.
+  Traces     : REQ-INT-035
+  Data source: ENT-RPT-001.checkStatus, ENT-RPT-001.employeeDecision
+  Source     : POL-INT-008, POL-INT-009; RULE-RPT-011, RULE-RPT-012 (same codes and messages — ADR-INT-010)
+
+### RULE-INT-004 — The frontend is opened for one request
+  Scope      : ENT-RPT-001
+  Trigger    : on opening the employee frontend
+  Statement  : The system shall prevent showing any Check when the frontend was opened without a service code, a request number or an employee identity.
+  Message    : Open this screen from the host system for one request.
+  Traces     : REQ-INT-041
+  Data source: ENT-RPT-001.serviceCode, ENT-RPT-001.requestNumber, ENT-RPT-001.employeeId
+  Source     : POL-INT-012; ADR-INT-011
+
+## A6 — Lookups
+```yaml name=lookups
+lookups: []
+```
+Host Integration owns no lookup (ADR-INT-013). Consumed, not redefined: CHECK_STATUS, OVERALL_STATUS, FINDING_OUTCOME, CHECK_FAILURE_REASON (CHK); FETCH_MODE, DOCUMENT_READ_STATUS, UNREADABLE_REASON (DOC); EMPLOYEE_DECISION (RPT); SERVICE_CODE, DOCUMENT_TYPE (REG).
+
+## A7 — Status lifecycle
+Not applicable — Host Integration owns no entity with a status. The Check status it reads moves only forward as the Check Engine and the Report Store define it (CON-CHK-001; ADR-RPT-002); INT's rules read it (RULE-INT-001, RULE-INT-003).
+
+## A8 — Module dependencies
+```yaml name=module-dependencies
+consumes:
+  - {module: REG, entity: ENT-REG-002, type: SOFT-READ}
+```
+The Service Package Version's approval API is read through REG's published contract over the in-process interface (CON-REG-012); no foreign key crosses modules. It is the finer edge ADR-INT-008 declares, because REG is not in INT's platform row; the owner's platform row INT depends_on [CHK, RPT, DOC] is unchanged. The Report Store, the Check Engine and Document Access are reached through their operations — CON-RPT-003 (read a Check) and CON-RPT-006 (record a decision), CON-CHK-004 and CON-CHK-005, CON-DOC-003 — and INT holds the Check identifier only as a value (CON-RPT-001), as CHK and DOC do; so the INT → RPT, INT → CHK and INT → DOC edges are the platform edges (ADR-INT-016).
+
+| External service | Purpose | Integration kind |
+|---|---|---|
+| Host systems (Oracle ADF, others) | call the REST API; open the employee frontend in the host screen with the launch context | inbound REST; embedding |
+| Host Approval API (per service version, optional) | executes an APPROVED decision the employee confirmed | outbound HTTP, one call, configured timeout (ADR-INT-009, ADR-INT-012) |
+| Check Engine (CHK, in-process) | start a Check; confirm the uploads | CON-CHK-004, CON-CHK-005 |
+| Document Access (DOC, in-process) | hand over an uploaded file | CON-DOC-003 |
+| Report Store (RPT, in-process) | read a Check; record a decision | CON-RPT-003, CON-RPT-006 |
+| Service Registry (REG, in-process) | the approval API of a version | CON-REG-012 |
+
+# PART B — SCREEN REQUIREMENTS
+
+## SCR-REQ-INT-001 — Checks of a request
+### B1 — Definition
+  Purpose      : See the Checks of the request the host screen is showing, open one, and start a new one.
+  Entities     : ENT-RPT-001
+  Operations   : list, create (start a Check)
+  Users        : Employee
+  Navigation   : INT → host screen (embedded) → Checks of a request; from: host screen; to: SCR-REQ-INT-002
+  Content shape: flat list of records
+  Traces       : REQ-INT-040, REQ-INT-041, REQ-INT-042, REQ-INT-043, REQ-INT-044
+### B2 — Search / list
+  No filter — the list is scoped by the launch context (service code, request number) the host passes; applies RULE-INT-004. Columns: Check identifier, status (CHECK_STATUS), Overall Status (OVERALL_STATUS), start time, end time, Employee Decision (EMPLOYEE_DECISION) (REQ-INT-042); newest first, with the total when not all are listed (REQ-INT-043).
+### B3 — Input
+  No field is typed. Action "Start a Check" → start a Check with the launch context (REQ-INT-044, REQ-INT-001); refusals per REQ-INT-006. Selecting a Check → SCR-REQ-INT-002.
+### B4 — Access
+  Employee — list, start. No role check in this version (raw-idea A2).
+### B5 — API expectations
+| Operation | Verb | Path (per base path) | Inputs | Outputs | RULEs | Traces (REQ) |
+|---|---|---|---|---|---|---|
+| list the Checks of a request (RPT's read) | GET | /api/v1/checks | serviceCode, requestNumber | up to 100 Checks newest first + total | — | REQ-INT-040, REQ-INT-042, REQ-INT-043 |
+| start a Check | POST | /api/v1/checks | serviceCode, requestNumber, employeeId | accepted: checkId, status, address of the Check's read | — | REQ-INT-001 … REQ-INT-006, REQ-INT-044 |
+
+## SCR-REQ-INT-002 — Check report
+### B1 — Definition
+  Purpose      : Follow a Check until it ends and read its report — the Overall Status, each finding beside its evidence, the documents read, missing or unreadable, the unread queries — or its failure, and any recorded decision.
+  Entities     : ENT-RPT-001
+  Operations   : read
+  Users        : Employee
+  Navigation   : INT → host screen (embedded) → Check report; from: SCR-REQ-INT-001; to: SCR-REQ-INT-003, SCR-REQ-INT-004 (while AWAITING_DOCUMENTS), SCR-REQ-INT-005 (while COMPLETED and undecided)
+  Content shape: header + repeating lines (findings, documents, unread queries)
+  Traces       : REQ-INT-045, REQ-INT-046, REQ-INT-047, REQ-INT-048, REQ-INT-049, REQ-INT-050, REQ-INT-051, REQ-INT-052, REQ-INT-053, REQ-INT-054, REQ-INT-055, REQ-INT-056
+### B2 — Search / list
+  Not applicable — one Check, addressed by its identifier.
+### B3 — Input
+  No input. Header per REQ-INT-045; findings per REQ-INT-046; documents per REQ-INT-047; unread queries per REQ-INT-048; status presentation per REQ-INT-049; failure per REQ-INT-050; texts per REQ-INT-051; decision per REQ-INT-052. Actions: "Upload documents" and "Confirm uploads" while AWAITING_DOCUMENTS (REQ-INT-053); "Record decision" while COMPLETED and undecided (REQ-INT-054). Refresh per REQ-INT-055, REQ-INT-056.
+### B4 — Access
+  Employee — read. No role check in this version (raw-idea A2).
+### B5 — API expectations
+| Operation | Verb | Path (per base path) | Inputs | Outputs | RULEs | Traces (REQ) |
+|---|---|---|---|---|---|---|
+| read a Check and its report (RPT's read) | GET | /api/v1/checks/{checkId} | checkId | Check with status and, once ended, report or failure, and decision | — | REQ-INT-045 … REQ-INT-056 |
+
+## SCR-REQ-INT-003 — Document upload
+### B1 — Definition
+  Purpose      : Upload, one at a time, the documents of a Check whose service obtains them from the employee.
+  Entities     : ENT-RPT-001
+  Operations   : create (hand over an upload), list (uploaded documents)
+  Users        : Employee
+  Navigation   : INT → host screen (embedded) → Document upload; from: SCR-REQ-INT-002; to: SCR-REQ-INT-004, SCR-REQ-INT-002
+  Content shape: flat record (one upload) + list of uploaded documents
+  Traces       : REQ-INT-009, REQ-INT-010, REQ-INT-011, REQ-INT-012, REQ-INT-013, REQ-INT-014, REQ-INT-015, REQ-INT-016, REQ-INT-017
+### B2 — Search / list
+  Uploaded documents of the Check: document type (DOCUMENT_TYPE), file name, size (REQ-INT-017). No filter.
+### B3 — Input
+  Document type — choice of the required document types of the Check's service (DOCUMENT_TYPE; REQ-INT-016); file — one file (REQ-INT-009). Action "Upload" → hand over an upload; applies RULE-INT-001; the oversized notice per REQ-INT-013; the size limit per REQ-INT-014; refusals per REQ-INT-006, REQ-INT-012. The upload never confirms (REQ-INT-019).
+### B4 — Access
+  Employee — upload. No role check in this version (raw-idea A2).
+### B5 — API expectations
+| Operation | Verb | Path (per base path) | Inputs | Outputs | RULEs | Traces (REQ) |
+|---|---|---|---|---|---|---|
+| hand over an upload | POST | /api/v1/checks/{checkId}/documents | checkId, documentType, file | uploaded document (identifier, type, file name, size, oversized, notice) | RULE-INT-001 | REQ-INT-009 … REQ-INT-015 |
+| list the uploaded documents of a Check (DOC's read) | GET | /api/v1/uploaded-documents | checkId | uploaded documents | — | REQ-INT-017 |
+| read the service's required document types (REG's read) | GET | /api/v1/services/{serviceCode} | serviceCode | service summary with required document types | — | REQ-INT-016 |
+
+## SCR-REQ-INT-004 — Upload confirmation
+### B1 — Definition
+  Purpose      : Confirm, as a separate action, that every document of a `manual` Check has been uploaded, so that the Check continues.
+  Entities     : ENT-RPT-001
+  Operations   : custom (confirm uploads)
+  Users        : Employee
+  Navigation   : INT → host screen (embedded) → Upload confirmation; from: SCR-REQ-INT-002, SCR-REQ-INT-003; to: SCR-REQ-INT-002
+  Content shape: flat record
+  Traces       : REQ-INT-018, REQ-INT-019, REQ-INT-020
+### B2 — Search / list
+  Not applicable — the uploaded documents and the required types without an upload are shown read-only (REQ-INT-020).
+### B3 — Input
+  No field. Action "Confirm uploads" → confirm the uploads (REQ-INT-018); refusals per REQ-INT-006.
+### B4 — Access
+  Employee — confirm. No role check in this version (raw-idea A2).
+### B5 — API expectations
+| Operation | Verb | Path (per base path) | Inputs | Outputs | RULEs | Traces (REQ) |
+|---|---|---|---|---|---|---|
+| confirm the uploads | POST | /api/v1/checks/{checkId}/upload-confirmation | checkId | accepted: checkId, status | — | REQ-INT-018, REQ-INT-019 |
+| list the uploaded documents of a Check (DOC's read) | GET | /api/v1/uploaded-documents | checkId | uploaded documents | — | REQ-INT-020 |
+
+## SCR-REQ-INT-005 — Employee decision
+### B1 — Definition
+  Purpose      : Record the approve or reject decision on a completed Check — executed through the host's Approval API where the Check's version enables it.
+  Entities     : ENT-RPT-001, ENT-REG-002
+  Operations   : create (record a decision)
+  Users        : Employee
+  Navigation   : INT → host screen (embedded) → Employee decision; from: SCR-REQ-INT-002; to: SCR-REQ-INT-002
+  Content shape: flat record
+  Traces       : REQ-INT-021, REQ-INT-022, REQ-INT-023, REQ-INT-024, REQ-INT-025, REQ-INT-026, REQ-INT-027, REQ-INT-028, REQ-INT-034, REQ-INT-035, REQ-INT-036, REQ-INT-037, REQ-INT-038
+### B2 — Search / list
+  Not applicable.
+### B3 — Input
+  Decision — EMPLOYEE_DECISION (APPROVED / REJECTED); deciding employee — the launch identity, not typed (REQ-INT-023). Action "Record decision" → record a decision; applies RULE-INT-002, RULE-INT-003; Approval API per REQ-INT-025 … REQ-INT-028; failures per REQ-INT-036, REQ-INT-037 (the employee may submit again — REQ-INT-038); refusals per REQ-INT-006. The decision is the only submit of the screen (REQ-INT-024).
+### B4 — Access
+  Employee — decide. No role check in this version (raw-idea A2).
+### B5 — API expectations
+| Operation | Verb | Path (per base path) | Inputs | Outputs | RULEs | Traces (REQ) |
+|---|---|---|---|---|---|---|
+| record a decision | POST | /api/v1/checks/{checkId}/decision | checkId, employeeDecision, decidedBy | recorded decision (decision, decided by, decided at, executed through the Approval API) | RULE-INT-002, RULE-INT-003 | REQ-INT-021 … REQ-INT-039 |
+
+# STANDALONE
+
+## Traceability matrix
+| P0.5 | REQ | AC | RULE | ENT | SCR-REQ |
+|---|---|---|---|---|---|
+| US-INT-001 | REQ-INT-001, REQ-INT-002, REQ-INT-003, REQ-INT-004, REQ-INT-005, REQ-INT-044 | AC-INT-001, AC-INT-002, AC-INT-003, AC-INT-004, AC-INT-005, AC-INT-006, AC-INT-049 | — | ENT-RPT-001 | SCR-REQ-INT-001 |
+| US-INT-002 | REQ-INT-006, REQ-INT-007, REQ-INT-008 | AC-INT-007, AC-INT-008, AC-INT-009, AC-INT-010, AC-INT-011, AC-INT-012 | — | ENT-RPT-001 | SCR-REQ-INT-001, SCR-REQ-INT-003, SCR-REQ-INT-004, SCR-REQ-INT-005 |
+| US-INT-003 | REQ-INT-009, REQ-INT-010, REQ-INT-011, REQ-INT-012, REQ-INT-013, REQ-INT-014, REQ-INT-015, REQ-INT-016, REQ-INT-017, REQ-INT-053 | AC-INT-013, AC-INT-014, AC-INT-015, AC-INT-016, AC-INT-017, AC-INT-018, AC-INT-019, AC-INT-020, AC-INT-021, AC-INT-059 | RULE-INT-001 | ENT-RPT-001 | SCR-REQ-INT-003 |
+| US-INT-004 | REQ-INT-018, REQ-INT-019, REQ-INT-020, REQ-INT-053 | AC-INT-022, AC-INT-023, AC-INT-024, AC-INT-059 | — | ENT-RPT-001 | SCR-REQ-INT-004 |
+| US-INT-005 | REQ-INT-021, REQ-INT-022, REQ-INT-023, REQ-INT-024, REQ-INT-054 | AC-INT-025, AC-INT-026, AC-INT-027, AC-INT-028, AC-INT-060 | — | ENT-RPT-001 | SCR-REQ-INT-005 |
+| US-INT-006 | REQ-INT-025, REQ-INT-026, REQ-INT-027, REQ-INT-028, REQ-INT-029, REQ-INT-030, REQ-INT-031, REQ-INT-032, REQ-INT-033, REQ-INT-034, REQ-INT-035 | AC-INT-029, AC-INT-030, AC-INT-031, AC-INT-032, AC-INT-033, AC-INT-034, AC-INT-035, AC-INT-036, AC-INT-037, AC-INT-038, AC-INT-039, AC-INT-040 | RULE-INT-002, RULE-INT-003 | ENT-RPT-001, ENT-REG-002 | SCR-REQ-INT-005 |
+| US-INT-007 | REQ-INT-036, REQ-INT-037, REQ-INT-038, REQ-INT-039 | AC-INT-041, AC-INT-042, AC-INT-043, AC-INT-044 | — | ENT-RPT-001 | SCR-REQ-INT-005 |
+| US-INT-008 | REQ-INT-040, REQ-INT-041, REQ-INT-042, REQ-INT-043, REQ-INT-044 | AC-INT-045, AC-INT-046, AC-INT-047, AC-INT-048, AC-INT-049 | RULE-INT-004 | ENT-RPT-001 | SCR-REQ-INT-001 |
+| US-INT-009 | REQ-INT-045, REQ-INT-046, REQ-INT-047, REQ-INT-048, REQ-INT-049, REQ-INT-050, REQ-INT-051, REQ-INT-052 | AC-INT-050, AC-INT-051, AC-INT-052, AC-INT-053, AC-INT-054, AC-INT-055, AC-INT-056, AC-INT-057, AC-INT-058 | — | ENT-RPT-001 | SCR-REQ-INT-002 |
+| US-INT-010 | REQ-INT-055, REQ-INT-056 | AC-INT-061, AC-INT-062 | — | ENT-RPT-001 | SCR-REQ-INT-002 |
+| US-INT-011 | REQ-INT-057, REQ-INT-058 | AC-INT-063, AC-INT-064 | — | — | — |
+| US-INT-012 | REQ-INT-059, REQ-INT-060 | AC-INT-065, AC-INT-066 | — | — | — |
+
+Raw-idea §12 guardrails at INT's surface (AIAS-1; same approach as ADR-REG-008, ADR-RPT-008): (1) the LLM never triggers approval → REQ-INT-029 · (2) approval only as a result of the employee's action → REQ-INT-025, REQ-INT-027, REQ-INT-029, REQ-INT-035 · (3) read-only host access → REQ-INT-060 · (4) bound or typed parameters, nothing built from free text → REQ-INT-031 · (5) file paths inside the storage root → REQ-INT-015 · (6) nothing skipped silently → REQ-INT-013, REQ-INT-047, REQ-INT-048 · (7) document content is data → REQ-INT-051, REQ-INT-015 · (8) limits → REQ-INT-014, REQ-INT-037 · (9) nothing carried between Checks → REQ-INT-059.
+
+## Decisions applied
+| DEFAULT / ADR | What | Source | Override / status |
+|---|---|---|---|
+| ADR-REG-001 | RPT owns the run records; INT owns none | P0 (REG) | ACCEPTED by owner |
+| ADR-REG-006 | Limits are platform configuration (pattern for INT's limits) | P0 (REG) | ACCEPTED by owner |
+| ADR-REG-008 | Each module states the §12 guardrails at its own surface | P1 (REG) | ACCEPTED |
+| ADR-CHK-018 | CHK's in-process refusal codes INT passes through | P3.1 (CHK) | ACCEPTED |
+| ADR-DOC-006 | INT passes the Check's service code and version with every upload | DOC | ACCEPTED by owner |
+| ADR-DOC-012 | DOC's in-process refusal codes INT passes through | P3.1 (DOC) | ACCEPTED |
+| ADR-RPT-003 | Decision on the Check Run; call the Approval API first; a failed call records nothing | P0 (RPT) | Confirmed at RPT prd-approval |
+| ADR-RPT-005, ADR-RPT-006 | RPT serves the reads over HTTP; its writes are in-process | RPT | ACCEPTED |
+| ADR-RPT-013 | RPT's decision refusal codes INT maps to ProblemDetail | P3.1 (RPT) | ACCEPTED |
+| ADR-INT-001 | Four write operations; reads stay with their owners; no report page | P0 | Confirmed at prd-approval |
+| ADR-INT-002 | Asynchronous start; identity as sent; no caller authentication | P0 | Confirmed at prd-approval |
+| ADR-INT-003 | Owner's refusal codes passed through; INT codes for INT's own decisions | P0 | Confirmed at prd-approval |
+| ADR-INT-004 | Approval API: APPROVED only, COMPLETED and undecided, where enabled; call first; failure records nothing | P0 | Confirmed at prd-approval |
+| ADR-INT-005 | One file per upload, only while AWAITING_DOCUMENTS; confirmation separate | P0 | Confirmed at prd-approval |
+| ADR-INT-006 | The employee frontend: launch context, four jobs, REST API only | P0 | Confirmed at prd-approval |
+| ADR-INT-007 | INT keeps no records | P0 | Confirmed at prd-approval |
+| ADR-INT-008 | INT reads CON-REG-012; platform row unchanged; entity-level edge | P0 | Confirmed at prd-approval |
+| ADR-INT-009 | Approval API call shape: method + path, encoded request number, base address per environment, one call | P0 | Confirmed at prd-approval |
+| ADR-INT-010 | Pre-call checks refuse with the Report Store's own codes | P1 (this stage) | ACCEPTED — non-breaking |
+| ADR-INT-011 | Frontend launch context, stored status with the MISSING safeguard, plain text, 5-second refresh, owners' reads | P1 (this stage) | ACCEPTED — non-breaking |
+| ADR-INT-012 | Approval timeout 10 s, upload request limit 50 MB, approval base address per environment | P1 (this stage) | ACCEPTED — non-breaking |
+| ADR-INT-013 | No ENT-INT; rules read the owners' fields; no lookup owned | P1 (this stage) | ACCEPTED — non-breaking |
+| ADR-INT-016 | INT → RPT is the platform edge (operations, Check identifier by value); only INT → REG is an entity-level edge — supersedes the RPT part of ADR-INT-013 (3) | P1 (this stage) | ACCEPTED — non-breaking |
+| DEFAULT — approval timeout 10 seconds | The Approval API call waits at most 10 seconds | ADR-INT-012; domain best practice | Override: set the approval timeout in the platform configuration |
+| DEFAULT — upload request limit 50 MB | An upload request above 50 MB is refused before it is read | ADR-INT-012 | Override: set the upload request limit (never below the maximum file size) |
+| DEFAULT — polling interval 5 seconds | A Check that has not ended is read again every 5 seconds | ADR-INT-011; [KB:raw-idea.md §5] | Override: set the polling interval in the frontend configuration |
+| DEFAULT — any 2xx answer is a successful approval | The Approval API succeeded when it answers 200–299 | ADR-INT-009 | Override: a per-host success rule in a later version |
+
+## Access summary
+| Role | Screens | Operations |
+|---|---|---|
+| Employee | SCR-REQ-INT-001 … SCR-REQ-INT-005 | start a Check, upload, confirm uploads, record a decision (INT); read Checks and reports (RPT), uploaded documents (DOC), required document types (REG) |
+| Host System | — (embeds the frontend) | the same REST API: start a Check, upload, confirm, record a decision, and the owners' reads |
+Caller authentication and who may view stored reports are deferred (raw-idea A2, domain-profile D4); no role check is specified in this version.
+══════════════════════════════════════════════════════════════════
+
+<<<END INPUT>>>
+
+<<<INPUT: registry-srs>>>
+## REGISTRY — P1 — INT v1
+
+### Entities
+None — Host Integration declares no entity (ADR-INT-007, ADR-INT-013).
+
+### Consumed
+Only the A8 block's ids (ADR-INT-016 — RPT, CHK and DOC are platform edges):
+| Module | Entity | Type |
+|---|---|---|
+| REG | ENT-REG-002 | SOFT-READ |
+
+### Lookups owned
+None — `lookups: []` (ADR-INT-013).
+
+### Lookups consumed
+| Key | Owner |
+|---|---|
+| CHECK_STATUS | CHK |
+| OVERALL_STATUS | CHK |
+| FINDING_OUTCOME | CHK |
+| CHECK_FAILURE_REASON | CHK |
+| FETCH_MODE | DOC |
+| DOCUMENT_READ_STATUS | DOC |
+| UNREADABLE_REASON | DOC |
+| EMPLOYEE_DECISION | RPT |
+| SERVICE_CODE | REG |
+| DOCUMENT_TYPE | REG |
+
+### Screens
+| SCR-REQ | Name | Page code |
+|---|---|---|
+| SCR-REQ-INT-001 | Checks of a request | — |
+| SCR-REQ-INT-002 | Check report | — |
+| SCR-REQ-INT-003 | Document upload | — |
+| SCR-REQ-INT-004 | Upload confirmation | — |
+| SCR-REQ-INT-005 | Employee decision | — |
+
+### Requirements
+REQ count 60 · AC count 66 · RULE count 4 · last sequence per atom (REQ: 60, AC: 66, ENT: 0, RULE: 4, SCR-REQ: 5)
+
+| REQ | AC |
+|---|---|
+| REQ-INT-001 | AC-INT-001, AC-INT-002 |
+| REQ-INT-002 | AC-INT-003 |
+| REQ-INT-003 | AC-INT-004 |
+| REQ-INT-004 | AC-INT-005 |
+| REQ-INT-005 | AC-INT-006 |
+| REQ-INT-006 | AC-INT-007, AC-INT-008, AC-INT-009, AC-INT-010 |
+| REQ-INT-007 | AC-INT-011 |
+| REQ-INT-008 | AC-INT-012 |
+| REQ-INT-009 | AC-INT-013 |
+| REQ-INT-010 | AC-INT-014 |
+| REQ-INT-011 | AC-INT-015 |
+| REQ-INT-012 | AC-INT-016 |
+| REQ-INT-013 | AC-INT-017 |
+| REQ-INT-014 | AC-INT-018 |
+| REQ-INT-015 | AC-INT-019 |
+| REQ-INT-016 | AC-INT-020 |
+| REQ-INT-017 | AC-INT-021 |
+| REQ-INT-018 | AC-INT-022 |
+| REQ-INT-019 | AC-INT-023 |
+| REQ-INT-020 | AC-INT-024 |
+| REQ-INT-021 | AC-INT-025 |
+| REQ-INT-022 | AC-INT-026 |
+| REQ-INT-023 | AC-INT-027 |
+| REQ-INT-024 | AC-INT-028 |
+| REQ-INT-025 | AC-INT-029 |
+| REQ-INT-026 | AC-INT-030 |
+| REQ-INT-027 | AC-INT-031 |
+| REQ-INT-028 | AC-INT-032 |
+| REQ-INT-029 | AC-INT-033 |
+| REQ-INT-030 | AC-INT-034 |
+| REQ-INT-031 | AC-INT-035 |
+| REQ-INT-032 | AC-INT-036 |
+| REQ-INT-033 | AC-INT-037 |
+| REQ-INT-034 | AC-INT-038 |
+| REQ-INT-035 | AC-INT-039, AC-INT-040 |
+| REQ-INT-036 | AC-INT-041 |
+| REQ-INT-037 | AC-INT-042 |
+| REQ-INT-038 | AC-INT-043 |
+| REQ-INT-039 | AC-INT-044 |
+| REQ-INT-040 | AC-INT-045 |
+| REQ-INT-041 | AC-INT-046 |
+| REQ-INT-042 | AC-INT-047 |
+| REQ-INT-043 | AC-INT-048 |
+| REQ-INT-044 | AC-INT-049 |
+| REQ-INT-045 | AC-INT-050 |
+| REQ-INT-046 | AC-INT-051 |
+| REQ-INT-047 | AC-INT-052 |
+| REQ-INT-048 | AC-INT-053 |
+| REQ-INT-049 | AC-INT-054, AC-INT-055 |
+| REQ-INT-050 | AC-INT-056 |
+| REQ-INT-051 | AC-INT-057 |
+| REQ-INT-052 | AC-INT-058 |
+| REQ-INT-053 | AC-INT-059 |
+| REQ-INT-054 | AC-INT-060 |
+| REQ-INT-055 | AC-INT-061 |
+| REQ-INT-056 | AC-INT-062 |
+| REQ-INT-057 | AC-INT-063 |
+| REQ-INT-058 | AC-INT-064 |
+| REQ-INT-059 | AC-INT-065 |
+| REQ-INT-060 | AC-INT-066 |
+
+### Rules
+| RULE | Traces |
+|---|---|
+| RULE-INT-001 | REQ-INT-011 |
+| RULE-INT-002 | REQ-INT-034 |
+| RULE-INT-003 | REQ-INT-035 |
+| RULE-INT-004 | REQ-INT-041 |
+
+### Decisions
+ADR-INT-010, ADR-INT-011, ADR-INT-012, ADR-INT-013, ADR-INT-016 (new, ACCEPTED); applied ADR-INT-001 … ADR-INT-009. No BLOCKED ADR.
+
+### Event
+P1 completed: INT v1 — 60 REQ · 66 AC · 0 ENT · 4 RULE · 5 SCR-REQ · 5 ADR
+
+<<<END INPUT>>>
+
+<<<INPUT: registry-db>>>
+## REGISTRY — P2 — INT v1
+
+### Tables
+None — INT creates no table (ADR-INT-015). Read bindings (owner tables, not created here):
+| Bound table (owner) | ENT | DBF range |
+|---|---|---|
+| RPT_CHECK_RUN (RPT) | ENT-RPT-001 | DBF-INT-001, DBF-INT-002, DBF-INT-003, DBF-INT-004, DBF-INT-005, DBF-INT-006, DBF-INT-007, DBF-INT-008 |
+| REG_SVC_PKG_VER (REG) | ENT-REG-002 | DBF-INT-009, DBF-INT-010 |
+
+### XM index
+| XM | Type | Target | State | Contract |
+|---|---|---|---|---|
+| XM-INT-001 | SOFT-READ | REG · ENT-REG-002 | CONTRACTED | CON-REG-002 |
+
+### Lookups
+| Key | Seeded values | Owner |
+|---|---|---|
+| — | 0 — INT owns no lookup | — |
+
+### Sequences
+last DBF: DBF-INT-010 · last XM: XM-INT-001
+
+### Decisions
+ADR-INT-015, ADR-INT-016 (ACCEPTED). BLOCKED: none.
+
+### Event
+"P2 completed: INT v1 — 0 tables, 10 DBF, 1 XM"
+
+### Cascade
+none by hand — `gov.py graph` derives the edges targeting INT and raises their resolution events.
+
+<<<END INPUT>>>
+
+<<<INPUT: backend-execution-plan>>>
+# BACKEND EXECUTION PLAN — Host Integration (INT)
+══════════════════════════════════════════════════════════════════
+Module : INT   Version : v1   Profile : aias   Dialect : oracle19c   Framework : spring-boot-4-java-21
+Inputs : srs-int.md · db-script-int.md · registry-srs-int.md · registry-db-int.md · contract-int.md · the published contracts of CHK, DOC and RPT (platform edges) and of the module reached through XM-INT-001
+Governance : FULL (db-script present — no table by design, ADR-INT-015)   Open ADRs : 0 BLOCKED — decisions applied: ADR-INT-001 … ADR-INT-017 (analysis/decisions/INT/)
+══════════════════════════════════════════════════════════════════
+
+## EXECUTION PLAN INDEX — INT v1
+
+### Entity registry
+| ENT | Name | Table | Business code | Operations |
+|---|---|---|---|---|
+| — | INT declares no entity (ADR-INT-007, ADR-INT-013) | — | — | — |
+| — (Report Store, consumed by value) | Check Run — the subject of every INT endpoint | owned by the Report Store | — | create (start a Check — API-INT-001), create (hand over an upload — API-INT-002), custom (confirm the uploads — API-INT-003), create (record a decision — API-INT-004) |
+
+### API registry
+| API | Operation | Verb | Path | Traces |
+|---|---|---|---|---|
+| API-INT-001 | Start a Check | POST | /api/v1/checks | REQ-INT-001 … REQ-INT-008, REQ-INT-044, REQ-INT-057 … REQ-INT-060 |
+| API-INT-002 | Hand over an uploaded document | POST | /api/v1/checks/{checkId}/documents | REQ-INT-009 … REQ-INT-017, REQ-INT-053 |
+| API-INT-003 | Confirm the uploads | POST | /api/v1/checks/{checkId}/upload-confirmation | REQ-INT-018 … REQ-INT-020, REQ-INT-053 |
+| API-INT-004 | Record an Employee Decision | POST | /api/v1/checks/{checkId}/decision | REQ-INT-021 … REQ-INT-039, REQ-INT-054 |
+
+### Rule registry
+| RULE | Name | Scope | Enforced where | Message en / ar |
+|---|---|---|---|---|
+| RULE-INT-001 | Uploads only while the Check waits for documents | Check Run (read, Report Store) | API-INT-002 | ✓ / PENDING ADR-INT-017 |
+| RULE-INT-002 | A decision is complete before any Approval API call | decision request | API-INT-004 (approval path) | ✓ (Report Store's text) / PENDING ADR-INT-017 |
+| RULE-INT-003 | Approval only on a completed, undecided Check | Check Run (read, Report Store) | API-INT-004 (approval path) | ✓ (Report Store's text) / PENDING ADR-INT-017 |
+| RULE-INT-004 | The frontend is opened for one request | launch context | employee frontend (P3.2) — no backend endpoint, no catalog row | ✓ / PENDING ADR-INT-017 |
+
+### Screen registry
+| Screen | Type | ENT | Permission names |
+|---|---|---|---|
+| SCR-REQ-INT-001 — Checks of a request | list + start | — (Report Store) | none (no permission model — raw-idea A2) |
+| SCR-REQ-INT-002 — Check report | read | — (Report Store) | none |
+| SCR-REQ-INT-003 — Document upload | create + list | — (Report Store) | none |
+| SCR-REQ-INT-004 — Upload confirmation | custom | — (Report Store) | none |
+| SCR-REQ-INT-005 — Employee decision | create | — (Report Store) | none |
+
+### Screen demand resolution (SRS `Operations` lines — ADR-INT-017 (4))
+| Screen | Operation | Resolution |
+|---|---|---|
+| SCR-REQ-INT-001 | create | built — API-INT-001 (Start a Check) on the Report Store's Check Run |
+| SCR-REQ-INT-001 | list | not built by INT — derived: served by the Report Store's HTTP list of the Checks of a request, called by the frontend directly (ADR-INT-001) |
+| SCR-REQ-INT-002 | read | not built by INT — derived: served by the Report Store's HTTP read of a Check and its report, called by the frontend directly (ADR-INT-001) |
+| SCR-REQ-INT-003 | create | built — API-INT-002 (Hand over an uploaded document) on the Report Store's Check Run |
+| SCR-REQ-INT-003 | list | not built by INT — derived: served by Document Access's HTTP list of the uploaded documents of a Check (ADR-INT-001) |
+| SCR-REQ-INT-004 | custom | built — API-INT-003 (Confirm the uploads) on the Report Store's Check Run |
+| SCR-REQ-INT-005 | create | built — API-INT-004 (Record an Employee Decision) on the Report Store's Check Run |
+
+### QRC summary
+None — INT has no repository; every read and write is another module's in-process operation (ADR-INT-017 (2)).
+
+DB ALIGNMENT: see manifest — ALIGNED ✓ / issues: 0 · INTEGRATION: 1 edge (XM-INT-001), one block in CROSS-MOD · SECURITY: 5 screens × 1 role (Employee), no permission model (caller authentication deferred — raw-idea A2)
+
+```yaml name=totals
+DBF: 10
+XM: 1
+API: 4
+QR: 0
+```
+
+## DB ALIGNMENT MANIFEST — INT v1
+
+Columns, types and SRS references are read from db-script-int.md (dbf-matrix) by DBF id. Every row is a READ BINDING (ADR-INT-015): the value reaches INT through the owner's in-process operation; INT writes none of them. Writer: why no INT endpoint writes the column.
+
+| DBF | ENT | Plan property | Plan type | XM | Status | Writer |
+|---|---|---|---|---|---|---|
+| DBF-INT-001 | — (Report Store) | checkId | Long | — | ✓ | derived — the Report Store generates it when the Check Engine creates the Check run; INT passes it by value |
+| DBF-INT-002 | — (Report Store) | status | CheckStatus (enum) | — | ✓ | derived — written by the Check Engine through the Report Store; INT only reads it |
+| DBF-INT-003 | — (Report Store) | serviceCode | String | — | ✓ | derived — written at Check start from API-INT-001's request by the Check Engine and the Report Store |
+| DBF-INT-004 | — (Report Store) | versionNumber | Integer | — | ✓ | derived — written at Check start by the Check Engine and the Report Store |
+| DBF-INT-005 | — (Report Store) | requestNumber | String | — | ✓ | derived — written at Check start from API-INT-001's request by the Check Engine and the Report Store |
+| DBF-INT-006 | — (Report Store) | employeeId | String | — | ✓ | derived — written at Check start from API-INT-001's request by the Check Engine and the Report Store |
+| DBF-INT-007 | — (Report Store) | employeeDecision | EmployeeDecision (enum) | — | ✓ | derived — written by the Report Store from API-INT-004's hand-over |
+| DBF-INT-008 | — (Report Store) | decidedBy | String | — | ✓ | derived — written by the Report Store from API-INT-004's hand-over |
+| DBF-INT-009 | — (via XM-INT-001) | approvalEnabled | Boolean | XM-INT-001 | ✓ | derived — written by the target's load run; read only through XM-INT-001 |
+| DBF-INT-010 | — (via XM-INT-001) | approvalApi | String (method + path template) | XM-INT-001 | ✓ | derived — written by the target's load run; read only through XM-INT-001 |
+
+Legend ✓ aligned. No property of INT's own is stored.
+
+<!-- PHASE:CORE:START traces=REQ-INT-007,REQ-INT-008,REQ-INT-014,REQ-INT-037,REQ-INT-057,REQ-INT-059,REQ-INT-060 -->
+## PHASE CORE — CORE
+
+### R1 — Core configuration
+- Type mapping (oracle19c → Java), column types only (for the bound values INT carries):
+
+| oracle19c | Java |
+|---|---|
+| NUMBER(19) | Long |
+| NUMBER(10) | Integer |
+| VARCHAR2(n CHAR) | String |
+| NUMBER(1) | Boolean (0/1) |
+| TIMESTAMP WITH TIME ZONE | OffsetDateTime |
+
+- Runtime error-code format: `{MOD}-{http}[-{SLUG}]` — every error-catalog row below is an instance of it; INT's own rows start with `INT-`, the pass-through rows keep their owner's prefix (ADR-INT-003).
+- Error envelope: ProblemDetail (RFC 9457) → {type, title, status, detail, code}. One `@RestControllerAdvice` — `IntegrationProblemAdvice` — maps: INT's own exceptions to their catalog codes; every typed refusal arriving from the Check Engine, Document Access or the Report Store to a ProblemDetail carrying that refusal's own code, HTTP status (the `{http}` part of its code) and message, unchanged (REQ-INT-006); `MaxUploadSizeExceededException` → `INT-413-UPLOAD-TOO-LARGE`; an unreadable body, a missing multipart part or a non-numeric `checkId` → `INT-400-REQUEST-INVALID` (REQ-INT-007); any other exception → `INT-500`, logged with the request path and the Check identifier, the answer carrying no stack trace (REQ-INT-008).
+- Lookup values: Overall status (COMPLIANT | NOT_COMPLIANT | NEEDS_MANUAL_REVIEW), fetch mode (path | blob | manual) and document read status are closed enums owned by the service; service codes come only from the service registry and are never hardcoded. INT uses the enums the owners publish (`CheckStatus` of the Check Engine, `EmployeeDecision` of the Report Store) and owns none (ADR-INT-013); service codes and document types pass through as strings.
+- Workflow engine: **forbidden**.
+- Search contract: INT has no search endpoint (the lists are the owners' reads — Screen demand resolution).
+- Languages: messages en (SRS); ar PENDING ADR-INT-017.
+- Configuration properties (environment settings, bound with `@ConfigurationProperties`, validated at start-up — ADR-INT-012):
+  - `aias.integration.approval.timeout` — Duration, default `10s`; connect + read timeout of the host Approval API call (REQ-INT-037).
+  - `aias.integration.approval.base-address` — URI of the host Approval API per environment; the version's definition supplies only the method and the path (ADR-INT-009). Absent → an approval-path decision answers `INT-502-APPROVAL-API-FAILED` with `{status}` = "no answer — no address is configured" and records nothing.
+  - `aias.integration.upload.request-limit` — DataSize, default `50MB`, never below `aias.check.max-file-size` (start-up fails if lower); bound to `spring.servlet.multipart.max-request-size` and `max-file-size` (REQ-INT-014).
+- No state between requests (REQ-INT-059): no table, no cache, no static or session field holds a request, a file, a report or a decision; an uploaded part lives only for its request (the container discards its temporary part when the request ends). The only in-memory structure is the per-Check approval lock of API-INT-004, released at the end of the request.
+- No host database (REQ-INT-060): INT declares no `DataSource`, JDBC template or MCP client; its only outbound host connection is the Approval API adapter (PORTS).
+- One REST API (REQ-INT-057, REQ-INT-058): the frontend calls only operations published in the API documents of the service; no server-rendered page or view controller exists (`/api/v1/checks/{checkId}/view` is not mapped → 404).
+<!-- PHASE:CORE:END -->
+
+<!-- PHASE:DATA-DOM:START traces=REQ-INT-011,REQ-INT-034,REQ-INT-035,DBF-INT-001,DBF-INT-002,DBF-INT-003,DBF-INT-004,DBF-INT-005,DBF-INT-006,DBF-INT-007,DBF-INT-008,DBF-INT-009,DBF-INT-010 -->
+## PHASE DATA-DOM — DATA+DOM
+
+No entity block: INT declares no entity and creates no table (ADR-INT-007, ADR-INT-013, ADR-INT-015). The domain is a set of immutable value objects (Java records) and two guards.
+
+### Value objects
+| Record | Fields (DBF where bound) | Built from |
+|---|---|---|
+| `CheckSnapshot` | checkId (DBF-INT-001), status (DBF-INT-002), serviceCode (DBF-INT-003), versionNumber (DBF-INT-004), requestNumber (DBF-INT-005), employeeDecision (DBF-INT-007, nullable) | the Report Store's read of a Check (PORTS) |
+| `ApprovalDefinition` | enabled (DBF-INT-009), method, pathTemplate (both parsed from DBF-INT-010) | XM-INT-001 |
+| `StartCheckCommand` | serviceCode (DBF-INT-003), requestNumber (DBF-INT-005), employeeId (DBF-INT-006) — exactly as received | API-INT-001 body |
+| `UploadCommand` | checkId (DBF-INT-001), documentType, fileName (text), bytes | API-INT-002 multipart |
+| `DecisionCommand` | checkId (DBF-INT-001), employeeDecision (DBF-INT-007), decidedBy (DBF-INT-008) — exactly as received | API-INT-004 body |
+
+### Domain rules (owner layer: domain classes `UploadGuard`, `ApprovalGuard`)
+- RULE-INT-001 — Uploads only while the Check waits for documents · trigger: on upload · scope: CREATE (upload)
+  - statement: The system shall prevent handing an upload to Document Access when the Check's status is not AWAITING_DOCUMENTS.
+  - message (en): Documents can be uploaded only while Check {checkId} is waiting for documents; its status is {status}. · message (ar): PENDING ADR-INT-017
+  - data source: DBF-INT-002 · enforcement: app-level (`UploadGuard`) → `INT-409-CHECK-NOT-AWAITING-DOCUMENTS`
+- RULE-INT-002 — A decision is complete before any Approval API call · trigger: on record decision (before the Approval API call) · scope: CREATE (decision, approval path)
+  - statement: The system shall prevent calling the Approval API when the decision request carries no decision code of EMPLOYEE_DECISION or no deciding employee.
+  - message (en): The decision was not recorded: `{value}` is not APPROVED or REJECTED. / The decision was not recorded: the deciding employee is missing. · message (ar): PENDING ADR-INT-017
+  - data source: DBF-INT-007, DBF-INT-008 (request values) · enforcement: app-level (`ApprovalGuard`) → `RPT-400-DECISION-INCOMPLETE` (the Report Store's own code — ADR-INT-010)
+- RULE-INT-003 — Approval only on a completed, undecided Check · trigger: on record decision (before the Approval API call) · scope: CREATE (decision, approval path)
+  - statement: The system shall prevent calling the Approval API when the Check's status is not COMPLETED or the Check already holds an Employee Decision.
+  - message (en): Check {checkId} is not completed; a decision can only be recorded on a completed Check. / Check {checkId} already has an Employee Decision. · message (ar): PENDING ADR-INT-017
+  - data source: DBF-INT-002, DBF-INT-007 · enforcement: app-level (`ApprovalGuard`) → `RPT-409-CHECK-NOT-COMPLETED` / `RPT-409-DECISION-ALREADY-RECORDED` (ADR-INT-010)
+- RULE-INT-004 — The frontend is opened for one request — enforced by the employee frontend (P3.2) before any call; no backend endpoint, no catalog row.
+
+STATE MACHINE  none of INT's own; INT reads the Check status (the Check Engine's closed list) and never changes it.
+CROSS-MODULE   XM-INT-001 (approval definition).
+REPOSITORY OPS none (no QR — ADR-INT-017).
+<!-- PHASE:DATA-DOM:END -->
+
+<!-- PHASE:PORTS:START traces=REQ-INT-001,REQ-INT-009,REQ-INT-015,REQ-INT-018,REQ-INT-021,REQ-INT-029,REQ-INT-031,REQ-INT-032,REQ-INT-033,REQ-INT-036,REQ-INT-037 -->
+## PHASE PORTS — PORTS+ADAPTERS
+
+Every dependency sits behind an INT port with a replaceable adapter (profile `layers`). The modules of the same deployable are injected by type (profile `module_interface: in_process`).
+
+- `CheckEnginePort` → `ChkCheckEngineAdapter` — wraps the injected Check Engine interface `CheckEngine`: `start(command)` calls `startCheck(serviceCode, requestNumber, employeeId)` with the values exactly as received and returns `{checkId, status}`; `confirm(checkId)` calls `confirmUploads(checkId)`. The Check Engine's typed refusals (CHK-400-START-INCOMPLETE, CHK-422-SERVICE-NOT-AVAILABLE, CHK-422-CONNECTION-NOT-ACTIVATED, CHK-404-CHECK-NOT-FOUND, CHK-409-CHECK-NOT-AWAITING-DOCUMENTS) propagate unchanged to `IntegrationProblemAdvice`.
+- `DocumentAccessPort` → `DocDocumentAccessAdapter` — wraps the injected Document Access interface `DocumentAccess`: `handOver(command, serviceCode, versionNumber)` calls `handOverUpload(checkId, serviceCode, versionNumber, documentType, fileName, bytes)` and returns its receipt `{uploadedDocumentId, documentType, fileName, fileSize, oversized, notice}`. The file is passed as bytes and the file name as text; INT never builds or opens a file path (REQ-INT-015). Document Access's refusals (DOC-400-INCOMPLETE-UPLOAD, DOC-404-SERVICE-VERSION-NOT-FOUND, DOC-422-FETCH-MODE-NOT-MANUAL, DOC-422-DOCUMENT-TYPE-NOT-OF-SERVICE) propagate unchanged.
+- `CheckRecordPort` → `RptCheckRecordAdapter` — wraps the injected Report Store interface `ReportStore`: `read(checkId)` calls `readCheck(checkId)` and maps checkId, status, serviceCode, versionNumber, requestNumber and the decision code into `CheckSnapshot`; `handOverDecision(checkId, employeeDecision, decidedBy, approvalApiExecuted)` calls `recordDecision(...)` and returns `{checkId, employeeDecision, decidedBy, decidedAt, approvalApiExecuted}`. The Report Store's refusals (RPT-404-CHECK-NOT-FOUND, RPT-400-DECISION-INCOMPLETE, RPT-409-CHECK-NOT-COMPLETED, RPT-409-DECISION-ALREADY-RECORDED, RPT-422-APPROVAL-FLAG-ON-REJECTION) propagate unchanged.
+- `ApprovalDefinitionPort` — implemented in the CROSS-MOD block of XM-INT-001; injected only into `DecisionService` (REQ-INT-029).
+- `HostApprovalPort` → `HttpHostApprovalAdapter` — the only network call of INT (ADR-INT-009, ADR-INT-017 (5)). `approve(definition, requestNumber, checkId, decidedBy)`:
+  1. builds the URI from `aias.integration.approval.base-address` and `definition.pathTemplate`, expanding its single `{…}` placeholder with the request number as ONE path-segment value, URL-encoded by `UriComponentsBuilder.buildAndExpand(...).encode()` — never by string concatenation (REQ-INT-031);
+  2. sends `definition.method` with the JSON body `{"checkId": <checkId>, "decidedBy": "<decidedBy>"}` (REQ-INT-032) through a `RestClient` whose connect and read timeouts are `aias.integration.approval.timeout`;
+  3. any 2xx → success; any other status, a connection failure or an unconfigured base address → `ApprovalApiFailedException(status)` (`INT-502-APPROVAL-API-FAILED`, REQ-INT-036); a timeout → `ApprovalApiTimedOutException(seconds)` (`INT-504-APPROVAL-API-TIMED-OUT`, REQ-INT-037);
+  4. exactly one attempt — no retry interceptor, no retry template (REQ-INT-033); every outcome logged at INFO with checkId, request number and status.
+  The adapter is a plain Spring bean, never registered as a model tool, and injected only into `DecisionService` (REQ-INT-029; AIAS-3, AIAS-4). INT has no query port, no document reader and no model port.
+<!-- PHASE:PORTS:END -->
+
+<!-- PHASE:SVC-API:START traces=REQ-INT-001,REQ-INT-002,REQ-INT-003,REQ-INT-004,REQ-INT-005,REQ-INT-006,REQ-INT-007,REQ-INT-008,REQ-INT-009,REQ-INT-010,REQ-INT-011,REQ-INT-012,REQ-INT-013,REQ-INT-014,REQ-INT-015,REQ-INT-016,REQ-INT-017,REQ-INT-018,REQ-INT-019,REQ-INT-020,REQ-INT-021,REQ-INT-022,REQ-INT-023,REQ-INT-024,REQ-INT-025,REQ-INT-026,REQ-INT-027,REQ-INT-028,REQ-INT-029,REQ-INT-030,REQ-INT-031,REQ-INT-032,REQ-INT-033,REQ-INT-034,REQ-INT-035,REQ-INT-036,REQ-INT-037,REQ-INT-038,REQ-INT-039,REQ-INT-044,REQ-INT-053,REQ-INT-054,REQ-INT-057,REQ-INT-058,REQ-INT-059,REQ-INT-060,DBF-INT-001,DBF-INT-002,DBF-INT-003,DBF-INT-004,DBF-INT-005,DBF-INT-006,DBF-INT-007,DBF-INT-008,DBF-INT-009,DBF-INT-010 -->
+## PHASE SVC-API — SVC+API
+
+4 API blocks (< 8 — no SUB). Controllers: `CheckIntakeController` (API-INT-001), `CheckUploadController` (API-INT-002, API-INT-003), `DecisionController` (API-INT-004); services: `CheckIntakeService`, `UploadService`, `UploadConfirmationService`, `DecisionService`.
+
+<!-- API:API-INT-001:START traces=REQ-INT-001,REQ-INT-002,REQ-INT-003,REQ-INT-004,REQ-INT-005,REQ-INT-006,REQ-INT-007,REQ-INT-008,REQ-INT-044,REQ-INT-057,REQ-INT-058,REQ-INT-059,REQ-INT-060,DBF-INT-001,DBF-INT-002,DBF-INT-003,DBF-INT-005,DBF-INT-006 -->
+### API-INT-001 — Start a Check
+Entity       : the Report Store's Check Run (operation: create — starts a Check whose run the Report Store keeps)
+Endpoint     : /api/v1/checks   verb: POST
+Layers       : controller CheckIntakeController.start → service CheckIntakeService.start
+Request      : body (application/json) StartCheckRequest {serviceCode (DBF-INT-003, string ≤ 100, required), requestNumber (DBF-INT-005, string ≤ 100, required), employeeId (DBF-INT-006, string ≤ 100, required)} — passed exactly as received, never trimmed or checked against a directory (REQ-INT-003, REQ-INT-004); presence is decided by the Check Engine (CHK-400-START-INCOMPLETE); no path or query parameter
+Response     : 202 · StartedCheckResponse {checkId (DBF-INT-001, int64), status (DBF-INT-002 — RUNNING or AWAITING_DOCUMENTS), checkUrl (`/api/v1/checks/{checkId}`)} and header `Location: /api/v1/checks/{checkId}` (REQ-INT-005) · not paginated · no envelope
+Validations  : body readable as JSON (PLATFORM-STD, ADR-INT-017)
+Errors       : INT-400-REQUEST-INVALID (400) · CHK-400-START-INCOMPLETE (400, PASS-THROUGH) · CHK-422-SERVICE-NOT-AVAILABLE (422, PASS-THROUGH) · CHK-422-CONNECTION-NOT-ACTIVATED (422, PASS-THROUGH) · INT-500 (500)
+Orchestration : parse → `CheckEnginePort.start` (PORTS) → answer 202 at once; the pipeline runs in the background inside the Check Engine (REQ-INT-002). INT writes no column: DBF-INT-001 and DBF-INT-002 come back from the call
+Repository   : none (no QR — ADR-INT-017)
+Concurrency  : NONE — INT allocates nothing and decides on nothing it writes; the Check identifier is allocated by the Report Store through the Check Engine, and every start is a new, independent Check
+Security     : none — no permission model, endpoints are open per the SRS (caller authentication deferred, raw-idea A2; REQ-INT-004)
+Localization : messages en per SRS; ar PENDING ADR-INT-017
+Honours      : CON-INT-001
+Covers       : REQ-INT-044 (the frontend's start uses this endpoint with its launch context); REQ-INT-057 … REQ-INT-060 hold for every INT endpoint (CORE).
+<!-- API:API-INT-001:END -->
+
+<!-- API:API-INT-002:START traces=REQ-INT-006,REQ-INT-007,REQ-INT-008,REQ-INT-009,REQ-INT-010,REQ-INT-011,REQ-INT-012,REQ-INT-013,REQ-INT-014,REQ-INT-015,REQ-INT-016,REQ-INT-017,REQ-INT-019,REQ-INT-053,DBF-INT-001,DBF-INT-002,DBF-INT-003,DBF-INT-004 -->
+### API-INT-002 — Hand over an uploaded document
+Entity       : the Report Store's Check Run (operation: create — one uploaded document handed over for the Check)
+Endpoint     : /api/v1/checks/{checkId}/documents   verb: POST
+Layers       : controller CheckUploadController.upload → service UploadService.upload
+Request      : path checkId (DBF-INT-001, integer int64, required); body (multipart/form-data) documentType (string ≤ 100, required — one of the service's required document types, checked by Document Access), file (binary, exactly one part, required); the service code and version are NOT accepted from the caller (REQ-INT-010)
+Response     : 201 · UploadReceiptResponse {uploadedDocumentId (int64), documentType, fileName, fileSize (int64), oversized (boolean), notice (string, present only when oversized — REQ-INT-013)} · not paginated · no envelope
+Validations  : request within `aias.integration.upload.request-limit` (REQ-INT-014, PLATFORM-STD) · RULE-INT-001 — Uploads only while the Check waits for documents · trigger: on upload · statement: The system shall prevent handing an upload to Document Access when the Check's status is not AWAITING_DOCUMENTS. · message (en): Documents can be uploaded only while Check {checkId} is waiting for documents; its status is {status}. · message (ar): PENDING ADR-INT-017
+Errors       : INT-400-REQUEST-INVALID (400) · RPT-404-CHECK-NOT-FOUND (404, PASS-THROUGH) · INT-409-CHECK-NOT-AWAITING-DOCUMENTS (409, RULE-INT-001) · INT-413-UPLOAD-TOO-LARGE (413) · DOC-400-INCOMPLETE-UPLOAD (400, PASS-THROUGH) · DOC-404-SERVICE-VERSION-NOT-FOUND (404, PASS-THROUGH) · DOC-422-FETCH-MODE-NOT-MANUAL (422, PASS-THROUGH) · DOC-422-DOCUMENT-TYPE-NOT-OF-SERVICE (422, PASS-THROUGH) · INT-500 (500)
+Orchestration : size limit (container, INT-413) → parse → load the Check: `CheckRecordPort.read(checkId)` (PORTS; unknown → RPT-404-CHECK-NOT-FOUND) → RULE-INT-001 on DBF-INT-002 → `DocumentAccessPort.handOver` with serviceCode DBF-INT-003 and versionNumber DBF-INT-004 of the Check → 201 with the receipt. INT writes no column; the Uploaded Document is Document Access's record. The upload never confirms the uploads (REQ-INT-019)
+Repository   : none (no QR — ADR-INT-017)
+Concurrency  : NONE of INT's own allocation. Read-then-act: the status read and the hand-over are not atomic — if a confirmation of the same Check commits in between, the file reaches Document Access after the Check left AWAITING_DOCUMENTS and is deleted with the Check's uploads when it ends (Document Access deletes a Check's uploads when it ends). Accepted for v1: the upload screen and the confirmation are submitted one after the other by the same employee (screen composition), so the window needs two parallel requests on one Check
+Security     : none — no permission model (raw-idea A2)
+Localization : messages en per SRS; ar PENDING ADR-INT-017
+Honours      : CON-INT-002
+Covers       : REQ-INT-016, REQ-INT-017 and REQ-INT-053 are the frontend's use of this endpoint with the owners' reads of the service and of the uploaded documents (P3.2).
+<!-- API:API-INT-002:END -->
+
+<!-- API:API-INT-003:START traces=REQ-INT-006,REQ-INT-007,REQ-INT-008,REQ-INT-018,REQ-INT-019,REQ-INT-020,REQ-INT-053,DBF-INT-001,DBF-INT-002 -->
+### API-INT-003 — Confirm the uploads
+Entity       : the Report Store's Check Run (operation: custom — confirm that the uploads of a `manual` Check are complete)
+Endpoint     : /api/v1/checks/{checkId}/upload-confirmation   verb: POST
+Layers       : controller CheckUploadController.confirm → service UploadConfirmationService.confirm
+Request      : path checkId (DBF-INT-001, integer int64, required); body (application/json) UploadConfirmationRequest {} — an empty object, no field
+Response     : 202 · ConfirmedCheckResponse {checkId (DBF-INT-001, int64), status (DBF-INT-002 — RUNNING)} · not paginated · no envelope
+Validations  : checkId numeric (PLATFORM-STD, ADR-INT-017)
+Errors       : INT-400-REQUEST-INVALID (400) · CHK-404-CHECK-NOT-FOUND (404, PASS-THROUGH) · CHK-409-CHECK-NOT-AWAITING-DOCUMENTS (409, PASS-THROUGH) · INT-500 (500)
+Orchestration : parse → `CheckEnginePort.confirm(checkId)` (PORTS) → 202; the pipeline continues in the background inside the Check Engine. INT writes no column
+Repository   : none (no QR — ADR-INT-017)
+Concurrency  : NONE in INT — the Check Engine's locking read serialises a confirmation against the upload-window deadline and a second confirmation (its own guard); the loser is refused CHK-409-CHECK-NOT-AWAITING-DOCUMENTS
+Security     : none — no permission model (raw-idea A2)
+Localization : messages en per SRS; ar PENDING ADR-INT-017
+Honours      : CON-INT-003
+Covers       : REQ-INT-020 is the confirmation screen's use of the uploaded-documents read before this call (P3.2).
+<!-- API:API-INT-003:END -->
+
+<!-- API:API-INT-004:START traces=REQ-INT-006,REQ-INT-007,REQ-INT-008,REQ-INT-021,REQ-INT-022,REQ-INT-023,REQ-INT-024,REQ-INT-025,REQ-INT-026,REQ-INT-027,REQ-INT-028,REQ-INT-029,REQ-INT-030,REQ-INT-031,REQ-INT-032,REQ-INT-033,REQ-INT-034,REQ-INT-035,REQ-INT-036,REQ-INT-037,REQ-INT-038,REQ-INT-039,REQ-INT-054,DBF-INT-001,DBF-INT-002,DBF-INT-003,DBF-INT-004,DBF-INT-005,DBF-INT-007,DBF-INT-008,DBF-INT-009,DBF-INT-010 -->
+### API-INT-004 — Record an Employee Decision
+Entity       : the Report Store's Check Run (operation: create — the Employee Decision recorded beside the Check's result)
+Endpoint     : /api/v1/checks/{checkId}/decision   verb: POST
+Layers       : controller DecisionController.decide → service DecisionService.decide
+Request      : path checkId (DBF-INT-001, integer int64, required); body (application/json) DecisionRequest {employeeDecision (DBF-INT-007, string, `APPROVED` | `REJECTED`, required), decidedBy (DBF-INT-008, string ≤ 100, required — exactly as the host sent it)}; approvalApiExecuted is never accepted from the caller — INT sets it (REQ-INT-026)
+Response     : 201 · RecordedDecisionResponse {checkId (int64), employeeDecision, decidedBy, decidedAt (date-time), approvalApiExecuted (boolean)} · not paginated · no envelope
+Validations  : body readable (PLATFORM-STD) · RULE-INT-002 — A decision is complete before any Approval API call · trigger: on record decision (before the Approval API call) · statement: The system shall prevent calling the Approval API when the decision request carries no decision code of EMPLOYEE_DECISION or no deciding employee. · message (en): The decision was not recorded: `{value}` is not APPROVED or REJECTED. / The decision was not recorded: the deciding employee is missing. · message (ar): PENDING ADR-INT-017 · RULE-INT-003 — Approval only on a completed, undecided Check · trigger: on record decision (before the Approval API call) · statement: The system shall prevent calling the Approval API when the Check's status is not COMPLETED or the Check already holds an Employee Decision. · message (en): Check {checkId} is not completed; a decision can only be recorded on a completed Check. / Check {checkId} already has an Employee Decision. · message (ar): PENDING ADR-INT-017
+Errors       : INT-400-REQUEST-INVALID (400) · RPT-404-CHECK-NOT-FOUND (404, PASS-THROUGH) · RPT-400-DECISION-INCOMPLETE (400, RULE-INT-002 / PASS-THROUGH) · RPT-409-CHECK-NOT-COMPLETED (409, RULE-INT-003 / PASS-THROUGH) · RPT-409-DECISION-ALREADY-RECORDED (409, RULE-INT-003 / PASS-THROUGH) · RPT-422-APPROVAL-FLAG-ON-REJECTION (422, PASS-THROUGH) · INT-502-APPROVAL-API-FAILED (502) · INT-504-APPROVAL-API-TIMED-OUT (504) · INT-500 (500)
+Orchestration : 
+  1. parse (INT-400-REQUEST-INVALID); load the Check: `CheckRecordPort.read(checkId)` (unknown → RPT-404-CHECK-NOT-FOUND).
+  2. When employeeDecision (DBF-INT-007) is `APPROVED`: integrate (XM-INT-001) — the approval definition of the Check's own version, by serviceCode DBF-INT-003 and versionNumber DBF-INT-004 (REQ-INT-030): enabled DBF-INT-009, method + path DBF-INT-010.
+  3. Approval path — APPROVED and enabled (REQ-INT-025): take the per-Check lock (below); re-read the Check; RULE-INT-002 on the request (DBF-INT-007, DBF-INT-008) → RPT-400-DECISION-INCOMPLETE; RULE-INT-003 on DBF-INT-002 and DBF-INT-007 → RPT-409-CHECK-NOT-COMPLETED / RPT-409-DECISION-ALREADY-RECORDED — in every refusal the host receives no call (REQ-INT-034, REQ-INT-035). Then `HostApprovalPort.approve(definition, requestNumber DBF-INT-005, checkId, decidedBy)` once (REQ-INT-031 … REQ-INT-033): failure → INT-502-APPROVAL-API-FAILED, timeout → INT-504-APPROVAL-API-TIMED-OUT, nothing recorded and the employee may submit again as a new request (REQ-INT-036 … REQ-INT-038). Success → `CheckRecordPort.handOverDecision(checkId, APPROVED, decidedBy, approvalApiExecuted = true)` (REQ-INT-026). A refusal of the hand-over after a successful call → answer that refusal unchanged and log at WARN "Approval executed but decision not recorded: Check {checkId}, request {requestNumber}" (REQ-INT-039). Release the lock.
+  4. Every other case — REJECTED (REQ-INT-027), a version that does not enable the Approval API (REQ-INT-028), or a code that is not APPROVED: no Approval API call; `CheckRecordPort.handOverDecision(checkId, employeeDecision, decidedBy, approvalApiExecuted = false)` (REQ-INT-021); the Report Store's refusals pass through unchanged (REQ-INT-006).
+  5. 201 with the recorded decision (REQ-INT-022). INT writes no column: DBF-INT-007 and DBF-INT-008 are written by the Report Store from the hand-over. The Approval API is called from this step 3 only (REQ-INT-029).
+Repository   : none (no QR — ADR-INT-017)
+Concurrency  : guard — a per-Check-identifier in-process lock (`ConcurrentHashMap<Long, ReentrantLock>`, removed when released) held across step 3 from the re-read to the hand-over: two simultaneous APPROVED decisions on one approval-enabled Check cannot both call the host; the second waits, re-reads, finds the decision and is refused RPT-409-DECISION-ALREADY-RECORDED before any call. The Report Store's conditional update stays the final guard for every path (one decision per Check). A multi-instance deployment is not covered by the in-process lock (ADR-INT-017 (6))
+Security     : none — no permission model (raw-idea A2); `HostApprovalPort` and `ApprovalDefinitionPort` are injected into `DecisionService` only (AIAS-4)
+Localization : messages en per SRS; ar PENDING ADR-INT-017
+Honours      : CON-INT-004
+Covers       : REQ-INT-023 (the frontend sends its launch identity as decidedBy) and REQ-INT-054 (the frontend offers the decision only on a COMPLETED, undecided Check) are the frontend's use of this endpoint (P3.2); REQ-INT-024: no other endpoint carries a decision.
+<!-- API:API-INT-004:END -->
+
+<!-- PHASE:SVC-API:END -->
+
+<!-- PHASE:ALIGN-BE:START traces=REQ-INT-006,REQ-INT-029 -->
+## PHASE ALIGN-BE — ALIGN-BE
+
+```
+ALIGN — INT v1
+row               backing check        assertion
+TRACEABILITY      traces               every PHASE/SUB/atom block carries traces=, and every API traces to its REQ and its DBF
+COVERED           orphans              every REQ is covered by ≥1 API or DBF
+BINDING (§2A)     value-agreement      every DBF names the same physical column here as the db-script declares for it
+MANIFEST (§4)     count-agrees         every total this plan states equals the rows it heads
+WRITERS           required-writer      every required column is written by an endpoint, or the row states why not
+QRC (§5)          orphans              every catalogued query is reached by ≥1 API
+API (R3)          code-format          every catalog code is an instance of the declared format and carries a status the platform can emit
+API DOCUMENT      api-spec-agree       every API block is one operation of api-spec-int.yaml and every operation one block, agreeing on method and path
+ERROR RESPONSES   api-spec-errors      every catalog row is answered by an operation of api-spec-int.yaml with its status and code
+DOCUMENT VALID    api-spec-valid       api-spec-int.yaml validates against OPENAPI 3.1.0 and reaches every required item
+RULE INPUTS       data-source          every RULE enforced at runtime names where the data it READS comes from, or is deferred
+CROSS-MODULE      registry-agree       every registered XM is placed here, and every XM minted here is back-registered
+INTEGRATION       xm-block-complete    every edge is one complete block of the last phase, and nothing else names its target
+FOREIGN IDS       xref-resolve         every id of another module cited here is defined in that module's own registry
+SECURITY (R5)     operation-resolves   every declared entity operation resolves to an API, and every marked matrix cell names its API and its permission
+DEMAND (SRS)      operation-resolves   every operation an SRS screen names is built by an API, or the plan states why it is not
+DECISIONS         refs-exist           every ADR this plan cites exists on disk in analysis/decisions/INT/
+PATHS             paths-resolve        every path the generated manifest and execution state emit resolves to something that exists
+COVERAGE          (the report)         as stamped by the orchestrator from the analyze report
+```
+```yaml name=self-check
+findings: 0
+clean: true
+examined_nothing:
+- C7.19
+- C7.20
+- C7.22
+- C7.23
+- C7.24
+- C7.28
+```
+R5 — Security (backend half): no permission model — endpoints are open per the SRS (caller authentication deferred, raw-idea A2; REQ-INT-004 states the identity is not checked against any directory).
+<!-- PHASE:ALIGN-BE:END -->
+
+<!-- PHASE:CROSS-MOD:START traces=REQ-INT-025,REQ-INT-028,REQ-INT-030 -->
+## PHASE CROSS-MOD — CROSS-MODULE
+
+<!-- XM:XM-INT-001:START traces=REQ-INT-025,REQ-INT-028,REQ-INT-030 -->
+### XM-INT-001 — Approval definition of the Check's service package version
+target     : REG · ENT-REG-002
+type       : SOFT-READ
+contract   : contract-reg.md#CON-REG-002
+requires   : REG:DELIVERED
+do         :
+  adapter   : `RegApprovalDefinitionAdapter implements ApprovalDefinitionPort` (INT port) wraps the injected REG in-process interface `ApprovalApiRegistry` — the separate interface REG gives only to the Employee Decision operation — and calls `getApprovalApi(serviceCode, versionNumber)` (CON-REG-012) with the service code and version number of the Check; maps ENT-REG-002.approvalEnabled (DBF-INT-009) to `ApprovalDefinition.enabled` and splits ENT-REG-002.approvalApi (DBF-INT-010, e.g. `POST /requests/{requestId}/approve`) at its first space into `method` and `pathTemplate`. REG's not-found for the Check's own version (CON-REG-002 promises it never disappears) → `INT-500`, logged with the Check identifier. Nothing is kept beyond the call; no FK. The adapter is injected only into `DecisionService` (AIAS-4) and never exposed to a model.
+  config    : none — the REG interface is a Spring bean of the same deployable, injected by type.
+tests      : AC-INT-029, AC-INT-032, AC-INT-034
+if_not_met : skip-block; record in execution-state.json → deferred_xm; continue
+<!-- XM:XM-INT-001:END -->
+
+<!-- PHASE:CROSS-MOD:END -->
+
+## QUERY REFERENCE CATALOG — INT v1
+
+None — INT owns no table and no repository (ADR-INT-015, ADR-INT-017 (2)). Every read is the Report Store's read of a Check (PORTS) or the approval definition (XM-INT-001); every write is the Check Engine's, Document Access's or the Report Store's own operation.
+
+## ERROR CATALOG — INT v1
+
+```yaml name=error-catalog
+rows:
+  - {code: "INT-400-REQUEST-INVALID", rule: PLATFORM-STD, api: [API-INT-001, API-INT-002, API-INT-003, API-INT-004], http: 400, trigger: "the body, a multipart part or the checkId cannot be read (REQ-INT-007)", messages: {en: "The request could not be read: {detail}.", ar: "PENDING ADR-INT-017"}, adr: "ADR-INT-017"}
+  - {code: "INT-409-CHECK-NOT-AWAITING-DOCUMENTS", rule: RULE-INT-001, api: [API-INT-002], http: 409, trigger: "a file is uploaded for a Check whose status is not AWAITING_DOCUMENTS (REQ-INT-011)", messages: {en: "Documents can be uploaded only while Check {checkId} is waiting for documents; its status is {status}.", ar: "PENDING ADR-INT-017"}}
+  - {code: "INT-413-UPLOAD-TOO-LARGE", rule: PLATFORM-STD, api: [API-INT-002], http: 413, trigger: "the upload request exceeds the upload request limit (REQ-INT-014)", messages: {en: "The upload is larger than the {limit} the service accepts in one request.", ar: "PENDING ADR-INT-017"}, adr: "ADR-INT-017"}
+  - {code: "INT-502-APPROVAL-API-FAILED", rule: PLATFORM-STD, api: [API-INT-004], http: 502, trigger: "the host Approval API answers outside 2xx, cannot be reached or has no configured address (REQ-INT-036)", messages: {en: "The approval was not executed: the host Approval API answered {status}. Nothing was recorded; you can try again.", ar: "PENDING ADR-INT-017"}, adr: "ADR-INT-017"}
+  - {code: "INT-504-APPROVAL-API-TIMED-OUT", rule: PLATFORM-STD, api: [API-INT-004], http: 504, trigger: "the host Approval API does not answer within the approval timeout (REQ-INT-037)", messages: {en: "The approval was not executed: the host Approval API did not answer within {timeout} seconds. Nothing was recorded; you can try again.", ar: "PENDING ADR-INT-017"}, adr: "ADR-INT-017"}
+  - {code: "INT-500", rule: PLATFORM-STD, api: [API-INT-001, API-INT-002, API-INT-003, API-INT-004], http: 500, trigger: "an unexpected server failure (REQ-INT-008)", messages: {en: "The request could not be completed because of an unexpected error.", ar: "PENDING ADR-INT-017"}, adr: "ADR-INT-017"}
+  - {code: "CHK-400-START-INCOMPLETE", rule: PASS-THROUGH, api: [API-INT-001], http: 400, trigger: "the Check Engine refuses a start with a value absent or blank", messages: {en: "A Check needs a service code, a request number and the employee's identity.", ar: "PENDING ADR-INT-017"}, adr: "ADR-INT-003"}
+  - {code: "CHK-422-SERVICE-NOT-AVAILABLE", rule: PASS-THROUGH, api: [API-INT-001], http: 422, trigger: "the Check Engine refuses a start for an unknown or withdrawn service", messages: {en: "The service \"{serviceCode}\" is not available for Checks.", ar: "PENDING ADR-INT-017"}, adr: "ADR-INT-003"}
+  - {code: "CHK-422-CONNECTION-NOT-ACTIVATED", rule: PASS-THROUGH, api: [API-INT-001], http: 422, trigger: "the Check Engine refuses a start whose connection is not activated", messages: {en: "The service \"{serviceCode}\" cannot be checked: connection \"{connectionName}\" is not activated in this environment.", ar: "PENDING ADR-INT-017"}, adr: "ADR-INT-003"}
+  - {code: "CHK-404-CHECK-NOT-FOUND", rule: PASS-THROUGH, api: [API-INT-003], http: 404, trigger: "the Check Engine knows no Check with this identifier on confirmation", messages: {en: "Check {checkId} does not exist.", ar: "PENDING ADR-INT-017"}, adr: "ADR-INT-003"}
+  - {code: "CHK-409-CHECK-NOT-AWAITING-DOCUMENTS", rule: PASS-THROUGH, api: [API-INT-003], http: 409, trigger: "the Check Engine refuses a confirmation of a Check not waiting for documents", messages: {en: "Check {checkId} is not waiting for documents; its status is {status}.", ar: "PENDING ADR-INT-017"}, adr: "ADR-INT-003"}
+  - {code: "DOC-400-INCOMPLETE-UPLOAD", rule: PASS-THROUGH, api: [API-INT-002], http: 400, trigger: "Document Access refuses an upload without a document type or with an empty file", messages: {en: "The upload needs a Check, a document type and a file that is not empty.", ar: "PENDING ADR-INT-017"}, adr: "ADR-INT-003"}
+  - {code: "DOC-404-SERVICE-VERSION-NOT-FOUND", rule: PASS-THROUGH, api: [API-INT-002], http: 404, trigger: "Document Access cannot resolve the Check's service package version", messages: {en: "service package version not found", ar: "PENDING ADR-INT-017"}, adr: "ADR-INT-003"}
+  - {code: "DOC-422-FETCH-MODE-NOT-MANUAL", rule: PASS-THROUGH, api: [API-INT-002], http: 422, trigger: "Document Access refuses an upload for a service whose fetch mode is not manual", messages: {en: "Documents can be uploaded only for a service whose documents are provided by the employee; the service \"{serviceCode}\" obtains its documents by \"{fetchMode}\".", ar: "PENDING ADR-INT-017"}, adr: "ADR-INT-003"}
+  - {code: "DOC-422-DOCUMENT-TYPE-NOT-OF-SERVICE", rule: PASS-THROUGH, api: [API-INT-002], http: 422, trigger: "Document Access refuses a document type the version does not require", messages: {en: "\"{documentType}\" is not a document type of the service \"{serviceCode}\"; choose one of: {requiredDocumentTypes}.", ar: "PENDING ADR-INT-017"}, adr: "ADR-INT-003"}
+  - {code: "RPT-404-CHECK-NOT-FOUND", rule: PASS-THROUGH, api: [API-INT-002, API-INT-004], http: 404, trigger: "the Report Store holds no Check with this identifier", messages: {en: "Check {checkId} was not found.", ar: "PENDING ADR-INT-017"}, adr: "ADR-INT-003"}
+  - {code: "RPT-400-DECISION-INCOMPLETE", rule: RULE-INT-002, api: [API-INT-004], http: 400, trigger: "the decision code is not APPROVED or REJECTED or the deciding employee is missing — raised by INT before an Approval API call, otherwise by the Report Store", messages: {en: "The decision was not recorded: `{value}` is not APPROVED or REJECTED. / The decision was not recorded: the deciding employee is missing.", ar: "PENDING ADR-INT-017"}, adr: "ADR-INT-010"}
+  - {code: "RPT-409-CHECK-NOT-COMPLETED", rule: RULE-INT-003, api: [API-INT-004], http: 409, trigger: "the Check is not COMPLETED — raised by INT before an Approval API call, otherwise by the Report Store", messages: {en: "Check {checkId} is not completed; a decision can only be recorded on a completed Check.", ar: "PENDING ADR-INT-017"}, adr: "ADR-INT-010"}
+  - {code: "RPT-409-DECISION-ALREADY-RECORDED", rule: RULE-INT-003, api: [API-INT-004], http: 409, trigger: "the Check already holds an Employee Decision — raised by INT before an Approval API call, otherwise by the Report Store", messages: {en: "Check {checkId} already has an Employee Decision.", ar: "PENDING ADR-INT-017"}, adr: "ADR-INT-010"}
+  - {code: "RPT-422-APPROVAL-FLAG-ON-REJECTION", rule: PASS-THROUGH, api: [API-INT-004], http: 422, trigger: "the Report Store refuses an executed rejection (INT never sends one — REQ-INT-027)", messages: {en: "The decision was not recorded: only an APPROVED decision is executed through the Approval API.", ar: "PENDING ADR-INT-017"}, adr: "ADR-INT-003"}
+```
+
+## Coverage
+| RULE | Where enforced | Catalog code |
+|---|---|---|
+| RULE-INT-001 | API-INT-002 (`UploadGuard`) | INT-409-CHECK-NOT-AWAITING-DOCUMENTS |
+| RULE-INT-002 | API-INT-004 step 3 (`ApprovalGuard`) | RPT-400-DECISION-INCOMPLETE |
+| RULE-INT-003 | API-INT-004 step 3 (`ApprovalGuard`) | RPT-409-CHECK-NOT-COMPLETED, RPT-409-DECISION-ALREADY-RECORDED |
+| RULE-INT-004 | employee frontend (P3.2) | — (no backend path) |
+
+| DBF | Phases | QR | XM |
+|---|---|---|---|
+| DBF-INT-001 … DBF-INT-008 | DATA-DOM, PORTS, SVC-API | — | — (platform edge INT → RPT) |
+| DBF-INT-009, DBF-INT-010 | DATA-DOM, SVC-API, CROSS-MOD | — | XM-INT-001 |
+
+| XM | requires | tests |
+|---|---|---|
+| XM-INT-001 | REG:DELIVERED | AC-INT-029, AC-INT-032, AC-INT-034 |
+
+Frontend-served requirements (REQ-INT-040 … REQ-INT-043, REQ-INT-045 … REQ-INT-052, REQ-INT-055, REQ-INT-056) are bound to the read bindings of the DBF matrix and are built by P3.2 on the owners' reads; no INT endpoint serves them (ADR-INT-001, ADR-INT-011).
+
+ADRs cited: ADR-INT-001, ADR-INT-003, ADR-INT-009, ADR-INT-010, ADR-INT-011, ADR-INT-012, ADR-INT-013, ADR-INT-015, ADR-INT-016, ADR-INT-017.
+
+<<<END INPUT>>>
+
+<<<INPUT: frontend-execution-plan>>>
+(MISSING — the orchestrator refuses to run this stage until it exists)
+<<<END INPUT>>>
+
+<<<INPUT: api-spec>>>
+openapi: 3.1.0
+info:
+  title: Host Integration (INT) API
+  version: 1.0.0
+  description: 'Derived from backend-execution-plan-int.md (API-INT-001 … API-INT-004). Write operations
+    only; the reads of a Check, its report and the Checks of a request are served by the Report Store
+    (api-spec-rpt.yaml), the service reads by the Service Registry and the uploaded documents by Document
+    Access (ADR-INT-001). Refusals of other modules keep their own code (ADR-INT-003). No security scheme:
+    caller authentication is deferred (raw-idea A2).'
+paths:
+  /api/v1/checks:
+    post:
+      operationId: startCheck
+      summary: Start a Check
+      x-api-id: API-INT-001
+      x-traces:
+      - REQ-INT-001
+      - REQ-INT-002
+      - REQ-INT-003
+      - REQ-INT-004
+      - REQ-INT-005
+      - REQ-INT-006
+      - REQ-INT-007
+      - REQ-INT-008
+      - REQ-INT-044
+      - REQ-INT-057
+      - REQ-INT-058
+      - REQ-INT-059
+      - REQ-INT-060
+      - DBF-INT-001
+      - DBF-INT-002
+      - DBF-INT-003
+      - DBF-INT-005
+      - DBF-INT-006
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartCheckRequest'
+      responses:
+        '202':
+          description: The Check is accepted and runs asynchronously
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StartedCheckResponse'
+          headers:
+            Location:
+              description: Address of the Check's read (/api/v1/checks/{checkId})
+              schema:
+                type: string
+        '400':
+          description: the body, a multipart part or the checkId cannot be read (REQ-INT-007) / the Check
+            Engine refuses a start with a value absent or blank
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - INT-400-REQUEST-INVALID
+          - CHK-400-START-INCOMPLETE
+        '422':
+          description: the Check Engine refuses a start for an unknown or withdrawn service / the Check
+            Engine refuses a start whose connection is not activated
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - CHK-422-SERVICE-NOT-AVAILABLE
+          - CHK-422-CONNECTION-NOT-ACTIVATED
+        '500':
+          description: an unexpected server failure (REQ-INT-008)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - INT-500
+  /api/v1/checks/{checkId}/documents:
+    post:
+      operationId: uploadDocument
+      summary: Hand over an uploaded document
+      x-api-id: API-INT-002
+      x-traces:
+      - REQ-INT-006
+      - REQ-INT-007
+      - REQ-INT-008
+      - REQ-INT-009
+      - REQ-INT-010
+      - REQ-INT-011
+      - REQ-INT-012
+      - REQ-INT-013
+      - REQ-INT-014
+      - REQ-INT-015
+      - REQ-INT-016
+      - REQ-INT-017
+      - REQ-INT-019
+      - REQ-INT-053
+      - DBF-INT-001
+      - DBF-INT-002
+      - DBF-INT-003
+      - DBF-INT-004
+      parameters:
+      - &id001
+        name: checkId
+        in: path
+        required: true
+        description: The Check identifier (DBF-INT-001)
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UploadRequest'
+      responses:
+        '201':
+          description: The file was handed over to Document Access
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadReceiptResponse'
+        '400':
+          description: the body, a multipart part or the checkId cannot be read (REQ-INT-007) / Document
+            Access refuses an upload without a document type or with an empty file
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - INT-400-REQUEST-INVALID
+          - DOC-400-INCOMPLETE-UPLOAD
+        '404':
+          description: Document Access cannot resolve the Check's service package version / the Report
+            Store holds no Check with this identifier
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - DOC-404-SERVICE-VERSION-NOT-FOUND
+          - RPT-404-CHECK-NOT-FOUND
+        '409':
+          description: a file is uploaded for a Check whose status is not AWAITING_DOCUMENTS (REQ-INT-011)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - INT-409-CHECK-NOT-AWAITING-DOCUMENTS
+        '413':
+          description: the upload request exceeds the upload request limit (REQ-INT-014)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - INT-413-UPLOAD-TOO-LARGE
+        '422':
+          description: Document Access refuses an upload for a service whose fetch mode is not manual
+            / Document Access refuses a document type the version does not require
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - DOC-422-FETCH-MODE-NOT-MANUAL
+          - DOC-422-DOCUMENT-TYPE-NOT-OF-SERVICE
+        '500':
+          description: an unexpected server failure (REQ-INT-008)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - INT-500
+  /api/v1/checks/{checkId}/upload-confirmation:
+    post:
+      operationId: confirmUploads
+      summary: Confirm the uploads
+      x-api-id: API-INT-003
+      x-traces:
+      - REQ-INT-006
+      - REQ-INT-007
+      - REQ-INT-008
+      - REQ-INT-018
+      - REQ-INT-019
+      - REQ-INT-020
+      - REQ-INT-053
+      - DBF-INT-001
+      - DBF-INT-002
+      parameters:
+      - *id001
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UploadConfirmationRequest'
+      responses:
+        '202':
+          description: The uploads are confirmed and the Check continues asynchronously
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfirmedCheckResponse'
+        '400':
+          description: the body, a multipart part or the checkId cannot be read (REQ-INT-007)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - INT-400-REQUEST-INVALID
+        '404':
+          description: the Check Engine knows no Check with this identifier on confirmation
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - CHK-404-CHECK-NOT-FOUND
+        '409':
+          description: the Check Engine refuses a confirmation of a Check not waiting for documents
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - CHK-409-CHECK-NOT-AWAITING-DOCUMENTS
+        '500':
+          description: an unexpected server failure (REQ-INT-008)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - INT-500
+  /api/v1/checks/{checkId}/decision:
+    post:
+      operationId: recordEmployeeDecision
+      summary: Record an Employee Decision
+      x-api-id: API-INT-004
+      x-traces:
+      - REQ-INT-006
+      - REQ-INT-007
+      - REQ-INT-008
+      - REQ-INT-021
+      - REQ-INT-022
+      - REQ-INT-023
+      - REQ-INT-024
+      - REQ-INT-025
+      - REQ-INT-026
+      - REQ-INT-027
+      - REQ-INT-028
+      - REQ-INT-029
+      - REQ-INT-030
+      - REQ-INT-031
+      - REQ-INT-032
+      - REQ-INT-033
+      - REQ-INT-034
+      - REQ-INT-035
+      - REQ-INT-036
+      - REQ-INT-037
+      - REQ-INT-038
+      - REQ-INT-039
+      - REQ-INT-054
+      - DBF-INT-001
+      - DBF-INT-002
+      - DBF-INT-003
+      - DBF-INT-004
+      - DBF-INT-005
+      - DBF-INT-007
+      - DBF-INT-008
+      - DBF-INT-009
+      - DBF-INT-010
+      parameters:
+      - *id001
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DecisionRequest'
+      responses:
+        '201':
+          description: The decision was recorded beside the Check's result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecordedDecisionResponse'
+        '400':
+          description: the body, a multipart part or the checkId cannot be read (REQ-INT-007) / the decision
+            code is not APPROVED or REJECTED or the deciding employee is missing — raised by INT before
+            an Approval API call, otherwise by the Report Store
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - INT-400-REQUEST-INVALID
+          - RPT-400-DECISION-INCOMPLETE
+        '404':
+          description: the Report Store holds no Check with this identifier
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - RPT-404-CHECK-NOT-FOUND
+        '409':
+          description: the Check is not COMPLETED — raised by INT before an Approval API call, otherwise
+            by the Report Store / the Check already holds an Employee Decision — raised by INT before
+            an Approval API call, otherwise by the Report Store
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - RPT-409-CHECK-NOT-COMPLETED
+          - RPT-409-DECISION-ALREADY-RECORDED
+        '422':
+          description: the Report Store refuses an executed rejection (INT never sends one — REQ-INT-027)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - RPT-422-APPROVAL-FLAG-ON-REJECTION
+        '500':
+          description: an unexpected server failure (REQ-INT-008)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - INT-500
+        '502':
+          description: the host Approval API answers outside 2xx, cannot be reached or has no configured
+            address (REQ-INT-036)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - INT-502-APPROVAL-API-FAILED
+        '504':
+          description: the host Approval API does not answer within the approval timeout (REQ-INT-037)
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - INT-504-APPROVAL-API-TIMED-OUT
+components:
+  schemas:
+    StartCheckRequest:
+      type: object
+      required:
+      - serviceCode
+      - requestNumber
+      - employeeId
+      properties:
+        serviceCode:
+          type: string
+          maxLength: 100
+          description: DBF-INT-003 — SERVICE_CODE, never hardcoded
+        requestNumber:
+          type: string
+          maxLength: 100
+          description: DBF-INT-005 — exactly as the host sent it
+        employeeId:
+          type: string
+          maxLength: 100
+          description: DBF-INT-006 — exactly as the host sent it
+    StartedCheckResponse:
+      type: object
+      required:
+      - checkId
+      - status
+      - checkUrl
+      properties:
+        checkId:
+          type: integer
+          format: int64
+          description: DBF-INT-001
+        status:
+          type: string
+          enum:
+          - RUNNING
+          - AWAITING_DOCUMENTS
+          description: DBF-INT-002 — CHECK_STATUS
+        checkUrl:
+          type: string
+          description: Address of the Check's read
+    UploadRequest:
+      type: object
+      required:
+      - documentType
+      - file
+      properties:
+        documentType:
+          type: string
+          maxLength: 100
+          description: DOCUMENT_TYPE code — one of the service's required document types
+        file:
+          type: string
+          format: binary
+          description: Exactly one file
+    UploadReceiptResponse:
+      type: object
+      required:
+      - uploadedDocumentId
+      - documentType
+      - fileName
+      - fileSize
+      - oversized
+      properties:
+        uploadedDocumentId:
+          type: integer
+          format: int64
+        documentType:
+          type: string
+          maxLength: 100
+        fileName:
+          type: string
+          maxLength: 255
+        fileSize:
+          type: integer
+          format: int64
+        oversized:
+          type: boolean
+        notice:
+          type: string
+          description: Present only when oversized — the file will be reported unreadable
+    ConfirmedCheckResponse:
+      type: object
+      required:
+      - checkId
+      - status
+      properties:
+        checkId:
+          type: integer
+          format: int64
+          description: DBF-INT-001
+        status:
+          type: string
+          enum:
+          - RUNNING
+          description: DBF-INT-002
+    DecisionRequest:
+      type: object
+      required:
+      - employeeDecision
+      - decidedBy
+      properties:
+        employeeDecision:
+          type: string
+          enum:
+          - APPROVED
+          - REJECTED
+          description: DBF-INT-007 — EMPLOYEE_DECISION
+        decidedBy:
+          type: string
+          maxLength: 100
+          description: DBF-INT-008 — exactly as the host sent it
+    RecordedDecisionResponse:
+      type: object
+      required:
+      - checkId
+      - employeeDecision
+      - decidedBy
+      - decidedAt
+      - approvalApiExecuted
+      properties:
+        checkId:
+          type: integer
+          format: int64
+        employeeDecision:
+          type: string
+          enum:
+          - APPROVED
+          - REJECTED
+        decidedBy:
+          type: string
+          maxLength: 100
+        decidedAt:
+          type: string
+          format: date-time
+        approvalApiExecuted:
+          type: boolean
+    ProblemDetail:
+      type: object
+      required:
+      - type
+      - title
+      - status
+      - code
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        code:
+          type: string
+    UploadConfirmationRequest:
+      type: object
+      properties: {}
+      additionalProperties: false
+      description: An empty object — the confirmation carries no field
+
+<<<END INPUT>>>
+
+<<<INPUT: dependency-graph>>>
+<<<dependency-graph.json>>>
+{
+  "schema": 1,
+  "generated_from": {
+    "platform-summary": {
+      "CHK": "v1",
+      "DOC": "v1",
+      "INT": "v1",
+      "REG": "v1",
+      "RPT": "v1"
+    },
+    "srs": {
+      "CHK": "v1",
+      "DOC": "v1",
+      "INT": "v1",
+      "REG": "v1",
+      "RPT": "v1"
+    }
+  },
+  "modules": {
+    "CHK": {
+      "tier": 2,
+      "tier_source": "declared"
+    },
+    "DOC": {
+      "tier": 1,
+      "tier_source": "declared"
+    },
+    "INT": {
+      "tier": 4,
+      "tier_source": "declared"
+    },
+    "REG": {
+      "tier": 0,
+      "tier_source": "declared"
+    },
+    "RPT": {
+      "tier": 3,
+      "tier_source": "declared"
+    }
+  },
+  "edges": [
+    {
+      "from": "CHK",
+      "to": "DOC",
+      "state": "READY",
+      "source": "platform"
+    },
+    {
+      "id": "XM-CHK-001",
+      "from": "CHK",
+      "to": "REG",
+      "entity": "ENT-REG-001",
+      "type": "SOFT-READ",
+      "state": "READY",
+      "declared": "CONTRACTED",
+      "contract_ref": "CON-REG-001",
+      "traces": [
+        "REQ-CHK-005",
+        "REQ-CHK-007"
+      ],
+      "source": "xm"
+    },
+    {
+      "id": "XM-CHK-002",
+      "from": "CHK",
+      "to": "REG",
+      "entity": "ENT-REG-002",
+      "type": "SOFT-READ",
+      "state": "READY",
+      "declared": "CONTRACTED",
+      "contract_ref": "CON-REG-002",
+      "traces": [
+        "REQ-CHK-007",
+        "REQ-CHK-008",
+        "REQ-CHK-015",
+        "REQ-CHK-027",
+        "REQ-CHK-034",
+        "REQ-CHK-056",
+        "REQ-CHK-057"
+      ],
+      "source": "xm"
+    },
+    {
+      "id": "XM-CHK-003",
+      "from": "CHK",
+      "to": "REG",
+      "entity": "ENT-REG-003",
+      "type": "SOFT-READ",
+      "state": "READY",
+      "declared": "CONTRACTED",
+      "contract_ref": "CON-REG-003",
+      "traces": [
+        "REQ-CHK-011",
+        "REQ-CHK-012",
+        "REQ-CHK-015"
+      ],
+      "source": "xm"
+    },
+    {
+      "id": "XM-CHK-004",
+      "from": "CHK",
+      "to": "REG",
+      "entity": "ENT-REG-004",
+      "type": "SOFT-READ",
+      "state": "READY",
+      "declared": "CONTRACTED",
+      "contract_ref": "CON-REG-004",
+      "traces": [
+        "REQ-CHK-019",
+        "REQ-CHK-020",
+        "REQ-CHK-021",
+        "REQ-CHK-022"
+      ],
+      "source": "xm"
+    },
+    {
+      "id": "XM-CHK-005",
+      "from": "CHK",
+      "to": "REG",
+      "entity": "ENT-REG-005",
+      "type": "SOFT-READ",
+      "state": "READY",
+      "declared": "CONTRACTED",
+      "contract_ref": "CON-REG-005",
+      "traces": [
+        "REQ-CHK-006",
+        "REQ-CHK-013",
+        "REQ-CHK-014"
+      ],
+      "source": "xm"
+    },
+    {
+      "id": "XM-DOC-001",
+      "from": "DOC",
+      "to": "REG",
+      "entity": "ENT-REG-002",
+      "type": "SOFT-READ",
+      "state": "READY",
+      "declared": "CONTRACTED",
+      "contract_ref": "CON-REG-002",
+      "traces": [
+        "REQ-DOC-002",
+        "REQ-DOC-003",
+        "REQ-DOC-020"
+      ],
+      "source": "xm"
+    },
+    {
+      "id": "XM-DOC-002",
+      "from": "DOC",
+      "to": "REG",
+      "entity": "ENT-REG-003",
+      "type": "SOFT-READ",
+      "state": "READY",
+      "declared": "CONTRACTED",
+      "contract_ref": "CON-REG-003",
+      "traces": [
+        "REQ-DOC-004",
+        "REQ-DOC-012",
+        "REQ-DOC-051"
+      ],
+      "source": "xm"
+    },
+    {
+      "id": "XM-DOC-003",
+      "from": "DOC",
+      "to": "REG",
+      "entity": "ENT-REG-004",
+      "type": "SOFT-READ",
+      "state": "READY",
+      "declared": "CONTRACTED",
+      "contract_ref": "CON-REG-004",
+      "traces": [
+        "REQ-DOC-021",
+        "REQ-DOC-035"
+      ],
+      "source": "xm"
+    },
+    {
+      "id": "XM-DOC-004",
+      "from": "DOC",
+      "to": "REG",
+      "entity": "ENT-REG-005",
+      "type": "SOFT-READ",
+      "state": "READY",
+      "declared": "CONTRACTED",
+      "contract_ref": "CON-REG-005",
+      "traces": [
+        "REQ-DOC-012",
+        "REQ-DOC-014",
+        "REQ-DOC-052"
+      ],
+      "source": "xm"
+    },
+    {
+      "from": "INT",
+      "to": "CHK",
+      "state": "READY",
+      "source": "platform"
+    },
+    {
+      "from": "INT",
+      "to": "DOC",
+      "state": "READY",
+      "source": "platform"
+    },
+    {
+      "id": "XM-INT-001",
+      "from": "INT",
+      "to": "REG",
+      "entity": "ENT-REG-002",
+      "type": "SOFT-READ",
+      "state": "READY",
+      "declared": "CONTRACTED",
+      "contract_ref": "CON-REG-002",
+      "traces": [
+        "REQ-INT-025",
+        "REQ-INT-028",
+        "REQ-INT-030"
+      ],
+      "source": "xm"
+    },
+    {
+      "from": "INT",
+      "to": "RPT",
+      "state": "READY",
+      "source": "platform"
+    },
+    {
+      "from": "RPT",
+      "to": "CHK",
+      "state": "READY",
+      "source": "platform"
+    }
+  ]
+}
+
+<<<END INPUT>>>
+
+---
+# KNOWLEDGE (profile primary sources — cite as [KB:<file> §n])
+
+<<<KB: profiles/aias/knowledge/raw-idea.md>>>
+# Request Verification Service — Raw Idea (project `aias`)
+
+As of 2026-10-01. Author: Hesham Ezzat. Amended 2026-10-01 — see section 15.
+Save as: `governance-shared/profiles/aias/knowledge/raw-idea.md` and list it under `knowledge.files` in `profiles/aias.yaml`.
+
+## 0. How the factory should read this file
+
+- Section 13 "Decided" is locked input. `domain-profile`, P0 and the PRD must not reopen those points.
+- Section 13 "Open" is the complete set of questions to resolve, by research and a recommended answer.
+- Section 12 "Guardrails" are non-negotiable and should become formal requirements in P1.
+- YAML and endpoint examples illustrate intent. Final names, schemas and contracts are for the analysis stages to define.
+
+## 1. Purpose
+
+A standalone service that verifies a government service request before an employee approves it. It collects the request's data and attached documents, compares them with the conditions of the service, and returns a short report: compliant or not, and where the problems are.
+
+The employee stays the decision maker. The service informs the decision and never makes it.
+
+The service is generic. It covers many services, each with its own conditions, data queries and documents, all defined in configuration. It supersedes the earlier "Reusable Agentic AI Library" idea, which was broader than the first real need.
+
+## 2. Scope
+
+In scope:
+
+- A standalone Spring Boot service, called by host systems over REST.
+- Per-service configuration: a knowledge file plus a structured definition, maintained by the service administrator. Employees never supply knowledge files.
+- Read-only access to request data through an MCP server (Oracle expected).
+- Document retrieval by file path, by database BLOB, or by manual upload.
+- Reading PDF, XLS and image documents (other extensions may appear).
+- A structured verification report, stored in a database and shown to the employee inside the host system.
+- A web frontend for the employee, embedded in the host screen (amendment A1, section 15).
+- Optional execution of an approval API, per service, triggered by the employee.
+
+Out of scope for now:
+
+- Multi-tenancy.
+- Conversation memory.
+- RAG and a vector store.
+- Multi-agent orchestration.
+- A full administration UI and an internal permission system.
+- Caller authentication and the security phases, deferred to a later version (amendment A2, section 15).
+
+Memory is excluded because a check is one independent run, and carrying state between requests risks leaking one request's data into another. RAG is excluded because each service's knowledge fits whole in the prompt, which is more reliable for compliance than retrieving fragments. RAG becomes relevant only if one service's knowledge grows to hundreds of pages.
+
+## 3. Architecture
+
+Stack: Java 21, Spring Boot 4, Spring AI 2.0.
+
+```text
+Host system (Oracle ADF or other)
+        |  REST
+        v
+Request Verification Service
+  - Service Registry   loads each service package
+  - Check Engine       fixed pipeline (the only fixed logic)
+  - Report Store       saves the report and the employee decision
+        |
+        +--> MCP server        read-only queries on Oracle
+        +--> Documents         storage path, BLOB or manual upload
+        +--> LLM provider      through Spring AI, replaceable
+        +--> Service database  runs, findings, documents
+```
+
+Each dependency sits behind an interface so it can be replaced without touching the engine.
+
+## 4. Service package (the variable part)
+
+Everything that differs between services lives in one package per service. Adding a service needs no code as long as it uses existing check types.
+
+```text
+services/<service-code>/
+  knowledge.md     conditions and rules in natural language (read by the LLM)
+  service.yaml     queries, required documents, fetch mode, optional approval API
+```
+
+The two files are separate on purpose. SQL and file locations are executed literally by the engine; only the conditions are interpreted by the LLM. Each package carries a version, and every report records the version it was built on.
+
+```yaml
+service: scholarship-request
+version: 3
+input: requestId
+
+queries:
+  request_details:
+    connection: main-db
+    sql: >
+      SELECT r.status, r.gpa, s.national_id
+      FROM requests r JOIN students s ON s.id = r.student_id
+      WHERE r.id = :requestId
+  attachments:
+    connection: main-db
+    sql: >
+      SELECT a.doc_type, a.file_path
+      FROM request_attachments a
+      WHERE a.request_id = :requestId
+
+documents:
+  source: attachments
+  type_column: doc_type
+  fetch: path            # path | blob | manual
+  path_column: file_path
+  required: [TRANSCRIPT, ID_CARD]
+
+approval:
+  enabled: false
+  api: POST /requests/{requestId}/approve
+```
+
+Connections are defined once, outside the service packages, and set at activation time for each environment.
+
+```yaml
+connections:
+  main-db:
+    type: mcp
+    endpoint: ...
+    query_tool: run_query
+    dialect: oracle
+```
+
+## 5. Check flow (the fixed part)
+
+1. The host system sends the service code, the request number and the employee's identity.
+2. The engine loads the service package and runs its queries through the MCP connection.
+3. It fetches the documents using the service's fetch mode.
+4. It reads each document by type: text extraction for PDF, table extraction for XLS, OCR or a vision model for scans and images.
+5. It runs the deterministic checks in code: required documents present, explicit values and dates.
+6. The LLM compares the data and document content with the service knowledge.
+7. The engine stores the structured report and makes it available to the host system.
+8. The employee takes the action in the host system, or through the approval API where it is enabled.
+
+A check takes time, so it runs asynchronously: the host starts it and then polls for the result.
+
+## 6. Data and document access
+
+Queries and documents use separate channels, each behind its own interface.
+
+Queries go through `QueryExecutor`. The first implementation, `McpQueryExecutor`, calls the MCP server's query tool using the Spring AI MCP client. The engine calls MCP to run the queries written in `service.yaml`. The LLM is never given a tool that runs SQL.
+
+Documents go through `DocumentFetcher`. All three modes are available, chosen per service.
+
+| Mode | Used when | How |
+| --- | --- | --- |
+| `path` | The file is in storage and its path is in the database | Read from storage by the path the query returns |
+| `blob` | The file is stored inside the database | Read the column directly over JDBC with a read-only user |
+| `manual` | The service is not allowed direct access | The employee uploads the files; the report is marked accordingly |
+
+BLOBs are not moved through MCP, because binary content would travel as Base64 text inside a message, which is slow and size-limited.
+
+Requirements for the MCP server chosen at activation: bind-variable support or strict parameter type validation in the engine, structured (JSON) results, a row limit and a timeout.
+
+## 7. Report model
+
+The report has a fixed structure for every service, produced as structured output and stored as data.
+
+| Part | Content |
+| --- | --- |
+| Overall status | `COMPLIANT`, `NOT_COMPLIANT` or `NEEDS_MANUAL_REVIEW` |
+| Findings | One per condition: satisfied or not, the evidence (actual value found), and a note for the employee |
+| Documents | What was read, what is missing, what could not be read |
+| Metadata | Service version, document source mode, model used, time, employee |
+
+Every finding carries its evidence so the employee can verify it. A required document that is missing or unreadable prevents a `COMPLIANT` status.
+
+## 8. API
+
+| Endpoint | Purpose |
+| --- | --- |
+| `POST /checks` | Start a check for a service code and request number |
+| `GET /checks/{id}` | Return the status and the report as JSON |
+| `GET /checks/{id}/view` | Return a ready report page to embed in the host screen |
+| `POST /checks/{id}/documents` | Upload documents in manual mode |
+| `POST /checks/{id}/decision` | Record the employee's decision; call the approval API if the service enables it |
+
+The calling system authenticates itself (API key or mTLS) and passes the employee's identity, which is recorded with the check.
+
+## 9. Persistence
+
+Reports are stored in database tables in a schema owned by the service, separate from the read-only user that reaches host data.
+
+| Table | Holds |
+| --- | --- |
+| `CHECK_RUN` | One row per check: service, request number, employee, status, result, service version, model, timestamps, employee decision |
+| `CHECK_FINDING` | One row per condition: satisfied flag, evidence, note |
+| `CHECK_DOCUMENT` | One row per document: type, source mode, read status |
+
+Storing the employee's decision beside the report result gives a direct measure of accuracy: where the two disagree, the service knowledge or a check needs attention.
+
+## 10. LLM strategy
+
+The provider is cloud-based for now and must be replaceable through configuration alone.
+
+- Testing: a free cloud tier. Gemini Flash-Lite through Google AI Studio is the starting candidate. Free-tier limits change often.
+- Test data only: free tiers may use submitted data for model training. Only synthetic or anonymised requests and documents are sent while a free provider is in use.
+- Real data: the provider for real requests, cloud or inside the network, is decided before go-live.
+
+Rules that keep the provider replaceable:
+
+- The engine depends on Spring AI's `ChatModel` only, with no provider-specific features.
+- Document reading (OCR or vision) is a separate step with its own configurable model.
+- A fixed set of test requests with known expected results is run on every model change.
+
+## 11. Host integration
+
+The service is reached from Oracle ADF applications, and from other government systems later, over HTTP only. It is not embedded in ADF.
+
+Display. The first version embeds the ready report page (`/checks/{id}/view`) inside the ADF screen. The same report is available as JSON, so it can later be rendered with ADF components or shown in the request log without changing the service.
+
+Approval. Two options, chosen per service:
+
+1. Default: the employee approves in the host system as today. The host notifies the service of the decision for the record. The service needs no write access to any system.
+2. Optional: where the host exposes an approval API, the service calls it after the employee confirms, and records the report the approval was based on.
+
+## 12. Guardrails
+
+- The LLM analyses and summarises. It does not write SQL and does not trigger approval.
+- Approval is executed only as a result of the employee's action.
+- All access to host data uses a read-only database user, preferably limited to specific views.
+- Query parameters are bound or strictly type-validated; SQL is never built from free text.
+- File paths are validated to be inside the allowed storage root before opening.
+- Anything that could not be read appears in the report. It is never skipped silently.
+- Document content is treated as data, never as instructions to the model.
+- Each check has limits: timeout, maximum rows, maximum file size.
+- No data is carried from one check to another.
+
+## 13. Decisions and open items
+
+Decided:
+
+| Topic | Decision |
+| --- | --- |
+| Form | A standalone service, not a library |
+| Stack | Java 21, Spring Boot 4, Spring AI 2.0 |
+| Tenancy | Single tenant |
+| Configuration | One package per service, maintained by the administrator |
+| Database access | Read-only through an MCP server, specified at activation |
+| Documents | `path`, `blob` and `manual` modes all available |
+| Decision maker | The employee; approval API is an optional second path |
+| Display | The frontend (A1) embedded in the host screen; JSON available for native display or the request log (amended — A1) |
+| Storage | Reports kept in the service's own database tables |
+| LLM | Cloud, free tier for testing, replaceable by configuration |
+| Memory, RAG, vector store | Not included |
+| Frontend | A web frontend for the employee, embedded in the host screen (amended — A1) |
+| Security | Caller authentication and security phases deferred to a later version; the section 12 guardrails stay (amended — A2) |
+
+Open:
+
+- Which MCP server to use for Oracle, confirmed against the requirements in section 6.
+- Which LLM provider is permitted for real request data.
+- How the host system authenticates to the service: API key or mTLS. Deferred with A2 — not to be resolved in this version.
+- Report retention period and who may view stored reports.
+- The first service to implement as the pilot.
+
+## 14. Proposed module split (for `domain-profile` to confirm)
+
+| Code | Module | Scope |
+| --- | --- | --- |
+| `REG` | Service Registry | Service packages, versions, connections |
+| `CHK` | Check Engine | The fixed pipeline, deterministic checks, LLM comparison |
+| `DOC` | Document Access | `path`, `blob` and `manual` fetching; reading PDF, XLS and images |
+| `RPT` | Report Store | Runs, findings, documents, employee decision |
+| `INT` | Host Integration | REST API, optional approval API |
+
+Tracks: backend and frontend (amended — A1). The platform track covers the MCP connection, the LLM provider configuration and the service database.
+
+## 15. Amendments
+
+| # | Date | Change | Supersedes |
+| --- | --- | --- | --- |
+| A1 | 2026-10-01 | A frontend track is added. A web frontend (React + TypeScript), embedded in the host screen, gives the employee: the checks of a request, the report (overall status, findings with evidence, documents read / missing / unreadable), manual document upload, and recording the decision. It consumes the same REST API as any host. It replaces the server-rendered report page (`GET /checks/{id}/view`) as the display path. A full administration UI stays out of scope. | Section 13 "Frontend: None" and "Display"; the section 14 tracks paragraph; the server-rendered page in sections 8 and 11 |
+| A2 | 2026-10-01 | Caller authentication (API key or mTLS) and the security phases are deferred to a later version; the owner already has the solution and adds it then. The section 12 guardrails are NOT deferred: they are part of what the service does. | The auth item under section 13 "Open" |
+
+<<<END KB>>>
+

@@ -19,15 +19,15 @@
   ],
   "skipped": [],
   "coverage": {
-    "C0.1": 7,
-    "C5.2": 60,
-    "C5.3": 60,
-    "C5.4": 60,
-    "C5.5": 66,
+    "C0.1": 15,
+    "C5.2": 64,
+    "C5.3": 64,
+    "C5.4": 64,
+    "C5.5": 74,
     "C5.6": 4,
-    "C5.8": 130,
-    "C5.13": 130,
-    "C5.14": 66,
+    "C5.8": 142,
+    "C5.13": 142,
+    "C5.14": 74,
     "C5.15": 0,
     "C5.16": 12,
     "C5.17": 1
@@ -52,8 +52,8 @@
       "to": [
         "AC"
       ],
-      "total": 60,
-      "covered": 60,
+      "total": 64,
+      "covered": 64,
       "pct": 100.0
     },
     {
@@ -62,9 +62,9 @@
       "to": [
         "API"
       ],
-      "total": 60,
-      "covered": 0,
-      "pct": 0.0
+      "total": 64,
+      "covered": 63,
+      "pct": 98.4
     },
     {
       "id": "req-ux",
@@ -73,9 +73,9 @@
         "SCR",
         "UXD"
       ],
-      "total": 60,
-      "covered": 0,
-      "pct": 0.0
+      "total": 64,
+      "covered": 46,
+      "pct": 71.9
     },
     {
       "id": "ac-tc",
@@ -83,9 +83,9 @@
       "to": [
         "TC"
       ],
-      "total": 66,
-      "covered": 0,
-      "pct": 0.0
+      "total": 74,
+      "covered": 74,
+      "pct": 100.0
     }
   ],
   "findings": [
@@ -95,7 +95,7 @@
       "check": "ambiguity",
       "message": "`AC-INT-011` uses 'could' \u2014 a word two implementers read two ways; state the measure, the set or the rule instead",
       "artifact": "srs",
-      "line": 193
+      "line": 194
     },
     {
       "severity": "MINOR",
@@ -103,7 +103,7 @@
       "check": "ambiguity",
       "message": "`AC-INT-012` uses 'could' \u2014 a word two implementers read two ways; state the measure, the set or the rule instead",
       "artifact": "srs",
-      "line": 207
+      "line": 208
     },
     {
       "severity": "MINOR",
@@ -111,7 +111,7 @@
       "check": "ambiguity",
       "message": "`AC-INT-019` uses 'etc' \u2014 a word two implementers read two ways; state the measure, the set or the rule instead",
       "artifact": "srs",
-      "line": 305
+      "line": 306
     },
     {
       "severity": "MINOR",
@@ -119,7 +119,7 @@
       "check": "ambiguity",
       "message": "`REQ-INT-048` uses 'could' \u2014 a word two implementers read two ways; state the measure, the set or the rule instead",
       "artifact": "srs",
-      "line": 763
+      "line": 764
     },
     {
       "severity": "MINOR",
@@ -127,7 +127,7 @@
       "check": "ambiguity",
       "message": "`REQ-INT-057` uses 'may' \u2014 a word two implementers read two ways; state the measure, the set or the rule instead",
       "artifact": "srs",
-      "line": 894
+      "line": 895
     },
     {
       "severity": "MINOR",
@@ -135,7 +135,7 @@
       "check": "ac-measurable",
       "message": "`AC-INT-020` `Then: the document type choices are exactly TRANSCRIPT and ID_CARD` names no number, limit, id or enumerable outcome \u2014 no test can fail it; say what is created, rejected, returned or shown, and how much",
       "artifact": "srs",
-      "line": 319
+      "line": 320
     },
     {
       "severity": "MINOR",
@@ -143,7 +143,7 @@
       "check": "ac-measurable",
       "message": "`AC-INT-033` `Then: the host receives no Approval API call` names no number, limit, id or enumerable outcome \u2014 no test can fail it; say what is created, rejected, returned or shown, and how much",
       "artifact": "srs",
-      "line": 501
+      "line": 502
     },
     {
       "severity": "MINOR",
@@ -151,7 +151,7 @@
       "check": "ac-measurable",
       "message": "`AC-INT-037` `Then: the host receives exactly one call` names no number, limit, id or enumerable outcome \u2014 no test can fail it; say what is created, rejected, returned or shown, and how much",
       "artifact": "srs",
-      "line": 557
+      "line": 558
     },
     {
       "severity": "MINOR",
@@ -159,7 +159,7 @@
       "check": "ac-measurable",
       "message": "`AC-INT-059` `Then: the document upload and the upload confirmation are offered and the de` names no number, limit, id or enumerable outcome \u2014 no test can fail it; say what is created, rejected, returned or shown, and how much",
       "artifact": "srs",
-      "line": 847
+      "line": 848
     },
     {
       "severity": "MINOR",
@@ -173,7 +173,7 @@
       "severity": "MINOR",
       "clause": "C5.16",
       "check": "feature-unwanted",
-      "message": "`US-INT-004` is covered by 4 requirement(s) and none states an `unwanted` path \u2014 what the system does when the input, state or sequence is wrong is unspecified for this feature",
+      "message": "`US-INT-004` is covered by 6 requirement(s) and none states an `unwanted` path \u2014 what the system does when the input, state or sequence is wrong is unspecified for this feature",
       "artifact": "srs",
       "line": 38
     },
@@ -197,7 +197,7 @@
       "severity": "MINOR",
       "clause": "C5.16",
       "check": "feature-unwanted",
-      "message": "`US-INT-011` is covered by 2 requirement(s) and none states an `unwanted` path \u2014 what the system does when the input, state or sequence is wrong is unspecified for this feature",
+      "message": "`US-INT-011` is covered by 6 requirement(s) and none states an `unwanted` path \u2014 what the system does when the input, state or sequence is wrong is unspecified for this feature",
       "artifact": "srs",
       "line": 101
     },
@@ -213,9 +213,9 @@
       "severity": "MINOR",
       "clause": "C5.17",
       "check": "glossary",
-      "message": "`job` appears 1\u00d7 where the glossary term is `Check` (lines 427)",
+      "message": "`job` appears 1\u00d7 where the glossary term is `Check` (lines 428)",
       "artifact": "srs",
-      "line": 427
+      "line": 428
     }
   ],
   "provenance": {
@@ -225,31 +225,49 @@
       "policy": "f0051863173859c50eaa1091adddc83f9c46e4a33a735325d37acc31ffd51c3d"
     },
     "resolvable": [
+      "api-spec",
+      "backend-execution-plan",
+      "backend-test-plan",
       "business-policies",
       "contract",
       "db-script",
       "domain-profile",
+      "flow-diagram",
+      "frontend-execution-plan",
+      "frontend-test-plan",
       "module-registry",
       "platform-summary",
       "prd",
       "project-registry",
       "registry-db",
+      "registry-exec-be",
+      "registry-exec-fe",
       "registry-srs",
-      "srs"
+      "srs",
+      "ui-ux-spec"
     ],
     "inputs": {
+      "api-spec": "e6c2a43bc53d93f5c425e679ada03108f2fe68185619762b5aaeea6a6ae3cc0b",
+      "backend-execution-plan": "2a6edbf10444003c29b3d40330bbd16248d91ebf5117d99492b7b279eec28506",
+      "backend-test-plan": "41e46cbeb2aa498eb686beb783a8b753fc1ab26cd52053c69e132a664999e718",
       "business-policies": "b3d3c54c9491ed1e4dd712c776861a342ebdbf00781122e295730f38ca465118",
-      "contract": "57107c7a3c3e434d8991c9d4614cd204f106136fdb008562416e84fe44b919b7",
-      "db-script": "f71e6d5017ee47d7ce4000951dbb7534fab24a4baba632ce5e8f38ea5983a451",
+      "contract": "7cfb87f1809ce3a686ba68ac51c176c6bbc498af3c6ffe7c7c15e2ca62b95d7d",
+      "db-script": "7590b37229f64856fc2dfa4d95ea83a289112ca7aa4215c53b25f73a9b766d6c",
       "domain-profile": "c9ffe7c45c917c5793e15b6fbc7151ccc4b9181c36a5aaf1ce2f15f6849e3cbd",
+      "flow-diagram": "07ac104ef2394998cf482d29d28ac12e130b4d8b6df5618e3898da177103648d",
+      "frontend-execution-plan": "aec8af337a7baccbfcca5e8909b83bb12f204a82cd03268c72ad58d70b37c9d2",
+      "frontend-test-plan": "2b1724dd89d0241d84f62da93313a3bb57d54bdd7e8f1f8fafbdb256a0c622d0",
       "module-registry": "88bb2f37bcfca903bb7b7847860c342cb5c9d59eca14dafffedf5fb84e6075a6",
       "platform-summary": "f37b801d053b9f3fc47378f11eee1d9a8350520a0ae1db83d39d19133c46ddfc",
       "prd": "d39662755a943b101ca970c40fb6b50438c24238f6a7e9e78d70be208445ad5c",
-      "project-registry": "7652329cae1b5e14558ead423c4a0d157fcf3aead94176473c23adb034161a82",
-      "registry-db": "ba009dec9d4d8933d0971cec484b95be70c4307953e0225760ea2741c925e26b",
-      "registry-srs": "dad527a2ccef01ebc49564b6bbd474cc18487bd6eb33cbc81408d5321b0e410a",
-      "srs": "14d09173ba93a08503be5f2b54872be2ef2fb3c01082ec8594fb034c1981bcca"
+      "project-registry": "715e7fc8d741601c09b787acf9a9c67c5d885977334834eb3b1f3bbf958928a1",
+      "registry-db": "debc0367bd2d407a947d278fe17423107847ef426d16cb1442b7cb235273278e",
+      "registry-exec-be": "62b143db6248cb2cc29c9a7c03e0dcf3105f5146f20e54cdd2848b3fe8d209d8",
+      "registry-exec-fe": "ba817d01543b57614474d40d7752ba96cb55b222112086a398764d7f528cef19",
+      "registry-srs": "ca156ef15f984f939c315a3a72df5d7874bf7c458b70afdc9117d42b55d804ca",
+      "srs": "f6fbdf9aa7884aa1a132818ba5f31625126981455cefdc18e6fa42e4330ca99a",
+      "ui-ux-spec": "14691f89a9605767ee67982c0cd3bac67bde2541a87fbc669d648846e1a837d2"
     },
-    "at": "2026-10-01T14:04:49+00:00"
+    "at": "2026-10-01T14:58:53+00:00"
   }
 }

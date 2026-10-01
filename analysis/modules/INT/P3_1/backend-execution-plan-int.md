@@ -2,7 +2,7 @@
 ══════════════════════════════════════════════════════════════════
 Module : INT   Version : v1   Profile : aias   Dialect : oracle19c   Framework : spring-boot-4-java-21
 Inputs : srs-int.md · db-script-int.md · registry-srs-int.md · registry-db-int.md · contract-int.md · the published contracts of CHK, DOC and RPT (platform edges) and of the module reached through XM-INT-001
-Governance : FULL (db-script present — no table by design, ADR-INT-015)   Open ADRs : 0 BLOCKED — decisions applied: ADR-INT-001 … ADR-INT-017 (analysis/decisions/INT/)
+Governance : FULL (db-script present — no table by design, ADR-INT-015)   Open ADRs : 0 BLOCKED — decisions applied: ADR-INT-001 … ADR-INT-017, ADR-INT-020 (analysis/decisions/INT/)
 ══════════════════════════════════════════════════════════════════
 
 ## EXECUTION PLAN INDEX — INT v1
@@ -11,7 +11,7 @@ Governance : FULL (db-script present — no table by design, ADR-INT-015)   Open
 | ENT | Name | Table | Business code | Operations |
 |---|---|---|---|---|
 | — | INT declares no entity (ADR-INT-007, ADR-INT-013) | — | — | — |
-| — (Report Store, consumed by value) | Check Run — the subject of every INT endpoint | owned by the Report Store | — | create (start a Check — API-INT-001), create (hand over an upload — API-INT-002), custom (confirm the uploads — API-INT-003), create (record a decision — API-INT-004) |
+| — (Report Store, consumed by value) | Check Run — the subject of every INT endpoint | owned by the Report Store | — | create (start a Check — API-INT-001), create (hand over an upload — API-INT-002), custom (confirm the uploads — API-INT-003), create (record a decision — API-INT-004), read (a Check and its report — API-INT-005), list (the Checks of a request — API-INT-006), list (the uploaded documents of a Check — API-INT-007), read (the required document types of the Check's version — API-INT-008) |
 
 ### API registry
 | API | Operation | Verb | Path | Traces |
@@ -20,6 +20,10 @@ Governance : FULL (db-script present — no table by design, ADR-INT-015)   Open
 | API-INT-002 | Hand over an uploaded document | POST | /api/v1/checks/{checkId}/documents | REQ-INT-009 … REQ-INT-017, REQ-INT-053 |
 | API-INT-003 | Confirm the uploads | POST | /api/v1/checks/{checkId}/upload-confirmation | REQ-INT-018 … REQ-INT-020, REQ-INT-053 |
 | API-INT-004 | Record an Employee Decision | POST | /api/v1/checks/{checkId}/decision | REQ-INT-021 … REQ-INT-039, REQ-INT-054 |
+| API-INT-005 | Read a Check and its report | GET | /api/v1/check-reports/{checkId} | REQ-INT-045 … REQ-INT-056, REQ-INT-061 |
+| API-INT-006 | List the Checks of a request | GET | /api/v1/check-reports | REQ-INT-040, REQ-INT-042, REQ-INT-043, REQ-INT-062 |
+| API-INT-007 | List the uploaded documents of a Check | GET | /api/v1/checks/{checkId}/documents | REQ-INT-017, REQ-INT-020, REQ-INT-063 |
+| API-INT-008 | Read the required document types of a Check's version | GET | /api/v1/checks/{checkId}/required-document-types | REQ-INT-016, REQ-INT-020, REQ-INT-064 |
 
 ### Rule registry
 | RULE | Name | Scope | Enforced where | Message en / ar |
@@ -42,10 +46,10 @@ Governance : FULL (db-script present — no table by design, ADR-INT-015)   Open
 | Screen | Operation | Resolution |
 |---|---|---|
 | SCR-REQ-INT-001 | create | built — API-INT-001 (Start a Check) on the Report Store's Check Run |
-| SCR-REQ-INT-001 | list | not built by INT — derived: served by the Report Store's HTTP list of the Checks of a request, called by the frontend directly (ADR-INT-001) |
-| SCR-REQ-INT-002 | read | not built by INT — derived: served by the Report Store's HTTP read of a Check and its report, called by the frontend directly (ADR-INT-001) |
+| SCR-REQ-INT-001 | list | built — API-INT-006 (List the Checks of a request) on the Report Store's Check Run, relayed from the Report Store's list of the Checks of a request (ADR-INT-020) |
+| SCR-REQ-INT-002 | read | built — API-INT-005 (Read a Check and its report) on the Report Store's Check Run, relayed from the Report Store's read of a Check (ADR-INT-020) |
 | SCR-REQ-INT-003 | create | built — API-INT-002 (Hand over an uploaded document) on the Report Store's Check Run |
-| SCR-REQ-INT-003 | list | not built by INT — derived: served by Document Access's HTTP list of the uploaded documents of a Check (ADR-INT-001) |
+| SCR-REQ-INT-003 | list | built — API-INT-007 (List the uploaded documents of a Check) and API-INT-008 (the required document types of the Check's version) on the Report Store's Check Run (ADR-INT-020) |
 | SCR-REQ-INT-004 | custom | built — API-INT-003 (Confirm the uploads) on the Report Store's Check Run |
 | SCR-REQ-INT-005 | create | built — API-INT-004 (Record an Employee Decision) on the Report Store's Check Run |
 
@@ -57,7 +61,7 @@ DB ALIGNMENT: see manifest — ALIGNED ✓ / issues: 0 · INTEGRATION: 1 edge (X
 ```yaml name=totals
 DBF: 10
 XM: 1
-API: 4
+API: 8
 QR: 0
 ```
 
@@ -98,7 +102,7 @@ Legend ✓ aligned. No property of INT's own is stored.
 - Error envelope: ProblemDetail (RFC 9457) → {type, title, status, detail, code}. One `@RestControllerAdvice` — `IntegrationProblemAdvice` — maps: INT's own exceptions to their catalog codes; every typed refusal arriving from the Check Engine, Document Access or the Report Store to a ProblemDetail carrying that refusal's own code, HTTP status (the `{http}` part of its code) and message, unchanged (REQ-INT-006); `MaxUploadSizeExceededException` → `INT-413-UPLOAD-TOO-LARGE`; an unreadable body, a missing multipart part or a non-numeric `checkId` → `INT-400-REQUEST-INVALID` (REQ-INT-007); any other exception → `INT-500`, logged with the request path and the Check identifier, the answer carrying no stack trace (REQ-INT-008).
 - Lookup values: Overall status (COMPLIANT | NOT_COMPLIANT | NEEDS_MANUAL_REVIEW), fetch mode (path | blob | manual) and document read status are closed enums owned by the service; service codes come only from the service registry and are never hardcoded. INT uses the enums the owners publish (`CheckStatus` of the Check Engine, `EmployeeDecision` of the Report Store) and owns none (ADR-INT-013); service codes and document types pass through as strings.
 - Workflow engine: **forbidden**.
-- Search contract: INT has no search endpoint (the lists are the owners' reads — Screen demand resolution).
+- Search contract: INT has no search endpoint; its two lists (API-INT-006, API-INT-007) take exact keys, are bounded by their owners (at most 100 Checks; the uploaded documents of one Check) and are not paginated.
 - Languages: messages en (SRS); ar PENDING ADR-INT-017.
 - Configuration properties (environment settings, bound with `@ConfigurationProperties`, validated at start-up — ADR-INT-012):
   - `aias.integration.approval.timeout` — Duration, default `10s`; connect + read timeout of the host Approval API call (REQ-INT-037).
@@ -106,7 +110,7 @@ Legend ✓ aligned. No property of INT's own is stored.
   - `aias.integration.upload.request-limit` — DataSize, default `50MB`, never below `aias.check.max-file-size` (start-up fails if lower); bound to `spring.servlet.multipart.max-request-size` and `max-file-size` (REQ-INT-014).
 - No state between requests (REQ-INT-059): no table, no cache, no static or session field holds a request, a file, a report or a decision; an uploaded part lives only for its request (the container discards its temporary part when the request ends). The only in-memory structure is the per-Check approval lock of API-INT-004, released at the end of the request.
 - No host database (REQ-INT-060): INT declares no `DataSource`, JDBC template or MCP client; its only outbound host connection is the Approval API adapter (PORTS).
-- One REST API (REQ-INT-057, REQ-INT-058): the frontend calls only operations published in the API documents of the service; no server-rendered page or view controller exists (`/api/v1/checks/{checkId}/view` is not mapped → 404).
+- One REST API (REQ-INT-057, REQ-INT-058): the employee frontend calls only INT's operations (API-INT-001 … API-INT-008 — ADR-INT-020); the owners' own reads stay published for hosts; no server-rendered page or view controller exists (`/api/v1/checks/{checkId}/view` is not mapped → 404).
 <!-- PHASE:CORE:END -->
 
 <!-- PHASE:DATA-DOM:START traces=REQ-INT-011,REQ-INT-034,REQ-INT-035,DBF-INT-001,DBF-INT-002,DBF-INT-003,DBF-INT-004,DBF-INT-005,DBF-INT-006,DBF-INT-007,DBF-INT-008,DBF-INT-009,DBF-INT-010 -->
@@ -143,15 +147,16 @@ CROSS-MODULE   XM-INT-001 (approval definition).
 REPOSITORY OPS none (no QR — ADR-INT-017).
 <!-- PHASE:DATA-DOM:END -->
 
-<!-- PHASE:PORTS:START traces=REQ-INT-001,REQ-INT-009,REQ-INT-015,REQ-INT-018,REQ-INT-021,REQ-INT-029,REQ-INT-031,REQ-INT-032,REQ-INT-033,REQ-INT-036,REQ-INT-037 -->
+<!-- PHASE:PORTS:START traces=REQ-INT-001,REQ-INT-009,REQ-INT-015,REQ-INT-018,REQ-INT-061,REQ-INT-062,REQ-INT-063,REQ-INT-021,REQ-INT-029,REQ-INT-031,REQ-INT-032,REQ-INT-033,REQ-INT-036,REQ-INT-037 -->
 ## PHASE PORTS — PORTS+ADAPTERS
 
 Every dependency sits behind an INT port with a replaceable adapter (profile `layers`). The modules of the same deployable are injected by type (profile `module_interface: in_process`).
 
 - `CheckEnginePort` → `ChkCheckEngineAdapter` — wraps the injected Check Engine interface `CheckEngine`: `start(command)` calls `startCheck(serviceCode, requestNumber, employeeId)` with the values exactly as received and returns `{checkId, status}`; `confirm(checkId)` calls `confirmUploads(checkId)`. The Check Engine's typed refusals (CHK-400-START-INCOMPLETE, CHK-422-SERVICE-NOT-AVAILABLE, CHK-422-CONNECTION-NOT-ACTIVATED, CHK-404-CHECK-NOT-FOUND, CHK-409-CHECK-NOT-AWAITING-DOCUMENTS) propagate unchanged to `IntegrationProblemAdvice`.
-- `DocumentAccessPort` → `DocDocumentAccessAdapter` — wraps the injected Document Access interface `DocumentAccess`: `handOver(command, serviceCode, versionNumber)` calls `handOverUpload(checkId, serviceCode, versionNumber, documentType, fileName, bytes)` and returns its receipt `{uploadedDocumentId, documentType, fileName, fileSize, oversized, notice}`. The file is passed as bytes and the file name as text; INT never builds or opens a file path (REQ-INT-015). Document Access's refusals (DOC-400-INCOMPLETE-UPLOAD, DOC-404-SERVICE-VERSION-NOT-FOUND, DOC-422-FETCH-MODE-NOT-MANUAL, DOC-422-DOCUMENT-TYPE-NOT-OF-SERVICE) propagate unchanged.
-- `CheckRecordPort` → `RptCheckRecordAdapter` — wraps the injected Report Store interface `ReportStore`: `read(checkId)` calls `readCheck(checkId)` and maps checkId, status, serviceCode, versionNumber, requestNumber and the decision code into `CheckSnapshot`; `handOverDecision(checkId, employeeDecision, decidedBy, approvalApiExecuted)` calls `recordDecision(...)` and returns `{checkId, employeeDecision, decidedBy, decidedAt, approvalApiExecuted}`. The Report Store's refusals (RPT-404-CHECK-NOT-FOUND, RPT-400-DECISION-INCOMPLETE, RPT-409-CHECK-NOT-COMPLETED, RPT-409-DECISION-ALREADY-RECORDED, RPT-422-APPROVAL-FLAG-ON-REJECTION) propagate unchanged.
+- `DocumentAccessPort` → `DocDocumentAccessAdapter` — wraps the injected Document Access interface `DocumentAccess`: `handOver(command, serviceCode, versionNumber)` calls `handOverUpload(checkId, serviceCode, versionNumber, documentType, fileName, bytes)` and returns its receipt `{uploadedDocumentId, documentType, fileName, fileSize, oversized, notice}`. The file is passed as bytes and the file name as text; INT never builds or opens a file path (REQ-INT-015). Document Access's refusals (DOC-400-INCOMPLETE-UPLOAD, DOC-404-SERVICE-VERSION-NOT-FOUND, DOC-422-FETCH-MODE-NOT-MANUAL, DOC-422-DOCUMENT-TYPE-NOT-OF-SERVICE) propagate unchanged. `listUploaded(checkId)` → list of {uploadedDocumentId, documentType, fileName, fileSize, oversized, uploadedAt}, never the content — PENDING ADR-INT-020 (4): Document Access publishes no in-process listing operation yet; the adapter method is written against the operation DOC adds to its contract, never against DOC's table.
+- `CheckRecordPort` → `RptCheckRecordAdapter` — wraps the injected Report Store interface `ReportStore`: `read(checkId)` calls `readCheck(checkId)` and maps checkId, status, serviceCode, versionNumber, requestNumber and the decision code into `CheckSnapshot`; `readReport(checkId)` calls the same `readCheck(checkId)` and returns the whole report unchanged as `CheckReportView`; `listOfRequest(serviceCode, requestNumber)` calls `listChecksOfRequest(serviceCode, requestNumber)` and returns `{total, checks}` unchanged; `handOverDecision(checkId, employeeDecision, decidedBy, approvalApiExecuted)` calls `recordDecision(...)` and returns `{checkId, employeeDecision, decidedBy, decidedAt, approvalApiExecuted}`. The Report Store's refusals (RPT-404-CHECK-NOT-FOUND, RPT-400-DECISION-INCOMPLETE, RPT-409-CHECK-NOT-COMPLETED, RPT-409-DECISION-ALREADY-RECORDED, RPT-422-APPROVAL-FLAG-ON-REJECTION) propagate unchanged.
 - `ApprovalDefinitionPort` — implemented in the CROSS-MOD block of XM-INT-001; injected only into `DecisionService` (REQ-INT-029).
+- `VersionDocumentsPort` — implemented in the CROSS-MOD block of XM-INT-001; injected only into `RequiredDocumentTypesService` (REQ-INT-064).
 - `HostApprovalPort` → `HttpHostApprovalAdapter` — the only network call of INT (ADR-INT-009, ADR-INT-017 (5)). `approve(definition, requestNumber, checkId, decidedBy)`:
   1. builds the URI from `aias.integration.approval.base-address` and `definition.pathTemplate`, expanding its single `{…}` placeholder with the request number as ONE path-segment value, URL-encoded by `UriComponentsBuilder.buildAndExpand(...).encode()` — never by string concatenation (REQ-INT-031);
   2. sends `definition.method` with the JSON body `{"checkId": <checkId>, "decidedBy": "<decidedBy>"}` (REQ-INT-032) through a `RestClient` whose connect and read timeouts are `aias.integration.approval.timeout`;
@@ -160,10 +165,13 @@ Every dependency sits behind an INT port with a replaceable adapter (profile `la
   The adapter is a plain Spring bean, never registered as a model tool, and injected only into `DecisionService` (REQ-INT-029; AIAS-3, AIAS-4). INT has no query port, no document reader and no model port.
 <!-- PHASE:PORTS:END -->
 
-<!-- PHASE:SVC-API:START traces=REQ-INT-001,REQ-INT-002,REQ-INT-003,REQ-INT-004,REQ-INT-005,REQ-INT-006,REQ-INT-007,REQ-INT-008,REQ-INT-009,REQ-INT-010,REQ-INT-011,REQ-INT-012,REQ-INT-013,REQ-INT-014,REQ-INT-015,REQ-INT-016,REQ-INT-017,REQ-INT-018,REQ-INT-019,REQ-INT-020,REQ-INT-021,REQ-INT-022,REQ-INT-023,REQ-INT-024,REQ-INT-025,REQ-INT-026,REQ-INT-027,REQ-INT-028,REQ-INT-029,REQ-INT-030,REQ-INT-031,REQ-INT-032,REQ-INT-033,REQ-INT-034,REQ-INT-035,REQ-INT-036,REQ-INT-037,REQ-INT-038,REQ-INT-039,REQ-INT-044,REQ-INT-053,REQ-INT-054,REQ-INT-057,REQ-INT-058,REQ-INT-059,REQ-INT-060,DBF-INT-001,DBF-INT-002,DBF-INT-003,DBF-INT-004,DBF-INT-005,DBF-INT-006,DBF-INT-007,DBF-INT-008,DBF-INT-009,DBF-INT-010 -->
+<!-- PHASE:SVC-API:START traces=REQ-INT-001,REQ-INT-002,REQ-INT-003,REQ-INT-004,REQ-INT-005,REQ-INT-006,REQ-INT-007,REQ-INT-008,REQ-INT-009,REQ-INT-010,REQ-INT-011,REQ-INT-012,REQ-INT-013,REQ-INT-014,REQ-INT-015,REQ-INT-016,REQ-INT-017,REQ-INT-018,REQ-INT-019,REQ-INT-020,REQ-INT-021,REQ-INT-022,REQ-INT-023,REQ-INT-024,REQ-INT-025,REQ-INT-026,REQ-INT-027,REQ-INT-028,REQ-INT-029,REQ-INT-030,REQ-INT-031,REQ-INT-032,REQ-INT-033,REQ-INT-034,REQ-INT-035,REQ-INT-036,REQ-INT-037,REQ-INT-038,REQ-INT-039,REQ-INT-044,REQ-INT-053,REQ-INT-054,REQ-INT-057,REQ-INT-058,REQ-INT-059,REQ-INT-060,REQ-INT-040,REQ-INT-042,REQ-INT-043,REQ-INT-045,REQ-INT-046,REQ-INT-047,REQ-INT-048,REQ-INT-049,REQ-INT-050,REQ-INT-051,REQ-INT-052,REQ-INT-055,REQ-INT-056,REQ-INT-061,REQ-INT-062,REQ-INT-063,REQ-INT-064,DBF-INT-001,DBF-INT-002,DBF-INT-003,DBF-INT-004,DBF-INT-005,DBF-INT-006,DBF-INT-007,DBF-INT-008,DBF-INT-009,DBF-INT-010 -->
 ## PHASE SVC-API — SVC+API
 
-4 API blocks (< 8 — no SUB). Controllers: `CheckIntakeController` (API-INT-001), `CheckUploadController` (API-INT-002, API-INT-003), `DecisionController` (API-INT-004); services: `CheckIntakeService`, `UploadService`, `UploadConfirmationService`, `DecisionService`.
+8 API blocks (≥ 8 — split COMMAND / QUERY; no VIEW: INT renders no view, REQ-INT-058). Controllers: `CheckIntakeController` (API-INT-001), `CheckUploadController` (API-INT-002, API-INT-003, API-INT-007), `DecisionController` (API-INT-004), `CheckReportController` (API-INT-005, API-INT-006), `RequiredDocumentTypesController` (API-INT-008); services: `CheckIntakeService`, `UploadService`, `UploadConfirmationService`, `DecisionService`, `CheckReportService`, `UploadedDocumentsService`, `RequiredDocumentTypesService`.
+
+<!-- SUB:SVC-API-COMMAND:START traces=REQ-INT-001,REQ-INT-002,REQ-INT-003,REQ-INT-004,REQ-INT-005,REQ-INT-006,REQ-INT-007,REQ-INT-008,REQ-INT-009,REQ-INT-010,REQ-INT-011,REQ-INT-012,REQ-INT-013,REQ-INT-014,REQ-INT-015,REQ-INT-016,REQ-INT-017,REQ-INT-018,REQ-INT-019,REQ-INT-020,REQ-INT-021,REQ-INT-022,REQ-INT-023,REQ-INT-024,REQ-INT-025,REQ-INT-026,REQ-INT-027,REQ-INT-028,REQ-INT-029,REQ-INT-030,REQ-INT-031,REQ-INT-032,REQ-INT-033,REQ-INT-034,REQ-INT-035,REQ-INT-036,REQ-INT-037,REQ-INT-038,REQ-INT-039,REQ-INT-044,REQ-INT-053,REQ-INT-054,REQ-INT-057,REQ-INT-058,REQ-INT-059,REQ-INT-060,DBF-INT-001,DBF-INT-002,DBF-INT-003,DBF-INT-004,DBF-INT-005,DBF-INT-006,DBF-INT-007,DBF-INT-008,DBF-INT-009,DBF-INT-010 -->
+### SVC-API-COMMAND — the four write operations
 
 <!-- API:API-INT-001:START traces=REQ-INT-001,REQ-INT-002,REQ-INT-003,REQ-INT-004,REQ-INT-005,REQ-INT-006,REQ-INT-007,REQ-INT-008,REQ-INT-044,REQ-INT-057,REQ-INT-058,REQ-INT-059,REQ-INT-060,DBF-INT-001,DBF-INT-002,DBF-INT-003,DBF-INT-005,DBF-INT-006 -->
 ### API-INT-001 — Start a Check
@@ -241,6 +249,81 @@ Localization : messages en per SRS; ar PENDING ADR-INT-017
 Honours      : CON-INT-004
 Covers       : REQ-INT-023 (the frontend sends its launch identity as decidedBy) and REQ-INT-054 (the frontend offers the decision only on a COMPLETED, undecided Check) are the frontend's use of this endpoint (P3.2); REQ-INT-024: no other endpoint carries a decision.
 <!-- API:API-INT-004:END -->
+<!-- SUB:SVC-API-COMMAND:END -->
+
+<!-- SUB:SVC-API-QUERY:START traces=REQ-INT-006,REQ-INT-007,REQ-INT-008,REQ-INT-016,REQ-INT-017,REQ-INT-020,REQ-INT-040,REQ-INT-042,REQ-INT-043,REQ-INT-045,REQ-INT-046,REQ-INT-047,REQ-INT-048,REQ-INT-049,REQ-INT-050,REQ-INT-051,REQ-INT-052,REQ-INT-053,REQ-INT-054,REQ-INT-055,REQ-INT-056,REQ-INT-057,REQ-INT-061,REQ-INT-062,REQ-INT-063,REQ-INT-064,DBF-INT-001,DBF-INT-002,DBF-INT-003,DBF-INT-004,DBF-INT-005,DBF-INT-006,DBF-INT-007,DBF-INT-008 -->
+### SVC-API-QUERY — the four frontend-facing reads (ADR-INT-020)
+
+Each read relays one owner operation and keeps nothing (REQ-INT-059); no read touches another module's table, and no read writes.
+
+<!-- API:API-INT-005:START traces=REQ-INT-006,REQ-INT-007,REQ-INT-008,REQ-INT-045,REQ-INT-046,REQ-INT-047,REQ-INT-048,REQ-INT-049,REQ-INT-050,REQ-INT-051,REQ-INT-052,REQ-INT-053,REQ-INT-054,REQ-INT-055,REQ-INT-056,REQ-INT-057,REQ-INT-061,DBF-INT-001,DBF-INT-002,DBF-INT-003,DBF-INT-004,DBF-INT-005,DBF-INT-006,DBF-INT-007,DBF-INT-008 -->
+### API-INT-005 — Read a Check and its report
+Entity       : the Report Store's Check Run (operation: read — a Check and its report)
+Endpoint     : /api/v1/check-reports/{checkId}   verb: GET
+Layers       : controller CheckReportController.read → service CheckReportService.read
+Request      : path checkId (DBF-INT-001, integer int64, required); no query parameter; no body
+Response     : 200 · CheckReportResponse {checkId (DBF-INT-001, int64), status (DBF-INT-002), serviceCode (DBF-INT-003), versionNumber (DBF-INT-004), fetchMode, requestNumber (DBF-INT-005), employeeId (DBF-INT-006), startedAt, runningSince (nullable), endedAt (nullable), overallStatus (nullable, COMPLETED only), comparisonModel (nullable), failureReason (nullable, FAILED only), failureDetail (nullable), findings [position, condition, outcome, evidence, note], documents [position, documentType, sourceMode, readStatus, unreadableReason (nullable), detail (nullable)], unreadQueries [position, queryName, detail], decision {employeeDecision (DBF-INT-007), decidedBy (DBF-INT-008), decidedAt, approvalApiExecuted} or null} — the Report Store's read-a-Check answer, unchanged, every text as stored · not paginated · no envelope
+Validations  : checkId numeric (PLATFORM-STD, ADR-INT-017)
+Errors       : INT-400-REQUEST-INVALID (400) · RPT-404-CHECK-NOT-FOUND (404, PASS-THROUGH) · INT-500 (500)
+Orchestration : parse → `CheckRecordPort.readReport(checkId)` (PORTS; unknown → RPT-404-CHECK-NOT-FOUND) → 200. Writes nothing; INT derives nothing (the Overall Status is the stored one — ADR-INT-011 (2))
+Repository   : none (no QR — ADR-INT-017)
+Concurrency  : NONE — this endpoint neither allocates a unique value nor reads-then-writes
+Security     : none — no permission model, endpoints are open per the SRS (raw-idea A2)
+Localization : messages en per SRS; ar PENDING ADR-INT-017
+Honours      : CON-INT-005
+<!-- API:API-INT-005:END -->
+
+<!-- API:API-INT-006:START traces=REQ-INT-006,REQ-INT-008,REQ-INT-040,REQ-INT-042,REQ-INT-043,REQ-INT-057,REQ-INT-062,DBF-INT-001,DBF-INT-002,DBF-INT-003,DBF-INT-005,DBF-INT-007 -->
+### API-INT-006 — List the Checks of a request
+Entity       : the Report Store's Check Run (operation: list — the Checks of a request)
+Endpoint     : /api/v1/check-reports   verb: GET
+Layers       : controller CheckReportController.list → service CheckReportService.list
+Request      : query serviceCode (DBF-INT-003, string ≤ 100, required), query requestNumber (DBF-INT-005, string ≤ 100, required) — passed exactly as received; presence is decided by the Report Store (RPT-400-REQUEST-KEYS-MISSING); no body
+Response     : 200 · ChecksOfRequestResponse {total (integer), checks [checkId (DBF-INT-001), status (DBF-INT-002), overallStatus (nullable), startedAt, endedAt (nullable), employeeDecision (DBF-INT-007, nullable)] — at most 100, newest first} — the Report Store's list answer, unchanged · not paginated (bounded by the owner) · no envelope
+Validations  : none of INT's own — the keys are checked by the Report Store (pass-through)
+Errors       : RPT-400-REQUEST-KEYS-MISSING (400, PASS-THROUGH) · INT-500 (500)
+Orchestration : `CheckRecordPort.listOfRequest(serviceCode, requestNumber)` (PORTS) → 200. Writes nothing
+Repository   : none (no QR — ADR-INT-017)
+Concurrency  : NONE — this endpoint neither allocates a unique value nor reads-then-writes
+Security     : none — no permission model (raw-idea A2)
+Localization : messages en per SRS; ar PENDING ADR-INT-017
+Honours      : CON-INT-006
+<!-- API:API-INT-006:END -->
+
+<!-- API:API-INT-007:START traces=REQ-INT-007,REQ-INT-008,REQ-INT-017,REQ-INT-020,REQ-INT-057,REQ-INT-063,DBF-INT-001 -->
+### API-INT-007 — List the uploaded documents of a Check
+Entity       : the Report Store's Check Run (operation: list — the uploaded documents of a Check)
+Endpoint     : /api/v1/checks/{checkId}/documents   verb: GET
+Layers       : controller CheckUploadController.list → service UploadedDocumentsService.list
+Request      : path checkId (DBF-INT-001, integer int64, required); no body
+Response     : 200 · array of UploadedDocumentResponse {uploadedDocumentId (int64), documentType (string ≤ 100), fileName (string ≤ 255), fileSize (int64), oversized (boolean), uploadedAt (date-time)} in upload order; empty when none; never the content · not paginated (one Check's uploads) · no envelope
+Validations  : checkId numeric (PLATFORM-STD, ADR-INT-017)
+Errors       : INT-400-REQUEST-INVALID (400) · INT-500 (500)
+Orchestration : parse → `DocumentAccessPort.listUploaded(checkId)` (PORTS — PENDING ADR-INT-020 (4): Document Access's in-process listing operation) → 200. Writes nothing
+Repository   : none (no QR — ADR-INT-017)
+Concurrency  : NONE — this endpoint neither allocates a unique value nor reads-then-writes
+Security     : none — no permission model (raw-idea A2)
+Localization : messages en per SRS; ar PENDING ADR-INT-017
+Honours      : CON-INT-007
+<!-- API:API-INT-007:END -->
+
+<!-- API:API-INT-008:START traces=REQ-INT-006,REQ-INT-007,REQ-INT-008,REQ-INT-016,REQ-INT-020,REQ-INT-057,REQ-INT-064,DBF-INT-001,DBF-INT-003,DBF-INT-004 -->
+### API-INT-008 — Read the required document types of a Check's version
+Entity       : the Report Store's Check Run (operation: read — the required document types of the version the Check runs on)
+Endpoint     : /api/v1/checks/{checkId}/required-document-types   verb: GET
+Layers       : controller RequiredDocumentTypesController.read → service RequiredDocumentTypesService.read
+Request      : path checkId (DBF-INT-001, integer int64, required); no body
+Response     : 200 · RequiredDocumentTypesResponse {checkId (DBF-INT-001), serviceCode (DBF-INT-003), versionNumber (DBF-INT-004), requiredDocumentTypes [string ≤ 100] in the version's order} · not paginated · no envelope
+Validations  : checkId numeric (PLATFORM-STD, ADR-INT-017)
+Errors       : INT-400-REQUEST-INVALID (400) · RPT-404-CHECK-NOT-FOUND (404, PASS-THROUGH) · INT-500 (500)
+Orchestration : parse → load the Check: `CheckRecordPort.read(checkId)` (PORTS; unknown → RPT-404-CHECK-NOT-FOUND) → integrate (XM-INT-001) — the required document types of the version by serviceCode DBF-INT-003 and versionNumber DBF-INT-004 (REQ-INT-064) → 200. Writes nothing
+Repository   : none (no QR — ADR-INT-017)
+Concurrency  : NONE — this endpoint neither allocates a unique value nor reads-then-writes
+Security     : none — no permission model (raw-idea A2)
+Localization : messages en per SRS; ar PENDING ADR-INT-017
+Honours      : CON-INT-008
+<!-- API:API-INT-008:END -->
+<!-- SUB:SVC-API-QUERY:END -->
 
 <!-- PHASE:SVC-API:END -->
 
@@ -284,19 +367,19 @@ examined_nothing:
 R5 — Security (backend half): no permission model — endpoints are open per the SRS (caller authentication deferred, raw-idea A2; REQ-INT-004 states the identity is not checked against any directory).
 <!-- PHASE:ALIGN-BE:END -->
 
-<!-- PHASE:CROSS-MOD:START traces=REQ-INT-025,REQ-INT-028,REQ-INT-030 -->
+<!-- PHASE:CROSS-MOD:START traces=REQ-INT-025,REQ-INT-028,REQ-INT-030,REQ-INT-064 -->
 ## PHASE CROSS-MOD — CROSS-MODULE
 
-<!-- XM:XM-INT-001:START traces=REQ-INT-025,REQ-INT-028,REQ-INT-030 -->
-### XM-INT-001 — Approval definition of the Check's service package version
+<!-- XM:XM-INT-001:START traces=REQ-INT-025,REQ-INT-028,REQ-INT-030,REQ-INT-064 -->
+### XM-INT-001 — Approval definition and required document types of the Check's service package version
 target     : REG · ENT-REG-002
 type       : SOFT-READ
 contract   : contract-reg.md#CON-REG-002
 requires   : REG:DELIVERED
 do         :
-  adapter   : `RegApprovalDefinitionAdapter implements ApprovalDefinitionPort` (INT port) wraps the injected REG in-process interface `ApprovalApiRegistry` — the separate interface REG gives only to the Employee Decision operation — and calls `getApprovalApi(serviceCode, versionNumber)` (CON-REG-012) with the service code and version number of the Check; maps ENT-REG-002.approvalEnabled (DBF-INT-009) to `ApprovalDefinition.enabled` and splits ENT-REG-002.approvalApi (DBF-INT-010, e.g. `POST /requests/{requestId}/approve`) at its first space into `method` and `pathTemplate`. REG's not-found for the Check's own version (CON-REG-002 promises it never disappears) → `INT-500`, logged with the Check identifier. Nothing is kept beyond the call; no FK. The adapter is injected only into `DecisionService` (AIAS-4) and never exposed to a model.
+  adapter   : `RegApprovalDefinitionAdapter implements ApprovalDefinitionPort` (INT port) wraps the injected REG in-process interface `ApprovalApiRegistry` — the separate interface REG gives only to the Employee Decision operation — and calls `getApprovalApi(serviceCode, versionNumber)` (CON-REG-012) with the service code and version number of the Check; maps ENT-REG-002.approvalEnabled (DBF-INT-009) to `ApprovalDefinition.enabled` and splits ENT-REG-002.approvalApi (DBF-INT-010, e.g. `POST /requests/{requestId}/approve`) at its first space into `method` and `pathTemplate`. REG's not-found for the Check's own version (CON-REG-002 promises it never disappears) → `INT-500`, logged with the Check identifier. Nothing is kept beyond the call; no FK. The adapter is injected only into `DecisionService` (AIAS-4) and never exposed to a model. Second adapter (ADR-INT-020): `RegVersionDocumentsAdapter implements VersionDocumentsPort` wraps the injected REG in-process interface `ServiceRegistry` and calls `getServicePackageVersion(serviceCode, versionNumber)` (CON-REG-009) with the Check's service code and version number; maps the version's `requiredDocumentTypes` (ENT-REG-004 values of ENT-REG-002) into an unmodifiable list in the version's order; REG's `VersionNotFoundException` for the Check's own version (CON-REG-002 promises it never disappears) → `INT-500`, logged with the Check identifier. Injected only into `RequiredDocumentTypesService`; it never receives the approval interface.
   config    : none — the REG interface is a Spring bean of the same deployable, injected by type.
-tests      : AC-INT-029, AC-INT-032, AC-INT-034
+tests      : AC-INT-029, AC-INT-032, AC-INT-034, AC-INT-073
 if_not_met : skip-block; record in execution-state.json → deferred_xm; continue
 <!-- XM:XM-INT-001:END -->
 
@@ -310,12 +393,12 @@ None — INT owns no table and no repository (ADR-INT-015, ADR-INT-017 (2)). Eve
 
 ```yaml name=error-catalog
 rows:
-  - {code: "INT-400-REQUEST-INVALID", rule: PLATFORM-STD, api: [API-INT-001, API-INT-002, API-INT-003, API-INT-004], http: 400, trigger: "the body, a multipart part or the checkId cannot be read (REQ-INT-007)", messages: {en: "The request could not be read: {detail}.", ar: "PENDING ADR-INT-017"}, adr: "ADR-INT-017"}
+  - {code: "INT-400-REQUEST-INVALID", rule: PLATFORM-STD, api: [API-INT-001, API-INT-002, API-INT-003, API-INT-004, API-INT-005, API-INT-007, API-INT-008], http: 400, trigger: "the body, a multipart part or the checkId cannot be read (REQ-INT-007)", messages: {en: "The request could not be read: {detail}.", ar: "PENDING ADR-INT-017"}, adr: "ADR-INT-017"}
   - {code: "INT-409-CHECK-NOT-AWAITING-DOCUMENTS", rule: RULE-INT-001, api: [API-INT-002], http: 409, trigger: "a file is uploaded for a Check whose status is not AWAITING_DOCUMENTS (REQ-INT-011)", messages: {en: "Documents can be uploaded only while Check {checkId} is waiting for documents; its status is {status}.", ar: "PENDING ADR-INT-017"}}
   - {code: "INT-413-UPLOAD-TOO-LARGE", rule: PLATFORM-STD, api: [API-INT-002], http: 413, trigger: "the upload request exceeds the upload request limit (REQ-INT-014)", messages: {en: "The upload is larger than the {limit} the service accepts in one request.", ar: "PENDING ADR-INT-017"}, adr: "ADR-INT-017"}
   - {code: "INT-502-APPROVAL-API-FAILED", rule: PLATFORM-STD, api: [API-INT-004], http: 502, trigger: "the host Approval API answers outside 2xx, cannot be reached or has no configured address (REQ-INT-036)", messages: {en: "The approval was not executed: the host Approval API answered {status}. Nothing was recorded; you can try again.", ar: "PENDING ADR-INT-017"}, adr: "ADR-INT-017"}
   - {code: "INT-504-APPROVAL-API-TIMED-OUT", rule: PLATFORM-STD, api: [API-INT-004], http: 504, trigger: "the host Approval API does not answer within the approval timeout (REQ-INT-037)", messages: {en: "The approval was not executed: the host Approval API did not answer within {timeout} seconds. Nothing was recorded; you can try again.", ar: "PENDING ADR-INT-017"}, adr: "ADR-INT-017"}
-  - {code: "INT-500", rule: PLATFORM-STD, api: [API-INT-001, API-INT-002, API-INT-003, API-INT-004], http: 500, trigger: "an unexpected server failure (REQ-INT-008)", messages: {en: "The request could not be completed because of an unexpected error.", ar: "PENDING ADR-INT-017"}, adr: "ADR-INT-017"}
+  - {code: "INT-500", rule: PLATFORM-STD, api: [API-INT-001, API-INT-002, API-INT-003, API-INT-004, API-INT-005, API-INT-006, API-INT-007, API-INT-008], http: 500, trigger: "an unexpected server failure (REQ-INT-008)", messages: {en: "The request could not be completed because of an unexpected error.", ar: "PENDING ADR-INT-017"}, adr: "ADR-INT-017"}
   - {code: "CHK-400-START-INCOMPLETE", rule: PASS-THROUGH, api: [API-INT-001], http: 400, trigger: "the Check Engine refuses a start with a value absent or blank", messages: {en: "A Check needs a service code, a request number and the employee's identity.", ar: "PENDING ADR-INT-017"}, adr: "ADR-INT-003"}
   - {code: "CHK-422-SERVICE-NOT-AVAILABLE", rule: PASS-THROUGH, api: [API-INT-001], http: 422, trigger: "the Check Engine refuses a start for an unknown or withdrawn service", messages: {en: "The service \"{serviceCode}\" is not available for Checks.", ar: "PENDING ADR-INT-017"}, adr: "ADR-INT-003"}
   - {code: "CHK-422-CONNECTION-NOT-ACTIVATED", rule: PASS-THROUGH, api: [API-INT-001], http: 422, trigger: "the Check Engine refuses a start whose connection is not activated", messages: {en: "The service \"{serviceCode}\" cannot be checked: connection \"{connectionName}\" is not activated in this environment.", ar: "PENDING ADR-INT-017"}, adr: "ADR-INT-003"}
@@ -325,10 +408,11 @@ rows:
   - {code: "DOC-404-SERVICE-VERSION-NOT-FOUND", rule: PASS-THROUGH, api: [API-INT-002], http: 404, trigger: "Document Access cannot resolve the Check's service package version", messages: {en: "service package version not found", ar: "PENDING ADR-INT-017"}, adr: "ADR-INT-003"}
   - {code: "DOC-422-FETCH-MODE-NOT-MANUAL", rule: PASS-THROUGH, api: [API-INT-002], http: 422, trigger: "Document Access refuses an upload for a service whose fetch mode is not manual", messages: {en: "Documents can be uploaded only for a service whose documents are provided by the employee; the service \"{serviceCode}\" obtains its documents by \"{fetchMode}\".", ar: "PENDING ADR-INT-017"}, adr: "ADR-INT-003"}
   - {code: "DOC-422-DOCUMENT-TYPE-NOT-OF-SERVICE", rule: PASS-THROUGH, api: [API-INT-002], http: 422, trigger: "Document Access refuses a document type the version does not require", messages: {en: "\"{documentType}\" is not a document type of the service \"{serviceCode}\"; choose one of: {requiredDocumentTypes}.", ar: "PENDING ADR-INT-017"}, adr: "ADR-INT-003"}
-  - {code: "RPT-404-CHECK-NOT-FOUND", rule: PASS-THROUGH, api: [API-INT-002, API-INT-004], http: 404, trigger: "the Report Store holds no Check with this identifier", messages: {en: "Check {checkId} was not found.", ar: "PENDING ADR-INT-017"}, adr: "ADR-INT-003"}
+  - {code: "RPT-404-CHECK-NOT-FOUND", rule: PASS-THROUGH, api: [API-INT-002, API-INT-004, API-INT-005, API-INT-008], http: 404, trigger: "the Report Store holds no Check with this identifier", messages: {en: "Check {checkId} was not found.", ar: "PENDING ADR-INT-017"}, adr: "ADR-INT-003"}
   - {code: "RPT-400-DECISION-INCOMPLETE", rule: RULE-INT-002, api: [API-INT-004], http: 400, trigger: "the decision code is not APPROVED or REJECTED or the deciding employee is missing — raised by INT before an Approval API call, otherwise by the Report Store", messages: {en: "The decision was not recorded: `{value}` is not APPROVED or REJECTED. / The decision was not recorded: the deciding employee is missing.", ar: "PENDING ADR-INT-017"}, adr: "ADR-INT-010"}
   - {code: "RPT-409-CHECK-NOT-COMPLETED", rule: RULE-INT-003, api: [API-INT-004], http: 409, trigger: "the Check is not COMPLETED — raised by INT before an Approval API call, otherwise by the Report Store", messages: {en: "Check {checkId} is not completed; a decision can only be recorded on a completed Check.", ar: "PENDING ADR-INT-017"}, adr: "ADR-INT-010"}
   - {code: "RPT-409-DECISION-ALREADY-RECORDED", rule: RULE-INT-003, api: [API-INT-004], http: 409, trigger: "the Check already holds an Employee Decision — raised by INT before an Approval API call, otherwise by the Report Store", messages: {en: "Check {checkId} already has an Employee Decision.", ar: "PENDING ADR-INT-017"}, adr: "ADR-INT-010"}
+  - {code: "RPT-400-REQUEST-KEYS-MISSING", rule: PASS-THROUGH, api: [API-INT-006], http: 400, trigger: "the Report Store refuses a list of the Checks of a request without a service code or a request number", messages: {en: "Both a service code and a request number are needed to list Checks.", ar: "PENDING ADR-INT-017"}, adr: "ADR-INT-020"}
   - {code: "RPT-422-APPROVAL-FLAG-ON-REJECTION", rule: PASS-THROUGH, api: [API-INT-004], http: 422, trigger: "the Report Store refuses an executed rejection (INT never sends one — REQ-INT-027)", messages: {en: "The decision was not recorded: only an APPROVED decision is executed through the Approval API.", ar: "PENDING ADR-INT-017"}, adr: "ADR-INT-003"}
 ```
 
@@ -347,8 +431,8 @@ rows:
 
 | XM | requires | tests |
 |---|---|---|
-| XM-INT-001 | REG:DELIVERED | AC-INT-029, AC-INT-032, AC-INT-034 |
+| XM-INT-001 | REG:DELIVERED | AC-INT-029, AC-INT-032, AC-INT-034, AC-INT-073 |
 
-Frontend-served requirements (REQ-INT-040 … REQ-INT-043, REQ-INT-045 … REQ-INT-052, REQ-INT-055, REQ-INT-056) are bound to the read bindings of the DBF matrix and are built by P3.2 on the owners' reads; no INT endpoint serves them (ADR-INT-001, ADR-INT-011).
+Frontend-served requirements (REQ-INT-040 … REQ-INT-043, REQ-INT-045 … REQ-INT-052, REQ-INT-055, REQ-INT-056) are built by P3.2 on INT's reads API-INT-005 … API-INT-008 (ADR-INT-020); presentation (order, MISSING safeguard, plain text, polling) is the frontend's (ADR-INT-011).
 
-ADRs cited: ADR-INT-001, ADR-INT-003, ADR-INT-009, ADR-INT-010, ADR-INT-011, ADR-INT-012, ADR-INT-013, ADR-INT-015, ADR-INT-016, ADR-INT-017.
+ADRs cited: ADR-INT-001, ADR-INT-003, ADR-INT-009, ADR-INT-010, ADR-INT-011, ADR-INT-012, ADR-INT-013, ADR-INT-015, ADR-INT-016, ADR-INT-017, ADR-INT-020.

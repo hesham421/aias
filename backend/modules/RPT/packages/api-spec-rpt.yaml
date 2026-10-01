@@ -1,0 +1,530 @@
+openapi: 3.1.0
+info:
+  title: Report Store (RPT) API
+  version: 1.0.0
+  description: 'Derived from backend-execution-plan-rpt.md (API-RPT-001 … API-RPT-003). Read-only; the Check result port and
+    the Employee Decision are in-process (ADR-RPT-006). No security scheme: caller authentication is deferred (raw-idea A2).'
+paths:
+  /api/v1/checks/{checkId}:
+    get:
+      operationId: readCheck
+      summary: Read a Check and its report
+      x-api-id: API-RPT-001
+      x-traces:
+      - REQ-RPT-023
+      - REQ-RPT-024
+      - REQ-RPT-025
+      - REQ-RPT-026
+      - REQ-RPT-027
+      - DBF-RPT-001
+      - DBF-RPT-002
+      - DBF-RPT-003
+      - DBF-RPT-004
+      - DBF-RPT-005
+      - DBF-RPT-006
+      - DBF-RPT-007
+      - DBF-RPT-008
+      - DBF-RPT-009
+      - DBF-RPT-010
+      - DBF-RPT-011
+      - DBF-RPT-012
+      - DBF-RPT-013
+      - DBF-RPT-014
+      - DBF-RPT-015
+      - DBF-RPT-016
+      - DBF-RPT-017
+      - DBF-RPT-018
+      - DBF-RPT-022
+      - DBF-RPT-023
+      - DBF-RPT-024
+      - DBF-RPT-025
+      - DBF-RPT-026
+      - DBF-RPT-031
+      - DBF-RPT-032
+      - DBF-RPT-033
+      - DBF-RPT-034
+      - DBF-RPT-035
+      - DBF-RPT-036
+      - DBF-RPT-041
+      - DBF-RPT-042
+      - DBF-RPT-043
+      parameters:
+      - name: checkId
+        in: path
+        required: true
+        description: The Check identifier (DBF-RPT-001)
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: The Check with, once COMPLETED, its report
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckReport'
+        '400':
+          description: The checkId path parameter is not a number
+          content:
+            application/problem+json:
+              schema: &id001
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - RPT-400-CHECK-ID-INVALID
+        '404':
+          description: No Check Run exists for the checkId — never created or purged
+          content:
+            application/problem+json:
+              schema: *id001
+          x-error-codes:
+          - RPT-404-CHECK-NOT-FOUND
+        '500':
+          description: Unexpected server failure
+          content:
+            application/problem+json:
+              schema: *id001
+          x-error-codes:
+          - RPT-500
+  /api/v1/checks:
+    get:
+      operationId: listChecksOfRequest
+      summary: List the Checks of a request
+      x-api-id: API-RPT-002
+      x-traces:
+      - REQ-RPT-028
+      - REQ-RPT-029
+      - REQ-RPT-030
+      - REQ-RPT-031
+      - REQ-RPT-050
+      - DBF-RPT-001
+      - DBF-RPT-002
+      - DBF-RPT-005
+      - DBF-RPT-007
+      - DBF-RPT-008
+      - DBF-RPT-010
+      - DBF-RPT-011
+      - DBF-RPT-015
+      parameters:
+      - name: serviceCode
+        in: query
+        required: true
+        description: DBF-RPT-002, matched exactly
+        schema: &id002
+          type: string
+          maxLength: 100
+      - name: requestNumber
+        in: query
+        required: true
+        description: DBF-RPT-005, matched exactly as sent
+        schema: *id002
+      responses:
+        '200':
+          description: At most 100 Checks, newest first, with the total
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChecksOfRequest'
+        '400':
+          description: serviceCode or requestNumber absent or blank
+          content:
+            application/problem+json:
+              schema: *id001
+          x-error-codes:
+          - RPT-400-REQUEST-KEYS-MISSING
+        '500':
+          description: Unexpected server failure
+          content:
+            application/problem+json:
+              schema: *id001
+          x-error-codes:
+          - RPT-500
+  /api/v1/decision-agreement:
+    get:
+      operationId: readDecisionAgreement
+      summary: Read the decision agreement of a service
+      x-api-id: API-RPT-003
+      x-traces:
+      - REQ-RPT-040
+      - REQ-RPT-041
+      - DBF-RPT-002
+      - DBF-RPT-003
+      - DBF-RPT-011
+      - DBF-RPT-015
+      parameters:
+      - name: serviceCode
+        in: query
+        required: true
+        description: DBF-RPT-002
+        schema: *id002
+      responses:
+        '200':
+          description: Counts of decided Checks per version, Overall Status and Employee Decision
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AgreementRow'
+        '400':
+          description: serviceCode absent or blank
+          content:
+            application/problem+json:
+              schema: *id001
+          x-error-codes:
+          - RPT-400-SERVICE-CODE-MISSING
+        '500':
+          description: Unexpected server failure
+          content:
+            application/problem+json:
+              schema: *id001
+          x-error-codes:
+          - RPT-500
+components:
+  schemas:
+    FindingView:
+      type: object
+      required:
+      - position
+      - condition
+      - outcome
+      - evidence
+      - note
+      properties:
+        position:
+          type: integer
+          description: DBF-RPT-022
+        condition:
+          type: string
+          description: DBF-RPT-023
+        outcome:
+          type: string
+          enum:
+          - SATISFIED
+          - NOT_SATISFIED
+          - UNDETERMINED
+          maxLength: 30
+          description: DBF-RPT-024 — FINDING_OUTCOME
+        evidence:
+          type: string
+          description: DBF-RPT-025 — returned exactly as stored, as data
+        note:
+          type: string
+          description: DBF-RPT-026
+    DocumentView:
+      type: object
+      required:
+      - position
+      - documentType
+      - sourceMode
+      - readStatus
+      properties:
+        position:
+          type: integer
+          description: DBF-RPT-031
+        documentType:
+          type: string
+          maxLength: 100
+          description: DBF-RPT-032
+        sourceMode:
+          type: string
+          enum: &id003
+          - path
+          - blob
+          - manual
+          maxLength: 10
+          description: DBF-RPT-033 — FETCH_MODE
+        readStatus:
+          type: string
+          enum:
+          - READ
+          - MISSING
+          - UNREADABLE
+          maxLength: 30
+          description: DBF-RPT-034 — DOCUMENT_READ_STATUS
+        unreadableReason:
+          type:
+          - string
+          - 'null'
+          enum:
+          - OUTSIDE_STORAGE_ROOT
+          - NOT_FOUND
+          - TOO_LARGE
+          - UNSUPPORTED_FORMAT
+          - READING_FAILED
+          - OUT_OF_TIME
+          - SOURCE_QUERY_FAILED
+          - MODEL_NOT_PERMITTED
+          - null
+          maxLength: 30
+          description: DBF-RPT-035 — UNREADABLE_REASON, UNREADABLE only
+        detail:
+          type:
+          - string
+          - 'null'
+          description: DBF-RPT-036
+    UnreadQueryView:
+      type: object
+      required:
+      - position
+      - queryName
+      - detail
+      properties:
+        position:
+          type: integer
+          description: DBF-RPT-041
+        queryName:
+          type: string
+          maxLength: 100
+          description: DBF-RPT-042
+        detail:
+          type: string
+          description: DBF-RPT-043
+    DecisionView:
+      type: object
+      required:
+      - employeeDecision
+      - decidedBy
+      - decidedAt
+      - approvalApiExecuted
+      properties:
+        employeeDecision:
+          type: string
+          enum: &id005
+          - APPROVED
+          - REJECTED
+          maxLength: 30
+          description: DBF-RPT-015 — EMPLOYEE_DECISION
+        decidedBy:
+          type: string
+          maxLength: 100
+          description: DBF-RPT-016 — exactly as sent
+        decidedAt:
+          type: string
+          format: date-time
+          description: DBF-RPT-017
+        approvalApiExecuted:
+          type: boolean
+          description: DBF-RPT-018
+    CheckReport:
+      type: object
+      required:
+      - checkId
+      - status
+      - serviceCode
+      - versionNumber
+      - fetchMode
+      - requestNumber
+      - employeeId
+      - startedAt
+      - findings
+      - documents
+      - unreadQueries
+      properties:
+        checkId:
+          type: integer
+          format: int64
+          description: DBF-RPT-001
+        status:
+          type: string
+          enum: &id004
+          - AWAITING_DOCUMENTS
+          - RUNNING
+          - COMPLETED
+          - FAILED
+          maxLength: 30
+          description: DBF-RPT-007 — CHECK_STATUS
+        serviceCode:
+          type: string
+          maxLength: 100
+          description: DBF-RPT-002
+        versionNumber:
+          type: integer
+          description: DBF-RPT-003
+        fetchMode:
+          type: string
+          enum: *id003
+          maxLength: 10
+          description: DBF-RPT-004 — FETCH_MODE
+        requestNumber:
+          type: string
+          maxLength: 100
+          description: DBF-RPT-005 — exactly as sent
+        employeeId:
+          type: string
+          maxLength: 100
+          description: DBF-RPT-006 — exactly as sent
+        startedAt:
+          type: string
+          format: date-time
+          description: DBF-RPT-008
+        runningSince:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: DBF-RPT-009
+        endedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: DBF-RPT-010
+        overallStatus:
+          type:
+          - string
+          - 'null'
+          enum:
+          - COMPLIANT
+          - NOT_COMPLIANT
+          - NEEDS_MANUAL_REVIEW
+          - null
+          maxLength: 30
+          description: DBF-RPT-011 — OVERALL_STATUS, COMPLETED only
+        comparisonModel:
+          type:
+          - string
+          - 'null'
+          maxLength: 200
+          description: DBF-RPT-012 — COMPLETED only
+        failureReason:
+          type:
+          - string
+          - 'null'
+          enum:
+          - TIMED_OUT
+          - MODEL_UNAVAILABLE
+          - MODEL_OUTPUT_INVALID
+          - MODEL_NOT_PERMITTED
+          - UPLOAD_WINDOW_EXPIRED
+          - INTERRUPTED
+          - INTERNAL_ERROR
+          - null
+          maxLength: 30
+          description: DBF-RPT-013 — CHECK_FAILURE_REASON, FAILED only
+        failureDetail:
+          type:
+          - string
+          - 'null'
+          description: DBF-RPT-014 — FAILED only
+        findings:
+          type: array
+          items:
+            $ref: '#/components/schemas/FindingView'
+        documents:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentView'
+        unreadQueries:
+          type: array
+          items:
+            $ref: '#/components/schemas/UnreadQueryView'
+        decision:
+          oneOf:
+          - $ref: '#/components/schemas/DecisionView'
+          - type: 'null'
+    CheckSummary:
+      type: object
+      required:
+      - checkId
+      - status
+      - startedAt
+      properties:
+        checkId:
+          type: integer
+          format: int64
+          description: DBF-RPT-001
+        status:
+          type: string
+          enum: *id004
+          maxLength: 30
+          description: DBF-RPT-007
+        overallStatus:
+          type:
+          - string
+          - 'null'
+          enum:
+          - COMPLIANT
+          - NOT_COMPLIANT
+          - NEEDS_MANUAL_REVIEW
+          - null
+          maxLength: 30
+          description: DBF-RPT-011
+        startedAt:
+          type: string
+          format: date-time
+          description: DBF-RPT-008
+        endedAt:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: DBF-RPT-010
+        employeeDecision:
+          type:
+          - string
+          - 'null'
+          enum:
+          - APPROVED
+          - REJECTED
+          - null
+          maxLength: 30
+          description: DBF-RPT-015
+    ChecksOfRequest:
+      type: object
+      required:
+      - total
+      - checks
+      properties:
+        total:
+          type: integer
+          description: every Check of the service code and request number
+        checks:
+          type: array
+          maxItems: 100
+          items:
+            $ref: '#/components/schemas/CheckSummary'
+    AgreementRow:
+      type: object
+      required:
+      - versionNumber
+      - overallStatus
+      - employeeDecision
+      - count
+      properties:
+        versionNumber:
+          type: integer
+          description: DBF-RPT-003
+        overallStatus:
+          type: string
+          enum:
+          - COMPLIANT
+          - NOT_COMPLIANT
+          - NEEDS_MANUAL_REVIEW
+          maxLength: 30
+          description: DBF-RPT-011
+        employeeDecision:
+          type: string
+          enum: *id005
+          maxLength: 30
+          description: DBF-RPT-015
+        count:
+          type: integer
+          minimum: 1
+    ProblemDetail:
+      type: object
+      required:
+      - type
+      - title
+      - status
+      - code
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        code:
+          type: string

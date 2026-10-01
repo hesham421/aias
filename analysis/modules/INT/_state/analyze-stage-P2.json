@@ -1,0 +1,126 @@
+{
+  "module": "INT",
+  "version": 1,
+  "scope": "stage:P2",
+  "counts": {
+    "CRITICAL": 0,
+    "MAJOR": 0,
+    "MINOR": 0
+  },
+  "clean": true,
+  "blocking": [
+    "CRITICAL",
+    "MAJOR"
+  ],
+  "contracts": [
+    "C0",
+    "C6",
+    "C12"
+  ],
+  "skipped": [],
+  "coverage": {
+    "C0.1": 7,
+    "C6.2": 10,
+    "C6.3": 2,
+    "C6.5": 12,
+    "C6.6": 0,
+    "C6.10": 2,
+    "C6.11": 5,
+    "C6.12": 0,
+    "C6.13": 5,
+    "C6.14": 5,
+    "C6.15": 2
+  },
+  "vacuous": [
+    "C6.12",
+    "C6.6"
+  ],
+  "metrics": [
+    {
+      "id": "us-req",
+      "from": "US",
+      "to": [
+        "REQ"
+      ],
+      "total": 12,
+      "covered": 12,
+      "pct": 100.0
+    },
+    {
+      "id": "req-ac",
+      "from": "REQ",
+      "to": [
+        "AC"
+      ],
+      "total": 60,
+      "covered": 60,
+      "pct": 100.0
+    },
+    {
+      "id": "req-api",
+      "from": "REQ",
+      "to": [
+        "API"
+      ],
+      "total": 60,
+      "covered": 0,
+      "pct": 0.0
+    },
+    {
+      "id": "req-ux",
+      "from": "REQ",
+      "to": [
+        "SCR",
+        "UXD"
+      ],
+      "total": 60,
+      "covered": 0,
+      "pct": 0.0
+    },
+    {
+      "id": "ac-tc",
+      "from": "AC",
+      "to": [
+        "TC"
+      ],
+      "total": 66,
+      "covered": 0,
+      "pct": 0.0
+    }
+  ],
+  "findings": [],
+  "provenance": {
+    "rules": {
+      "contracts": "66ab69cc1483b2f9858c7b3db7d89f46990f817721fc4417f100bd5f023dff07",
+      "checker": "a94d2877f8d266ce52f428ed037da56bf89abcf3d31d225d01591f884f268f8b",
+      "policy": "f0051863173859c50eaa1091adddc83f9c46e4a33a735325d37acc31ffd51c3d"
+    },
+    "resolvable": [
+      "business-policies",
+      "contract",
+      "db-script",
+      "domain-profile",
+      "module-registry",
+      "platform-summary",
+      "prd",
+      "project-registry",
+      "registry-db",
+      "registry-srs",
+      "srs"
+    ],
+    "inputs": {
+      "business-policies": "b3d3c54c9491ed1e4dd712c776861a342ebdbf00781122e295730f38ca465118",
+      "contract": "57107c7a3c3e434d8991c9d4614cd204f106136fdb008562416e84fe44b919b7",
+      "db-script": "f71e6d5017ee47d7ce4000951dbb7534fab24a4baba632ce5e8f38ea5983a451",
+      "domain-profile": "c9ffe7c45c917c5793e15b6fbc7151ccc4b9181c36a5aaf1ce2f15f6849e3cbd",
+      "module-registry": "88bb2f37bcfca903bb7b7847860c342cb5c9d59eca14dafffedf5fb84e6075a6",
+      "platform-summary": "f37b801d053b9f3fc47378f11eee1d9a8350520a0ae1db83d39d19133c46ddfc",
+      "prd": "d39662755a943b101ca970c40fb6b50438c24238f6a7e9e78d70be208445ad5c",
+      "project-registry": "7652329cae1b5e14558ead423c4a0d157fcf3aead94176473c23adb034161a82",
+      "registry-db": "ba009dec9d4d8933d0971cec484b95be70c4307953e0225760ea2741c925e26b",
+      "registry-srs": "ced82fb853904f2f2a8487e7e3d643bc2e8789f859b61c4f6b5e227edc5aedc5",
+      "srs": "dc44d0c3bcf6b1bd51cc9567d65397a8d96718d4666c9993b16e90a64c2b146b"
+    },
+    "at": "2026-10-01T13:59:41+00:00"
+  }
+}

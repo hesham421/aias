@@ -33,7 +33,7 @@ None — `consumes: []` (RPT implements CHK's Check result port; codes stored by
 None — no SCR-REQ in this version (RPT has no screen).
 
 ### Requirements
-REQ count 53 · AC count 61 · RULE count 15 · last sequence per atom (REQ: 53, AC: 61, ENT: 4, RULE: 15, SCR-REQ: 0)
+REQ count 54 · AC count 64 · RULE count 15 · last sequence per atom (REQ: 54, AC: 64, ENT: 4, RULE: 15, SCR-REQ: 0)
 
 | REQ | AC |
 |---|---|
@@ -45,7 +45,7 @@ REQ count 53 · AC count 61 · RULE count 15 · last sequence per atom (REQ: 53,
 | REQ-RPT-006 | AC-RPT-008, AC-RPT-009 |
 | REQ-RPT-007 | AC-RPT-010 |
 | REQ-RPT-008 | AC-RPT-011 |
-| REQ-RPT-009 | AC-RPT-012 |
+| REQ-RPT-009 | AC-RPT-012, AC-RPT-062 |
 | REQ-RPT-010 | AC-RPT-013 |
 | REQ-RPT-011 | AC-RPT-014 |
 | REQ-RPT-012 | AC-RPT-015 |
@@ -54,7 +54,7 @@ REQ count 53 · AC count 61 · RULE count 15 · last sequence per atom (REQ: 53,
 | REQ-RPT-015 | AC-RPT-018 |
 | REQ-RPT-016 | AC-RPT-019 |
 | REQ-RPT-017 | AC-RPT-020 |
-| REQ-RPT-018 | AC-RPT-021 |
+| REQ-RPT-018 | AC-RPT-021, AC-RPT-063 |
 | REQ-RPT-019 | AC-RPT-022 |
 | REQ-RPT-020 | AC-RPT-023 |
 | REQ-RPT-021 | AC-RPT-024 |
@@ -90,6 +90,7 @@ REQ count 53 · AC count 61 · RULE count 15 · last sequence per atom (REQ: 53,
 | REQ-RPT-051 | AC-RPT-059 |
 | REQ-RPT-052 | AC-RPT-060 |
 | REQ-RPT-053 | AC-RPT-061 |
+| REQ-RPT-054 | AC-RPT-064 |
 
 | RULE | Traces |
 |---|---|
@@ -110,7 +111,7 @@ REQ count 53 · AC count 61 · RULE count 15 · last sequence per atom (REQ: 53,
 | RULE-RPT-015 | REQ-RPT-041 |
 
 ### Decisions
-ADR-RPT-006, ADR-RPT-007, ADR-RPT-008, ADR-RPT-009, ADR-RPT-010, ADR-RPT-017, ADR-RPT-018 (new, ACCEPTED); applied ADR-RPT-001 … ADR-RPT-005, ADR-REG-001, ADR-REG-002, ADR-REG-006, ADR-CHK-001, ADR-CHK-002, ADR-CHK-005, ADR-CHK-007, ADR-CHK-011, ADR-CHK-014, ADR-CHK-015, ADR-CHK-017, ADR-DOC-002, ADR-DOC-007, ADR-DOC-008, ADR-DOC-011. BLOCKED: none.
+ADR-RPT-006, ADR-RPT-007, ADR-RPT-008, ADR-RPT-009, ADR-RPT-010, ADR-RPT-017, ADR-RPT-018, ADR-RPT-020 (new, ACCEPTED); applied ADR-RPT-001 … ADR-RPT-005, ADR-REG-001, ADR-REG-002, ADR-REG-006, ADR-CHK-001, ADR-CHK-002, ADR-CHK-005, ADR-CHK-007, ADR-CHK-011, ADR-CHK-014, ADR-CHK-015, ADR-CHK-017, ADR-DOC-002, ADR-DOC-007, ADR-DOC-008, ADR-DOC-011. BLOCKED: none.
 
 ### Event
-"P1 completed: RPT v1 — REQ 53 · AC 61 · ENT 4 · RULE 15 · SCR-REQ 0 · ADR 7"
+"P1 completed: RPT v1 — REQ 54 · AC 64 · ENT 4 · RULE 15 · SCR-REQ 0 · ADR 8"

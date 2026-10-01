@@ -205,7 +205,7 @@
       "source": "platform"
     },
     {
-      "id": "XM-INT-002",
+      "id": "XM-INT-001",
       "from": "INT",
       "to": "REG",
       "entity": "ENT-REG-002",
@@ -221,25 +221,10 @@
       "source": "xm"
     },
     {
-      "id": "XM-INT-001",
       "from": "INT",
       "to": "RPT",
-      "entity": "ENT-RPT-001",
-      "type": "SOFT-READ",
       "state": "READY",
-      "declared": "CONTRACTED",
-      "contract_ref": "CON-RPT-001",
-      "traces": [
-        "REQ-INT-010",
-        "REQ-INT-011",
-        "REQ-INT-012",
-        "REQ-INT-021",
-        "REQ-INT-026",
-        "REQ-INT-030",
-        "REQ-INT-031",
-        "REQ-INT-035"
-      ],
-      "source": "xm"
+      "source": "platform"
     },
     {
       "from": "RPT",

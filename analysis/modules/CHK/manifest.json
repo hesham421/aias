@@ -80,6 +80,56 @@
         "trigger": "delivered",
         "resolution": "OPEN",
         "raised_at": "2026-10-01T15:10:26+00:00"
+      },
+      {
+        "id": "XM-CHK-001",
+        "key": "XM-CHK-001@REGv1:delivered",
+        "target": "REG",
+        "target_version": 1,
+        "version": 1,
+        "trigger": "delivered",
+        "resolution": "OPEN",
+        "raised_at": "2026-10-01T15:33:09+00:00"
+      },
+      {
+        "id": "XM-CHK-002",
+        "key": "XM-CHK-002@REGv1:delivered",
+        "target": "REG",
+        "target_version": 1,
+        "version": 1,
+        "trigger": "delivered",
+        "resolution": "OPEN",
+        "raised_at": "2026-10-01T15:33:09+00:00"
+      },
+      {
+        "id": "XM-CHK-003",
+        "key": "XM-CHK-003@REGv1:delivered",
+        "target": "REG",
+        "target_version": 1,
+        "version": 1,
+        "trigger": "delivered",
+        "resolution": "OPEN",
+        "raised_at": "2026-10-01T15:33:09+00:00"
+      },
+      {
+        "id": "XM-CHK-004",
+        "key": "XM-CHK-004@REGv1:delivered",
+        "target": "REG",
+        "target_version": 1,
+        "version": 1,
+        "trigger": "delivered",
+        "resolution": "OPEN",
+        "raised_at": "2026-10-01T15:33:09+00:00"
+      },
+      {
+        "id": "XM-CHK-005",
+        "key": "XM-CHK-005@REGv1:delivered",
+        "target": "REG",
+        "target_version": 1,
+        "version": 1,
+        "trigger": "delivered",
+        "resolution": "OPEN",
+        "raised_at": "2026-10-01T15:33:09+00:00"
       }
     ]
   },

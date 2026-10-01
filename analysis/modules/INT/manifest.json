@@ -68,6 +68,16 @@
         "trigger": "delivered",
         "resolution": "OPEN",
         "raised_at": "2026-10-01T15:10:26+00:00"
+      },
+      {
+        "id": "XM-INT-001",
+        "key": "XM-INT-001@REGv1:delivered",
+        "target": "REG",
+        "target_version": 1,
+        "version": 1,
+        "trigger": "delivered",
+        "resolution": "OPEN",
+        "raised_at": "2026-10-01T15:33:09+00:00"
       }
     ]
   },

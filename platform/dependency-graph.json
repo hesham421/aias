@@ -51,7 +51,7 @@
       "to": "REG",
       "entity": "ENT-REG-001",
       "type": "SOFT-READ",
-      "state": "READY",
+      "state": "DELIVERED",
       "declared": "CONTRACTED",
       "contract_ref": "CON-REG-001",
       "traces": [
@@ -66,7 +66,7 @@
       "to": "REG",
       "entity": "ENT-REG-002",
       "type": "SOFT-READ",
-      "state": "READY",
+      "state": "DELIVERED",
       "declared": "CONTRACTED",
       "contract_ref": "CON-REG-002",
       "traces": [
@@ -86,7 +86,7 @@
       "to": "REG",
       "entity": "ENT-REG-003",
       "type": "SOFT-READ",
-      "state": "READY",
+      "state": "DELIVERED",
       "declared": "CONTRACTED",
       "contract_ref": "CON-REG-003",
       "traces": [
@@ -102,7 +102,7 @@
       "to": "REG",
       "entity": "ENT-REG-004",
       "type": "SOFT-READ",
-      "state": "READY",
+      "state": "DELIVERED",
       "declared": "CONTRACTED",
       "contract_ref": "CON-REG-004",
       "traces": [
@@ -119,7 +119,7 @@
       "to": "REG",
       "entity": "ENT-REG-005",
       "type": "SOFT-READ",
-      "state": "READY",
+      "state": "DELIVERED",
       "declared": "CONTRACTED",
       "contract_ref": "CON-REG-005",
       "traces": [
@@ -135,7 +135,7 @@
       "to": "REG",
       "entity": "ENT-REG-002",
       "type": "SOFT-READ",
-      "state": "READY",
+      "state": "DELIVERED",
       "declared": "CONTRACTED",
       "contract_ref": "CON-REG-002",
       "traces": [
@@ -151,7 +151,7 @@
       "to": "REG",
       "entity": "ENT-REG-003",
       "type": "SOFT-READ",
-      "state": "READY",
+      "state": "DELIVERED",
       "declared": "CONTRACTED",
       "contract_ref": "CON-REG-003",
       "traces": [
@@ -167,7 +167,7 @@
       "to": "REG",
       "entity": "ENT-REG-004",
       "type": "SOFT-READ",
-      "state": "READY",
+      "state": "DELIVERED",
       "declared": "CONTRACTED",
       "contract_ref": "CON-REG-004",
       "traces": [
@@ -182,7 +182,7 @@
       "to": "REG",
       "entity": "ENT-REG-005",
       "type": "SOFT-READ",
-      "state": "READY",
+      "state": "DELIVERED",
       "declared": "CONTRACTED",
       "contract_ref": "CON-REG-005",
       "traces": [
@@ -210,7 +210,7 @@
       "to": "REG",
       "entity": "ENT-REG-002",
       "type": "SOFT-READ",
-      "state": "READY",
+      "state": "DELIVERED",
       "declared": "CONTRACTED",
       "contract_ref": "CON-REG-002",
       "traces": [

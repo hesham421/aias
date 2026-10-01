@@ -36,10 +36,28 @@
   "status": {
     "archived": false,
     "split": {
-      "backend/exec": false,
-      "backend/test": false,
-      "frontend/exec": false,
-      "frontend/test": false
+      "backend/exec": true,
+      "backend/test": true,
+      "frontend/exec": true,
+      "frontend/test": true,
+      "integration": [
+        {
+          "xm": "XM-DOC-001",
+          "path": "governance-shared/backend/modules/DOC/packages/integration/XM-DOC-001"
+        },
+        {
+          "xm": "XM-DOC-002",
+          "path": "governance-shared/backend/modules/DOC/packages/integration/XM-DOC-002"
+        },
+        {
+          "xm": "XM-DOC-003",
+          "path": "governance-shared/backend/modules/DOC/packages/integration/XM-DOC-003"
+        },
+        {
+          "xm": "XM-DOC-004",
+          "path": "governance-shared/backend/modules/DOC/packages/integration/XM-DOC-004"
+        }
+      ]
     },
     "coverage": {
       "us-req": 100.0,
@@ -47,7 +65,49 @@
       "req-api": 7.8,
       "req-ux": 0.0,
       "ac-tc": 100.0
-    }
+    },
+    "xm_events": [
+      {
+        "id": "XM-DOC-001",
+        "key": "XM-DOC-001@REGv1:delivered",
+        "target": "REG",
+        "target_version": 1,
+        "version": 1,
+        "trigger": "delivered",
+        "resolution": "OPEN",
+        "raised_at": "2026-10-01T15:33:09+00:00"
+      },
+      {
+        "id": "XM-DOC-002",
+        "key": "XM-DOC-002@REGv1:delivered",
+        "target": "REG",
+        "target_version": 1,
+        "version": 1,
+        "trigger": "delivered",
+        "resolution": "OPEN",
+        "raised_at": "2026-10-01T15:33:09+00:00"
+      },
+      {
+        "id": "XM-DOC-003",
+        "key": "XM-DOC-003@REGv1:delivered",
+        "target": "REG",
+        "target_version": 1,
+        "version": 1,
+        "trigger": "delivered",
+        "resolution": "OPEN",
+        "raised_at": "2026-10-01T15:33:09+00:00"
+      },
+      {
+        "id": "XM-DOC-004",
+        "key": "XM-DOC-004@REGv1:delivered",
+        "target": "REG",
+        "target_version": 1,
+        "version": 1,
+        "trigger": "delivered",
+        "resolution": "OPEN",
+        "raised_at": "2026-10-01T15:33:09+00:00"
+      }
+    ]
   },
   "created_at": "2026-10-01T11:53:29+00:00"
 }

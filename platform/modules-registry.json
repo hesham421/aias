@@ -29,7 +29,13 @@
         1
       ],
       "current_version": 1,
-      "delivery": {}
+      "delivery": {
+        "backend": {
+          "version": 1,
+          "exec": "backend/modules/REG/packages/backend-execution",
+          "test": "backend/modules/REG/packages/backend-test"
+        }
+      }
     },
     "DOC": {
       "code": "DOC",

@@ -20,13 +20,14 @@ bindings:
   - {req: REQ-DOC-018, api: [API-DOC-001]}
   - {req: REQ-DOC-043, api: [API-DOC-001]}
   - {req: REQ-DOC-056, api: [API-DOC-001]}
+  - {req: REQ-DOC-064, api: [API-DOC-001]}
 unmapped: []
 ```
 
 Reconciliation against the SRS:
-- Every REQ that needs an HTTP operation has one: the four REQs above (the Uploaded Documents of a Check — created by the handover, read only for that Check, oversized without content, never another Check's). The other 55 REQs are fulfilled by the in-process `DocumentAccess` operations called by CHK and INT and need no HTTP operation (ADR-DOC-011).
-- Every operation of the document maps to a REQ: API-DOC-001 → REQ-DOC-017, REQ-DOC-018, REQ-DOC-043, REQ-DOC-056. `unmapped` is empty.
-- Runtime codes → RULE: none. API-DOC-001's two codes, `DOC-400-CHECK-ID-REQUIRED` and `DOC-500`, are PLATFORM-STD rows with no RULE (ADR-DOC-012), so the `codes` list is omitted. The upload-handover rule codes (RULE-DOC-001 … RULE-DOC-003, RULE-DOC-005) reach the frontend through INT's upload endpoint and are bound in INT's plan.
+- Every REQ that needs an HTTP operation has one: the five REQs above (the Uploaded Documents of a Check — created by the handover, read only for that Check, oversized without content, never another Check's, listed without content — REQ-DOC-064, whose in-process form CON-DOC-006 INT calls, ADR-DOC-017). The other 59 REQs are fulfilled by the in-process `DocumentAccess` operations called by CHK and INT and need no HTTP operation (ADR-DOC-011).
+- Every operation of the document maps to a REQ: API-DOC-001 → REQ-DOC-017, REQ-DOC-018, REQ-DOC-043, REQ-DOC-056, REQ-DOC-064. `unmapped` is empty.
+- Runtime codes → RULE: none. API-DOC-001's two codes, `DOC-400-CHECK-ID-REQUIRED` and `DOC-500`, are PLATFORM-STD rows with no RULE (ADR-DOC-012), so the `codes` list is omitted. The upload-handover rule codes (RULE-DOC-001 … RULE-DOC-003, RULE-DOC-005, RULE-DOC-009, RULE-DOC-010) reach the frontend through INT's upload endpoint and are bound in INT's plan.
 
 <!-- PHASE:F1:START traces=REQ-DOC-017,REQ-DOC-018,REQ-DOC-043,REQ-DOC-056,API-DOC-001 -->
 ## PHASE F1 — Models & Types

@@ -20,7 +20,7 @@
   "skipped": [],
   "coverage": {
     "C0.1": 15,
-    "C10.1": 77,
+    "C10.1": 82,
     "C10.2": 70,
     "C10.7": 0,
     "C10.8": 160,
@@ -123,11 +123,11 @@
       "domain-profile": "c9ffe7c45c917c5793e15b6fbc7151ccc4b9181c36a5aaf1ce2f15f6849e3cbd",
       "flow-diagram": "cd4d58137eb14c8482bff3a8612cc85043c33f21f3d8c0f88f920b8ef028d5cd",
       "frontend-execution-plan": "9b63247c51a645de51bea56ef45c27e2a7955c68a26b21684ef697c12c24d7d3",
-      "frontend-test-plan": "faea4f643a94f95af70111a67505fce5fada641907e9aa36d41079f280f5c21f",
+      "frontend-test-plan": "d46b6fd8d0acd0454604920dd7e3095f27385351f35dd45fac5efd6d6112a1d1",
       "module-registry": "b8de43f6c9f01340d973219f0d250ef6886d8121f0cfc383e9960c1c464fdaed",
       "platform-summary": "2beb30eaa26a520522195bd01764073ec4b086ee85c0642849b0a3943a8f0986",
       "prd": "682c62b88bbd8f2df993120568162993c3b1b6cb64a8d0c92572cdd73e7ba976",
-      "project-registry": "7652329cae1b5e14558ead423c4a0d157fcf3aead94176473c23adb034161a82",
+      "project-registry": "1a17eb5c9f24158dab0fe2302e1173bfeffddbc582a82f29d88c0ee815511800",
       "registry-db": "fb31015865488e29fea56048478d7a9f987a40065f0b4ad0bb183dcaf35c79c5",
       "registry-exec-be": "862fe02080975df06daf89a040ced896f9045af2033fd6d7343c023e99c591b1",
       "registry-exec-fe": "7c182333d056d1f805d20e6dc076e9c110635b4f1f73b26fcbca19469f098122",
@@ -135,6 +135,6 @@
       "srs": "b88a90753396d7a88e7f860beb6c75fa781f8f9ad16b7e8a0a42f17a9cc634d0",
       "ui-ux-spec": "a573f4dc8407c342aa58a28a73cea0e915f088519dafea0bfe126780a746e4af"
     },
-    "at": "2026-10-01T14:51:47+00:00"
+    "at": "2026-10-01T15:08:21+00:00"
   }
 }

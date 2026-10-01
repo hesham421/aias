@@ -39,7 +39,7 @@ records:
   - {id: XM-INT-001, type: SOFT-READ, target_module: REG, target_entity: ENT-REG-002, traces: [REQ-INT-025, REQ-INT-028, REQ-INT-030, REQ-INT-064], state: CONTRACTED, contract_ref: "CON-REG-002", column: "in-process REG interfaces by serviceCode + versionNumber of the Check — CON-REG-012 getApprovalApi (ENT-REG-002.approvalEnabled, approvalApi) only on the Employee Decision path; CON-REG-009 getServicePackageVersion (required document types of the version, ENT-REG-004 via ENT-REG-002) only on the required-document-types read (ADR-INT-020); no column, no FK"}
 ```
 
-SOFT-READ over the in-process REG interface: INT holds no column that references another module's table (it holds no column at all). The Report Store, the Check Engine and Document Access are reached through their operations (CON-RPT-003, CON-RPT-004, CON-RPT-006, CON-CHK-004, CON-CHK-005, CON-DOC-003; Document Access's uploaded-documents listing is pending in its contract — ADR-INT-020 (4)) and the Check identifier is held only as a value, as CHK and DOC hold it, so they are the platform edges INT → RPT, INT → CHK and INT → DOC, not XM records (SRS A8; ADR-INT-016).
+SOFT-READ over the in-process REG interface: INT holds no column that references another module's table (it holds no column at all). The Report Store, the Check Engine and Document Access are reached through their operations (CON-RPT-003, CON-RPT-004, CON-RPT-006, CON-CHK-004, CON-CHK-005, CON-DOC-003, CON-DOC-006 — Document Access's published uploaded-documents listing, bound by ADR-INT-023, which closes ADR-INT-020 (4)) and the Check identifier is held only as a value, as CHK and DOC hold it, so they are the platform edges INT → RPT, INT → CHK and INT → DOC, not XM records (SRS A8; ADR-INT-016).
 
 ## 4. FULL_DATABASE_SCRIPT
 
@@ -75,6 +75,7 @@ SOFT-READ over the in-process REG interface: INT holds no column that references
 | ADR-INT-013 | No ENT-INT; rules read the owners' fields; no lookup owned | ACCEPTED (P1) |
 | ADR-INT-015 | No table; the DBF matrix holds read bindings to the owners' columns | ACCEPTED — non-breaking |
 | ADR-INT-016 | One XM (REG); INT → RPT is the platform edge; the REG edge is XM-INT-001 | ACCEPTED (P1 re-run) — non-breaking |
+| ADR-INT-023 | INT → DOC listing read binds CON-DOC-006 over the platform edge; no XM added | ACCEPTED (P1 revision) — non-breaking |
 | ADR-RPT-011 | Owner column types copied verbatim (RPT_CHECK_RUN) | RPT — ACCEPTED |
 
 ## 6. Registry content

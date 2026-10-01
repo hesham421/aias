@@ -21,7 +21,7 @@ None — INT creates no table (ADR-INT-015). Read bindings (owner tables, not cr
 last DBF: DBF-INT-010 · last XM: XM-INT-001
 
 ### Decisions
-ADR-INT-015, ADR-INT-016 (ACCEPTED). BLOCKED: none.
+ADR-INT-015, ADR-INT-016, ADR-INT-023 (ACCEPTED — ADR-INT-023: the INT → DOC listing read binds CON-DOC-006 over the platform edge; no XM added). BLOCKED: none.
 
 ### Event
 "P2 completed: INT v1 — 0 tables, 10 DBF, 1 XM"

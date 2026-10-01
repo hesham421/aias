@@ -1,0 +1,7 @@
+# ADR-CHK-021 — The empty F4 package is accepted by a structural TC (no CHK route, no write call, read only through the F2 hook); amends point (5) of ADR-CHK-019
+Status      : ACCEPTED
+Stage       : P4        Module: CHK        Version: v1
+Context     : ADR-CHK-019 (5) left the F4 package (Screens & Routes, empty because CHK has no screen) without a TC and recorded the C10.11 package-has-tests finding as a factory-level gap. REG (TC-REG-071) and DOC (TC-DOC-074) faced the same empty F4 and resolved it inside their plans: each has a structural TC proving the module's frontend holds no route. That property is real and testable, and it is what F4 delivers for a module without screens.
+Decision    : F4's acceptance is TC-CHK-106 (frontend-test-plan-chk.md, Package F4, derived from AC-CHK-081 / REQ-CHK-078 with API-CHK-001). It checks three things: CHK's frontend module registers 0 routes, 0 lazy chunks and 0 components; CHK's client sends only GET of API-CHK-001 and no write call; that read is issued only by ACTIVE-CHECK-QUERY (F2), and a completed Check reads as `ended`. ADR-CHK-019 is unchanged except that its point (5) — the open F4 gap needing a factory change — is superseded by this decision. No profile or factory change is needed.
+Consequences: Every frontend package of CHK (F1–F4) has acceptance; C10.11 is cleared within the plan.
+traces      : AC-CHK-081, REQ-CHK-078, ENT-CHK-001

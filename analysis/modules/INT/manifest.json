@@ -43,7 +43,7 @@
       "integration": [
         {
           "xm": "XM-INT-001",
-          "path": "governance-shared/backend/modules/INT/packages/integration/XM-INT-001"
+          "path": "/Users/ezzat/my project/aias/governance-shared/backend/modules/INT/packages/integration/XM-INT-001"
         }
       ]
     },

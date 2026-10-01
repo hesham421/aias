@@ -5,21 +5,21 @@
   "version": 1,
   "profile": "aias",
   "markers_schema_version": 2,
-  "source": "governance-shared/analysis/modules/INT/P4/backend-test-plan-int.md",
-  "split_at": "2026-10-01T15:52:06+00:00",
+  "source": "analysis/modules/INT/P4/backend-test-plan-int.md",
+  "split_at": "2026-10-01T16:25:57+00:00",
   "strict": false,
   "files": [
-    "governance-shared/backend/modules/INT/packages/backend-test/TEST-PLAN-BE-HEADER.md",
-    "governance-shared/backend/modules/INT/packages/backend-test/RULE-SCENARIOS.md",
-    "governance-shared/backend/modules/INT/packages/backend-test/API-SCENARIOS.md",
-    "governance-shared/backend/modules/INT/packages/backend-test/INT-XM.md",
-    "governance-shared/backend/modules/INT/packages/backend-test/_SECTIONS.md",
-    "governance-shared/backend/modules/INT/packages/backend-test/RULE-SCENARIOS.package.json",
-    "governance-shared/backend/modules/INT/packages/backend-test/API-SCENARIOS.package.json",
-    "governance-shared/backend/modules/INT/packages/backend-test/INT-XM.package.json"
+    "backend/modules/INT/packages/backend-test/TEST-PLAN-BE-HEADER.md",
+    "backend/modules/INT/packages/backend-test/RULE-SCENARIOS.md",
+    "backend/modules/INT/packages/backend-test/API-SCENARIOS.md",
+    "backend/modules/INT/packages/backend-test/INT-XM.md",
+    "backend/modules/INT/packages/backend-test/_SECTIONS.md",
+    "backend/modules/INT/packages/backend-test/RULE-SCENARIOS.package.json",
+    "backend/modules/INT/packages/backend-test/API-SCENARIOS.package.json",
+    "backend/modules/INT/packages/backend-test/INT-XM.package.json"
   ],
   "indexes": [
-    "governance-shared/backend/modules/INT/packages/backend-test/index.md"
+    "backend/modules/INT/packages/backend-test/index.md"
   ],
   "units": [
     "SUB:RULE-SCENARIOS",
@@ -86,6 +86,6 @@
     "TC:TC-INT-100",
     "TC:TC-INT-044"
   ],
-  "verification": "governance-shared/backend/modules/INT/packages/backend-test/verification.json",
+  "verification": "backend/modules/INT/packages/backend-test/verification.json",
   "verified": true
 }

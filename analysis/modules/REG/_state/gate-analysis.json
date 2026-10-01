@@ -10,169 +10,37 @@
     "P3.2",
     "P4"
   ],
-  "verdict": "REVISE",
+  "verdict": "APPROVE",
   "scores": {
-    "unambiguous": 2,
-    "verifiable": 2,
-    "complete": 2,
-    "consistent": 2,
+    "unambiguous": 3,
+    "verifiable": 3,
+    "complete": 3,
+    "consistent": 3,
     "singular": 3,
-    "feasible": 2,
-    "traceable": 2
+    "feasible": 3,
+    "traceable": 3
   },
   "findings": [
     {
       "id": "G1",
-      "severity": "MAJOR",
-      "section": "backend",
-      "artifact": "current-contract.md / current-backend-execution-plan.md",
+      "severity": "MINOR",
+      "section": "tests",
+      "artifact": "current-backend-test-plan.md (RULE-REG-027 family)",
       "line": null,
-      "clause": "P1 silent path; rubric: complete",
-      "problem": "CON-REG-007 (getCurrentServicePackage(serviceCode) — resolves to whatever is CURRENT right now) lists 'Called by: CHK ...; DOC (fetch mode, document source, required document types)' as an independent caller, while CON-REG-009 (getServicePackageVersion(serviceCode, versionNumber) — the version-pinned lookup) lists only RPT and CHK, never DOC. Within one Check, CHK resolves the current version (e.g. version 3) for its knowledge/queries; if a load run promotes a new version before DOC performs its own document-fetch step of that same Check, DOC independently calling CON-REG-007 would receive version 4's fetchMode/documentSource/requiredDocumentTypes while CHK's report records version 3 — two consumers of one Check silently disagreeing on which version they used. Nothing in REQ-REG-024, RULE-REG-016 or RULE-REG-017 states that every consumer of one Check must resolve the identical version, and no AC/TC exercises a version promotion occurring mid-Check.",
-      "fix": "Either (a) have CHK pass the version number it already resolved to DOC, with DOC calling CON-REG-009 (getServicePackageVersion) instead of CON-REG-007 for that Check — update contract.md's 'Called by' lines for CON-REG-007/CON-REG-009 accordingly and add REQ/AC stating one Check uses one pinned version across every consumer; or (b) have CHK hand DOC the in-memory ServicePackage object it already resolved, with DOC never calling REG again for that Check. Add a TC that starts a Check at version N, promotes to N+1 before DOC's fetch step, and asserts DOC still uses version N. This is a scope/architecture choice for how version-pinning crosses the CHK/DOC boundary, so flag for an ADR.",
-      "adr": true
+      "clause": "rubric: verifiable",
+      "problem": "RULE-REG-027's length guard covers 6 distinct bounded-field classes (folder name, connection name, endpoint, plus 'an environment name longer than 50 refuses every entry'); TC-REG-093/094/095 exercise folder name, connection name and endpoint, but no TC exercises the cascading 'over-length environment name refuses every connection in this run' branch.",
+      "fix": "Add one TC: an activation configuration with a 51-character environment name and 2 otherwise-valid connections, asserting all connection entries are REJECTED under RULE-REG-027 with none registered. Polish-level hardening, not a build/test blocker.",
+      "adr": false
     },
     {
       "id": "G2",
-      "severity": "MAJOR",
-      "section": "backend",
-      "artifact": "current-srs.md (RULE-REG-010, RULE-REG-017) / current-backend-execution-plan.md",
-      "line": null,
-      "clause": "P1 silent path; rubric: complete",
-      "problem": "RULE-REG-010 rejects a package at LOAD time if its blob-mode document-source connection is not type jdbc, but connection activation (PHASE CORE step 2) allows an existing REG_CONNECTION row to be UPDATED (REQ-REG-050) when the administrator's activation configuration changes its settings — nothing restricts connectionType from changing on an UPDATE, and nothing re-validates already-loaded, immutable versions that reference that connection by name. RULE-REG-017 (the only serve-time guard) refuses only when a connection is absent/not activated, never when its type no longer matches what the stored version needs. So a blob-mode version 1 validated against connection 'main-db' (jdbc) keeps being served unchanged after 'main-db' is later re-activated as type mcp — REG would still hand this version to DOC, which would then read BLOB content over an MCP connection, exactly the thing raw-idea §12/G14 and RULE-REG-010 exist to prevent, with no REJECTED row or refusal anywhere.",
-      "fix": "Extend RULE-REG-017 (or add RULE-REG-025) so that supplying the current version of a blob-mode service also refuses when the document-source connection's CURRENT type is not jdbc, not only when the connection is missing/not activated. Add a load reason / in-process error code and a TC: activate 'main-db' as jdbc, load a blob-mode version against it, then re-activate 'main-db' as mcp, and assert the version is refused to DOC. This is a new serve-time rule, so flag for an ADR.",
-      "adr": true
-    },
-    {
-      "id": "G3",
-      "severity": "MAJOR",
-      "section": "backend",
-      "artifact": "current-backend-execution-plan.md (PackageSource port) / current-srs.md (RULE-REG-001, RULE-REG-023)",
-      "line": null,
-      "clause": "P1 silent path; rubric: complete",
-      "problem": "PackageSource reports directory-level status (MISSING/UNREADABLE/EMPTY/READY, covered by RULE-REG-023) and, once READY, 'returns per folder its name, the service knowledge file text, the service definition file text…'. Nothing states what happens when the directory is readable and the folder is present, but reading one specific file inside that folder fails (permission error, transient I/O fault) — a case distinct from 'folder lacks the file' (RULE-REG-001, read as absence) and distinct from whole-directory UNREADABLE (RULE-REG-023). It is not stated whether this is (a) mapped to RULE-REG-001's REJECTED outcome for that one folder, matching REQ-REG-007's 'a failing item never stops the run', or (b) propagates an uncaught exception that aborts the whole load run (and, under ADR-REG-015's single-transaction lock, rolls back every other package's outcome too) — a far more severe result than the per-item savepoint design intends.",
-      "fix": "State explicitly, in the PackageSource port contract (backend-execution-plan CORE phase) and in RULE-REG-001's statement, that a per-file read failure on a present folder is caught at that folder's savepoint and recorded REJECTED under RULE-REG-001 (symmetric with 'lacks the file'), never propagated past the folder's own processing step. Add a TC that simulates an unreadable (not missing) service-definition file in an otherwise-present folder and asserts the run continues with every other folder processed.",
-      "adr": false
-    },
-    {
-      "id": "G4",
-      "severity": "MAJOR",
-      "section": "backend",
-      "artifact": "current-db-script.md (DBF-REG-043, DBF-REG-047, DBF-REG-030, DBF-REG-032) / current-srs.md",
-      "line": null,
-      "clause": "P4 pattern (same gap, 4+ places); rubric: feasible, complete",
-      "problem": "SERVICE_CODE is validated/rejected above length before anything is stored (RULE-REG-022), but no equivalent rule bounds the length of filesystem- or configuration-sourced free text before it is persisted into bounded VARCHAR2 columns: a folder name or the configured package-directory path written verbatim as REG_LOAD_RESULT.SUBJECT_NAME (DBF-REG-043, VARCHAR2(200)) for the PACKAGE_DIRECTORY row (RULE-REG-023/ADR-REG-018), the RULE message text written to REG_LOAD_RESULT.REASON (DBF-REG-047, VARCHAR2(1000)), and a connection name/endpoint from the activation configuration (DBF-REG-030 VARCHAR2(100), DBF-REG-032 VARCHAR2(500)). An over-length value fails the INSERT with a raw Oracle error inside the single load-run transaction (ADR-REG-015), which — unlike every other validated failure — would abort the ENTIRE run rather than produce one clean REJECTED row, directly contradicting REQ-REG-007's 'reject it, record the reason … and continue loading the remaining items' guarantee. One governing gap, reported once per the P4 instruction rather than as four separate findings.",
-      "fix": "Add one rule (e.g. RULE-REG-026) stating that any free-text value about to be written into a bounded REG_LOAD_RESULT or REG_CONNECTION column is checked against that column's declared length before insert; a value that does not fit is rejected with a dedicated load reason (or truncated with an explicit marker, if the owner prefers tolerance over rejection — propose rejection as the safer default) rather than allowed to raise a raw DB error inside the load transaction. Apply it uniformly to SUBJECT_NAME, REASON, CONNECTION_NAME and ENDPOINT. Add one TC with an over-length directory path and one with an over-length connection name. The truncate-vs-reject choice is a product decision, so flag for an ADR.",
-      "adr": true
-    },
-    {
-      "id": "G5",
       "severity": "MINOR",
       "section": "backend",
-      "artifact": "current-srs.md (RULE-REG-002) / current-backend-execution-plan.md",
-      "line": null,
-      "clause": "rubric: unambiguous",
-      "problem": "The load-run algorithm validates each folder individually first (RULE-REG-024 … RULE-REG-011, in order) and only 'then RULE-REG-002 across folders' afterward. REQ-REG-004 says every package declaring a colliding service code is rejected, but it is not explicit whether RULE-REG-002 is applied to a folder's raw declared (canonical) code regardless of that folder's own independent validity, or only among folders that already passed per-folder validation — a materially different implementation in the case of one valid folder A and one independently-broken folder B that happen to declare the same code. All existing ACs (AC-REG-004, AC-REG-067) test only the both-folders-clean case.",
-      "fix": "State explicitly in REQ-REG-004 / RULE-REG-002 that the duplicate-code check runs against every folder's canonical declared code regardless of that folder's own validity, so a valid folder A is still correctly rejected when its twin B exists even though B is independently rejected for an unrelated reason. Add a TC for this mixed-validity pairing.",
-      "adr": false
-    },
-    {
-      "id": "G6",
-      "severity": "MINOR",
-      "section": "backend",
-      "artifact": "current-backend-execution-plan.md (load reason code table)",
+      "artifact": "current-platform-summary.md (REG's own P0 snapshot)",
       "line": null,
       "clause": "rubric: consistent",
-      "problem": "RULE-REG-017 (the serve-time/in-process refusal, never written to REG_LOAD_RESULT) is given the code REG-LOAD-SERVICE-CONNECTION-NOT-ACTIVATED, reusing the REG-LOAD-* prefix that every genuine, persisted Load Result reason code uses (the 21+ codes returned via API-REG-003). A consumer correlating REG-LOAD-* identifiers with load-report rows could reasonably expect this one to appear there too — it never will, since it is thrown directly to CHK/DOC on a package request.",
-      "fix": "Rename to a distinct namespace, e.g. REG-RUNTIME-CONNECTION-NOT-ACTIVATED or REG-SERVE-CONNECTION-NOT-ACTIVATED, and update the one TC that cites it.",
-      "adr": false
-    },
-    {
-      "id": "G7",
-      "severity": "MINOR",
-      "section": "frontend",
-      "artifact": "current-ui-ux-spec.md / current-frontend-execution-plan.md",
-      "line": null,
-      "clause": "rubric: traceable, consistent",
-      "problem": "current-ui-ux-spec.md's header 'Decisions' line still reads 'ADR-REG-012 (new, ACCEPTED); applied ADR-REG-007, ADR-REG-011' and current-frontend-execution-plan.md's header 'Open ADRs' line still reads 'applied: ADR-REG-007, ADR-REG-011, ADR-REG-012' — both omit ADR-REG-016/017/018, even though each document's own body cites all three inline (the `available` field, case-insensitive matching, the PACKAGE_DIRECTORY subject kind). current-frontend-test-plan.md's own header was correctly refreshed ('applied ADR-REG-011, ADR-REG-012, ADR-REG-016'), showing the other two files' headers simply weren't regenerated in this revision.",
-      "fix": "Regenerate each header's 'applied ADRs' list from the ADR ids actually cited in that file's own body: ui-ux-spec.md needs +ADR-REG-016, +ADR-REG-017, +ADR-REG-018; frontend-execution-plan.md needs +ADR-REG-016.",
-      "adr": false
-    },
-    {
-      "id": "G8",
-      "severity": "MINOR",
-      "section": "frontend",
-      "artifact": "current-frontend-test-plan.md",
-      "line": null,
-      "clause": "rubric: verifiable",
-      "problem": "The one FE-track TC that runs the SERVICE-QUERY flow against API-REG-002 with real data (TC-REG-068) only covers available = true (a non-withdrawn service). No FE-track TC proves that available = false for a withdrawn service survives unchanged through the frontend's cache-keyed read query — that exact behaviour is tested only at the backend layer (TC-REG-088), never through the client-contract wrapper that INT's Document-upload screen (SCR-REQ-INT-003) actually consumes per ADR-REG-012's reuse rationale.",
-      "fix": "Add an FE TC (e.g. TC-REG-089) that runs SERVICE-QUERY against a mocked withdrawn-service response and asserts available = false is preserved under the cache key [\"reg-service\", serviceCode].",
-      "adr": false
-    },
-    {
-      "id": "G9",
-      "severity": "MINOR",
-      "section": "frontend",
-      "artifact": "current-frontend-test-plan.md (TC-REG-066)",
-      "line": null,
-      "clause": "rubric: verifiable",
-      "problem": "TC-REG-066's title ('Load report rows typed with every field of the latest run') is broader than its own Expected clause, which asserts only subjectKind, subjectName, versionNumber, outcome and reason — it never checks serviceCode or loadRunAt, both real LoadResult properties per ui-ux-spec.md's Fields table and the F1 phase text.",
-      "fix": "Either add serviceCode and loadRunAt to TC-REG-066's Expected assertion, or soften its title to '...typed with its core fields.'",
-      "adr": false
-    },
-    {
-      "id": "G10",
-      "severity": "MINOR",
-      "section": "tests",
-      "artifact": "current-frontend-test-plan.md",
-      "line": null,
-      "clause": "rubric: verifiable",
-      "problem": "ADR-REG-018 widens LOAD_SUBJECT with a new PACKAGE_DIRECTORY value, fully covered at the backend layer (TC-REG-077/078), but no frontend-layer TC exercises a PACKAGE_DIRECTORY row against the frontend's own strict LoadResult schema validator (TC-REG-066 only uses SERVICE_PACKAGE-style rows; TC-REG-070 only tests that an unexpected EXTRA property is rejected). A frontend strict-validator regression against this legitimately widened enum would go undetected.",
-      "fix": "Extend TC-REG-066 (or add a sibling case) with one PACKAGE_DIRECTORY-subjectKind row and assert the frontend validator still accepts it.",
-      "adr": false
-    },
-    {
-      "id": "G11",
-      "severity": "MINOR",
-      "section": "tests",
-      "artifact": "current-backend-test-plan.md (TC-REG-076)",
-      "line": null,
-      "clause": "rubric: verifiable",
-      "problem": "RULE-REG-022's own message names several invalid shapes ('lower-case letters, digits and single hyphens, at most 100 characters') but TC-REG-076 only actually asserts rejection of one example (`scholarship request!`); the other shapes (`a_b`, `-a`, `a--b`, a 101-character code) are listed only as a parenthetical Test-Hint with no corresponding Expected assertion, and there is no companion boundary-pass case proving a legitimate 100-character, single-hyphen code is accepted.",
-      "fix": "Split the hinted shapes into real sub-cases (or add explicit pass/fail assertions for each), and add a boundary-pass TC at exactly 100 characters.",
-      "adr": false
-    },
-    {
-      "id": "G12",
-      "severity": "MINOR",
-      "section": "backend",
-      "artifact": "ADR-REG-019 / project-registry (platform)",
-      "line": null,
-      "clause": "rubric: consistent",
-      "problem": "ADR-REG-019's Context states the Check-limits hand-off to CHK/DOC 'is recorded as a platform finding for CHK's and DOC's own gates to confirm', but project-registry.md's 'Platform findings (CAT-10)' section only carries PF-1 … PF-6, all recorded by DOC's own gate — none for this REG-originated hand-off. The ADR's own claim is not yet true of the artifact it points to.",
-      "fix": "Either add a PF row to project-registry.md's CAT-10 section for this hand-off (module/stage: REG · P1 · v1; belongs to: CHK's and DOC's own CORE phases) through the orchestrator's registry step, or soften ADR-REG-019's wording to 'should be recorded' until that row exists.",
-      "adr": false
-    },
-    {
-      "id": "G13",
-      "severity": "MAJOR",
-      "section": "backend",
-      "artifact": "project-registry.md (platform, shared — not a REG artifact)",
-      "line": null,
-      "clause": "C2.2 registry-agree; shared/REGISTRY-SCHEMA.md §1",
-      "problem": "Platform-scoped, not a REG defect (per this round's instructions, a separate operator is fixing project-registry.md under stage P-1; reported here transparently, not counted against REG's verdict). Round-1 finding G9 is UNFIXED verbatim: the SCHEMA COMPLIANCE MAP still maps CAT-7 to '7. Cross-module dependency index' (schema: CAT-7 = decision/ADR index), CAT-8 to '8. Open question index' (schema: CAT-8 = pipeline status), CAT-9 to '9. Pipeline / progress status' (schema: CAT-9 = event history) and CAT-10 to '10. Change / event history' (schema: CAT-10 = platform findings) — against shared/REGISTRY-SCHEMA.md §1's actual CAT-1..CAT-10 order. A genuine 'Platform findings (CAT-10)' subsection was added under the mislabeled section 10 header, but the compliance map was never updated to point CAT-10 at it, and no section implements a genuine CAT-7 decision index.",
-      "fix": "Realign project-registry.md's compliance-map to REGISTRY-SCHEMA.md §1's actual CAT-1..CAT-10 order and point CAT-10 explicitly at the existing 'Platform findings' subsection; add a genuine CAT-7 decision index. Orchestrator/platform maintenance, not REG's content.",
-      "adr": false
-    },
-    {
-      "id": "G14",
-      "severity": "MAJOR",
-      "section": "backend",
-      "artifact": "project-registry.md (platform) / current-platform-summary.md",
-      "line": null,
-      "clause": "CAT-8 pipeline status; rubric: traceable",
-      "problem": "Platform-scoped, not a REG defect (reported transparently, not counted against REG's verdict). Round-1 finding G11 is UNFIXED verbatim: project-registry.md §9 still lists all 5 modules (REG, CHK, DOC, RPT, INT) as 'NOT STARTED', and current-platform-summary.md still states 'No module is past P0 in the registry's pipeline status ... Phase 2 in this run: 0.1 REG'. This is still factually wrong — governance-shared/analysis/modules/{CHK,DOC,RPT,INT}/_state/ each still hold their own traceability.md and a full P0-P4 artifact set, confirmed present on disk in this round.",
-      "fix": "Correct project-registry.md §9's pipeline-status table and platform-summary's progress narrative to each module's actual last-committed stage, or state explicitly that those modules are a separate/exploratory track outside this registry's bookkeeping. Orchestrator/project-registry maintenance, not REG's content.",
+      "problem": "current-platform-summary.md still states 'No module is past P0 ... Phase 2 in this run: 0.1 REG', which once read as factually stale (round-2 finding G14/round-1 G11). project-registry.md now explicitly documents why: 'The P0 platform-summary snapshots under analysis/modules/*/P0/ were written when no module had started and are not updated here' — so this is a labelled historical snapshot, not a live claim, and the authoritative pipeline-status table (project-registry §8) is now correct and current. No fix needed; recorded only to close the loop on the prior finding.",
+      "fix": "No action required — the platform registry's own documentation already explains this artifact is a frozen P0-era snapshot, not maintained after the fact. Optional polish: a one-line note on current-platform-summary.md itself pointing to project-registry §8 for current status.",
       "adr": false
     }
   ],
@@ -193,8 +61,8 @@
       "to": [
         "AC"
       ],
-      "total": 69,
-      "covered": 69,
+      "total": 74,
+      "covered": 74,
       "pct": 100.0
     },
     {
@@ -203,9 +71,9 @@
       "to": [
         "API"
       ],
-      "total": 69,
+      "total": 74,
       "covered": 7,
-      "pct": 10.1
+      "pct": 9.5
     },
     {
       "id": "req-ux",
@@ -214,7 +82,7 @@
         "SCR",
         "UXD"
       ],
-      "total": 69,
+      "total": 74,
       "covered": 0,
       "pct": 0.0
     },
@@ -224,10 +92,10 @@
       "to": [
         "TC"
       ],
-      "total": 81,
-      "covered": 81,
+      "total": 91,
+      "covered": 91,
       "pct": 100.0
     }
   ],
-  "at": "2026-10-01T15:15:09+00:00"
+  "at": "2026-10-01T15:33:07+00:00"
 }

@@ -1,17 +1,17 @@
 # BACKEND TEST PLAN — Report Store (RPT)
 ══════════════════════════════════════════════════════════════════
 Module : RPT   Version : v1   Profile : aias   Stage : P4   Framework : agnostic (the consumer repo chooses its tool; this plan names none)
-Sources : _state/current-srs.md (v1, AC 61) · current-registry-srs.md · current-registry-db.md (XM 0) · current-backend-execution-plan.md (units PORTS, SVC-API; CORE, DATA-DOM, ALIGN-BE no_tests; CROSS-MOD 0 edges) · current-api-spec.yaml (API-RPT-001 … API-RPT-003) · dependency-graph (no RPT XM edge)
-Open ADRs : none BLOCKED — applied ADR-RPT-006, ADR-RPT-012, ADR-RPT-013, ADR-RPT-015, ADR-RPT-018
-TCs : 61 (TC-RPT-001 … TC-RPT-061) — one per AC; RULE-SCENARIOS 31 · API-SCENARIOS 29 · MODEL-EVAL 1
+Sources : _state/current-srs.md (v1, AC 64) · current-registry-srs.md · current-registry-db.md (XM 0) · current-backend-execution-plan.md (units PORTS, SVC-API; CORE, DATA-DOM, ALIGN-BE no_tests; CROSS-MOD 0 edges) · current-api-spec.yaml (API-RPT-001 … API-RPT-003) · dependency-graph (no RPT XM edge)
+Open ADRs : none BLOCKED — applied ADR-RPT-006, ADR-RPT-012, ADR-RPT-013, ADR-RPT-015, ADR-RPT-018, ADR-RPT-020
+TCs : 64 (TC-RPT-001 … TC-RPT-064) — one per AC; RULE-SCENARIOS 34 · API-SCENARIOS 29 · MODEL-EVAL 1
 ══════════════════════════════════════════════════════════════════
 
 Every TC derives from one AC. In-process operations (the Check result port, the decision procedure, the purge — ADR-RPT-006) are named on the `Exercises` line; HTTP cases cite the API id and read the shape in api-spec-rpt.yaml. Errors over HTTP are ProblemDetail (RFC 9457) → {type, title, status, detail, code}; in-process refusals are typed exceptions carrying the same code and message (ADR-RPT-013). Arabic messages are `PENDING ADR-RPT-013`. Values of the open REG lists (service code, document type) are placeholders carried by value (ADR-RPT-015). INT-XM is absent: RPT declares no XM edge (registry-db XM 0).
 
-<!-- PHASE:TEST-PLAN-BE:START traces=AC-RPT-001,AC-RPT-002,AC-RPT-003,AC-RPT-004,AC-RPT-005,AC-RPT-006,AC-RPT-007,AC-RPT-008,AC-RPT-009,AC-RPT-010,AC-RPT-011,AC-RPT-012,AC-RPT-013,AC-RPT-014,AC-RPT-015,AC-RPT-016,AC-RPT-017,AC-RPT-018,AC-RPT-019,AC-RPT-020,AC-RPT-021,AC-RPT-022,AC-RPT-023,AC-RPT-024,AC-RPT-025,AC-RPT-026,AC-RPT-027,AC-RPT-028,AC-RPT-029,AC-RPT-030,AC-RPT-031,AC-RPT-032,AC-RPT-033,AC-RPT-034,AC-RPT-035,AC-RPT-036,AC-RPT-037,AC-RPT-038,AC-RPT-039,AC-RPT-040,AC-RPT-041,AC-RPT-042,AC-RPT-043,AC-RPT-044,AC-RPT-045,AC-RPT-046,AC-RPT-047,AC-RPT-048,AC-RPT-049,AC-RPT-050,AC-RPT-051,AC-RPT-052,AC-RPT-053,AC-RPT-054,AC-RPT-055,AC-RPT-056,AC-RPT-057,AC-RPT-058,AC-RPT-059,AC-RPT-060,AC-RPT-061,REQ-RPT-001,REQ-RPT-002,REQ-RPT-003,REQ-RPT-004,REQ-RPT-005,REQ-RPT-006,REQ-RPT-007,REQ-RPT-008,REQ-RPT-009,REQ-RPT-010,REQ-RPT-011,REQ-RPT-012,REQ-RPT-013,REQ-RPT-014,REQ-RPT-015,REQ-RPT-016,REQ-RPT-017,REQ-RPT-018,REQ-RPT-019,REQ-RPT-020,REQ-RPT-021,REQ-RPT-022,REQ-RPT-023,REQ-RPT-024,REQ-RPT-025,REQ-RPT-026,REQ-RPT-027,REQ-RPT-028,REQ-RPT-029,REQ-RPT-030,REQ-RPT-031,REQ-RPT-032,REQ-RPT-033,REQ-RPT-034,REQ-RPT-035,REQ-RPT-036,REQ-RPT-037,REQ-RPT-038,REQ-RPT-039,REQ-RPT-040,REQ-RPT-041,REQ-RPT-042,REQ-RPT-043,REQ-RPT-044,REQ-RPT-045,REQ-RPT-046,REQ-RPT-047,REQ-RPT-048,REQ-RPT-049,REQ-RPT-050,REQ-RPT-051,REQ-RPT-052,REQ-RPT-053 -->
+<!-- PHASE:TEST-PLAN-BE:START traces=AC-RPT-001,AC-RPT-002,AC-RPT-003,AC-RPT-004,AC-RPT-005,AC-RPT-006,AC-RPT-007,AC-RPT-008,AC-RPT-009,AC-RPT-010,AC-RPT-011,AC-RPT-012,AC-RPT-013,AC-RPT-014,AC-RPT-015,AC-RPT-016,AC-RPT-017,AC-RPT-018,AC-RPT-019,AC-RPT-020,AC-RPT-021,AC-RPT-022,AC-RPT-023,AC-RPT-024,AC-RPT-025,AC-RPT-026,AC-RPT-027,AC-RPT-028,AC-RPT-029,AC-RPT-030,AC-RPT-031,AC-RPT-032,AC-RPT-033,AC-RPT-034,AC-RPT-035,AC-RPT-036,AC-RPT-037,AC-RPT-038,AC-RPT-039,AC-RPT-040,AC-RPT-041,AC-RPT-042,AC-RPT-043,AC-RPT-044,AC-RPT-045,AC-RPT-046,AC-RPT-047,AC-RPT-048,AC-RPT-049,AC-RPT-050,AC-RPT-051,AC-RPT-052,AC-RPT-053,AC-RPT-054,AC-RPT-055,AC-RPT-056,AC-RPT-057,AC-RPT-058,AC-RPT-059,AC-RPT-060,AC-RPT-061,AC-RPT-062,AC-RPT-063,AC-RPT-064,REQ-RPT-001,REQ-RPT-002,REQ-RPT-003,REQ-RPT-004,REQ-RPT-005,REQ-RPT-006,REQ-RPT-007,REQ-RPT-008,REQ-RPT-009,REQ-RPT-010,REQ-RPT-011,REQ-RPT-012,REQ-RPT-013,REQ-RPT-014,REQ-RPT-015,REQ-RPT-016,REQ-RPT-017,REQ-RPT-018,REQ-RPT-019,REQ-RPT-020,REQ-RPT-021,REQ-RPT-022,REQ-RPT-023,REQ-RPT-024,REQ-RPT-025,REQ-RPT-026,REQ-RPT-027,REQ-RPT-028,REQ-RPT-029,REQ-RPT-030,REQ-RPT-031,REQ-RPT-032,REQ-RPT-033,REQ-RPT-034,REQ-RPT-035,REQ-RPT-036,REQ-RPT-037,REQ-RPT-038,REQ-RPT-039,REQ-RPT-040,REQ-RPT-041,REQ-RPT-042,REQ-RPT-043,REQ-RPT-044,REQ-RPT-045,REQ-RPT-046,REQ-RPT-047,REQ-RPT-048,REQ-RPT-049,REQ-RPT-050,REQ-RPT-051,REQ-RPT-052,REQ-RPT-053,REQ-RPT-054 -->
 ## PHASE TEST-PLAN-BE
 
-<!-- SUB:RULE-SCENARIOS:START traces=AC-RPT-003,AC-RPT-004,AC-RPT-005,AC-RPT-006,AC-RPT-007,AC-RPT-008,AC-RPT-009,AC-RPT-010,AC-RPT-012,AC-RPT-016,AC-RPT-017,AC-RPT-018,AC-RPT-019,AC-RPT-020,AC-RPT-021,AC-RPT-023,AC-RPT-035,AC-RPT-039,AC-RPT-040,AC-RPT-041,AC-RPT-042,AC-RPT-045,AC-RPT-046,AC-RPT-049,AC-RPT-050,AC-RPT-051,AC-RPT-052,AC-RPT-053,AC-RPT-054,AC-RPT-059,AC-RPT-060,REQ-RPT-003,REQ-RPT-004,REQ-RPT-005,REQ-RPT-006,REQ-RPT-007,REQ-RPT-009,REQ-RPT-013,REQ-RPT-014,REQ-RPT-015,REQ-RPT-016,REQ-RPT-017,REQ-RPT-018,REQ-RPT-020,REQ-RPT-029,REQ-RPT-033,REQ-RPT-034,REQ-RPT-035,REQ-RPT-038,REQ-RPT-039,REQ-RPT-041,REQ-RPT-042,REQ-RPT-043,REQ-RPT-044,REQ-RPT-045,REQ-RPT-046,REQ-RPT-051,REQ-RPT-052 -->
+<!-- SUB:RULE-SCENARIOS:START traces=AC-RPT-003,AC-RPT-004,AC-RPT-005,AC-RPT-006,AC-RPT-007,AC-RPT-008,AC-RPT-009,AC-RPT-010,AC-RPT-012,AC-RPT-016,AC-RPT-017,AC-RPT-018,AC-RPT-019,AC-RPT-020,AC-RPT-021,AC-RPT-023,AC-RPT-035,AC-RPT-039,AC-RPT-040,AC-RPT-041,AC-RPT-042,AC-RPT-045,AC-RPT-046,AC-RPT-049,AC-RPT-050,AC-RPT-051,AC-RPT-052,AC-RPT-053,AC-RPT-054,AC-RPT-059,AC-RPT-060,AC-RPT-062,AC-RPT-063,AC-RPT-064,REQ-RPT-003,REQ-RPT-004,REQ-RPT-005,REQ-RPT-006,REQ-RPT-007,REQ-RPT-009,REQ-RPT-013,REQ-RPT-014,REQ-RPT-015,REQ-RPT-016,REQ-RPT-017,REQ-RPT-018,REQ-RPT-020,REQ-RPT-029,REQ-RPT-033,REQ-RPT-034,REQ-RPT-035,REQ-RPT-038,REQ-RPT-039,REQ-RPT-041,REQ-RPT-042,REQ-RPT-043,REQ-RPT-044,REQ-RPT-045,REQ-RPT-046,REQ-RPT-051,REQ-RPT-052,REQ-RPT-054 -->
 ### RULE-SCENARIOS
 
 <!-- TC:TC-RPT-003:START traces=AC-RPT-003,REQ-RPT-003,RULE-RPT-001 -->
@@ -140,9 +140,24 @@ Preconditions: Check 506 is RUNNING
 Host data    : none
 Steps        : 1. completeCheck(506, …) with 3 findings, the third with outcome `PASSED`
                2. count the rows of Check 506 in RPT_FINDING, RPT_CHECK_DOCUMENT, RPT_UNREAD_QUERY
-Expected     : the call is refused as not stored; Check 506 stays RUNNING with overallStatus null; 0 Findings, 0 Check Documents, 0 Unread Queries
+Expected     : the call is refused before any write with UnknownCodeException (RPT-422-UNKNOWN-CODE) "Not stored: `PASSED` is not a code of FINDING_OUTCOME." — the validation path of REQ-RPT-009; the write-failure path RPT-500-REPORT-NOT-STORED is TC-RPT-062; Check 506 stays RUNNING with overallStatus null; 0 Findings, 0 Check Documents, 0 Unread Queries
 Test data    : outcome `PASSED` (not a FINDING_OUTCOME code)
 <!-- TC:TC-RPT-012:END -->
+
+<!-- TC:TC-RPT-062:START traces=AC-RPT-062,REQ-RPT-009 -->
+### TC-RPT-062 — Database failure while storing a report leaves nothing stored
+Derived from : AC-RPT-062  (REQ-RPT-009)
+Exercises    : in-process result port completeCheck (implements CON-CHK-008) — no HTTP operation; caller transaction joined (ADR-RPT-012)
+Rule / code  : REQ-RPT-009 → RPT-500-REPORT-NOT-STORED
+Package      : PORTS
+Scenario     : VIOLATION · data class EDGE · language ALL
+Preconditions: Check 546 is RUNNING; the INSERT of the second RPT_FINDING row of Check 546 is made to fail (fault injected), all other writes succeed
+Host data    : none
+Steps        : 1. inside a caller transaction, completeCheck(546, …) with a valid report of 3 findings, 2 document outcomes, 1 unread query
+               2. after the caller's transaction ends, read Check 546 and count its rows in RPT_FINDING, RPT_CHECK_DOCUMENT, RPT_UNREAD_QUERY
+Expected     : the call raises ReportNotStoredException (RPT-500-REPORT-NOT-STORED) "The report of Check 546 was not stored." and it reaches the caller (the Check Engine); the caller's transaction is rolled back whole; Check 546 stays RUNNING with overallStatus null and comparisonModel null; 0 Findings, 0 Check Documents, 0 Unread Queries
+Test data    : Check 546; fault on Finding position 2
+<!-- TC:TC-RPT-062:END -->
 
 <!-- TC:TC-RPT-016:START traces=AC-RPT-016,REQ-RPT-013,RULE-RPT-004 -->
 ### TC-RPT-016 — Metadata disagreeing with the Check run refused
@@ -231,6 +246,21 @@ Steps        : 1. failCheck(515, TIMED_OUT, "Check exceeded 300 s", 2026-10-01T0
 Expected     : Check 515 is FAILED, failureReason TIMED_OUT, failureDetail "Check exceeded 300 s", endedAt 2026-10-01T09:06:00Z, overallStatus null, 0 findings
 Test data    : TIMED_OUT; "Check exceeded 300 s"; 2026-10-01T09:06:00Z
 <!-- TC:TC-RPT-021:END -->
+
+<!-- TC:TC-RPT-063:START traces=AC-RPT-063,REQ-RPT-018,API-RPT-001,RULE-RPT-003 -->
+### TC-RPT-063 — Check awaiting documents failed with its reason
+Derived from : AC-RPT-063  (REQ-RPT-018)
+Exercises    : in-process result port failCheck (implements CON-CHK-009) — no HTTP operation; read through API-RPT-001 GET /api/v1/checks/{checkId}
+Rule / code  : RULE-RPT-003 (allowed transition AWAITING_DOCUMENTS → FAILED)
+Package      : PORTS
+Scenario     : STATE · data class VALID · language ALL
+Preconditions: Check 547 of fetch mode `manual` is AWAITING_DOCUMENTS (never marked RUNNING)
+Host data    : none
+Steps        : 1. failCheck(547, UPLOAD_WINDOW_EXPIRED, "Upload window of 30 min expired", 2026-10-01T09:40:00Z)
+               2. read Check 547
+Expected     : Check 547 is FAILED, failureReason UPLOAD_WINDOW_EXPIRED, failureDetail "Upload window of 30 min expired", endedAt 2026-10-01T09:40:00Z, overallStatus null, runningSince null, 0 findings; the row satisfies CHK_RPT_CHECK_RUN_RESULT
+Test data    : UPLOAD_WINDOW_EXPIRED; "Upload window of 30 min expired"; 2026-10-01T09:40:00Z
+<!-- TC:TC-RPT-063:END -->
 
 <!-- TC:TC-RPT-023:START traces=AC-RPT-023,REQ-RPT-020,RULE-RPT-003 -->
 ### TC-RPT-023 — Ended report never changes
@@ -463,6 +493,21 @@ Steps        : 1. run the purge
 Expected     : Check 544 still stored with all its records; Check 545 no longer exists; the log counts 1 deleted Check run
 Test data    : Checks 544, 545
 <!-- TC:TC-RPT-060:END -->
+
+<!-- TC:TC-RPT-064:START traces=AC-RPT-064,REQ-RPT-054 -->
+### TC-RPT-064 — Purge failure logged with its Check run and cause
+Derived from : AC-RPT-064  (REQ-RPT-054)
+Exercises    : scheduled ReportPurgeService (no caller, no HTTP operation — ADR-RPT-010, ADR-RPT-020)
+Rule / code  : —
+Package      : SVC-API
+Scenario     : VIOLATION · data class EDGE · language ALL
+Preconditions: retention period 30 days; Checks 548 and 549 ended 40 days ago; the deletion of Check 548 is made to fail with the cause "lock wait timeout" (fault injected)
+Host data    : none
+Steps        : 1. run the purge
+               2. read both Checks and the captured log lines in order
+Expected     : the log holds, at WARN, "Report purge kept Check run 548: its deletion failed (lock wait timeout)." before the closing line "Report purge deleted 1 Check runs ended before {cutOff}."; no row content appears in the log; Check 548 still stored with all its records; Check 549 no longer exists
+Test data    : Checks 548, 549; cause "lock wait timeout"
+<!-- TC:TC-RPT-064:END -->
 <!-- SUB:RULE-SCENARIOS:END -->
 
 <!-- SUB:API-SCENARIOS:START traces=AC-RPT-001,AC-RPT-002,AC-RPT-011,AC-RPT-013,AC-RPT-014,AC-RPT-015,AC-RPT-022,AC-RPT-024,AC-RPT-025,AC-RPT-026,AC-RPT-027,AC-RPT-028,AC-RPT-029,AC-RPT-030,AC-RPT-031,AC-RPT-032,AC-RPT-033,AC-RPT-034,AC-RPT-036,AC-RPT-037,AC-RPT-038,AC-RPT-043,AC-RPT-044,AC-RPT-047,AC-RPT-048,AC-RPT-055,AC-RPT-056,AC-RPT-058,REQ-RPT-001,REQ-RPT-002,REQ-RPT-008,REQ-RPT-010,REQ-RPT-011,REQ-RPT-012,REQ-RPT-019,REQ-RPT-021,REQ-RPT-022,REQ-RPT-023,REQ-RPT-024,REQ-RPT-025,REQ-RPT-026,REQ-RPT-027,REQ-RPT-028,REQ-RPT-030,REQ-RPT-031,REQ-RPT-032,REQ-RPT-036,REQ-RPT-037,REQ-RPT-040,REQ-RPT-047,REQ-RPT-048,REQ-RPT-050,AC-RPT-061,REQ-RPT-053 -->
@@ -925,7 +970,7 @@ Test data    : —
 | AC-RPT-009 | REQ-RPT-006 | TC-RPT-009 | in-process | RULE-RPT-003 → RPT-409-CHECK-NOT-RUNNING | PORTS |
 | AC-RPT-010 | REQ-RPT-007 | TC-RPT-010 | in-process | REQ-RPT-007 → RPT-404-CHECK-NOT-FOUND | PORTS |
 | AC-RPT-011 | REQ-RPT-008 | TC-RPT-011 | API-RPT-001 | — | PORTS |
-| AC-RPT-012 | REQ-RPT-009 | TC-RPT-012 | in-process | RULE-RPT-006 → RPT-422-UNKNOWN-CODE (report not stored) | PORTS |
+| AC-RPT-012 | REQ-RPT-009 | TC-RPT-012 | in-process | RULE-RPT-006 → RPT-422-UNKNOWN-CODE (refused before any write) | PORTS |
 | AC-RPT-013 | REQ-RPT-010 | TC-RPT-013 | API-RPT-001 | — | PORTS |
 | AC-RPT-014 | REQ-RPT-011 | TC-RPT-014 | API-RPT-001 | — | PORTS |
 | AC-RPT-015 | REQ-RPT-012 | TC-RPT-015 | API-RPT-001 | — | PORTS |
@@ -975,10 +1020,13 @@ Test data    : —
 | AC-RPT-059 | REQ-RPT-051 | TC-RPT-059 | in-process | RULE-RPT-010 → RPT-400-FAILURE-INCOMPLETE | PORTS |
 | AC-RPT-060 | REQ-RPT-052 | TC-RPT-060 | in-process | — | SVC-API |
 | AC-RPT-061 | REQ-RPT-053 | TC-RPT-061 | in-process | — (structural, ADR-RPT-018) | PORTS |
+| AC-RPT-062 | REQ-RPT-009 | TC-RPT-062 | in-process | REQ-RPT-009 → RPT-500-REPORT-NOT-STORED | PORTS |
+| AC-RPT-063 | REQ-RPT-018 | TC-RPT-063 | API-RPT-001 | RULE-RPT-003 (allowed transition AWAITING_DOCUMENTS → FAILED) | PORTS |
+| AC-RPT-064 | REQ-RPT-054 | TC-RPT-064 | in-process | — (ADR-RPT-020) | SVC-API |
 
-Package → TC: PORTS: 30 (TC-RPT-001 …) · SVC-API: 31 (TC-RPT-022 …) · CORE, DATA-DOM, ALIGN-BE: no_tests (profile) · CROSS-MOD: 0 edges, no unit
+Package → TC: PORTS: 32 (TC-RPT-001 …) · SVC-API: 32 (TC-RPT-022 …) · CORE, DATA-DOM, ALIGN-BE: no_tests (profile) · CROSS-MOD: 0 edges, no unit
 XM → TC: none (0 XM)
 
 ## COVERAGE
 
-AC covered 61/61 ✓ · REQ covered 53/53 ✓ · API covered 3/3 (API-RPT-001, API-RPT-002, API-RPT-003) ✓ · XM edges covered 0/0 (none declared) · retention purge: TC-RPT-050 … TC-RPT-054, TC-RPT-060 · one-time final decision: TC-RPT-039 · COMPLIANT only when every finding SATISFIED: TC-RPT-017 · closed-list CHECK constraints: TC-RPT-004, TC-RPT-018, TC-RPT-020, TC-RPT-046
+AC covered 64/64 ✓ · REQ covered 54/54 ✓ · API covered 3/3 (API-RPT-001, API-RPT-002, API-RPT-003) ✓ · XM edges covered 0/0 (none declared) · retention purge: TC-RPT-050 … TC-RPT-054, TC-RPT-060, TC-RPT-064 · report stored whole: TC-RPT-012, TC-RPT-062 · failCheck from both start states: TC-RPT-021, TC-RPT-063 · one-time final decision: TC-RPT-039 · COMPLIANT only when every finding SATISFIED: TC-RPT-017 · closed-list CHECK constraints: TC-RPT-004, TC-RPT-018, TC-RPT-020, TC-RPT-046

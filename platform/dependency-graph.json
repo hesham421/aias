@@ -4,7 +4,9 @@
     "platform-summary": {
       "REG": "v1"
     },
-    "srs": {}
+    "srs": {
+      "REG": "v1"
+    }
   },
   "modules": {
     "CHK": {

@@ -71,7 +71,13 @@
         1
       ],
       "current_version": 1,
-      "delivery": {}
+      "delivery": {
+        "backend": {
+          "version": 1,
+          "exec": "backend/modules/RPT/packages/backend-execution",
+          "test": "backend/modules/RPT/packages/backend-test"
+        }
+      }
     },
     "INT": {
       "code": "INT",

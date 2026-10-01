@@ -224,7 +224,7 @@
     {
       "from": "INT",
       "to": "RPT",
-      "state": "READY",
+      "state": "DELIVERED",
       "source": "platform"
     },
     {

@@ -78,6 +78,16 @@
         "trigger": "delivered",
         "resolution": "OPEN",
         "raised_at": "2026-10-01T15:33:09+00:00"
+      },
+      {
+        "id": "INT>RPT",
+        "key": "INT>RPT@RPTv1:delivered",
+        "target": "RPT",
+        "target_version": 1,
+        "version": 1,
+        "trigger": "delivered",
+        "resolution": "OPEN",
+        "raised_at": "2026-10-01T15:34:56+00:00"
       }
     ]
   },

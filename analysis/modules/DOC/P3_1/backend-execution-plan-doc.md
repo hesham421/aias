@@ -2,7 +2,7 @@
 ══════════════════════════════════════════════════════════════════
 Module : DOC   Version : v1   Profile : aias   Dialect : oracle19c   Framework : spring-boot-4-java-21 (+ Spring AI 2.0 for the document-reading model)
 Inputs : srs-doc.md · db-script-doc.md · registry-srs-doc.md · registry-db-doc.md · contract-doc.md · the published contract of the one module DOC consumes (reached only through XM-DOC-001 … XM-DOC-004)
-Governance : FULL (db-script present)   Open ADRs : 0 BLOCKED — decisions applied: ADR-DOC-001 … ADR-DOC-012, ADR-DOC-015, ADR-DOC-016 (analysis/decisions/DOC/)
+Governance : FULL (db-script present)   Open ADRs : 0 BLOCKED — decisions applied: ADR-DOC-001 … ADR-DOC-012, ADR-DOC-015, ADR-DOC-016, ADR-DOC-017 (analysis/decisions/DOC/)
 ══════════════════════════════════════════════════════════════════
 
 ## EXECUTION PLAN INDEX — DOC v1
@@ -10,13 +10,13 @@ Governance : FULL (db-script present)   Open ADRs : 0 BLOCKED — decisions appl
 ### Entity registry
 | ENT | Name | Table | Business code | Operations |
 |---|---|---|---|---|
-| ENT-DOC-001 | Uploaded Document | DOC_UPLOADED_DOC | — | in-process create (handover, CON-DOC-003); read (API-DOC-001, in-process fetch CON-DOC-004); in-process delete (end of Check and end-of-Check sweep, CON-DOC-005); never updated |
+| ENT-DOC-001 | Uploaded Document | DOC_UPLOADED_DOC | — | in-process create (handover, CON-DOC-003); read (API-DOC-001 and in-process listing CON-DOC-006, in-process fetch CON-DOC-004); in-process delete (end of Check and end-of-Check sweep, CON-DOC-005); never updated |
 | ENT-DOC-002 | Ended Check | DOC_ENDED_CHECK | — | in-process create (end of Check, CON-DOC-005); read (in-process handover RULE-DOC-009, end-of-Check sweep); never updated, not deleted in this version |
 
 ### API registry
 | API | Operation | Verb | Path | Traces |
 |---|---|---|---|---|
-| API-DOC-001 | List the Uploaded Documents of a Check | GET | /api/v1/uploaded-documents | REQ-DOC-017, REQ-DOC-018, REQ-DOC-043, REQ-DOC-056 |
+| API-DOC-001 | List the Uploaded Documents of a Check | GET | /api/v1/uploaded-documents | REQ-DOC-017, REQ-DOC-018, REQ-DOC-043, REQ-DOC-056, REQ-DOC-064 |
 
 ### Rule registry
 | RULE | Name | Scope | Enforced where | Message en / ar |
@@ -227,11 +227,11 @@ Every external dependency of DOC is a port with a replaceable adapter (profile l
 <!-- SUB:PORTS-MODEL:END -->
 <!-- PHASE:PORTS:END -->
 
-<!-- PHASE:SVC-API:START traces=DBF-DOC-001,DBF-DOC-002,DBF-DOC-005,DBF-DOC-006,DBF-DOC-007,DBF-DOC-009,DBF-DOC-010,DBF-DOC-013,REQ-DOC-001,REQ-DOC-002,REQ-DOC-003,REQ-DOC-017,REQ-DOC-018,REQ-DOC-034,REQ-DOC-035,REQ-DOC-054,REQ-DOC-060,REQ-DOC-061,REQ-DOC-062,REQ-DOC-063 -->
+<!-- PHASE:SVC-API:START traces=DBF-DOC-001,DBF-DOC-002,DBF-DOC-005,DBF-DOC-006,DBF-DOC-007,DBF-DOC-009,DBF-DOC-010,DBF-DOC-013,REQ-DOC-001,REQ-DOC-002,REQ-DOC-003,REQ-DOC-017,REQ-DOC-018,REQ-DOC-034,REQ-DOC-035,REQ-DOC-054,REQ-DOC-060,REQ-DOC-061,REQ-DOC-062,REQ-DOC-063,REQ-DOC-064 -->
 ## PHASE SVC-API — SVC+API
 
 ### Service layer — the in-process interface `DocumentAccess` (contract-doc.md)
-Injected into CHK and INT (profile `module_interface: in_process`). Value objects are Java records with unmodifiable lists. Service classes: `UploadHandoverService`, `DocumentFetchService`, `CheckEndService`.
+Injected into CHK and INT (profile `module_interface: in_process`). Value objects are Java records with unmodifiable lists. Service classes: `UploadHandoverService`, `DocumentFetchService`, `CheckEndService`, `UploadedDocumentQueryService`.
 
 **`handOverUpload(checkId, serviceCode, versionNumber, documentType, fileName, bytes)` → UploadReceipt {uploadedDocumentId, documentType, fileName, fileSize, oversized, notice}** — READ_WRITE, one transaction.
   - Honours: CON-DOC-003
@@ -264,6 +264,14 @@ Injected into CHK and INT (profile `module_interface: in_process`). Value object
   4. deletedCount = rows deleted by steps 2 and 3. Idempotent: a second call records nothing new and deletes 0 rows.
   - Concurrency: one transaction; step 1 commits the marker with the deletes. A handover that read no marker before this commit and commits after it leaves a row that step 3 of the next endCheck removes (ADR-DOC-015). Ordering guarantee upheld by the callers (CON-DOC-003, CON-DOC-005): CHK calls endCheck only once the Check accepts no more documents.
 
+**`listUploadedDocuments(checkId)` → List<UploadedDocumentSummary {uploadedDocumentId, documentType, fileName, fileSize, oversized, uploadedAt}>** — READ_ONLY (`UploadedDocumentQueryService`).
+  - Honours: CON-DOC-006
+  1. checkId absent → `CheckIdRequiredException` (DOC-400-CHECK-ID-REQUIRED — the same code as API-DOC-001's catalog row).
+  2. QR-DOC-001 — SELECT UPLOADED_DOCUMENT_ID, DOCUMENT_TYPE, FILE_NAME, FILE_SIZE, OVERSIZED, CREATED_AT FROM DOC_UPLOADED_DOC WHERE CHECK_ID = :checkId ORDER BY CREATED_AT (RULE-DOC-008); CONTENT is never selected (REQ-DOC-064). uploadedAt = CREATED_AT (DBF-DOC-010).
+  3. No row → empty list (an unknown or ended Check — AC-DOC-070). DOC holds no read status; `oversized` is the only reading-related field (ADR-DOC-017).
+  - Called in-process by the host integration (its frontend read) and by API-DOC-001 below, which delegates to it.
+  - Concurrency: NONE — reads only.
+
 ### In-process rejection codes (typed exceptions of `DocumentAccess` — mapped by INT to ProblemDetail, ADR-DOC-012)
 | Code | Rule / REQ | Exception | Message en | Message ar |
 |---|---|---|---|---|
@@ -276,9 +284,9 @@ Injected into CHK and INT (profile `module_interface: in_process`). Value object
 | (notice, not an error) | RULE-DOC-005 | UploadReceipt.notice | The file "{fileName}" is larger than the maximum file size of {maxFileSize}; it will not be read and will be reported as unreadable. | PENDING ADR-DOC-012 |
 
 ### HTTP endpoint
-Controller `UploadedDocumentController` → service `UploadedDocumentQueryService`. DOC exposes no POST, PUT or DELETE (ADR-DOC-011).
+Controller `UploadedDocumentController` → service `UploadedDocumentQueryService` (the same `listUploadedDocuments` procedure INT calls in-process — ADR-DOC-017). DOC exposes no POST, PUT or DELETE (ADR-DOC-011).
 
-<!-- API:API-DOC-001:START traces=REQ-DOC-017,REQ-DOC-018,REQ-DOC-043,REQ-DOC-056,DBF-DOC-001,DBF-DOC-002,DBF-DOC-005,DBF-DOC-006,DBF-DOC-007,DBF-DOC-009,DBF-DOC-010 -->
+<!-- API:API-DOC-001:START traces=REQ-DOC-017,REQ-DOC-018,REQ-DOC-043,REQ-DOC-056,REQ-DOC-064,DBF-DOC-001,DBF-DOC-002,DBF-DOC-005,DBF-DOC-006,DBF-DOC-007,DBF-DOC-009,DBF-DOC-010 -->
 ### API-DOC-001 — List the Uploaded Documents of a Check
 Entity       : ENT-DOC-001
 Endpoint     : /api/v1/uploaded-documents   verb: GET
@@ -287,12 +295,12 @@ Request      : query checkId (DBF-DOC-002, integer int64, required); no path par
 Response     : 200 · array of UploadedDocumentSummary {uploadedDocumentId (DBF-DOC-001), documentType (DBF-DOC-005), fileName (DBF-DOC-006), fileSize (DBF-DOC-007), oversized (DBF-DOC-009), createdAt (DBF-DOC-010)} ordered by createdAt · not paginated · no envelope; never the file content (DBF-DOC-008)
 Validations  : checkId present and numeric (PLATFORM-STD, ADR-DOC-012)
 Errors       : DOC-400-CHECK-ID-REQUIRED (400, PLATFORM-STD) · DOC-500 (500, PLATFORM-STD)
-Orchestration : validate checkId → load the Check's rows (QR-DOC-001, filter on DBF-DOC-002 — RULE-DOC-008) → map to UploadedDocumentSummary; writes nothing
+Orchestration : validate checkId → delegate to `listUploadedDocuments(checkId)` (CON-DOC-006, REQ-DOC-064), which loads the Check's rows (QR-DOC-001, filter on DBF-DOC-002 — RULE-DOC-008) → map to UploadedDocumentSummary (createdAt = uploadedAt); writes nothing
 Repository   : QR-DOC-001 · FIND_BY_CRITERIA · join NONE · READ_ONLY
 Concurrency  : NONE — this endpoint neither allocates a unique value nor reads-then-writes
 Security     : none — no permission model, endpoints are open per the SRS (caller authentication deferred, raw-idea A2; REQ-DOC-017, REQ-DOC-018 name no role check)
 Localization : messages en per SRS; ar PENDING ADR-DOC-012
-Covers       : DOC's only HTTP surface (ADR-DOC-011). It shows the result of the handover (REQ-DOC-017, REQ-DOC-020 … REQ-DOC-023, REQ-DOC-043) and of the end of a Check (REQ-DOC-054). The in-process procedures of this phase implement, and are listed here for the coverage check: REQ-DOC-001, REQ-DOC-002, REQ-DOC-003, REQ-DOC-004, REQ-DOC-005, REQ-DOC-006, REQ-DOC-007, REQ-DOC-008, REQ-DOC-009, REQ-DOC-010, REQ-DOC-011, REQ-DOC-012, REQ-DOC-013, REQ-DOC-014, REQ-DOC-015, REQ-DOC-016, REQ-DOC-019, REQ-DOC-024, REQ-DOC-025, REQ-DOC-026, REQ-DOC-027, REQ-DOC-028, REQ-DOC-029, REQ-DOC-030, REQ-DOC-031, REQ-DOC-032, REQ-DOC-033, REQ-DOC-034, REQ-DOC-035, REQ-DOC-036, REQ-DOC-037, REQ-DOC-038, REQ-DOC-039, REQ-DOC-040, REQ-DOC-041, REQ-DOC-042, REQ-DOC-044, REQ-DOC-045, REQ-DOC-046, REQ-DOC-047, REQ-DOC-048, REQ-DOC-049, REQ-DOC-050, REQ-DOC-051, REQ-DOC-052, REQ-DOC-053, REQ-DOC-055, REQ-DOC-057, REQ-DOC-058, REQ-DOC-059, REQ-DOC-060, REQ-DOC-061, REQ-DOC-062, REQ-DOC-063
+Covers       : DOC's only HTTP surface (ADR-DOC-011). It shows the result of the handover (REQ-DOC-017, REQ-DOC-020 … REQ-DOC-023, REQ-DOC-043) and of the end of a Check (REQ-DOC-054). The in-process procedures of this phase implement, and are listed here for the coverage check: REQ-DOC-001, REQ-DOC-002, REQ-DOC-003, REQ-DOC-004, REQ-DOC-005, REQ-DOC-006, REQ-DOC-007, REQ-DOC-008, REQ-DOC-009, REQ-DOC-010, REQ-DOC-011, REQ-DOC-012, REQ-DOC-013, REQ-DOC-014, REQ-DOC-015, REQ-DOC-016, REQ-DOC-019, REQ-DOC-024, REQ-DOC-025, REQ-DOC-026, REQ-DOC-027, REQ-DOC-028, REQ-DOC-029, REQ-DOC-030, REQ-DOC-031, REQ-DOC-032, REQ-DOC-033, REQ-DOC-034, REQ-DOC-035, REQ-DOC-036, REQ-DOC-037, REQ-DOC-038, REQ-DOC-039, REQ-DOC-040, REQ-DOC-041, REQ-DOC-042, REQ-DOC-044, REQ-DOC-045, REQ-DOC-046, REQ-DOC-047, REQ-DOC-048, REQ-DOC-049, REQ-DOC-050, REQ-DOC-051, REQ-DOC-052, REQ-DOC-053, REQ-DOC-055, REQ-DOC-057, REQ-DOC-058, REQ-DOC-059, REQ-DOC-060, REQ-DOC-061, REQ-DOC-062, REQ-DOC-063, REQ-DOC-064
 <!-- API:API-DOC-001:END -->
 
 <!-- PHASE:SVC-API:END -->
@@ -397,7 +405,7 @@ if_not_met : skip-block; record in execution-state.json → deferred_xm; continu
 
 ### QR-DOC-001 — Uploaded Documents of a Check, without content
 Phase        : SVC-API
-API          : API-DOC-001
+API          : API-DOC-001 (through the in-process `listUploadedDocuments`, CON-DOC-006)
 Entity       : ENT-DOC-001
 Operation    : FIND_BY_CRITERIA
 Intent       : the files handed over for one Check, as the employee sees them — never their content
@@ -444,4 +452,4 @@ rows:
 | XM-DOC-003 | REG:DELIVERED | AC-DOC-023, AC-DOC-037 |
 | XM-DOC-004 | REG:DELIVERED | AC-DOC-014, AC-DOC-016, AC-DOC-055 |
 
-ADRs cited: ADR-DOC-001, ADR-DOC-003, ADR-DOC-007, ADR-DOC-008, ADR-DOC-009, ADR-DOC-010, ADR-DOC-011, ADR-DOC-012, ADR-DOC-015, ADR-DOC-016.
+ADRs cited: ADR-DOC-001, ADR-DOC-003, ADR-DOC-007, ADR-DOC-008, ADR-DOC-009, ADR-DOC-010, ADR-DOC-011, ADR-DOC-012, ADR-DOC-015, ADR-DOC-016, ADR-DOC-017.

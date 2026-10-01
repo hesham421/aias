@@ -76,6 +76,11 @@
           "version": 1,
           "exec": "backend/modules/RPT/packages/backend-execution",
           "test": "backend/modules/RPT/packages/backend-test"
+        },
+        "frontend": {
+          "version": 1,
+          "exec": "frontend/modules/RPT/packages/frontend-execution",
+          "test": "frontend/modules/RPT/packages/frontend-test"
         }
       }
     },

@@ -3,11 +3,11 @@
   "version": 1,
   "scope": "all",
   "counts": {
-    "CRITICAL": 1,
+    "CRITICAL": 0,
     "MAJOR": 0,
     "MINOR": 14
   },
-  "clean": false,
+  "clean": true,
   "blocking": [
     "CRITICAL",
     "MAJOR"
@@ -169,14 +169,6 @@
     }
   ],
   "findings": [
-    {
-      "severity": "CRITICAL",
-      "clause": "C7.14",
-      "check": "paths-resolve",
-      "message": "manifest.json \u2192 `status.split.integration[0].path` = `governance-shared/backend/modules/INT/packages/integration/XM-INT-001` resolves to nothing under /Users/ezzat/my project/aias/governance-shared/analysis/modules/INT",
-      "artifact": "manifest_file",
-      "line": 0
-    },
     {
       "severity": "MINOR",
       "clause": "C5.13",
@@ -340,6 +332,6 @@
       "srs": "002193a649eff1862a58589373acc527c07e3bd9ee676c8dbceb9210d407fe2a",
       "ui-ux-spec": "70182d676b3e811b6b29b801b8083c75e586afd39eb63b8fbf328c188ed029fb"
     },
-    "at": "2026-10-01T16:25:35+00:00"
+    "at": "2026-10-01T16:26:28+00:00"
   }
 }

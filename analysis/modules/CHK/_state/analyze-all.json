@@ -3,11 +3,11 @@
   "version": 1,
   "scope": "all",
   "counts": {
-    "CRITICAL": 5,
+    "CRITICAL": 0,
     "MAJOR": 0,
     "MINOR": 0
   },
-  "clean": false,
+  "clean": true,
   "blocking": [
     "CRITICAL",
     "MAJOR"
@@ -173,48 +173,7 @@
       "pct": 100.0
     }
   ],
-  "findings": [
-    {
-      "severity": "CRITICAL",
-      "clause": "C7.14",
-      "check": "paths-resolve",
-      "message": "manifest.json \u2192 `status.split.integration[0].path` = `governance-shared/backend/modules/CHK/packages/integration/XM-CHK-001` resolves to nothing under /Users/ezzat/my project/aias/governance-shared/analysis/modules/CHK",
-      "artifact": "manifest_file",
-      "line": 0
-    },
-    {
-      "severity": "CRITICAL",
-      "clause": "C7.14",
-      "check": "paths-resolve",
-      "message": "manifest.json \u2192 `status.split.integration[1].path` = `governance-shared/backend/modules/CHK/packages/integration/XM-CHK-002` resolves to nothing under /Users/ezzat/my project/aias/governance-shared/analysis/modules/CHK",
-      "artifact": "manifest_file",
-      "line": 0
-    },
-    {
-      "severity": "CRITICAL",
-      "clause": "C7.14",
-      "check": "paths-resolve",
-      "message": "manifest.json \u2192 `status.split.integration[2].path` = `governance-shared/backend/modules/CHK/packages/integration/XM-CHK-003` resolves to nothing under /Users/ezzat/my project/aias/governance-shared/analysis/modules/CHK",
-      "artifact": "manifest_file",
-      "line": 0
-    },
-    {
-      "severity": "CRITICAL",
-      "clause": "C7.14",
-      "check": "paths-resolve",
-      "message": "manifest.json \u2192 `status.split.integration[3].path` = `governance-shared/backend/modules/CHK/packages/integration/XM-CHK-004` resolves to nothing under /Users/ezzat/my project/aias/governance-shared/analysis/modules/CHK",
-      "artifact": "manifest_file",
-      "line": 0
-    },
-    {
-      "severity": "CRITICAL",
-      "clause": "C7.14",
-      "check": "paths-resolve",
-      "message": "manifest.json \u2192 `status.split.integration[4].path` = `governance-shared/backend/modules/CHK/packages/integration/XM-CHK-005` resolves to nothing under /Users/ezzat/my project/aias/governance-shared/analysis/modules/CHK",
-      "artifact": "manifest_file",
-      "line": 0
-    }
-  ],
+  "findings": [],
   "provenance": {
     "rules": {
       "contracts": "66ab69cc1483b2f9858c7b3db7d89f46990f817721fc4417f100bd5f023dff07",
@@ -265,6 +224,6 @@
       "srs": "c63dfae3f180f887206645f48d9850ac3f20a975a795504c203015549a6f0f54",
       "ui-ux-spec": "d84ef3b682a31c5a4b5c569cd026fc1e0e81913560d92335bd631cd119e20df9"
     },
-    "at": "2026-10-01T16:25:26+00:00"
+    "at": "2026-10-01T16:26:19+00:00"
   }
 }

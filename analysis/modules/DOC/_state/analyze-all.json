@@ -3,11 +3,11 @@
   "version": 1,
   "scope": "all",
   "counts": {
-    "CRITICAL": 4,
+    "CRITICAL": 0,
     "MAJOR": 0,
     "MINOR": 12
   },
-  "clean": false,
+  "clean": true,
   "blocking": [
     "CRITICAL",
     "MAJOR"
@@ -175,38 +175,6 @@
   ],
   "findings": [
     {
-      "severity": "CRITICAL",
-      "clause": "C7.14",
-      "check": "paths-resolve",
-      "message": "manifest.json \u2192 `status.split.integration[0].path` = `governance-shared/backend/modules/DOC/packages/integration/XM-DOC-001` resolves to nothing under /Users/ezzat/my project/aias/governance-shared/analysis/modules/DOC",
-      "artifact": "manifest_file",
-      "line": 0
-    },
-    {
-      "severity": "CRITICAL",
-      "clause": "C7.14",
-      "check": "paths-resolve",
-      "message": "manifest.json \u2192 `status.split.integration[1].path` = `governance-shared/backend/modules/DOC/packages/integration/XM-DOC-002` resolves to nothing under /Users/ezzat/my project/aias/governance-shared/analysis/modules/DOC",
-      "artifact": "manifest_file",
-      "line": 0
-    },
-    {
-      "severity": "CRITICAL",
-      "clause": "C7.14",
-      "check": "paths-resolve",
-      "message": "manifest.json \u2192 `status.split.integration[2].path` = `governance-shared/backend/modules/DOC/packages/integration/XM-DOC-003` resolves to nothing under /Users/ezzat/my project/aias/governance-shared/analysis/modules/DOC",
-      "artifact": "manifest_file",
-      "line": 0
-    },
-    {
-      "severity": "CRITICAL",
-      "clause": "C7.14",
-      "check": "paths-resolve",
-      "message": "manifest.json \u2192 `status.split.integration[3].path` = `governance-shared/backend/modules/DOC/packages/integration/XM-DOC-004` resolves to nothing under /Users/ezzat/my project/aias/governance-shared/analysis/modules/DOC",
-      "artifact": "manifest_file",
-      "line": 0
-    },
-    {
       "severity": "MINOR",
       "clause": "C5.14",
       "check": "ac-measurable",
@@ -353,6 +321,6 @@
       "srs": "b88a90753396d7a88e7f860beb6c75fa781f8f9ad16b7e8a0a42f17a9cc634d0",
       "ui-ux-spec": "a573f4dc8407c342aa58a28a73cea0e915f088519dafea0bfe126780a746e4af"
     },
-    "at": "2026-10-01T16:25:22+00:00"
+    "at": "2026-10-01T16:26:15+00:00"
   }
 }

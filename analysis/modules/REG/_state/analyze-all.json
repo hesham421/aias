@@ -4,10 +4,10 @@
   "scope": "all",
   "counts": {
     "CRITICAL": 0,
-    "MAJOR": 1,
+    "MAJOR": 0,
     "MINOR": 0
   },
-  "clean": false,
+  "clean": true,
   "blocking": [
     "CRITICAL",
     "MAJOR"
@@ -180,16 +180,7 @@
       "pct": 100.0
     }
   ],
-  "findings": [
-    {
-      "severity": "MAJOR",
-      "clause": "C9.23",
-      "check": "publication-fresh",
-      "message": "`build-order` in the project repo is stale \u2014 status.2 differ from what the factory derives now. Run `gov.py publish` (the version, split and gate steps do it themselves)",
-      "artifact": "governance-shared/platform/build-order.json",
-      "line": 0
-    }
-  ],
+  "findings": [],
   "provenance": {
     "rules": {
       "contracts": "66ab69cc1483b2f9858c7b3db7d89f46990f817721fc4417f100bd5f023dff07",
@@ -232,7 +223,7 @@
       "module-registry": "a2758d2683662198389174350d8c2d025bc8c29f5a86e89242d07d780de95e56",
       "platform-summary": "c6de83d8c1dce3f765ace2a6254fac74cb9f285bea2562968c4804961c308676",
       "prd": "b4455d56bb4ffd13b3f70fe595fdb3f13468054e8fba4b47c8971e013b8c47e1",
-      "project-registry": "e317bcfdef486639652f87910e13ac6e069e135cd2c8bff54ad33a9fc205f6c2",
+      "project-registry": "7a389817f730ec9c3e3e6e96562c8ed5753214059e0e715c2ae8c491e2b9d009",
       "registry-db": "b19f6a7009487b69cc871e780bc87d07b804a738808f41574ff21e955cdaa384",
       "registry-exec-be": "50e4024eea3c029ef0a752c8fb23cac3e47a8c942b3e3a05ecdd480bc196eccc",
       "registry-exec-fe": "78e57d273c1272e9ce7698632e091e26adbe8f49b6d2e0952fa96a4a1be3c1a7",
@@ -240,6 +231,6 @@
       "srs": "72b28d7e5386dd923508da72dd4ec0864617d5988266c09289e8e9455375debc",
       "ui-ux-spec": "c35feb7a14710999f21bd66aa2e5281f27428d138259cb4953667b69ec2b666c"
     },
-    "at": "2026-10-01T15:26:35+00:00"
+    "at": "2026-10-01T16:26:11+00:00"
   }
 }

@@ -3,8 +3,8 @@
 Profile            : aias
 Registry Version   : 1.1.0
 Domain Profile     : analysis/domain/domain-profile.md v1
-Last Updated       : 2026-10-01 by P-1 (registry step of the REG v1 analysis-gate revise, findings G9, G11: sections and compliance map realigned to shared/REGISTRY-SCHEMA.md §1; decision index added; pipeline status set to the modules' real state)
-Modules registered : 5   Entity candidates : 6   Open items : 0 (OQ-1, OQ-2 RESOLVED) · ADR streams : 5 · platform findings OPEN : 6
+Last Updated       : 2026-10-01 by P-1 (registry step of the REG v1 analysis-gate revise round 2, findings G1, G12: platform findings PF-7, PF-8 recorded; earlier: findings G9, G11 — sections and compliance map realigned to shared/REGISTRY-SCHEMA.md §1, decision index added, pipeline status set to the modules' real state)
+Modules registered : 5   Entity candidates : 6   Open items : 0 (OQ-1, OQ-2 RESOLVED) · ADR streams : 5 · platform findings OPEN : 8
 ══════════════════════════════════════════════════════════════════
 
 ## SCHEMA COMPLIANCE MAP
@@ -305,6 +305,7 @@ Maintained by the orchestrator from commits (E5). The P0 platform-summary snapsh
 | 2026-10-01 | RESTRUCTURE | — | REG v1 analysis gate (finding G9) | Registry 1.1.0: sections and compliance map realigned to shared/REGISTRY-SCHEMA.md §1 (section N = CAT-N); conventions folded into §1; §7 decision index added (5 ADR streams, 2 resolution events); platform findings moved to their own §10; §3/§4 owner of Check and Check Document set to RPT (OQ-1, OQ-2) |
 | 2026-10-01 | PIPELINE-STATUS | — | REG v1 analysis gate (finding G11) | §8 set from the modules' manifests: CHK v1 APPROVE and tagged; REG, DOC at the analysis gate after REVISE; INT at the analysis gate; RPT re-running pass 1 from P3.1 |
 | 2026-10-01 | RESOLUTION-EVENT | INT>CHK | ADR-INT-024 | INT's XM event on CHK v1 delivery answered: cited CON-CHK-001 … CON-CHK-005 unchanged |
+| 2026-10-01 | PLATFORM-FINDING | PF-7, PF-8 | REG v1 analysis gate round 2 (findings G1, G12) | 2 CAT-10 rows recorded in §10, both OPEN — DOC v2 switches to the version-pinned lookup (ADR-REG-020); the Check-limits hand-off to CHK and DOC (ADR-REG-019) |
 
 ---
 
@@ -320,6 +321,8 @@ Findings a module-scoped stage recorded that are not that module's to settle (sh
 | PF-4 | RPT's database must carry the CHECK constraints for DOCUMENT_READ_STATUS (3 values) and UNREADABLE_REASON (8 values) on its own Check Document columns | ADR-DOC-010; db-script-doc.md BLOCK 8; contract-doc.md CON-DOC-001 | DOC · P2 · v1 | RPT (its P2 db-script) | OPEN |
 | PF-5 | INT's backend plan must list DOC's in-process rejection codes in its own error catalog and map them to ProblemDetail — DOC-400-INCOMPLETE-UPLOAD, DOC-404-SERVICE-VERSION-NOT-FOUND, DOC-422-FETCH-MODE-NOT-MANUAL, DOC-422-DOCUMENT-TYPE-NOT-OF-SERVICE, and since the revise DOC-409-CHECK-ENDED, DOC-422-UPLOAD-LIMIT-REACHED | ADR-DOC-012 (Consequences "recorded for INT"); ADR-DOC-015, ADR-DOC-016; backend-execution-plan-doc.md in-process rejection codes | DOC · P3.1 · v1 | INT (its P3.1 error catalog) | OPEN |
 | PF-6 | Ordering guarantee: no upload handover for a Check may reach DOC after that Check's end-of-Check notice — INT hands over only while the Check awaits documents, CHK sends the notice only once the Check accepts no more documents (DOC refuses and sweeps as a safety net) | ADR-DOC-015; contract-doc.md CON-DOC-003, CON-DOC-005 | DOC · P1 · v1 (analysis-gate finding G2) | CHK and INT (Check lifecycle / upload confirmation) | OPEN |
+| PF-7 | DOC must switch its fetch-time reads of fetch mode, document source and required document types from CON-REG-007 (current version) to CON-REG-009 (getServicePackageVersion) with the Check's pinned version in DOC v2, so every consumer of one Check uses the version CHK resolved; until then a load run during a running Check can make DOC v1 read a newer version than CHK's report records | ADR-REG-020; contract-reg.md CON-REG-007, CON-REG-009 (widened additively), REQ-REG-070 | REG · P1 · v1 (analysis-gate round 2, finding G1) | DOC (DOC v2 — its fetch step) | OPEN |
+| PF-8 | Check-limits hand-off: the platform-wide Check limits `aias.check.timeout` (Duration, default PT2M), `aias.check.max-rows` (int, default 100) and `aias.check.max-file-size` (DataSize, default 10MB) are declared and applied by the CORE phase of the modules that run Checks — CHK (timeout, rows) and DOC (file size, rows on document fetch); REG reads none of them and rejects them in a service definition (RULE-REG-012) | ADR-REG-019 (Context/Decision "recorded as a platform finding for CHK's and DOC's own gates"); ADR-REG-006 | REG · P1 · v1 (analysis-gate round 2, finding G12) | CHK and DOC (their CORE phases) | OPEN |
 
 ---
 

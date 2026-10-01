@@ -5,7 +5,7 @@
   "counts": {
     "CRITICAL": 0,
     "MAJOR": 0,
-    "MINOR": 1
+    "MINOR": 0
   },
   "clean": true,
   "blocking": [
@@ -86,16 +86,7 @@
       "pct": 98.4
     }
   ],
-  "findings": [
-    {
-      "severity": "MINOR",
-      "clause": "C5.14",
-      "check": "ac-measurable",
-      "message": "`AC-RPT-027` `Then: it receives status RUNNING with the Check's service code, version numb` names no number, limit, id or enumerable outcome \u2014 no test can fail it; say what is created, rejected, returned or shown, and how much",
-      "artifact": "srs",
-      "line": 494
-    }
-  ],
+  "findings": [],
   "provenance": {
     "rules": {
       "contracts": "66ab69cc1483b2f9858c7b3db7d89f46990f817721fc4417f100bd5f023dff07",
@@ -143,9 +134,9 @@
       "registry-exec-be": "d692bd9c88512f9ce58a13ca255cdacd5609bf7317efaa8c290b730135169b7d",
       "registry-exec-fe": "8a16c6bd0a840d2923f99bc06bbb37f3ae58bb3c4dd7815d46b00ed66a7290c2",
       "registry-srs": "58ced6c267ba4460f6a110593ff9607549c915ab94fe54f356778cd9f69b956c",
-      "srs": "0a3e4e93dcac93ae9a8e0eedf5fb038bafc08ddc4b49217f399abb2d13022949",
+      "srs": "9702aec4678bfb062e19747eb814f4a2fb329e41d9ee4f16cf7e91cd02789c92",
       "ui-ux-spec": "b0e05de20c091a9eafd12ed6044bc8460c368bad30db995df6544373bc776551"
     },
-    "at": "2026-10-01T15:04:55+00:00"
+    "at": "2026-10-01T15:05:05+00:00"
   }
 }

@@ -494,7 +494,7 @@ Consumed: none. RPT consumes no entity of another module: the service code, vers
 #### AC-RPT-027 — [REQ-RPT-023]
   Given  : Check 522 is RUNNING
   When   : the employee frontend reads Check 522
-  Then   : it receives status RUNNING with the Check's service code, version number, request number, startedAt and runningSince; overallStatus is null, and findings, documents and unreadQueries are each an empty array
+  Then   : it receives checkId 522 with status RUNNING, its service code, version number, request number, startedAt and runningSince; overallStatus is null, and findings, documents and unreadQueries are each an empty array of 0 entries
 
 #### AC-RPT-028 — [REQ-RPT-023]
   Given  : Check 523 is COMPLETED with Overall Status NOT_COMPLIANT, 3 findings, 2 Check Documents and 0 unread queries, with no decision

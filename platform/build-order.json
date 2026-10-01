@@ -75,7 +75,7 @@
       "INT": "done"
     },
     "2": {
-      "REG": "failed",
+      "REG": "done",
       "DOC": "done",
       "CHK": "done",
       "RPT": "failed",

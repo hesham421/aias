@@ -8,6 +8,13 @@
       "ref": "ADR-INT-024",
       "how": "CHK v1 delivered; cited CON-CHK-001..005 unchanged since INT's design, INT->CHK edge and plans remain valid",
       "at": "2026-10-01T15:05:50+00:00"
+    },
+    {
+      "key": "factory|xm_events|INT>DOC",
+      "digest": "e91f0d6103266b55",
+      "ref": "ADR-INT-027",
+      "how": "DOC v1 delivered; INT already binds CON-DOC-006 (ADR-INT-023) and now passes through DOC-409-CHECK-ENDED and DOC-422-UPLOAD-LIMIT-REACHED (ADR-INT-025); INT->DOC edge remains valid",
+      "at": "2026-10-01T15:41:09+00:00"
     }
   ]
 }

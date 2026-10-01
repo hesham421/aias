@@ -2,7 +2,7 @@
 ══════════════════════════════════════════════════════════════════
 Module : INT   Version : v1   Profile : aias   Stage : P4 (test-gen)   Framework : agnostic (profile.stack.testing.backend)
 Sources: _state/current-srs.md (REQ-INT-001 … REQ-INT-066, AC-INT-001 … AC-INT-079, RULE-INT-001 … RULE-INT-004) · current-registry-srs.md · current-registry-db.md (XM-INT-001) · current-backend-execution-plan.md (API-INT-001 … API-INT-008, CROSS-MOD XM-INT-001) · current-frontend-execution-plan.md · current-api-spec.yaml (api-spec-int.yaml — every endpoint shape asserted here) — all v1
-Open ADRs: ADR-INT-017 (Arabic messages PENDING) · ADR-INT-019 / ADR-INT-022 (derivation choices) · ADR-INT-020 (INT reads) · ADR-INT-021 (frontend binding) · ADR-INT-023 (API-INT-007 binds Document Access's listing operation; closes the DOC listing gap) · ADR-INT-025 (DOC-409-CHECK-ENDED, DOC-422-UPLOAD-LIMIT-REACHED passed through) · ADR-INT-026 (gate round 1 clarifications) — 0 BLOCKED
+Open ADRs: ADR-INT-017 (Arabic messages PENDING) · ADR-INT-019 / ADR-INT-022 (derivation choices) · ADR-INT-020 (INT reads) · ADR-INT-021 (frontend binding) · ADR-INT-023 (API-INT-007 binds Document Access's listing operation; closes the DOC listing gap) · ADR-INT-025 (DOC-409-CHECK-ENDED, DOC-422-UPLOAD-LIMIT-REACHED passed through) · ADR-INT-026 (gate round 1 clarifications) · ADR-INT-027 (XM event INT>DOC resolved) — 0 BLOCKED
 ══════════════════════════════════════════════════════════════════
 
 Framework note: the plan is framework-neutral — each TC block below is the whole contract; the consumer repository

@@ -9,8 +9,8 @@ Framework note: the plan is framework-neutral — each TC block below is the who
 chooses its tool and turns each TC into a test. Screens and routes are the frontend plan's (F4); every refusal
 text a case asserts is bound in the frontend plan's §3.0 message binding (`text:`). Every case runs against the
 mock server serving api-spec-int.yaml (ADR-INT-021 (2), ADR-INT-022). The launch query
-string is `?serviceCode=…&requestNumber=…&employeeId=…` (ADR-INT-018 (4)). 23 frontend ACs plus 3 frontend cases of
-backend ACs on SCR-INT-005 (ADR-INT-019 (2)); 16 integration cases for 8 UXD.
+string is `?serviceCode=…&requestNumber=…&employeeId=…` (ADR-INT-018 (4)). 24 frontend ACs plus 6 frontend cases of
+backend ACs (3 on SCR-INT-005 — ADR-INT-019 (2); 3 on SCR-INT-003 — ADR-INT-025, ADR-INT-026); 16 integration cases for 8 UXD.
 
 <!-- PHASE:TEST-PLAN-FE:START traces=REQ-INT-016,REQ-INT-017,REQ-INT-020,REQ-INT-022,REQ-INT-023,REQ-INT-036,REQ-INT-038,REQ-INT-040,REQ-INT-041,REQ-INT-042,REQ-INT-043,REQ-INT-044,REQ-INT-045,REQ-INT-046,REQ-INT-047,REQ-INT-048,REQ-INT-049,REQ-INT-050,REQ-INT-051,REQ-INT-052,REQ-INT-053,REQ-INT-054,REQ-INT-055,REQ-INT-056,REQ-INT-057,AC-INT-020,AC-INT-021,AC-INT-024,AC-INT-026,AC-INT-027,AC-INT-041,AC-INT-043,AC-INT-045,AC-INT-046,AC-INT-047,AC-INT-048,AC-INT-049,AC-INT-050,AC-INT-051,AC-INT-052,AC-INT-053,AC-INT-054,AC-INT-055,AC-INT-056,AC-INT-057,AC-INT-058,AC-INT-059,AC-INT-060,AC-INT-061,AC-INT-062,AC-INT-063,SCR-INT-001,SCR-INT-002,SCR-INT-003,SCR-INT-004,SCR-INT-005,REQ-INT-006,REQ-INT-065,REQ-INT-066,AC-INT-075,AC-INT-076,AC-INT-077,AC-INT-078 -->
 ## PHASE TEST-PLAN-FE

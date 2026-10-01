@@ -44,7 +44,7 @@
     "coverage": {
       "us-req": 100.0,
       "req-ac": 100.0,
-      "req-api": 95.5,
+      "req-api": 98.5,
       "req-ux": 69.7,
       "ac-tc": 93.7
     },

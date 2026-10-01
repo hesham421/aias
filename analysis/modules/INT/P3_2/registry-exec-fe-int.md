@@ -4,8 +4,8 @@
 REGISTRY — P3.2 — INT v1
 ID RANGES     UXD-INT-001..UXD-INT-008 · SCR-INT-001..SCR-INT-005
 ALIGN         verdict as stamped by the orchestrator · findings fixed: see the analyze report
-ADRs          decisions/INT/ADR-INT-018, ADR-INT-021 (ACCEPTED, non-breaking; ADR-INT-021 supersedes ADR-INT-018 (1), (2), (3), (7)) · ADR-INT-020 (P1 revision) · applied ADR-INT-001, ADR-INT-006, ADR-INT-011, ADR-INT-013, ADR-INT-017
-TRACEABILITY  REQ covered by ≥1 SCR/F-block: 49/64 · the other 15 (REQ-INT-002 … REQ-INT-005, REQ-INT-007, REQ-INT-008, REQ-INT-029 … REQ-INT-033, REQ-INT-039, REQ-INT-058 … REQ-INT-060) are backend behaviour with no screen element, bound in the api-surface block to API-INT-001 … API-INT-004 or held by the backend CORE · orphan REQ: none
+ADRs          decisions/INT/ADR-INT-018, ADR-INT-021 (ACCEPTED, non-breaking; ADR-INT-021 supersedes ADR-INT-018 (1), (2), (3), (7)) · ADR-INT-020 (P1 revision) · ADR-INT-025, ADR-INT-026 (gate round 1 — DOC upload refusals, same-type uploads, background-read failure) · applied ADR-INT-001, ADR-INT-006, ADR-INT-011, ADR-INT-013, ADR-INT-017
+TRACEABILITY  REQ covered by ≥1 SCR/F-block: 51/66 · the other 15 (REQ-INT-002 … REQ-INT-005, REQ-INT-007, REQ-INT-008, REQ-INT-029 … REQ-INT-033, REQ-INT-039, REQ-INT-058 … REQ-INT-060) are backend behaviour with no screen element, bound in the api-surface block to API-INT-001 … API-INT-004 or held by the backend CORE · orphan REQ: none
 ```
 
 ### Screens

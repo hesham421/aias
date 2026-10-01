@@ -10,8 +10,7 @@ None — INT creates no table (ADR-INT-015). Read bindings (owner tables, not cr
 ### XM index
 | XM | Type | Target | State | Contract |
 |---|---|---|---|---|
-| XM-INT-001 | SOFT-READ | RPT · ENT-RPT-001 | CONTRACTED | CON-RPT-001 |
-| XM-INT-002 | SOFT-READ | REG · ENT-REG-002 | CONTRACTED | CON-REG-002 |
+| XM-INT-001 | SOFT-READ | REG · ENT-REG-002 | CONTRACTED | CON-REG-002 |
 
 ### Lookups
 | Key | Seeded values | Owner |
@@ -19,13 +18,13 @@ None — INT creates no table (ADR-INT-015). Read bindings (owner tables, not cr
 | — | 0 — INT owns no lookup | — |
 
 ### Sequences
-last DBF: DBF-INT-010 · last XM: XM-INT-002
+last DBF: DBF-INT-010 · last XM: XM-INT-001
 
 ### Decisions
-ADR-INT-015 (ACCEPTED). BLOCKED: none.
+ADR-INT-015, ADR-INT-016 (ACCEPTED). BLOCKED: none.
 
 ### Event
-"P2 completed: INT v1 — 0 tables, 10 DBF, 2 XM"
+"P2 completed: INT v1 — 0 tables, 10 DBF, 1 XM"
 
 ### Cascade
 none by hand — `gov.py graph` derives the edges targeting INT and raises their resolution events.

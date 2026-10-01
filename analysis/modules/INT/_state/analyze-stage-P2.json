@@ -21,15 +21,15 @@
   "coverage": {
     "C0.1": 7,
     "C6.2": 10,
-    "C6.3": 2,
-    "C6.5": 12,
+    "C6.3": 1,
+    "C6.5": 11,
     "C6.6": 0,
-    "C6.10": 2,
+    "C6.10": 1,
     "C6.11": 5,
     "C6.12": 0,
     "C6.13": 5,
     "C6.14": 5,
-    "C6.15": 2
+    "C6.15": 1
   },
   "vacuous": [
     "C6.12",
@@ -111,16 +111,16 @@
     "inputs": {
       "business-policies": "b3d3c54c9491ed1e4dd712c776861a342ebdbf00781122e295730f38ca465118",
       "contract": "57107c7a3c3e434d8991c9d4614cd204f106136fdb008562416e84fe44b919b7",
-      "db-script": "f71e6d5017ee47d7ce4000951dbb7534fab24a4baba632ce5e8f38ea5983a451",
+      "db-script": "ba000c15e7f63d30aedb46cdc617d35308eb1a30f4b0cf097096fde12b34f4ab",
       "domain-profile": "c9ffe7c45c917c5793e15b6fbc7151ccc4b9181c36a5aaf1ce2f15f6849e3cbd",
       "module-registry": "88bb2f37bcfca903bb7b7847860c342cb5c9d59eca14dafffedf5fb84e6075a6",
       "platform-summary": "f37b801d053b9f3fc47378f11eee1d9a8350520a0ae1db83d39d19133c46ddfc",
       "prd": "d39662755a943b101ca970c40fb6b50438c24238f6a7e9e78d70be208445ad5c",
       "project-registry": "7652329cae1b5e14558ead423c4a0d157fcf3aead94176473c23adb034161a82",
-      "registry-db": "ba009dec9d4d8933d0971cec484b95be70c4307953e0225760ea2741c925e26b",
-      "registry-srs": "ced82fb853904f2f2a8487e7e3d643bc2e8789f859b61c4f6b5e227edc5aedc5",
-      "srs": "dc44d0c3bcf6b1bd51cc9567d65397a8d96718d4666c9993b16e90a64c2b146b"
+      "registry-db": "debc0367bd2d407a947d278fe17423107847ef426d16cb1442b7cb235273278e",
+      "registry-srs": "dad527a2ccef01ebc49564b6bbd474cc18487bd6eb33cbc81408d5321b0e410a",
+      "srs": "14d09173ba93a08503be5f2b54872be2ef2fb3c01082ec8594fb034c1981bcca"
     },
-    "at": "2026-10-01T13:59:41+00:00"
+    "at": "2026-10-01T14:05:22+00:00"
   }
 }

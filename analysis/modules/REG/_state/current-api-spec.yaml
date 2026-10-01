@@ -1,0 +1,212 @@
+openapi: 3.1.0
+info:
+  title: Service Registry (REG) API
+  version: 1.0.0
+  description: 'Derived from backend-execution-plan-reg.md (API-REG-001 … API-REG-003).
+    Read-only. No security scheme: caller authentication is deferred (raw-idea A2).'
+paths:
+  /api/v1/services:
+    get:
+      operationId: listServices
+      summary: List services
+      x-api-id: API-REG-001
+      x-traces:
+      - REQ-REG-013
+      - REQ-REG-030
+      - DBF-REG-002
+      - DBF-REG-003
+      - DBF-REG-007
+      - DBF-REG-011
+      - DBF-REG-016
+      - DBF-REG-027
+      responses:
+        '200':
+          description: Available services
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ServiceSummary'
+        '500':
+          description: Unexpected server failure
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - REG-500
+  /api/v1/services/{serviceCode}:
+    get:
+      operationId: readService
+      summary: Read one service
+      x-api-id: API-REG-002
+      x-traces:
+      - REQ-REG-014
+      - REQ-REG-015
+      - DBF-REG-002
+      - DBF-REG-003
+      - DBF-REG-007
+      - DBF-REG-011
+      - DBF-REG-016
+      - DBF-REG-027
+      parameters:
+      - name: serviceCode
+        in: path
+        required: true
+        schema:
+          type: string
+          maxLength: 100
+      responses:
+        '200':
+          description: Current version summary
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceSummary'
+        '404':
+          description: Service code not held by the registry
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - REG-404-SERVICE-NOT-FOUND
+        '500':
+          description: Unexpected server failure
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - REG-500
+  /api/v1/load-results:
+    get:
+      operationId: readLoadReport
+      summary: Read the load report
+      x-api-id: API-REG-003
+      x-traces:
+      - REQ-REG-008
+      - REQ-REG-007
+      - DBF-REG-040
+      - DBF-REG-041
+      - DBF-REG-042
+      - DBF-REG-043
+      - DBF-REG-044
+      - DBF-REG-045
+      - DBF-REG-046
+      - DBF-REG-047
+      responses:
+        '200':
+          description: Load results of the latest load run
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LoadResult'
+        '500':
+          description: Unexpected server failure
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - REG-500
+components:
+  schemas:
+    ServiceSummary:
+      type: object
+      required:
+      - serviceCode
+      - versionNumber
+      - fetchMode
+      - requiredDocumentTypes
+      - approvalEnabled
+      properties:
+        serviceCode:
+          type: string
+          maxLength: 100
+        versionNumber:
+          type: integer
+          format: int32
+          minimum: 1
+        fetchMode:
+          type: string
+          enum:
+          - path
+          - blob
+          - manual
+        requiredDocumentTypes:
+          type: array
+          items:
+            type: string
+            maxLength: 100
+        approvalEnabled:
+          type: boolean
+    LoadResult:
+      type: object
+      required:
+      - loadResultId
+      - loadRunAt
+      - subjectKind
+      - subjectName
+      - outcome
+      properties:
+        loadResultId:
+          type: integer
+          format: int64
+        loadRunAt:
+          type: string
+          format: date-time
+        subjectKind:
+          type: string
+          enum:
+          - SERVICE_PACKAGE
+          - CONNECTION
+        subjectName:
+          type: string
+          maxLength: 200
+        serviceCode:
+          type:
+          - string
+          - 'null'
+          maxLength: 100
+        versionNumber:
+          type:
+          - integer
+          - 'null'
+          format: int32
+        outcome:
+          type: string
+          enum:
+          - REGISTERED
+          - UNCHANGED
+          - REJECTED
+          - WITHDRAWN
+          - ACTIVATED
+          - UPDATED
+          - REMOVED
+        reason:
+          type:
+          - string
+          - 'null'
+          maxLength: 1000
+    ProblemDetail:
+      type: object
+      required:
+      - type
+      - title
+      - status
+      - code
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        code:
+          type: string

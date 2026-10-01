@@ -3,8 +3,8 @@
   "version": 1,
   "scope": "all",
   "counts": {
-    "CRITICAL": 6,
-    "MAJOR": 85,
+    "CRITICAL": 3,
+    "MAJOR": 70,
     "MINOR": 0
   },
   "clean": false,
@@ -28,9 +28,12 @@
     "C14",
     "C12"
   ],
-  "skipped": [],
+  "skipped": [
+    "C7.23 (operation-resolves): the profile declares nothing at `conventions.security_model.actions` \u2014 the operation vocabulary \u2014 this clause enforced nothing",
+    "C7.20 (operation-resolves): the profile declares nothing at `conventions.security_model.actions` \u2014 the operation vocabulary \u2014 this clause enforced nothing"
+  ],
   "coverage": {
-    "C0.1": 7,
+    "C0.1": 12,
     "C1.4": 3,
     "C2.2": 10,
     "C3.7": 15,
@@ -58,25 +61,25 @@
     "C6.13": 1,
     "C6.14": 1,
     "C6.15": 0,
-    "C7.2": 0,
-    "C7.3": 0,
-    "C7.4": 0,
+    "C7.2": 11,
+    "C7.3": 3,
+    "C7.4": 8,
     "C7.5": 0,
     "C7.5b": 0,
     "C7.6": 62,
-    "C7.22": 0,
+    "C7.22": 5,
     "C7.23": 0,
     "C7.20": 0,
     "C7.19": 0,
-    "C7.18": 0,
+    "C7.18": 4,
     "C7.24": 0,
-    "C7.25": 0,
+    "C7.25": 1,
     "C7.26": 0,
     "C7.27": 0,
     "C7.28": 0,
-    "C7.29": 0,
-    "C7.30": 0,
-    "C7.31": 0,
+    "C7.29": 6,
+    "C7.30": 2,
+    "C7.31": 3,
     "C9.2": 0,
     "C9.3": 0,
     "C9.4": 0,
@@ -96,13 +99,12 @@
     "C10.8": 0,
     "C10.9": 0,
     "C10.10": 0,
-    "C10.11": 0,
+    "C10.11": 6,
     "C13.5": 13
   },
   "vacuous": [
     "C10.1",
     "C10.10",
-    "C10.11",
     "C10.7",
     "C10.8",
     "C10.9",
@@ -110,22 +112,13 @@
     "C6.12",
     "C6.15",
     "C6.3",
-    "C7.18",
     "C7.19",
-    "C7.2",
     "C7.20",
-    "C7.22",
     "C7.23",
     "C7.24",
-    "C7.25",
     "C7.26",
     "C7.27",
     "C7.28",
-    "C7.29",
-    "C7.3",
-    "C7.30",
-    "C7.31",
-    "C7.4",
     "C7.5",
     "C7.5b",
     "C9.15",
@@ -169,8 +162,8 @@
         "API"
       ],
       "total": 62,
-      "covered": 0,
-      "pct": 0.0
+      "covered": 6,
+      "pct": 9.7
     },
     {
       "id": "req-ux",
@@ -213,34 +206,26 @@
     },
     {
       "severity": "CRITICAL",
-      "clause": "C7.1",
-      "check": "markers",
-      "message": "`backend-execution-plan` missing",
-      "artifact": "backend-execution-plan",
-      "line": 0
-    },
-    {
-      "severity": "CRITICAL",
-      "clause": "C7.31",
-      "check": "api-spec-valid",
-      "message": "`api-spec` is missing",
-      "artifact": "api-spec",
-      "line": 0
-    },
-    {
-      "severity": "CRITICAL",
-      "clause": "C8.1",
-      "check": "exists",
-      "message": "`api-spec` is missing or empty",
-      "artifact": "api-spec",
-      "line": 0
-    },
-    {
-      "severity": "CRITICAL",
       "clause": "C9.1",
       "check": "markers",
       "message": "`frontend-execution-plan` missing",
       "artifact": "frontend-execution-plan",
+      "line": 0
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.11",
+      "check": "package-has-tests",
+      "message": "`PORTS` (PHASE) of `backend-execution-plan` leaves the factory with no test case naming it on its `Package` line \u2014 a package with no acceptance; derive one in `backend-test-plan`, or flag its phase `no_tests` in the profile",
+      "artifact": "backend-test-plan",
+      "line": 0
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.11",
+      "check": "package-has-tests",
+      "message": "`SVC-API` (PHASE) of `backend-execution-plan` leaves the factory with no test case naming it on its `Package` line \u2014 a package with no acceptance; derive one in `backend-test-plan`, or flag its phase `no_tests` in the profile",
+      "artifact": "backend-test-plan",
       "line": 0
     },
     {
@@ -757,150 +742,6 @@
     },
     {
       "severity": "MAJOR",
-      "clause": "C7.2",
-      "check": "traces",
-      "message": "`backend-execution-plan` missing",
-      "artifact": "backend-execution-plan",
-      "line": 0
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.4",
-      "check": "registry-agree",
-      "message": "registry `registry-exec-be` missing",
-      "artifact": "registry-exec-be",
-      "line": 0
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.5",
-      "check": "registry-agree",
-      "message": "artifact `backend-execution-plan` missing",
-      "artifact": "backend-execution-plan",
-      "line": 0
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-003` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 200
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-005` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 230
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-013` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 348
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-014` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 362
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-015` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 376
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-016` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 391
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-017` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 405
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-026` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 533
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-030` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 590
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-051` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 900
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-058` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 1001
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-059` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 1015
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-060` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 1029
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-061` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 1043
-    },
-    {
-      "severity": "MAJOR",
-      "clause": "C7.6",
-      "check": "orphans",
-      "message": "`REQ-REG-062` is referenced by 0 of ['API', 'DBF'], needs \u22651",
-      "artifact": "",
-      "line": 1057
-    },
-    {
-      "severity": "MAJOR",
       "clause": "C9.2",
       "check": "traces",
       "message": "`frontend-execution-plan` missing",
@@ -911,8 +752,16 @@
       "severity": "MAJOR",
       "clause": "C9.23",
       "check": "publication-fresh",
-      "message": "`dependency-graph` in the project repo is stale \u2014 edges differ from what the factory derives now. Run `gov.py publish` (the version, split and gate steps do it themselves)",
-      "artifact": "governance-shared/platform/dependency-graph.json",
+      "message": "`api-specs` in the project repo is stale \u2014 api-spec-reg.yaml differ from what the factory derives now. Run `gov.py publish` (the version, split and gate steps do it themselves)",
+      "artifact": "governance-shared/backend/modules/REG/packages/api-spec-reg.yaml",
+      "line": 0
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C9.23",
+      "check": "publication-fresh",
+      "message": "`build-order` in the project repo is stale \u2014 status.1 differ from what the factory derives now. Run `gov.py publish` (the version, split and gate steps do it themselves)",
+      "artifact": "governance-shared/platform/build-order.json",
       "line": 0
     },
     {
@@ -931,6 +780,8 @@
       "policy": "f0051863173859c50eaa1091adddc83f9c46e4a33a735325d37acc31ffd51c3d"
     },
     "resolvable": [
+      "api-spec",
+      "backend-execution-plan",
       "business-policies",
       "contract",
       "db-script",
@@ -940,10 +791,13 @@
       "prd",
       "project-registry",
       "registry-db",
+      "registry-exec-be",
       "registry-srs",
       "srs"
     ],
     "inputs": {
+      "api-spec": "78d666b92208ad16b4c27ce82943f157a295cea9d10d8a21869b487e3be14720",
+      "backend-execution-plan": "90e7981004860d2be9cfa4acc4b252f98bcb1394e4772a534e410937e9f61a8f",
       "business-policies": "b6f725a79290552291db42eaeb23c9e63eb20cc480ffbe3dfa9319271c708fee",
       "contract": "8c99e96d1a7023bfc1adbf7fccd4cda57704388898915a7e9a40eac14042525c",
       "db-script": "6043c0a02e989596cc52ff59b19ac18f8e6ef8f03b0ea1f9713e7d9c8d22603d",
@@ -953,9 +807,10 @@
       "prd": "8a1c68fbab13cfa2243996a08e0e26c8c9a1c12b5d1e9cffb1bbe41bc52a0047",
       "project-registry": "7652329cae1b5e14558ead423c4a0d157fcf3aead94176473c23adb034161a82",
       "registry-db": "ff09b2b33e370672674b6745dc7b304acd0c7945190331a07d1e5240d2fb25c2",
+      "registry-exec-be": "7d6b603d587c592f588af4ea190f14465220adaad4451838d0bd1fe18b2f37f4",
       "registry-srs": "66a13d6897dbd06aebe1a99239bc4d7609a93faf51e5dac527542c9646d3d453",
       "srs": "3c99ff5e021a6a058edaeaf94c86ff27a53f9da1871e5f50559f1a1fd43ffb5e"
     },
-    "at": "2026-10-01T11:47:36+00:00"
+    "at": "2026-10-01T11:52:56+00:00"
   }
 }

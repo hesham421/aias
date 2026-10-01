@@ -1,6 +1,16 @@
 {
   "unit": "MODEL-EVAL",
   "kind": "SUB",
-  "tests": [],
+  "tests": [
+    "TC-CHK-087",
+    "TC-CHK-088",
+    "TC-CHK-089",
+    "TC-CHK-090",
+    "TC-CHK-091",
+    "TC-CHK-092",
+    "TC-CHK-093",
+    "TC-CHK-094",
+    "TC-CHK-095"
+  ],
   "acceptance": "tests-green"
 }

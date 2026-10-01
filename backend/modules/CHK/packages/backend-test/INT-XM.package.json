@@ -1,6 +1,12 @@
 {
   "unit": "INT-XM",
   "kind": "PHASE",
-  "tests": [],
+  "tests": [
+    "TC-CHK-096",
+    "TC-CHK-097",
+    "TC-CHK-098",
+    "TC-CHK-099",
+    "TC-CHK-100"
+  ],
   "acceptance": "tests-green"
 }

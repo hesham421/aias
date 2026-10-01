@@ -43,23 +43,23 @@
       "integration": [
         {
           "xm": "XM-CHK-001",
-          "path": "governance-shared/backend/modules/CHK/packages/integration/XM-CHK-001"
+          "path": "/Users/ezzat/my project/aias/governance-shared/backend/modules/CHK/packages/integration/XM-CHK-001"
         },
         {
           "xm": "XM-CHK-002",
-          "path": "governance-shared/backend/modules/CHK/packages/integration/XM-CHK-002"
+          "path": "/Users/ezzat/my project/aias/governance-shared/backend/modules/CHK/packages/integration/XM-CHK-002"
         },
         {
           "xm": "XM-CHK-003",
-          "path": "governance-shared/backend/modules/CHK/packages/integration/XM-CHK-003"
+          "path": "/Users/ezzat/my project/aias/governance-shared/backend/modules/CHK/packages/integration/XM-CHK-003"
         },
         {
           "xm": "XM-CHK-004",
-          "path": "governance-shared/backend/modules/CHK/packages/integration/XM-CHK-004"
+          "path": "/Users/ezzat/my project/aias/governance-shared/backend/modules/CHK/packages/integration/XM-CHK-004"
         },
         {
           "xm": "XM-CHK-005",
-          "path": "governance-shared/backend/modules/CHK/packages/integration/XM-CHK-005"
+          "path": "/Users/ezzat/my project/aias/governance-shared/backend/modules/CHK/packages/integration/XM-CHK-005"
         }
       ]
     },

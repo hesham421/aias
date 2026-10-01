@@ -324,7 +324,7 @@ Standard fields — per profile: kind `transactional` carries `createdAt, update
   Traces     : US-INT-003
   Entities   : ENT-RPT-001
   Rationale  : The employee uploads only documents the service asks for.
-  Source     : POL-INT-004; CON-REG-010 (required document types); ADR-INT-011
+  Source     : POL-INT-004; CON-REG-009 (required document types of the Check's pinned version — ADR-INT-020, ADR-REG-020, ADR-INT-028); ADR-INT-011
   Priority   : —
 
 #### AC-INT-020 — [REQ-INT-016]
@@ -1291,6 +1291,7 @@ Raw-idea §12 guardrails at INT's surface (AIAS-1; same approach as ADR-REG-008,
 | ADR-DOC-015, ADR-DOC-016 | DOC refuses an upload for an ended Check and above the maximum uploads per Check; INT passes both through | DOC P1 (revise) | ACCEPTED |
 | ADR-INT-025 | DOC-409-CHECK-ENDED and DOC-422-UPLOAD-LIMIT-REACHED passed through on the upload; closes PF-5 for INT | P1 (gate round 1) | ACCEPTED — non-breaking |
 | ADR-INT-026 | Same-type uploads passed through; a failed background read keeps the shown Check; invalid decision code tested; REQ-INT-057 wording; partial-supersession note | P1 (gate round 1) | ACCEPTED — non-breaking |
+| ADR-INT-028 | REG v1 delivered: CON-REG-002, CON-REG-004, CON-REG-009, CON-REG-012 still honoured; required document types already read through CON-REG-009 with the Check's pinned version (ADR-REG-020); REQ-INT-016 source corrected; resolves XM-INT-001 | P1 (XM event) | ACCEPTED — non-breaking |
 | DEFAULT — approval timeout 10 seconds | The Approval API call waits at most 10 seconds | ADR-INT-012; domain best practice | Override: set the approval timeout in the platform configuration |
 | DEFAULT — upload request limit 50 MB | An upload request above 50 MB is refused before it is read | ADR-INT-012 | Override: set the upload request limit (never below the maximum file size) |
 | DEFAULT — polling interval 5 seconds | A Check that has not ended is read again every 5 seconds | ADR-INT-011; [KB:raw-idea.md §5] | Override: set the polling interval in the frontend configuration |

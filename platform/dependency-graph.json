@@ -10,7 +10,8 @@
     "srs": {
       "CHK": "v1",
       "DOC": "v1",
-      "REG": "v1"
+      "REG": "v1",
+      "RPT": "v1"
     }
   },
   "modules": {

@@ -1065,7 +1065,7 @@ Standard fields — per profile: kind `transactional` carries `createdAt, update
 #### AC-INT-078 — [REQ-INT-066]
   Given  : the polling interval is 5 seconds and Check 730 is shown as RUNNING
   When   : one repeated read of Check 730 fails and the next succeeds with Check 730 still RUNNING
-  Then   : Check 730 stays shown as RUNNING with the notice "Could not refresh; retrying" during the failed interval, and the notice is gone after the next successful read
+  Then   : Check 730 stays shown as RUNNING with the notice "Refresh failed; retrying" during the failed interval, and the notice is gone after the next successful read
 
 ## A5 — Business rules
 

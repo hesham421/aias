@@ -5,7 +5,7 @@
   "counts": {
     "CRITICAL": 0,
     "MAJOR": 0,
-    "MINOR": 15
+    "MINOR": 14
   },
   "clean": true,
   "blocking": [
@@ -120,14 +120,6 @@
       "message": "`REQ-INT-048` uses 'could' \u2014 a word two implementers read two ways; state the measure, the set or the rule instead",
       "artifact": "srs",
       "line": 779
-    },
-    {
-      "severity": "MINOR",
-      "clause": "C5.13",
-      "check": "ambiguity",
-      "message": "`AC-INT-078` uses 'could' \u2014 a word two implementers read two ways; state the measure, the set or the rule instead",
-      "artifact": "srs",
-      "line": 1065
     },
     {
       "severity": "MINOR",
@@ -257,9 +249,9 @@
       "registry-exec-be": "194493fd567639ce64b5092df8f529fc37ec7cc7cc01b9d0cf3ff17b742dc087",
       "registry-exec-fe": "ba817d01543b57614474d40d7752ba96cb55b222112086a398764d7f528cef19",
       "registry-srs": "50ed443a61028fb64b51098ff213724a104f231c0afb0600037fd6fa4c50c0d4",
-      "srs": "330b2865d7959439477d1526224963e4ae1ff76ccb1d992e54b75d35b32105a2",
+      "srs": "a351eb999a7f704a28fee48afd9ca3b5de0f3101b3544d52468711509f02c2ac",
       "ui-ux-spec": "14691f89a9605767ee67982c0cd3bac67bde2541a87fbc669d648846e1a837d2"
     },
-    "at": "2026-10-01T15:35:18+00:00"
+    "at": "2026-10-01T15:35:30+00:00"
   }
 }

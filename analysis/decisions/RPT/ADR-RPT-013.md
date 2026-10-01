@@ -1,0 +1,8 @@
+# ADR-RPT-013 — RPT's HTTP errors are the RULE rows of its two list validations plus PLATFORM-STD rows (invalid identifier, Check not found, server failure); the result port and decision refusals are typed in-process exceptions with codes in the same format that INT maps to ProblemDetail; Arabic messages pending
+Status      : ACCEPTED
+Stage       : P3.1        Module: RPT        Version: v1
+Context     : The profile requires every catalog code to follow `{MOD}-{http}[-{SLUG}]` and every infrastructure error to be a PLATFORM-STD row with an ADR. RPT's writes are in-process (ADR-RPT-006), so their refusals are not HTTP responses of RPT. The SRS gives English messages only; the profile lists Arabic as a language (require_all false). CHK and DOC took the same approach (ADR-CHK-018, ADR-DOC-012).
+Decision    : (1) Catalog rows: RPT-400-CHECK-ID-INVALID, RPT-404-CHECK-NOT-FOUND, RPT-500 (PLATFORM-STD), RPT-400-REQUEST-KEYS-MISSING (RULE-RPT-009), RPT-400-SERVICE-CODE-MISSING (RULE-RPT-015). (2) The 16 in-process codes of the SVC-API table (RULE-RPT-001 … RULE-RPT-008, RULE-RPT-010 … RULE-RPT-014, not found, not stored) are exception codes in the same format; INT's decision endpoint maps the five decision codes to ProblemDetail with the HTTP status of their code. (3) Every Arabic message is `PENDING ADR-RPT-013` until the owner supplies the employee-facing texts.
+Alternatives rejected: HTTP rows for in-process refusals — RPT would claim responses it never serves; machine-translated Arabic — not a business-language text.
+Consequences: The API document answers only the five catalog rows; P3.2 / INT read the decision codes from this plan's in-process table.
+traces      : REQ-RPT-025, REQ-RPT-029, REQ-RPT-041, RULE-RPT-009, RULE-RPT-015

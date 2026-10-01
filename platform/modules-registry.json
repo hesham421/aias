@@ -29,6 +29,16 @@
       ],
       "current_version": 1,
       "delivery": {}
+    },
+    "RPT": {
+      "code": "RPT",
+      "description": "",
+      "registered_at": "2026-10-01T13:11:11+00:00",
+      "versions": [
+        1
+      ],
+      "current_version": 1,
+      "delivery": {}
     }
   }
 }

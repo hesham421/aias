@@ -4,7 +4,8 @@
     "platform-summary": {
       "CHK": "v1",
       "DOC": "v1",
-      "REG": "v1"
+      "REG": "v1",
+      "RPT": "v1"
     },
     "srs": {
       "CHK": "v1",

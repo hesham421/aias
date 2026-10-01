@@ -42,6 +42,7 @@ Field/DTO binding : see api-spec-rpt.yaml — the response schemas of API-RPT-00
 |---|---|---|
 | CheckReport | API-RPT-001 200 | status-discriminated reading: `overallStatus`, `comparisonModel` present exactly when COMPLETED; `failureReason`, `failureDetail` exactly when FAILED; `findings`, `documents`, `unreadQueries` empty until COMPLETED; `decision` null until recorded (REQ-RPT-023, REQ-RPT-026; AC-RPT-027, AC-RPT-028, AC-RPT-031) |
 | FindingView | API-RPT-001 200 | one entry holding condition, outcome, evidence, note — never split across models (REQ-RPT-024) |
+| DocumentView | API-RPT-001 200 | one entry holding documentType, sourceMode, readStatus, unreadableReason, detail; `unreadableReason` present exactly when readStatus is UNREADABLE (REQ-RPT-017, RULE-RPT-008) |
 | text fields (condition, evidence, note, detail, queryName, requestNumber, employeeId, decidedBy) | API-RPT-001 / API-RPT-002 | typed `string`, kept exactly as received — no trimming, case change or parsing (REQ-RPT-027) |
 | ChecksOfRequest | API-RPT-002 200 | `total` kept beside `checks` (≤ 100) so the cut stays visible (REQ-RPT-028, REQ-RPT-031) |
 | closed codes | api-spec enums | CHECK_STATUS, OVERALL_STATUS, FINDING_OUTCOME, CHECK_FAILURE_REASON, FETCH_MODE, DOCUMENT_READ_STATUS, UNREADABLE_REASON, EMPLOYEE_DECISION as string-literal unions of the document's enums; labels en per SRS, ar PENDING ADR-RPT-013 |
@@ -105,6 +106,7 @@ Rendering obligations any consuming screen owes RPT's data (from the SRS; not co
 - condition, evidence, note, detail and query name are rendered as text nodes — never as HTML, markdown or a link built from their content (REQ-RPT-027, AC-RPT-032);
 - each finding is one visual entry holding its condition, outcome, evidence and note together (REQ-RPT-024, AC-RPT-029);
 - findings, documents and unread queries are rendered in `position` order as returned (REQ-RPT-010, AC-RPT-013);
+- each Check Document is one visual entry showing documentType, sourceMode and readStatus; READ, MISSING and UNREADABLE carry distinct text labels (never colour alone), an UNREADABLE document shows its unreadableReason and detail, and a missing or unreadable document is never shown as satisfied (REQ-RPT-023, REQ-RPT-017; ui-ux-spec design intent);
 - a document path quoted in a detail is shown as text; nothing is opened or fetched from it (REQ-RPT-048).
 <!-- PHASE:F4:END -->
 

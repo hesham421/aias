@@ -22,6 +22,7 @@ The SRS states these about RPT's data wherever it is shown; Part B (F4) turns th
 |---|---|
 | A Check's status is shown while it runs; the report only once it is COMPLETED; a FAILED Check shows its failure reason and detail and no Overall Status | REQ-RPT-023, AC-RPT-027, AC-RPT-028, REQ-RPT-026, AC-RPT-031 |
 | Each finding is shown as one entry: condition, outcome, evidence and note together | REQ-RPT-024, AC-RPT-029 |
+| Each Check Document is shown as one entry with its document type, source mode and read status; READ, MISSING and UNREADABLE are visibly told apart (distinct label per status, never colour alone); an UNREADABLE document shows its unreadable reason and detail beside the status, a MISSING one its detail; a missing or unreadable required document is never presented as satisfied — it stands beside the finding it caused (NOT_SATISFIED / UNDETERMINED), so no COMPLIANT reading can hide it | REQ-RPT-023, AC-RPT-028, REQ-RPT-017, AC-RPT-020, REQ-RPT-014, ADR-RPT-017 |
 | Findings, documents and unread queries keep report order (position) | REQ-RPT-010, AC-RPT-013 |
 | Stored texts are shown as text, never interpreted | REQ-RPT-027, AC-RPT-032 |
 | The Checks of a request are listed newest first, at most 100, with the total shown so a cut is visible | REQ-RPT-028, REQ-RPT-031, AC-RPT-034, AC-RPT-037 |

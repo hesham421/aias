@@ -4,6 +4,7 @@
 | Table | ENT | Kind | DBF range |
 |---|---|---|---|
 | DOC_UPLOADED_DOC | ENT-DOC-001 | transactional | DBF-DOC-001, DBF-DOC-002, DBF-DOC-003, DBF-DOC-004, DBF-DOC-005, DBF-DOC-006, DBF-DOC-007, DBF-DOC-008, DBF-DOC-009, DBF-DOC-010, DBF-DOC-011 |
+| DOC_ENDED_CHECK | ENT-DOC-002 | transactional | DBF-DOC-012, DBF-DOC-013, DBF-DOC-014, DBF-DOC-015 |
 
 ### XM index
 | XM | Type | Target | State | Contract |
@@ -23,13 +24,13 @@
 | SERVICE_CODE | 0 here (REG data) | REG |
 
 ### Sequences
-last DBF: DBF-DOC-011 · last XM: XM-DOC-004
+last DBF: DBF-DOC-015 · last XM: XM-DOC-004
 
 ### Decisions
-ADR-DOC-010 (ACCEPTED). BLOCKED: none.
+ADR-DOC-010 (ACCEPTED); applied ADR-DOC-015, ADR-DOC-016. BLOCKED: none.
 
 ### Event
-"P2 completed: DOC v1 — 1 tables, 11 DBF, 4 XM"
+"P2 completed: DOC v1 — 2 tables, 15 DBF, 4 XM (analysis-gate revise: DOC_ENDED_CHECK)"
 
 ### Cascade
 none by hand — `gov.py graph` derives the edges targeting DOC and raises their resolution events.

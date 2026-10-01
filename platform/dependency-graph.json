@@ -40,13 +40,13 @@
     {
       "from": "CHK",
       "to": "REG",
-      "state": "CONTRACTED",
+      "state": "READY",
       "source": "platform"
     },
     {
       "from": "DOC",
       "to": "REG",
-      "state": "CONTRACTED",
+      "state": "READY",
       "source": "platform"
     },
     {

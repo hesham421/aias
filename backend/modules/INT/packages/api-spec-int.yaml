@@ -145,12 +145,15 @@ paths:
           - RPT-404-CHECK-NOT-FOUND
         '409':
           description: a file is uploaded for a Check whose status is not AWAITING_DOCUMENTS (REQ-INT-011)
+            / Document Access refuses an upload for a Check it has recorded as ended (passed
+            through — ADR-INT-025)
           content:
             application/problem+json:
               schema:
                 $ref: '#/components/schemas/ProblemDetail'
           x-error-codes:
           - INT-409-CHECK-NOT-AWAITING-DOCUMENTS
+          - DOC-409-CHECK-ENDED
         '413':
           description: the upload request exceeds the upload request limit (REQ-INT-014)
           content:
@@ -161,7 +164,9 @@ paths:
           - INT-413-UPLOAD-TOO-LARGE
         '422':
           description: Document Access refuses an upload for a service whose fetch mode is not manual
-            / Document Access refuses a document type the version does not require
+            / Document Access refuses a document type the version does not require / Document Access
+            refuses an upload when the Check already holds the maximum uploads per Check (passed
+            through — ADR-INT-025)
           content:
             application/problem+json:
               schema:
@@ -169,6 +174,7 @@ paths:
           x-error-codes:
           - DOC-422-FETCH-MODE-NOT-MANUAL
           - DOC-422-DOCUMENT-TYPE-NOT-OF-SERVICE
+          - DOC-422-UPLOAD-LIMIT-REACHED
         '500':
           description: an unexpected server failure (REQ-INT-008)
           content:

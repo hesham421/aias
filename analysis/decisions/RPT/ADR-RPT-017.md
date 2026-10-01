@@ -1,0 +1,8 @@
+# ADR-RPT-017 — Correction of ADR-RPT-007's citation of ADR-CHK-014: a missing required document yields NOT_SATISFIED and an unreadable one UNDETERMINED; the COMPLIANT guard still covers both
+Status      : ACCEPTED
+Stage       : P1        Module: RPT        Version: v1
+Context     : ADR-RPT-007's Context states "A missing or unreadable required document already yields a NOT_SATISFIED finding (ADR-CHK-014)". ADR-CHK-014's decision (1) actually reads: SATISFIED when at least one outcome of the type is READ; otherwise UNDETERMINED when at least one is UNREADABLE (evidence: the unreadable reason and detail); otherwise NOT_SATISFIED (MISSING) — consistent with ADR-CHK-002 (MISSING → NOT_SATISFIED, UNREADABLE → UNDETERMINED). The citation misattributes the UNREADABLE outcome (gate-analysis finding G5). An existing ADR is never rewritten under its id.
+Decision    : The Context sentence of ADR-RPT-007 is superseded by: "A missing required document yields a NOT_SATISFIED finding and an unreadable one an UNDETERMINED finding (ADR-CHK-014, ADR-CHK-002), so the COMPLIANT guard — every finding SATISFIED — also covers G6 at the store." ADR-RPT-007's Decision, RULE-RPT-002, RULE-RPT-004 and RULE-RPT-005 are unchanged: neither NOT_SATISFIED nor UNDETERMINED is SATISFIED, so RULE-RPT-005 refuses COMPLIANT in both cases.
+Alternatives rejected: editing ADR-RPT-007 in place — ADRs are immutable under their id; leaving the misquotation — a false attribution of a cited decision.
+Consequences: No requirement, rule, column or test changes. A reader of ADR-RPT-007 finds the corrected citation here. Non-breaking.
+traces      : ADR-RPT-007, RULE-RPT-005, REQ-RPT-014, US-RPT-004

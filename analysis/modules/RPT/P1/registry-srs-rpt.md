@@ -33,7 +33,7 @@ None — `consumes: []` (RPT implements CHK's Check result port; codes stored by
 None — no SCR-REQ in this version (RPT has no screen).
 
 ### Requirements
-REQ count 52 · AC count 60 · RULE count 15 · last sequence per atom (REQ: 52, AC: 60, ENT: 4, RULE: 15, SCR-REQ: 0)
+REQ count 53 · AC count 61 · RULE count 15 · last sequence per atom (REQ: 53, AC: 61, ENT: 4, RULE: 15, SCR-REQ: 0)
 
 | REQ | AC |
 |---|---|
@@ -89,6 +89,7 @@ REQ count 52 · AC count 60 · RULE count 15 · last sequence per atom (REQ: 52,
 | REQ-RPT-050 | AC-RPT-058 |
 | REQ-RPT-051 | AC-RPT-059 |
 | REQ-RPT-052 | AC-RPT-060 |
+| REQ-RPT-053 | AC-RPT-061 |
 
 | RULE | Traces |
 |---|---|
@@ -109,7 +110,7 @@ REQ count 52 · AC count 60 · RULE count 15 · last sequence per atom (REQ: 52,
 | RULE-RPT-015 | REQ-RPT-041 |
 
 ### Decisions
-ADR-RPT-006, ADR-RPT-007, ADR-RPT-008, ADR-RPT-009, ADR-RPT-010 (new, ACCEPTED); applied ADR-RPT-001 … ADR-RPT-005, ADR-REG-001, ADR-REG-002, ADR-REG-006, ADR-CHK-001, ADR-CHK-002, ADR-CHK-005, ADR-CHK-007, ADR-CHK-011, ADR-CHK-014, ADR-CHK-015, ADR-CHK-017, ADR-DOC-002, ADR-DOC-007, ADR-DOC-008, ADR-DOC-011. BLOCKED: none.
+ADR-RPT-006, ADR-RPT-007, ADR-RPT-008, ADR-RPT-009, ADR-RPT-010, ADR-RPT-017, ADR-RPT-018 (new, ACCEPTED); applied ADR-RPT-001 … ADR-RPT-005, ADR-REG-001, ADR-REG-002, ADR-REG-006, ADR-CHK-001, ADR-CHK-002, ADR-CHK-005, ADR-CHK-007, ADR-CHK-011, ADR-CHK-014, ADR-CHK-015, ADR-CHK-017, ADR-DOC-002, ADR-DOC-007, ADR-DOC-008, ADR-DOC-011. BLOCKED: none.
 
 ### Event
-"P1 completed: RPT v1 — REQ 52 · AC 60 · ENT 4 · RULE 15 · SCR-REQ 0 · ADR 5"
+"P1 completed: RPT v1 — REQ 53 · AC 61 · ENT 4 · RULE 15 · SCR-REQ 0 · ADR 7"

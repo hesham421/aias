@@ -2,7 +2,7 @@
 ══════════════════════════════════════════════════════════════════
 Module : RPT   Version : v1   Profile : aias
 Inputs : prd, domain-profile, project-registry (PRD approved 2026-10-01)
-Counts : REQ 52 · AC 60 · ENT 4 · RULE 15 · SCR-REQ 0 · ADR 5 (new: ADR-RPT-006 … ADR-RPT-010; applied: ADR-RPT-001 … ADR-RPT-010, ADR-REG-001, ADR-REG-002, ADR-REG-006, ADR-CHK-001, ADR-CHK-002, ADR-CHK-005, ADR-CHK-007, ADR-CHK-011, ADR-CHK-014, ADR-CHK-015, ADR-CHK-017, ADR-DOC-002, ADR-DOC-007, ADR-DOC-008, ADR-DOC-011)
+Counts : REQ 53 · AC 61 · ENT 4 · RULE 15 · SCR-REQ 0 · ADR 7 (new: ADR-RPT-006 … ADR-RPT-010, ADR-RPT-017, ADR-RPT-018; applied: ADR-RPT-001 … ADR-RPT-010, ADR-RPT-016 … ADR-RPT-018, ADR-REG-001, ADR-REG-002, ADR-REG-006, ADR-CHK-001, ADR-CHK-002, ADR-CHK-005, ADR-CHK-007, ADR-CHK-011, ADR-CHK-014, ADR-CHK-015, ADR-CHK-017, ADR-DOC-002, ADR-DOC-007, ADR-DOC-008, ADR-DOC-011)
 ══════════════════════════════════════════════════════════════════
 
 # PART A — MODULE FOUNDATION
@@ -16,7 +16,7 @@ Counts : REQ 52 · AC 60 · ENT 4 · RULE 15 · SCR-REQ 0 · ADR 5 (new: ADR-RPT
 | Date | 2026-10-01 |
 | Status | DRAFT — P1 output, PRD approved 2026-10-01 (gate prd-approval) |
 | Prepared by | P1 SRS engine (operator run, lane analysis) |
-| Decisions applied | 10 RPT ADRs (ADR-RPT-001 … ADR-RPT-010, of which 5 new), 3 REG ADRs, 8 CHK ADRs, 4 DOC ADRs and 4 DEFAULTs — see Decisions applied |
+| Decisions applied | 13 RPT ADRs (ADR-RPT-001 … ADR-RPT-010 and ADR-RPT-016 … ADR-RPT-018, of which 7 new), 3 REG ADRs, 8 CHK ADRs, 4 DOC ADRs and 4 DEFAULTs — see Decisions applied |
 
 ## A2 — Functional context
 
@@ -433,7 +433,7 @@ Consumed: none. RPT consumes no entity of another module: the service code, vers
 #### AC-RPT-022 — [REQ-RPT-019]
   Given  : Check 516 is completed with a document outcome TRANSCRIPT READ
   When   : the Check Document of TRANSCRIPT is read
-  Then   : it holds document type, source mode, read status and detail only — no field holds the transcript's text or file
+  Then   : the Check Document holds exactly the fields position (1), documentType TRANSCRIPT, sourceMode, readStatus READ, unreadableReason (null) and detail, and none of them holds the transcript's raw text, image data or file bytes
 
 ### REQ-RPT-020 — An ended report never changes
   Pattern    : state
@@ -494,7 +494,7 @@ Consumed: none. RPT consumes no entity of another module: the service code, vers
 #### AC-RPT-027 — [REQ-RPT-023]
   Given  : Check 522 is RUNNING
   When   : the employee frontend reads Check 522
-  Then   : it receives status RUNNING with the Check's service, version, request and times, and no Overall Status, findings or documents
+  Then   : it receives status RUNNING with the Check's service code, version number, request number, startedAt and runningSince; overallStatus is null, and findings, documents and unreadQueries are each an empty array
 
 #### AC-RPT-028 — [REQ-RPT-023]
   Given  : Check 523 is COMPLETED with Overall Status NOT_COMPLIANT, 3 findings, 2 Check Documents and 0 unread queries, with no decision
@@ -922,6 +922,20 @@ Consumed: none. RPT consumes no entity of another module: the service code, vers
   When   : the purge runs
   Then   : Check 544 is still stored with all its records, Check 545 no longer exists, and the log counts 1 deleted Check run
 
+### REQ-RPT-053 — A hand-over carrying an undeclared field refused
+  Pattern    : unwanted
+  Statement  : If the Check Engine hands over a completed report or a failure whose finding, document outcome, unread query, metadata or failure carries a field that CON-CHK-008 or CON-CHK-009 does not declare, then the system shall refuse the hand-over and store nothing of it.
+  Traces     : US-RPT-005
+  Entities   : ENT-RPT-001, ENT-RPT-002, ENT-RPT-003, ENT-RPT-004
+  Rationale  : What the store keeps is exactly the contracted shape; an undeclared field (for example document content) must never reach a stored report.
+  Source     : POL-RPT-008; CON-CHK-008; CON-CHK-009; ADR-RPT-018
+  Priority   : —
+
+#### AC-RPT-061 — [REQ-RPT-053]
+  Given  : the Check result port RPT implements for CON-CHK-008 and CON-CHK-009
+  When   : the components of the value types completeCheck and failCheck accept are listed
+  Then   : a finding has exactly {condition, outcome, evidence, note}, a document outcome exactly {documentType, sourceMode, readStatus, reason, detail}, an unread query exactly {queryName, detail}, the metadata exactly {serviceCode, versionNumber, fetchMode, comparisonModel, employeeId, startedAt, endedAt} and failCheck exactly (checkId, failureReason, detail, endedAt); none of them is a map, a byte array or an untyped object, so 0 undeclared fields can be handed over and 0 rows are written from one
+
 ## A5 — Business rules
 
 ### RULE-RPT-001 — A Check run is complete
@@ -1128,8 +1142,8 @@ Errors    : ProblemDetail (RFC 9457) → {type, title, status, detail, code}; in
 | record an Employee Decision (in-process, called by INT) | — | — | checkId, employeeDecision, decidedBy, approvalApiExecuted | Check with the recorded decision or rejection | RULE-RPT-011 … RULE-RPT-014 | REQ-RPT-032 … REQ-RPT-039 |
 | Check result port — create a Check run (implements CON-CHK-006) | — | — | serviceCode, versionNumber, fetchMode, requestNumber, employeeId, status, startedAt | checkId | RULE-RPT-001, RULE-RPT-002, RULE-RPT-006 | REQ-RPT-001 … REQ-RPT-004 |
 | Check result port — mark RUNNING (implements CON-CHK-007) | — | — | checkId, runningSince | — | RULE-RPT-003 | REQ-RPT-005, REQ-RPT-006, REQ-RPT-007 |
-| Check result port — complete a Check (implements CON-CHK-008) | — | — | checkId, overallStatus, findings, documentOutcomes, unreadQueries, metadata | — | RULE-RPT-003 … RULE-RPT-008 | REQ-RPT-008 … REQ-RPT-017, REQ-RPT-020 |
-| Check result port — fail a Check (implements CON-CHK-009) | — | — | checkId, failureReason, detail, endedAt | — | RULE-RPT-003, RULE-RPT-006, RULE-RPT-010 | REQ-RPT-018, REQ-RPT-051 |
+| Check result port — complete a Check (implements CON-CHK-008) | — | — | checkId, overallStatus, findings, documentOutcomes, unreadQueries, metadata | — | RULE-RPT-003 … RULE-RPT-008 | REQ-RPT-008 … REQ-RPT-017, REQ-RPT-020, REQ-RPT-053 |
+| Check result port — fail a Check (implements CON-CHK-009) | — | — | checkId, failureReason, detail, endedAt | — | RULE-RPT-003, RULE-RPT-006, RULE-RPT-010 | REQ-RPT-018, REQ-RPT-051, REQ-RPT-053 |
 | Check result port — read one Check (implements CON-CHK-010) | — | — | checkId | checkId, status, serviceCode, versionNumber, fetchMode, requestNumber, employeeId, startedAt | — | REQ-RPT-021, REQ-RPT-007 |
 | Check result port — list unfinished Checks (implements CON-CHK-011) | — | — | — | list of checkId, status, startedAt | — | REQ-RPT-022 |
 | purge (scheduled, no caller) | — | — | platform configuration | count deleted (log) | — | REQ-RPT-042 … REQ-RPT-046, REQ-RPT-052 |
@@ -1143,7 +1157,7 @@ Errors    : ProblemDetail (RFC 9457) → {type, title, status, detail, code}; in
 | US-RPT-002 | REQ-RPT-004, REQ-RPT-005, REQ-RPT-006, REQ-RPT-007 | AC-RPT-006, AC-RPT-007, AC-RPT-008, AC-RPT-009, AC-RPT-010 | RULE-RPT-003 | ENT-RPT-001 | — |
 | US-RPT-003 | REQ-RPT-008, REQ-RPT-009, REQ-RPT-010, REQ-RPT-011, REQ-RPT-012, REQ-RPT-013, REQ-RPT-014 | AC-RPT-011, AC-RPT-012, AC-RPT-013, AC-RPT-014, AC-RPT-015, AC-RPT-016, AC-RPT-017 | RULE-RPT-004, RULE-RPT-005 | ENT-RPT-001, ENT-RPT-002, ENT-RPT-003, ENT-RPT-004 | — |
 | US-RPT-004 | REQ-RPT-014, REQ-RPT-015, REQ-RPT-016, REQ-RPT-017, REQ-RPT-018, REQ-RPT-051 | AC-RPT-017, AC-RPT-018, AC-RPT-019, AC-RPT-020, AC-RPT-021, AC-RPT-059 | RULE-RPT-005, RULE-RPT-006, RULE-RPT-007, RULE-RPT-008, RULE-RPT-010 | ENT-RPT-001, ENT-RPT-002, ENT-RPT-003 | — |
-| US-RPT-005 | REQ-RPT-019, REQ-RPT-047, REQ-RPT-048, REQ-RPT-049 | AC-RPT-022, AC-RPT-055, AC-RPT-056, AC-RPT-057 | — | ENT-RPT-002, ENT-RPT-003, ENT-RPT-004 | — |
+| US-RPT-005 | REQ-RPT-019, REQ-RPT-047, REQ-RPT-048, REQ-RPT-049, REQ-RPT-053 | AC-RPT-022, AC-RPT-055, AC-RPT-056, AC-RPT-057, AC-RPT-061 | — | ENT-RPT-001, ENT-RPT-002, ENT-RPT-003, ENT-RPT-004 | — |
 | US-RPT-006 | REQ-RPT-006, REQ-RPT-020 | AC-RPT-008, AC-RPT-009, AC-RPT-023 | RULE-RPT-003 | ENT-RPT-001, ENT-RPT-002, ENT-RPT-003, ENT-RPT-004 | — |
 | US-RPT-007 | REQ-RPT-007, REQ-RPT-021, REQ-RPT-022 | AC-RPT-010, AC-RPT-024, AC-RPT-025, AC-RPT-026 | — | ENT-RPT-001 | — |
 | US-RPT-008 | REQ-RPT-023, REQ-RPT-024, REQ-RPT-025, REQ-RPT-026, REQ-RPT-027 | AC-RPT-027, AC-RPT-028, AC-RPT-029, AC-RPT-030, AC-RPT-031, AC-RPT-032 | — | ENT-RPT-001, ENT-RPT-002, ENT-RPT-003, ENT-RPT-004 | — |
@@ -1152,7 +1166,7 @@ Errors    : ProblemDetail (RFC 9457) → {type, title, status, detail, code}; in
 | US-RPT-011 | REQ-RPT-040, REQ-RPT-041 | AC-RPT-047, AC-RPT-048, AC-RPT-049 | RULE-RPT-015 | ENT-RPT-001 | — |
 | US-RPT-012 | REQ-RPT-042, REQ-RPT-043, REQ-RPT-044, REQ-RPT-045, REQ-RPT-046, REQ-RPT-052 | AC-RPT-050, AC-RPT-051, AC-RPT-052, AC-RPT-053, AC-RPT-054, AC-RPT-060 | — | ENT-RPT-001, ENT-RPT-002, ENT-RPT-003, ENT-RPT-004 | — |
 
-Raw-idea §12 guardrails at RPT's surface (AIAS-1, ADR-RPT-008): (1) LLM analyses only → REQ-RPT-049 · (2) approval only on the employee's action → REQ-RPT-037, REQ-RPT-039 · (3) read-only host access → REQ-RPT-047 · (4) bound parameters → REQ-RPT-050 · (5) storage root → REQ-RPT-048 · (6) nothing skipped silently → REQ-RPT-011, REQ-RPT-012, REQ-RPT-014 · (7) content is data → REQ-RPT-019, REQ-RPT-027 · (8) limits → REQ-RPT-031 · (9) nothing carried between Checks → REQ-RPT-030.
+Raw-idea §12 guardrails at RPT's surface (AIAS-1, ADR-RPT-008): (1) LLM analyses only → REQ-RPT-049 · (2) approval only on the employee's action → REQ-RPT-037, REQ-RPT-039 · (3) read-only host access → REQ-RPT-047 · (4) bound parameters → REQ-RPT-050 · (5) storage root → REQ-RPT-048 · (6) nothing skipped silently → REQ-RPT-011, REQ-RPT-012, REQ-RPT-014 · (7) content is data → REQ-RPT-019, REQ-RPT-027, REQ-RPT-053 · (8) limits → REQ-RPT-031 · (9) nothing carried between Checks → REQ-RPT-030.
 
 ## Decisions applied
 | DEFAULT / ADR | What | Source | Override / status |
@@ -1181,6 +1195,9 @@ Raw-idea §12 guardrails at RPT's surface (AIAS-1, ADR-RPT-008): (1) LLM analyse
 | ADR-RPT-008 | Every §12 guardrail stated at RPT's surface; listing capped at 100 with a total | P1 (this stage) | ACCEPTED — non-breaking |
 | ADR-RPT-009 | Decision inputs; recording time is RPT's clock; Approval API flag only with APPROVED | P1 (this stage) | ACCEPTED — non-breaking |
 | ADR-RPT-010 | Retention and purge configuration: whole days, schedule default daily 02:00, one transaction per Check run, logged | P1 (this stage) | ACCEPTED — non-breaking |
+| ADR-RPT-016 | The PRD records its prd-approval of 2026-10-01 | P0.5 (revise) | ACCEPTED — non-breaking |
+| ADR-RPT-017 | Corrects ADR-RPT-007's citation of ADR-CHK-014: MISSING → NOT_SATISFIED, UNREADABLE → UNDETERMINED; RULE-RPT-005 unchanged | P1 (revise) | ACCEPTED — non-breaking |
+| ADR-RPT-018 | The result port's value types are closed to the contracted fields; an undeclared field is refused structurally (REQ-RPT-053), no new rejection code | P1 (revise) | ACCEPTED — non-breaking |
 | DEFAULT — purge schedule daily at 02:00 server time | The purge runs once a day at 02:00 | ADR-RPT-010; domain best practice | Override: set the purge schedule in the platform configuration |
 | DEFAULT — age measured from the end time | A Check run's age for the purge counts from endedAt | ADR-RPT-004 | Override: count from startedAt |
 | DEFAULT — listing cap 100 | The Checks of a request are returned 100 at most, newest first, with the total | ADR-RPT-008 | Override: add paging in a later version |

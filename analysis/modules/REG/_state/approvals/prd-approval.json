@@ -1,0 +1,11 @@
+{
+  "gate": "prd-approval",
+  "module": "REG",
+  "version": 1,
+  "by": "Hesham Ezzat (owner) — PRD as is + agent decisions 1-9 / ADR-REG-002..006 confirmed 2026-10-01",
+  "at": "2026-10-01T10:56:29+00:00",
+  "after": "P0.5",
+  "artifact_sha": {
+    "prd": "8a1c68fbab13cfa2243996a08e0e26c8c9a1c12b5d1e9cffb1bbe41bc52a0047"
+  }
+}

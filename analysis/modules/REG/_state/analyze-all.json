@@ -1,0 +1,400 @@
+{
+  "module": "REG",
+  "version": 1,
+  "scope": "all",
+  "counts": {
+    "CRITICAL": 11,
+    "MAJOR": 9,
+    "MINOR": 0
+  },
+  "clean": false,
+  "blocking": [
+    "CRITICAL",
+    "MAJOR"
+  ],
+  "contracts": [
+    "C0",
+    "C1",
+    "C2",
+    "C3",
+    "C4",
+    "C5",
+    "C6",
+    "C7",
+    "C8",
+    "C9",
+    "C10",
+    "C13",
+    "C14",
+    "C12"
+  ],
+  "skipped": [],
+  "coverage": {
+    "C0.1": 3,
+    "C1.4": 3,
+    "C2.2": 10,
+    "C3.7": 15,
+    "C3.8": 15,
+    "C4.4": 13,
+    "C4.7": 1,
+    "C5.2": 0,
+    "C5.3": 0,
+    "C5.4": 0,
+    "C5.5": 0,
+    "C5.6": 0,
+    "C5.8": 0,
+    "C5.13": 0,
+    "C5.14": 0,
+    "C5.15": 0,
+    "C5.16": 0,
+    "C5.17": 0,
+    "C6.2": 0,
+    "C6.3": 0,
+    "C6.5": 0,
+    "C6.6": 0,
+    "C6.10": 0,
+    "C6.11": 1,
+    "C6.12": 0,
+    "C6.13": 1,
+    "C6.14": 1,
+    "C6.15": 0,
+    "C7.2": 0,
+    "C7.3": 0,
+    "C7.4": 0,
+    "C7.5": 0,
+    "C7.5b": 0,
+    "C7.6": 0,
+    "C7.22": 0,
+    "C7.23": 0,
+    "C7.20": 0,
+    "C7.19": 0,
+    "C7.18": 0,
+    "C7.24": 0,
+    "C7.25": 0,
+    "C7.26": 0,
+    "C7.27": 0,
+    "C7.28": 0,
+    "C7.29": 0,
+    "C7.30": 0,
+    "C7.31": 0,
+    "C9.2": 0,
+    "C9.3": 0,
+    "C9.4": 0,
+    "C9.5": 0,
+    "C9.6": 0,
+    "C9.7": 0,
+    "C9.8": 0,
+    "C9.15": 0,
+    "C9.17": 0,
+    "C9.16": 0,
+    "C9.24": 0,
+    "C9.22": 0,
+    "C9.23": 6,
+    "C10.1": 0,
+    "C10.2": 0,
+    "C10.7": 0,
+    "C10.8": 0,
+    "C10.9": 0,
+    "C10.10": 0,
+    "C10.11": 0,
+    "C13.5": 0
+  },
+  "vacuous": [
+    "C10.1",
+    "C10.10",
+    "C10.11",
+    "C10.2",
+    "C10.7",
+    "C10.8",
+    "C10.9",
+    "C13.5",
+    "C5.13",
+    "C5.14",
+    "C5.15",
+    "C5.16",
+    "C5.17",
+    "C5.2",
+    "C5.3",
+    "C5.4",
+    "C5.5",
+    "C5.6",
+    "C5.8",
+    "C6.10",
+    "C6.12",
+    "C6.15",
+    "C6.2",
+    "C6.3",
+    "C6.5",
+    "C6.6",
+    "C7.18",
+    "C7.19",
+    "C7.2",
+    "C7.20",
+    "C7.22",
+    "C7.23",
+    "C7.24",
+    "C7.25",
+    "C7.26",
+    "C7.27",
+    "C7.28",
+    "C7.29",
+    "C7.3",
+    "C7.30",
+    "C7.31",
+    "C7.4",
+    "C7.5",
+    "C7.5b",
+    "C7.6",
+    "C9.15",
+    "C9.16",
+    "C9.17",
+    "C9.2",
+    "C9.22",
+    "C9.24",
+    "C9.3",
+    "C9.4",
+    "C9.5",
+    "C9.6",
+    "C9.7",
+    "C9.8"
+  ],
+  "metrics": [
+    {
+      "id": "us-req",
+      "from": "US",
+      "to": [
+        "REQ"
+      ],
+      "total": 13,
+      "covered": 0,
+      "pct": 0.0
+    },
+    {
+      "id": "req-ac",
+      "from": "REQ",
+      "to": [
+        "AC"
+      ],
+      "total": 0,
+      "covered": 0,
+      "pct": null
+    },
+    {
+      "id": "req-api",
+      "from": "REQ",
+      "to": [
+        "API"
+      ],
+      "total": 0,
+      "covered": 0,
+      "pct": null
+    },
+    {
+      "id": "req-ux",
+      "from": "REQ",
+      "to": [
+        "SCR",
+        "UXD"
+      ],
+      "total": 0,
+      "covered": 0,
+      "pct": null
+    },
+    {
+      "id": "ac-tc",
+      "from": "AC",
+      "to": [
+        "TC"
+      ],
+      "total": 0,
+      "covered": 0,
+      "pct": null
+    }
+  ],
+  "findings": [
+    {
+      "severity": "CRITICAL",
+      "clause": "C10.3",
+      "check": "markers",
+      "message": "`backend-test-plan` missing",
+      "artifact": "backend-test-plan",
+      "line": 0
+    },
+    {
+      "severity": "CRITICAL",
+      "clause": "C10.4",
+      "check": "markers",
+      "message": "`frontend-test-plan` missing",
+      "artifact": "frontend-test-plan",
+      "line": 0
+    },
+    {
+      "severity": "CRITICAL",
+      "clause": "C13.1",
+      "check": "exists",
+      "message": "`contract` is missing or empty",
+      "artifact": "contract",
+      "line": 0
+    },
+    {
+      "severity": "CRITICAL",
+      "clause": "C4.2",
+      "check": "gate-approved",
+      "message": "no approval record for gate `prd-approval` (gov.py approve prd-approval)",
+      "artifact": "",
+      "line": 0
+    },
+    {
+      "severity": "CRITICAL",
+      "clause": "C5.1",
+      "check": "exists",
+      "message": "`srs` is missing or empty",
+      "artifact": "srs",
+      "line": 0
+    },
+    {
+      "severity": "CRITICAL",
+      "clause": "C6.1",
+      "check": "exists",
+      "message": "`db-script` is missing or empty",
+      "artifact": "db-script",
+      "line": 0
+    },
+    {
+      "severity": "CRITICAL",
+      "clause": "C7.1",
+      "check": "markers",
+      "message": "`backend-execution-plan` missing",
+      "artifact": "backend-execution-plan",
+      "line": 0
+    },
+    {
+      "severity": "CRITICAL",
+      "clause": "C7.10",
+      "check": "value-agreement",
+      "message": "binding artifact `db-script` missing",
+      "artifact": "db-script",
+      "line": 0
+    },
+    {
+      "severity": "CRITICAL",
+      "clause": "C7.31",
+      "check": "api-spec-valid",
+      "message": "`api-spec` is missing",
+      "artifact": "api-spec",
+      "line": 0
+    },
+    {
+      "severity": "CRITICAL",
+      "clause": "C8.1",
+      "check": "exists",
+      "message": "`api-spec` is missing or empty",
+      "artifact": "api-spec",
+      "line": 0
+    },
+    {
+      "severity": "CRITICAL",
+      "clause": "C9.1",
+      "check": "markers",
+      "message": "`frontend-execution-plan` missing",
+      "artifact": "frontend-execution-plan",
+      "line": 0
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C5.8",
+      "check": "registry-agree",
+      "message": "registry `registry-srs` missing",
+      "artifact": "registry-srs",
+      "line": 0
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C6.5",
+      "check": "registry-agree",
+      "message": "registry `registry-db` missing",
+      "artifact": "registry-db",
+      "line": 0
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.2",
+      "check": "traces",
+      "message": "`backend-execution-plan` missing",
+      "artifact": "backend-execution-plan",
+      "line": 0
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.4",
+      "check": "registry-agree",
+      "message": "registry `registry-exec-be` missing",
+      "artifact": "registry-exec-be",
+      "line": 0
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C9.2",
+      "check": "traces",
+      "message": "`frontend-execution-plan` missing",
+      "artifact": "frontend-execution-plan",
+      "line": 0
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C9.23",
+      "check": "publication-fresh",
+      "message": "`build-order` in the project repo is stale \u2014 critical_path, modules.CHK, modules.DOC, modules.INT, modules.REG, modules.RPT, parallelism, status.1 \u2026 differ from what the factory derives now. Run `gov.py publish` (the version, split and gate steps do it themselves)",
+      "artifact": "governance-shared/platform/build-order.json",
+      "line": 0
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C9.23",
+      "check": "publication-fresh",
+      "message": "`dependency-graph` in the project repo is stale \u2014 edges, generated_from.platform-summary, modules.CHK, modules.DOC, modules.INT, modules.REG, modules.RPT differ from what the factory derives now. Run `gov.py publish` (the version, split and gate steps do it themselves)",
+      "artifact": "governance-shared/platform/dependency-graph.json",
+      "line": 0
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C9.23",
+      "check": "publication-fresh",
+      "message": "`modules-registry` in the project repo is stale \u2014 modules.REG differ from what the factory derives now. Run `gov.py publish` (the version, split and gate steps do it themselves)",
+      "artifact": "governance-shared/platform/modules-registry.json",
+      "line": 0
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C9.8",
+      "check": "registry-agree",
+      "message": "registry `registry-exec-fe` missing",
+      "artifact": "registry-exec-fe",
+      "line": 0
+    }
+  ],
+  "provenance": {
+    "rules": {
+      "contracts": "66ab69cc1483b2f9858c7b3db7d89f46990f817721fc4417f100bd5f023dff07",
+      "checker": "a94d2877f8d266ce52f428ed037da56bf89abcf3d31d225d01591f884f268f8b",
+      "policy": "f0051863173859c50eaa1091adddc83f9c46e4a33a735325d37acc31ffd51c3d"
+    },
+    "resolvable": [
+      "business-policies",
+      "domain-profile",
+      "module-registry",
+      "platform-summary",
+      "prd",
+      "project-registry"
+    ],
+    "inputs": {
+      "business-policies": "0c9d49ba42cd4f471a55ce17333ae49313f9f25922a9233db59cf5c1c3a97596",
+      "domain-profile": "c9ffe7c45c917c5793e15b6fbc7151ccc4b9181c36a5aaf1ce2f15f6849e3cbd",
+      "module-registry": "e928789f16ba02d947ed4ecda767397ffda8c3f23800c840465d12652050f20c",
+      "platform-summary": "b12afda687b878afc59cb73b9d0ed69dfd2bccd319af0a32d4dc6f18f514f0c5",
+      "prd": "8a1c68fbab13cfa2243996a08e0e26c8c9a1c12b5d1e9cffb1bbe41bc52a0047",
+      "project-registry": "7652329cae1b5e14558ead423c4a0d157fcf3aead94176473c23adb034161a82"
+    },
+    "at": "2026-10-01T10:38:32+00:00"
+  }
+}

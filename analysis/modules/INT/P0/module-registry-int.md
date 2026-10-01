@@ -80,7 +80,7 @@ AUTO-DECISIONS
 AUTO: INT owns no entity and no table  FROM: ADR-INT-007; ADR-REG-001 (RPT owns the run records); CON-DOC-003 (DOC owns the Uploaded Document)  IF WRONG: an INT audit entity is added in a later version
 AUTO: Refusals of CHK, DOC and RPT keep their owner's code and status in ProblemDetail  FROM: ADR-INT-003; ADR-CHK-018, ADR-DOC-012, ADR-RPT-013 ("INT maps … to ProblemDetail")  IF WRONG: INT re-codes them (a second list to maintain)
 AUTO: The request number and employee identities are passed exactly as the host sent them, never verified against a directory  FROM: profile `conventions.identifiers`; [KB:raw-idea.md §15 A2]  IF WRONG: none in this version — caller authentication returns with the security version
-AUTO: The reads the frontend needs are served by their owners (RPT, REG, DOC); INT adds no read façade  FROM: ADR-INT-001; ADR-RPT-005  IF WRONG: INT adds GET operations duplicating RPT's
+AUTO: The reads the frontend needs are served by their owners (RPT, REG, DOC); INT adds no read façade  FROM: ADR-INT-001; ADR-RPT-005  IF WRONG: INT adds GET operations duplicating RPT's (superseded by ADR-INT-020 — INT's 4 read operations relay the owners' data; see current-contract.md CON-INT-005...008)
 AUTO: The employee frontend belongs to INT's frontend track  FROM: domain-profile §4 row 5, §7.2; [KB:raw-idea.md §15 A1]; RPT module registry AUTO-DECISION (RPT has no screen)  IF WRONG: P3.2 assigns the screens to another module
 
 RESOLVED DECISIONS (dialogue, this module)

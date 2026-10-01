@@ -31,14 +31,14 @@ None — the `module-dependencies` block is `consumes: []`.
 None — no SCR-REQ in this version (administration UI out of scope).
 
 ### Requirements
-REQ count 69 · AC count 81 · RULE count 24 · last sequence per atom (REQ: 69, AC: 81, ENT: 6, RULE: 24, SCR-REQ: 0)
+REQ count 74 · AC count 91 · RULE count 28 · last sequence per atom (REQ: 74, AC: 91, ENT: 6, RULE: 28, SCR-REQ: 0)
 
 | REQ | AC |
 |---|---|
 | REQ-REG-001 | AC-REG-001 |
 | REQ-REG-002 | AC-REG-002 |
 | REQ-REG-003 | AC-REG-003 |
-| REQ-REG-004 | AC-REG-004 |
+| REQ-REG-004 | AC-REG-004, AC-REG-091 |
 | REQ-REG-005 | AC-REG-005 |
 | REQ-REG-006 | AC-REG-006 |
 | REQ-REG-007 | AC-REG-007, AC-REG-078 |
@@ -104,6 +104,11 @@ REQ count 69 · AC count 81 · RULE count 24 · last sequence per atom (REQ: 69,
 | REQ-REG-067 | AC-REG-072 |
 | REQ-REG-068 | AC-REG-073 |
 | REQ-REG-069 | AC-REG-074 |
+| REQ-REG-070 | AC-REG-082 |
+| REQ-REG-071 | AC-REG-083 |
+| REQ-REG-072 | AC-REG-084, AC-REG-085 |
+| REQ-REG-073 | AC-REG-086, AC-REG-087, AC-REG-088 |
+| REQ-REG-074 | AC-REG-089, AC-REG-090 |
 
 | RULE | Traces |
 |---|---|
@@ -131,10 +136,15 @@ REQ count 69 · AC count 81 · RULE count 24 · last sequence per atom (REQ: 69,
 | RULE-REG-022 | REQ-REG-065 |
 | RULE-REG-023 | REQ-REG-066 |
 | RULE-REG-024 | REQ-REG-069 |
+| RULE-REG-025 | REQ-REG-072 |
+| RULE-REG-026 | REQ-REG-071 |
+| RULE-REG-027 | REQ-REG-073 |
+| RULE-REG-028 | REQ-REG-074 |
 
 ### Decisions
-ADR-REG-007, ADR-REG-008, ADR-REG-009, ADR-REG-015 … ADR-REG-019 (new, ACCEPTED); applied ADR-REG-001 … ADR-REG-006, ADR-REG-013, ADR-REG-014. BLOCKED: none.
+ADR-REG-007, ADR-REG-008, ADR-REG-009, ADR-REG-015 … ADR-REG-022 (new, ACCEPTED); applied ADR-REG-001 … ADR-REG-006, ADR-REG-013, ADR-REG-014. BLOCKED: none.
 
 ### Event
 "P1 completed: REG v1 — REQ 62 · AC 64 · ENT 6 · RULE 20 · SCR-REQ 0 · ADR 3"
 "P1 revised (gate-analysis REVISE 2026-10-01): REG v1 — REQ 69 · AC 81 · ENT 6 · RULE 24 · SCR-REQ 0 · ADR 8"
+"P1 revised (gate-analysis REVISE round 2 2026-10-01): REG v1 — REQ 74 · AC 91 · ENT 6 · RULE 28 · SCR-REQ 0 · ADR 11"

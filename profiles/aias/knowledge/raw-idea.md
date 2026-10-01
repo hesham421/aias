@@ -235,7 +235,7 @@ Decided:
 | Database access | Read-only through an MCP server, specified at activation |
 | Documents | `path`, `blob` and `manual` modes all available |
 | Decision maker | The employee; approval API is an optional second path |
-| Display | Embedded report page in ADF first; JSON available for native display or the request log |
+| Display | The frontend (A1) embedded in the host screen; JSON available for native display or the request log (amended — A1) |
 | Storage | Reports kept in the service's own database tables |
 | LLM | Cloud, free tier for testing, replaceable by configuration |
 | Memory, RAG, vector store | Not included |
@@ -266,5 +266,5 @@ Tracks: backend and frontend (amended — A1). The platform track covers the MCP
 
 | # | Date | Change | Supersedes |
 | --- | --- | --- | --- |
-| A1 | 2026-10-01 | A frontend track is added. A web frontend (React + TypeScript), embedded in the host screen, gives the employee: the checks of a request, the report (overall status, findings with evidence, documents read / missing / unreadable), manual document upload, and recording the decision. It consumes the same REST API as any host. It replaces the server-rendered report page (`GET /checks/{id}/view`) as the display path. A full administration UI stays out of scope. | Section 13 "Frontend: None"; the section 14 tracks paragraph; the server-rendered page in sections 8 and 11 |
+| A1 | 2026-10-01 | A frontend track is added. A web frontend (React + TypeScript), embedded in the host screen, gives the employee: the checks of a request, the report (overall status, findings with evidence, documents read / missing / unreadable), manual document upload, and recording the decision. It consumes the same REST API as any host. It replaces the server-rendered report page (`GET /checks/{id}/view`) as the display path. A full administration UI stays out of scope. | Section 13 "Frontend: None" and "Display"; the section 14 tracks paragraph; the server-rendered page in sections 8 and 11 |
 | A2 | 2026-10-01 | Caller authentication (API key or mTLS) and the security phases are deferred to a later version; the owner already has the solution and adds it then. The section 12 guardrails are NOT deferred: they are part of what the service does. | The auth item under section 13 "Open" |

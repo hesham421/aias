@@ -5,5 +5,5 @@ project:
   url: "https://github.com/hesham421/aias.git"   # this repo's own url — every consumer mounts it as a submodule and pins a commit
 profile: aias                     # profiles/<profile>.yaml in this repo ($GOV_PROFILE overrides)
 repos:                             # the consumer repos, resolved relative to this checkout unless the env var is set
-  backend: {url: "", checkout_env: GOV_BACKEND_CHECKOUT, checkout_default: "../backend"}
+  backend: {url: "https://github.com/hesham421/agentic-ai-library.git", checkout_env: GOV_BACKEND_CHECKOUT, checkout_default: "../../agentic-ai-library"}
   frontend: {url: "", checkout_env: GOV_FRONTEND_CHECKOUT, checkout_default: "../frontend"}

@@ -27,11 +27,12 @@ None — REG consumes nothing (`records: []`).
 last DBF: DBF-REG-049 · last XM: none
 
 ### Decisions
-ADR-REG-010 (ACCEPTED); applied ADR-REG-015, ADR-REG-017, ADR-REG-018 (gate-analysis REVISE — 2 CHECK constraints added / widened, no new DBF). BLOCKED: none.
+ADR-REG-010 (ACCEPTED); applied ADR-REG-015, ADR-REG-017, ADR-REG-018 (gate-analysis REVISE — 2 CHECK constraints added / widened, no new DBF); applied ADR-REG-020 … ADR-REG-022 (round 2 — DBF traces only). BLOCKED: none.
 
 ### Event
 "P2 completed: REG v1 — 6 tables, 49 DBF, 0 XM"
 "P2 revised (gate-analysis REVISE 2026-10-01): REG v1 — 6 tables, 49 DBF, 0 XM; CHK_REG_SVC_PKG_SERVICE_CODE added, CHK_REG_LOAD_RESULT_SUBJECT_KIND widened"
+"P2 revised (gate-analysis REVISE round 2 2026-10-01): REG v1 — 6 tables, 49 DBF, 0 XM; DBF traces for REQ-REG-070 … REQ-REG-074, no schema change"
 
 ### Cascade
 none by hand — `gov.py graph` derives the edges targeting REG.

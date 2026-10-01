@@ -1,0 +1,7 @@
+# ADR-DOC-008 — Uploaded Documents are deleted when the Check Engine reports the end of their Check; fetched content lives only for the fetching call
+Status      : ACCEPTED
+Stage       : P1        Module: DOC        Version: v1
+Context     : POL-DOC-015 and ADR-DOC-003 discard every upload when its Check ends, but DOC does not run the Check and never reads RPT, so it cannot see the end by itself. Host documents fetched in `path` and `blob` mode and their read content must not outlive the Check either (G9).
+Decision    : (a) The Check Engine reports to DOC, in process, that a Check has ended — whatever its outcome (report stored, failed, timed out) — and DOC then hard-deletes every Uploaded Document carrying that Check's identifier (profile: hard delete). (b) Fetched host documents and read content are held only for the call that fetches and reads the documents of a Check; DOC stores none of them, and the call returns the outcomes and content to the Check Engine. (c) Each document-reading model call carries one document and no content of an earlier call.
+Consequences: Every Check ends — the Check timeout (G8) guarantees it — so no upload outlives its Check through DOC. The CHK analysis must send the end-of-Check notice on every ending path (recorded for CHK). P2 needs no retention purge for Uploaded Documents.
+traces      : US-DOC-012, POL-DOC-015, REQ-DOC-054, REQ-DOC-055, REQ-DOC-057, ENT-DOC-001

@@ -5,7 +5,7 @@
   "counts": {
     "CRITICAL": 0,
     "MAJOR": 0,
-    "MINOR": 1
+    "MINOR": 0
   },
   "clean": true,
   "blocking": [
@@ -86,16 +86,7 @@
       "pct": 89.0
     }
   ],
-  "findings": [
-    {
-      "severity": "MINOR",
-      "clause": "C5.13",
-      "check": "ambiguity",
-      "message": "`RULE-REG-002` uses 'could' \u2014 a word two implementers read two ways; state the measure, the set or the rule instead",
-      "artifact": "srs",
-      "line": 1340
-    }
-  ],
+  "findings": [],
   "provenance": {
     "rules": {
       "contracts": "66ab69cc1483b2f9858c7b3db7d89f46990f817721fc4417f100bd5f023dff07",
@@ -143,9 +134,9 @@
       "registry-exec-be": "c874fceabd7f8bc0a6f7c318823bba75af6a25baac504902439394af38cb8254",
       "registry-exec-fe": "ee82b4d4aa569121cf2b3b8e32d0cd4018cf3130da23e65be4c1c9a8b62e8ed1",
       "registry-srs": "20101bedffeada715aeaeb10262aebcad2a0b0a1f092d69e0520d45bf8df570f",
-      "srs": "5dd6d70b0956958f118b7bc7be9a9a6d1d232bfa83be4575f076e118af06e1ed",
+      "srs": "72b28d7e5386dd923508da72dd4ec0864617d5988266c09289e8e9455375debc",
       "ui-ux-spec": "11d4bdc30eaa2ac2a87288c991c175e9e6dd5a2310285f7a6c949954f28fd33c"
     },
-    "at": "2026-10-01T15:20:33+00:00"
+    "at": "2026-10-01T15:20:42+00:00"
   }
 }

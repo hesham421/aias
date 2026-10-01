@@ -1340,7 +1340,7 @@ Kind reason: transactional — one row per outcome of a load run, replaced at ev
 ### RULE-REG-002 — One folder per service code
   Scope      : ENT-REG-001
   Trigger    : on load
-  Statement  : The system shall reject every package that declares a service code when two or more folders declare that service code in canonical form, counting every folder whose service code could be read, whether or not that folder fails another rule; a folder that fails another rule keeps that rule's reason.
+  Statement  : The system shall reject every package that declares a service code when two or more folders declare that service code in canonical form, counting every folder whose service definition declares a readable service code, whether or not that folder fails another rule; a folder that fails another rule keeps that rule's reason.
   Message    : The service code "{serviceCode}" is declared by more than one package folder; keep one folder per service.
   Traces     : REQ-REG-004
   Data source: ENT-REG-001.serviceCode

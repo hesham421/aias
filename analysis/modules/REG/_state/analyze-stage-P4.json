@@ -1,0 +1,141 @@
+{
+  "module": "REG",
+  "version": 1,
+  "scope": "stage:P4",
+  "counts": {
+    "CRITICAL": 0,
+    "MAJOR": 0,
+    "MINOR": 0
+  },
+  "clean": true,
+  "blocking": [
+    "CRITICAL",
+    "MAJOR"
+  ],
+  "contracts": [
+    "C0",
+    "C10",
+    "C12"
+  ],
+  "skipped": [],
+  "coverage": {
+    "C0.1": 15,
+    "C10.1": 71,
+    "C10.2": 64,
+    "C10.7": 2,
+    "C10.8": 0,
+    "C10.9": 0,
+    "C10.10": 71,
+    "C10.11": 11
+  },
+  "vacuous": [
+    "C10.8",
+    "C10.9"
+  ],
+  "metrics": [
+    {
+      "id": "us-req",
+      "from": "US",
+      "to": [
+        "REQ"
+      ],
+      "total": 13,
+      "covered": 13,
+      "pct": 100.0
+    },
+    {
+      "id": "req-ac",
+      "from": "REQ",
+      "to": [
+        "AC"
+      ],
+      "total": 62,
+      "covered": 62,
+      "pct": 100.0
+    },
+    {
+      "id": "req-api",
+      "from": "REQ",
+      "to": [
+        "API"
+      ],
+      "total": 62,
+      "covered": 6,
+      "pct": 9.7
+    },
+    {
+      "id": "req-ux",
+      "from": "REQ",
+      "to": [
+        "SCR",
+        "UXD"
+      ],
+      "total": 62,
+      "covered": 0,
+      "pct": 0.0
+    },
+    {
+      "id": "ac-tc",
+      "from": "AC",
+      "to": [
+        "TC"
+      ],
+      "total": 64,
+      "covered": 64,
+      "pct": 100.0
+    }
+  ],
+  "findings": [],
+  "provenance": {
+    "rules": {
+      "contracts": "66ab69cc1483b2f9858c7b3db7d89f46990f817721fc4417f100bd5f023dff07",
+      "checker": "a94d2877f8d266ce52f428ed037da56bf89abcf3d31d225d01591f884f268f8b",
+      "policy": "f0051863173859c50eaa1091adddc83f9c46e4a33a735325d37acc31ffd51c3d"
+    },
+    "resolvable": [
+      "api-spec",
+      "backend-execution-plan",
+      "backend-test-plan",
+      "business-policies",
+      "contract",
+      "db-script",
+      "domain-profile",
+      "flow-diagram",
+      "frontend-execution-plan",
+      "frontend-test-plan",
+      "module-registry",
+      "platform-summary",
+      "prd",
+      "project-registry",
+      "registry-db",
+      "registry-exec-be",
+      "registry-exec-fe",
+      "registry-srs",
+      "srs",
+      "ui-ux-spec"
+    ],
+    "inputs": {
+      "api-spec": "78d666b92208ad16b4c27ce82943f157a295cea9d10d8a21869b487e3be14720",
+      "backend-execution-plan": "abca0a4efa18df3385d3d9e9925f479452da53d573bef2e2bf5e074b31a20cf1",
+      "backend-test-plan": "52aa99a7ff4aeed2dd07fb6de79541962e070b421e54b282d55d2df795a5d6b5",
+      "business-policies": "b6f725a79290552291db42eaeb23c9e63eb20cc480ffbe3dfa9319271c708fee",
+      "contract": "8c99e96d1a7023bfc1adbf7fccd4cda57704388898915a7e9a40eac14042525c",
+      "db-script": "6043c0a02e989596cc52ff59b19ac18f8e6ef8f03b0ea1f9713e7d9c8d22603d",
+      "domain-profile": "c9ffe7c45c917c5793e15b6fbc7151ccc4b9181c36a5aaf1ce2f15f6849e3cbd",
+      "flow-diagram": "f90d52e899227ad432b1ba543b505bafd6cee498d8576df115217a399c62931a",
+      "frontend-execution-plan": "e3e23ef99dea1044147f846dd3cac6ed74da884f3ed1be1153a7e065316498e5",
+      "frontend-test-plan": "ddacb7cbf29aaf6c5feb621d9b7a954b13650efa0bd54d35ae61d9cbd33ce6fb",
+      "module-registry": "e928789f16ba02d947ed4ecda767397ffda8c3f23800c840465d12652050f20c",
+      "platform-summary": "71a08acf727ff7da0c363990b2aa193dec4e0d3a72ef95e7dff19aaf8ffc197f",
+      "prd": "8a1c68fbab13cfa2243996a08e0e26c8c9a1c12b5d1e9cffb1bbe41bc52a0047",
+      "project-registry": "7652329cae1b5e14558ead423c4a0d157fcf3aead94176473c23adb034161a82",
+      "registry-db": "ff09b2b33e370672674b6745dc7b304acd0c7945190331a07d1e5240d2fb25c2",
+      "registry-exec-be": "7d6b603d587c592f588af4ea190f14465220adaad4451838d0bd1fe18b2f37f4",
+      "registry-exec-fe": "09b8cfbec201b4e2be85f6a50cb0fb5f8f67079e062d44d0b136140cd01af81b",
+      "registry-srs": "66a13d6897dbd06aebe1a99239bc4d7609a93faf51e5dac527542c9646d3d453",
+      "srs": "3c99ff5e021a6a058edaeaf94c86ff27a53f9da1871e5f50559f1a1fd43ffb5e",
+      "ui-ux-spec": "a80a56d8012dcb7219f2d47857aec0d32a0c93ea7351241afbb41e63a6653390"
+    },
+    "at": "2026-10-01T14:23:16+00:00"
+  }
+}

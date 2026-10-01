@@ -4,9 +4,9 @@
 None — Host Integration declares no entity (ADR-INT-007, ADR-INT-013).
 
 ### Consumed
+Only the A8 block's ids (ADR-INT-016 — RPT, CHK and DOC are platform edges):
 | Module | Entity | Type |
 |---|---|---|
-| RPT | ENT-RPT-001 | SOFT-READ |
 | REG | ENT-REG-002 | SOFT-READ |
 
 ### Lookups owned
@@ -110,7 +110,7 @@ REQ count 60 · AC count 66 · RULE count 4 · last sequence per atom (REQ: 60, 
 | RULE-INT-004 | REQ-INT-041 |
 
 ### Decisions
-ADR-INT-010, ADR-INT-011, ADR-INT-012, ADR-INT-013 (new, ACCEPTED); applied ADR-INT-001 … ADR-INT-009. No BLOCKED ADR.
+ADR-INT-010, ADR-INT-011, ADR-INT-012, ADR-INT-013, ADR-INT-016 (new, ACCEPTED); applied ADR-INT-001 … ADR-INT-009. No BLOCKED ADR.
 
 ### Event
-P1 completed: INT v1 — 60 REQ · 66 AC · 0 ENT · 4 RULE · 5 SCR-REQ · 4 ADR
+P1 completed: INT v1 — 60 REQ · 66 AC · 0 ENT · 4 RULE · 5 SCR-REQ · 5 ADR

@@ -2,7 +2,7 @@
 ══════════════════════════════════════════════════════════════════
 Module : INT   Version : v1   Profile : aias
 Inputs : prd, domain-profile, project-registry (PRD approved 2026-10-01)
-Counts : REQ 60 · AC 66 · ENT 0 · RULE 4 · SCR-REQ 5 · ADR 4 (new: ADR-INT-010 … ADR-INT-013; applied: ADR-INT-001 … ADR-INT-013, ADR-REG-001, ADR-REG-006, ADR-REG-008, ADR-CHK-018, ADR-DOC-006, ADR-DOC-012, ADR-RPT-003, ADR-RPT-005, ADR-RPT-006, ADR-RPT-013)
+Counts : REQ 60 · AC 66 · ENT 0 · RULE 4 · SCR-REQ 5 · ADR 5 (new: ADR-INT-010 … ADR-INT-013, ADR-INT-016; applied: ADR-INT-001 … ADR-INT-013, ADR-INT-016, ADR-REG-001, ADR-REG-006, ADR-REG-008, ADR-CHK-018, ADR-DOC-006, ADR-DOC-012, ADR-RPT-003, ADR-RPT-005, ADR-RPT-006, ADR-RPT-013)
 ══════════════════════════════════════════════════════════════════
 
 # PART A — MODULE FOUNDATION
@@ -16,7 +16,7 @@ Counts : REQ 60 · AC 66 · ENT 0 · RULE 4 · SCR-REQ 5 · ADR 4 (new: ADR-INT-
 | Date | 2026-10-01 |
 | Status | DRAFT — P1 output, PRD approved 2026-10-01 (gate prd-approval) |
 | Prepared by | P1 SRS engine (operator run, lane analysis) |
-| Decisions applied | 13 INT ADRs (ADR-INT-001 … ADR-INT-013, of which 4 new), 3 REG, 1 CHK, 2 DOC and 4 RPT ADRs, and 4 DEFAULTs — see Decisions applied |
+| Decisions applied | 14 INT ADRs (ADR-INT-001 … ADR-INT-013 and ADR-INT-016, of which 5 new), 3 REG, 1 CHK, 2 DOC and 4 RPT ADRs, and 4 DEFAULTs — see Decisions applied |
 
 ## A2 — Functional context
 
@@ -55,7 +55,7 @@ The host systems have no way to ask for a verification and show its evidence ins
 A host starts a Check with one call and the employee follows it in the embedded frontend (US-INT-001, US-INT-008, US-INT-010), verifies each finding against its evidence (US-INT-009), and records the decision beside the report — executed through the host's Approval API where the host offers one (US-INT-005, US-INT-006). Hosts can build their own display on the same API (US-INT-011).
 
 ### General notes
-- INT declares no entity (ADR-INT-007, ADR-INT-013); the fields it reads belong to the Report Store's Check Run (ENT-RPT-001) and the Service Registry's Service Package Version (ENT-REG-002), reached only through their contracts.
+- INT declares no entity (ADR-INT-007, ADR-INT-013); the fields it reads belong to the Report Store's Check Run (ENT-RPT-001) and the Service Registry's Service Package Version (ENT-REG-002), reached only through their contracts (ADR-INT-016).
 - The Approval API timeout, the upload request limit and the host Approval API base address are platform configuration (ADR-INT-012); the frontend's polling interval is frontend configuration (ADR-INT-011).
 - Codes follow the profile format `{MOD}-{http}[-{SLUG}]`; refusals raised by CHK, DOC and RPT keep their owner's code (ADR-INT-003, ADR-INT-010).
 - No role check is specified in this version (raw-idea A2).
@@ -998,10 +998,9 @@ Not applicable — Host Integration owns no entity with a status. The Check stat
 ## A8 — Module dependencies
 ```yaml name=module-dependencies
 consumes:
-  - {module: RPT, entity: ENT-RPT-001, type: SOFT-READ}
   - {module: REG, entity: ENT-REG-002, type: SOFT-READ}
 ```
-Both are read through the owners' published contracts over the in-process interfaces — the Check Run through CON-RPT-003 (read) and CON-RPT-006 (record a decision), the Service Package Version's approval API through CON-REG-012 — and no foreign key crosses modules (ADR-INT-013). The INT → REG read is the finer edge ADR-INT-008 declares; the owner's platform row INT depends_on [CHK, RPT, DOC] is unchanged. CHK and DOC promise no entity INT reads: INT calls their operations (CON-CHK-004, CON-CHK-005, CON-DOC-003), so the INT → CHK and INT → DOC edges are the platform edges.
+The Service Package Version's approval API is read through REG's published contract over the in-process interface (CON-REG-012); no foreign key crosses modules. It is the finer edge ADR-INT-008 declares, because REG is not in INT's platform row; the owner's platform row INT depends_on [CHK, RPT, DOC] is unchanged. The Report Store, the Check Engine and Document Access are reached through their operations — CON-RPT-003 (read a Check) and CON-RPT-006 (record a decision), CON-CHK-004 and CON-CHK-005, CON-DOC-003 — and INT holds the Check identifier only as a value (CON-RPT-001), as CHK and DOC do; so the INT → RPT, INT → CHK and INT → DOC edges are the platform edges (ADR-INT-016).
 
 | External service | Purpose | Integration kind |
 |---|---|---|
@@ -1163,6 +1162,7 @@ Raw-idea §12 guardrails at INT's surface (AIAS-1; same approach as ADR-REG-008,
 | ADR-INT-011 | Frontend launch context, stored status with the MISSING safeguard, plain text, 5-second refresh, owners' reads | P1 (this stage) | ACCEPTED — non-breaking |
 | ADR-INT-012 | Approval timeout 10 s, upload request limit 50 MB, approval base address per environment | P1 (this stage) | ACCEPTED — non-breaking |
 | ADR-INT-013 | No ENT-INT; rules read the owners' fields; no lookup owned | P1 (this stage) | ACCEPTED — non-breaking |
+| ADR-INT-016 | INT → RPT is the platform edge (operations, Check identifier by value); only INT → REG is an entity-level edge — supersedes the RPT part of ADR-INT-013 (3) | P1 (this stage) | ACCEPTED — non-breaking |
 | DEFAULT — approval timeout 10 seconds | The Approval API call waits at most 10 seconds | ADR-INT-012; domain best practice | Override: set the approval timeout in the platform configuration |
 | DEFAULT — upload request limit 50 MB | An upload request above 50 MB is refused before it is read | ADR-INT-012 | Override: set the upload request limit (never below the maximum file size) |
 | DEFAULT — polling interval 5 seconds | A Check that has not ended is read again every 5 seconds | ADR-INT-011; [KB:raw-idea.md §5] | Override: set the polling interval in the frontend configuration |

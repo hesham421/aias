@@ -3,7 +3,7 @@
 Module          : REG     Version : v1
 Source artifacts: platform-summary, module-registry, business-policies
 Stories         : 13   Policies covered : 15/15   Deferred : 0
-Status          : DRAFT — awaiting prd-approval
+Status          : APPROVED — prd-approval 2026-10-01 (Hesham Ezzat, owner; ADR-REG-013)
 ══════════════════════════════════════════════════════════════════
 
 ## USER STORIES
@@ -147,11 +147,11 @@ Every policy of the module (POL-REG-001 … POL-REG-015) appears in at least one
 ## RESOLVED DECISIONS (dialogue)
 | # | Question | Recommended | Confirmed by user | Sources |
 |---|---|---|---|---|
-| 1 | Which roles the REG stories speak for | The service administrator (maintains service packages and connections) and the employee (relies on them); host systems and the Check Engine are consumers of REG, not story roles | recommended — pending owner confirmation at prd-approval | domain-profile §7.1 (Service Administrator, Employee) |
-| 2 | Which stories carry a priority | HIGH only where the source makes it clear: the §12 guardrail stories (US-REG-006, US-REG-011, US-REG-013 — raw idea §0 "non-negotiable") and the pilot (US-REG-012, D5); every other story "—" | recommended — pending owner confirmation at prd-approval | [KB:raw-idea.md §0, §12]; D5 |
+| 1 | Which roles the REG stories speak for | The service administrator (maintains service packages and connections) and the employee (relies on them); host systems and the Check Engine are consumers of REG, not story roles | recommended — confirmed by owner at prd-approval 2026-10-01 | domain-profile §7.1 (Service Administrator, Employee) |
+| 2 | Which stories carry a priority | HIGH only where the source makes it clear: the §12 guardrail stories (US-REG-006, US-REG-011, US-REG-013 — raw idea §0 "non-negotiable") and the pilot (US-REG-012, D5); every other story "—" | recommended — confirmed by owner at prd-approval 2026-10-01 | [KB:raw-idea.md §0, §12]; D5 |
 | 3 | How the service administrator maintains service packages without an administration UI | Stories state the need only; no screen is implied — the full administration UI is out of scope for this version | yes — owner scope statement | [KB:raw-idea.md §2]; profile review AIAS-2 |
-| 4 | Whether a story covers rejecting an incomplete or malformed service package | Not written as a story: no REG policy states it; P1 derives the acceptance of a service package from POL-REG-001, POL-REG-007 and POL-REG-008 | recommended — pending owner confirmation at prd-approval | business-policies-reg; engine §3 "DO NOT EXTRACT" |
-| 5 | Version handling behind US-REG-004 | Versions never changed in place; new Checks use the current version; every loaded version stays resolvable | recommended — pending owner confirmation at prd-approval (ADR-REG-003) | [KB:raw-idea.md §4]; G11 |
+| 4 | Whether a story covers rejecting an incomplete or malformed service package | Not written as a story: no REG policy states it; P1 derives the acceptance of a service package from POL-REG-001, POL-REG-007 and POL-REG-008 | recommended — confirmed by owner at prd-approval 2026-10-01 | business-policies-reg; engine §3 "DO NOT EXTRACT" |
+| 5 | Version handling behind US-REG-004 | Versions never changed in place; new Checks use the current version; every loaded version stays resolvable | recommended — confirmed by owner at prd-approval 2026-10-01 (ADR-REG-003) | [KB:raw-idea.md §4]; G11 |
 
 ## DEFERRED
 | US | Reason | Activation trigger |
@@ -159,7 +159,7 @@ Every policy of the module (POL-REG-001 … POL-REG-015) appears in at least one
 | None | No REG story is deferred. Out-of-scope items (administration UI, permission system, caller authentication) stay in the platform summary DEFERRED table and the REG SCOPE EXCEPTIONS, not as stories | — |
 
 ## APPROVAL
-Approved by : —   Date : —
+Approved by : Hesham Ezzat (owner)   Date : 2026-10-01   (gate prd-approval — _state/approvals/prd-approval.json; ADR-REG-013)
 Once approved, no stage may raise a question; P1 onward self-resolve
 per the ambiguity rule (shared/GOVERNANCE-CORE.md).
 ══════════════════════════════════════════════════════════════════

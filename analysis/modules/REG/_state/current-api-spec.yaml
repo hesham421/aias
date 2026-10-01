@@ -44,6 +44,7 @@ paths:
       x-traces:
       - REQ-REG-014
       - REQ-REG-015
+      - REQ-REG-064
       - DBF-REG-002
       - DBF-REG-003
       - DBF-REG-007
@@ -54,6 +55,7 @@ paths:
       - name: serviceCode
         in: path
         required: true
+        description: Matched trimmed and case-insensitively (REQ-REG-064).
         schema:
           type: string
           maxLength: 100
@@ -119,6 +121,7 @@ components:
       type: object
       required:
       - serviceCode
+      - available
       - versionNumber
       - fetchMode
       - requiredDocumentTypes
@@ -127,6 +130,11 @@ components:
         serviceCode:
           type: string
           maxLength: 100
+          pattern: ^[a-z0-9]+(-[a-z0-9]+)*$
+          description: Canonical lower-case service code (ADR-REG-017).
+        available:
+          type: boolean
+          description: True when the Service Package is available, false when withdrawn (ADR-REG-016).
         versionNumber:
           type: integer
           format: int32
@@ -164,6 +172,7 @@ components:
           enum:
           - SERVICE_PACKAGE
           - CONNECTION
+          - PACKAGE_DIRECTORY
         subjectName:
           type: string
           maxLength: 200

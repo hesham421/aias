@@ -20,17 +20,18 @@ None — REG consumes nothing (`records: []`).
 | CONNECTION_TYPE | 2 (CHECK) | REG |
 | DOCUMENT_TYPE | 2 (via pilot package load) | REG |
 | LOAD_OUTCOME | 7 (CHECK) | REG |
-| LOAD_SUBJECT | 2 (CHECK) | REG |
+| LOAD_SUBJECT | 3 (CHECK) | REG |
 | FETCH_MODE | 3 (CHECK; profile closed enum) | DOC (consumed by value, ADR-REG-005) |
 
 ### Sequences
 last DBF: DBF-REG-049 · last XM: none
 
 ### Decisions
-ADR-REG-010 (ACCEPTED). BLOCKED: none.
+ADR-REG-010 (ACCEPTED); applied ADR-REG-015, ADR-REG-017, ADR-REG-018 (gate-analysis REVISE — 2 CHECK constraints added / widened, no new DBF). BLOCKED: none.
 
 ### Event
 "P2 completed: REG v1 — 6 tables, 49 DBF, 0 XM"
+"P2 revised (gate-analysis REVISE 2026-10-01): REG v1 — 6 tables, 49 DBF, 0 XM; CHK_REG_SVC_PKG_SERVICE_CODE added, CHK_REG_LOAD_RESULT_SUBJECT_KIND widened"
 
 ### Cascade
 none by hand — `gov.py graph` derives the edges targeting REG.

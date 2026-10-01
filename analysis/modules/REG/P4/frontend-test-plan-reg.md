@@ -3,7 +3,7 @@
 Module : REG   Version : v1   Profile : aias   Stage : P4   Track : frontend
 Sources: _state/current-srs.md (REG v1) · current-registry-srs.md · current-frontend-execution-plan.md (frontend-execution-plan-reg.md — 0 SCR · 0 UXD; units F1, F2, F3, F4) · current-api-spec.yaml (api-spec-reg.yaml, served by the mock server) · current-backend-execution-plan.md
 Framework: agnostic — each TC below is the whole contract; the consumer repository chooses its tool. No framework, annotation or file layout is named.
-Open ADRs: none BLOCKED — applied ADR-REG-011, ADR-REG-012
+Open ADRs: none BLOCKED — applied ADR-REG-011, ADR-REG-012, ADR-REG-016
 ══════════════════════════════════════════════════════════════════
 
 Derivation notes
@@ -11,7 +11,7 @@ Derivation notes
 - Package: each case names one frontend split unit — the plan has no SUB, so its units are the phases F1, F2, F3, F4 (ALIGN-FE is `no_tests`).
 - The one refusal asserted by its text (TC-REG-069) is bound in the plan: F2 SERVICE-QUERY routes `REG-404-SERVICE-NOT-FOUND` with `text: RULE-REG-016 message (SRS)`. Arabic is PENDING ADR-REG-011.
 - 8 cases or fewer → no SUB (threshold > 8); the UI-FLOWS / INT-FLOW grouping is not used. Integration: the plan cites no `UXD-*` (0 UXD), so the INT-UXD phase is absent.
-- The cases share the TC sequence with the backend plan (TC-REG-001 … TC-REG-064); this plan continues at TC-REG-065.
+- The cases share the TC sequence with the backend plan (TC-REG-001 … TC-REG-064); this plan continues at TC-REG-065 (TC-REG-065 … TC-REG-071); the backend plan's revision cases continue at TC-REG-072.
 
 <!-- PHASE:TEST-PLAN-FE:START traces=AC-REG-008,AC-REG-014,AC-REG-015,AC-REG-016,AC-REG-018,REQ-REG-008,REQ-REG-013,REQ-REG-014,REQ-REG-015,REQ-REG-017,API-REG-001,API-REG-002,API-REG-003,RULE-REG-016 -->
 ## PHASE TEST-PLAN-FE
@@ -28,7 +28,7 @@ Scenario     : HAPPY · data class VALID · language en
 Preconditions: The frontend's REG client types are generated from api-spec-reg.yaml; the mock server serving api-spec-reg.yaml returns 2 available services.
 Host data    : none — the mock server serves the responses of api-spec-reg.yaml; no catalogue value is created
 Steps        : 1. Generate the client types from api-spec-reg.yaml. 2. Inspect the `ServiceSummary` type and the list response of API-REG-001 from the mock.
-Expected     : `ServiceSummary` has exactly serviceCode, versionNumber, fetchMode, requiredDocumentTypes and approvalEnabled; the list holds 2 rows; no type or row carries sqlText or a connection field.
+Expected     : `ServiceSummary` has exactly serviceCode, available, versionNumber, fetchMode, requiredDocumentTypes and approvalEnabled (`available` — ADR-REG-016); the list holds 2 rows; no type or row carries sqlText or a connection field.
 Test data    : 2 mock services
 <!-- TC:TC-REG-065:END -->
 
@@ -56,7 +56,7 @@ Scenario     : HAPPY · data class VALID · language en
 Preconditions: the mock server serving api-spec-reg.yaml answers API-REG-001 with 2 available services (1 withdrawn service is not in the response).
 Host data    : none — the mock server serves the responses of api-spec-reg.yaml; no catalogue value is created
 Steps        : 1. Run SERVICES-QUERY. 2. Run it a second time within the cache lifetime.
-Expected     : The query returns 2 rows with serviceCode, versionNumber, fetchMode, requiredDocumentTypes and approvalEnabled under cache key ["reg-services"]; the second run is served from that key.
+Expected     : The query returns 2 rows with serviceCode, available = true, versionNumber, fetchMode, requiredDocumentTypes and approvalEnabled under cache key ["reg-services"]; the second run is served from that key.
 Test data    : 2 mock services
 <!-- TC:TC-REG-067:END -->
 
@@ -70,7 +70,7 @@ Scenario     : HAPPY · data class VALID · language en
 Preconditions: the mock server serving api-spec-reg.yaml answers API-REG-002 for `scholarship-request` with current version 3.
 Host data    : none — the mock server serves the responses of api-spec-reg.yaml; no catalogue value is created
 Steps        : 1. Run SERVICE-QUERY with serviceCode `scholarship-request`.
-Expected     : The query returns serviceCode `scholarship-request`, versionNumber 3, fetchMode `path`, requiredDocumentTypes TRANSCRIPT and ID_CARD, approvalEnabled = false, under cache key ["reg-service", "scholarship-request"].
+Expected     : The query returns serviceCode `scholarship-request`, available = true, versionNumber 3, fetchMode `path`, requiredDocumentTypes TRANSCRIPT and ID_CARD, approvalEnabled = false, under cache key ["reg-service", "scholarship-request"].
 Test data    : service code `scholarship-request`, version 3
 <!-- TC:TC-REG-068:END -->
 

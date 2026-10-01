@@ -3,9 +3,9 @@
 ID RANGES        API-REG-001, API-REG-002, API-REG-003 · QR-REG-001, QR-REG-002, QR-REG-003, QR-REG-004, QR-REG-005
 ENTITIES / TABLES bound: ENT-REG-001 REG_SVC_PKG · ENT-REG-002 REG_SVC_PKG_VER · ENT-REG-003 REG_SVC_QUERY · ENT-REG-004 REG_REQ_DOC · ENT-REG-005 REG_CONNECTION · ENT-REG-006 REG_LOAD_RESULT · lookups reused: SERVICE_CODE, CONNECTION_TYPE, DOCUMENT_TYPE, LOAD_OUTCOME, LOAD_SUBJECT, FETCH_MODE · new: none
 INTEGRATION      none — 0 XM
-CATALOG          2 codes (REG-404-SERVICE-NOT-FOUND, REG-500) · 18 load reason codes · ar messages PENDING ADR-REG-011
+CATALOG          2 codes (REG-404-SERVICE-NOT-FOUND, REG-500) · 22 load reason codes · ar messages PENDING ADR-REG-011
 API DOCUMENT     api-spec-reg.yaml · operations 3 = API blocks 3 · error responses 2 = catalog rows 2
 ALIGN            verdict as stamped by the orchestrator
-ADRs             ADR-REG-011 (ACCEPTED)
+ADRs             ADR-REG-011 (ACCEPTED); applied ADR-REG-015 … ADR-REG-019 (gate-analysis REVISE 2026-10-01)
 CONTRACT         Honours: CON-REG-007, CON-REG-008, CON-REG-009, CON-REG-010, CON-REG-011, CON-REG-012, CON-REG-013
-TRACEABILITY     REQ covered by ≥1 API/DBF: 62/62 · orphan REQ: none
+TRACEABILITY     REQ covered by ≥1 API/DBF: 69/69 · orphan REQ: none

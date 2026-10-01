@@ -1,0 +1,7 @@
+# ADR-REG-014 — Traces of ADR-REG-001 and ADR-REG-002, which were recorded empty
+Status      : ACCEPTED
+Stage       : P0        Module: REG        Version: v1
+Context     : ADR-REG-001 (RPT owns the Check run record, the findings and the Check Document record) and ADR-REG-002 (CHK writes to RPT through a result port CHK declares and RPT implements) carry "traces: —", although REG artifacts cite them directly: the SRS out-of-scope bullet on Check / Check Document ownership, the contract's "Read by" header, and the ownership split current-business-policies.md and current-prd.md reference (gate-analysis finding G13). An existing ADR is never rewritten under its id, so the traces are recorded here.
+Decision    : ADR-REG-001 traces: project-registry OQ-1, project-registry OQ-2 (platform-level, no REG atom owns the decided records); within REG it is applied by the SRS A2 out-of-scope bullet (Check runs, findings and Check Documents are not REG data) and by REQ-REG-059 (no request data in the registry). ADR-REG-002 traces: project-registry OQ-1, domain-profile §6 (RPT depends_on CHK) — platform-level, no REG atom; within REG it is reflected only by SRS A8 `consumes: []` (REG stays tier 0, unaffected by the CHK → RPT result port).
+Consequences: Traceability tools and readers resolve ADR-REG-001 and ADR-REG-002 through this ADR. No decision changes.
+traces      : ADR-REG-001, ADR-REG-002, REQ-REG-059

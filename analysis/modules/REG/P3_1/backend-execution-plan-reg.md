@@ -2,7 +2,7 @@
 ══════════════════════════════════════════════════════════════════
 Module : REG   Version : v1   Profile : aias   Dialect : oracle19c   Framework : spring-boot-4-java-21 (+ Spring AI 2.0, unused by REG)
 Inputs : srs-reg.md · db-script-reg.md · registry-srs-reg.md · registry-db-reg.md · contract-reg.md (no other module's contract is read — REG consumes nothing)
-Governance : FULL (db-script present)   Open ADRs : 0 BLOCKED — decisions applied: ADR-REG-001 … ADR-REG-011 (analysis/decisions/REG/)
+Governance : FULL (db-script present)   Open ADRs : 0 BLOCKED — decisions applied: ADR-REG-001 … ADR-REG-011, ADR-REG-013 … ADR-REG-019 (analysis/decisions/REG/; gate-analysis REVISE 2026-10-01)
 ══════════════════════════════════════════════════════════════════
 
 ## EXECUTION PLAN INDEX — REG v1
@@ -47,6 +47,10 @@ Governance : FULL (db-script present)   Open ADRs : 0 BLOCKED — decisions appl
 | RULE-REG-018 | Service knowledge not empty | ENT-REG-002 | load run | ✓ / PENDING ADR-REG-011 |
 | RULE-REG-019 | Unique query names | ENT-REG-003 | load run | ✓ / PENDING ADR-REG-011 |
 | RULE-REG-020 | Package folder content closed | ENT-REG-002 | load run | ✓ / PENDING ADR-REG-011 |
+| RULE-REG-021 | Unique required document types | ENT-REG-004 | load run | ✓ / PENDING ADR-REG-011 |
+| RULE-REG-022 | Valid service code | ENT-REG-001 | load run | ✓ / PENDING ADR-REG-011 |
+| RULE-REG-023 | Package directory reachable | ENT-REG-006 | load run | ✓ / PENDING ADR-REG-011 |
+| RULE-REG-024 | Stable package read | ENT-REG-002 | load run | ✓ / PENDING ADR-REG-011 |
 
 ### Screen registry
 None — REG has no screen (SRS PART B not applicable; administration UI out of scope).
@@ -127,7 +131,7 @@ Columns, types and SRS references are read from db-script-reg.md (dbf-matrix) by
 
 Legend ✓ aligned. No derived property. No cross-module column.
 
-<!-- PHASE:CORE:START traces=REQ-REG-034,REQ-REG-059,REQ-REG-016 -->
+<!-- PHASE:CORE:START traces=REQ-REG-034,REQ-REG-059,REQ-REG-016,REQ-REG-064,REQ-REG-068 -->
 ## PHASE CORE — CORE
 
 ### R1 — Core configuration
@@ -148,7 +152,8 @@ Legend ✓ aligned. No derived property. No cross-module column.
 - Workflow engine: **forbidden**.
 - Search contract: no SRS screen, so no filter list; API-REG-001 and API-REG-003 return full lists ordered by service code / subject; empty result = 200 with an empty array.
 - Languages: messages en (SRS); ar PENDING ADR-REG-011.
-- Configuration properties (environment settings, never in the deployable): `aias.registry.package-directory` (ADR-REG-007), `aias.registry.environment-name` and `aias.registry.connections[]` with `name, type, endpoint, query-tool, dialect, credential-reference, read-only, limited-to-views` (ADR-REG-009). The check limits (timeout, maximum rows, maximum file size) are platform configuration of this phase and are never read from a service definition (ADR-REG-006, REQ-REG-034).
+- Configuration properties (environment settings, never in the deployable): `aias.registry.package-directory` (ADR-REG-007), `aias.registry.environment-name` and `aias.registry.connections[]` with `name, type, endpoint, query-tool, dialect, credential-reference, read-only, limited-to-views` (ADR-REG-009), `aias.registry.load-lock-timeout` (Duration, default PT30S — how long a starting instance waits for the load lock, REQ-REG-068, ADR-REG-015). The check limits are platform configuration and are never read from a service definition (ADR-REG-006, REQ-REG-034): `aias.check.timeout` (Duration, default PT2M), `aias.check.max-rows` (int, default 100), `aias.check.max-file-size` (DataSize, default 10MB) — declared and applied by the CORE phase of CHK and DOC; REG reads none of them and rejects `timeout`, `max_rows`, `max_file_size` in a service definition (RULE-REG-012, ADR-REG-019).
+- Service codes (ADR-REG-017): one `ServiceCodes.canonical(code)` = trim + lower case (Locale.ROOT) is applied to every declared code and to every code a read or in-process call receives, before any comparison or query; only canonical codes are stored (REQ-REG-064).
 - No request data is held by REG (REQ-REG-059): no REG table, DTO or cache carries a request number, employee identity, query result or document content.
 - Packages are read only from `aias.registry.package-directory` (REQ-REG-016); a folder path is resolved and normalised and must lie inside that directory.
 <!-- PHASE:CORE:END -->
@@ -176,7 +181,11 @@ DOMAIN RULES
 - RULE-REG-002 — One folder per service code · trigger: on load · scope: CREATE (load run)
   - statement: The system shall reject every package that declares a service code when two or more folders declare that service code.
   - message (en): The service code "{serviceCode}" is declared by more than one package folder; keep one folder per service. · message (ar): PENDING ADR-REG-011
-  - DB enforcement: UQ_REG_SVC_PKG_SERVICE_CODE (+ app-level, load run) · owner layer: service (load run / registry service)
+  - DB enforcement: UQ_REG_SVC_PKG_SERVICE_CODE (+ app-level, load run, on canonical codes — ADR-REG-017) · owner layer: service (load run / registry service)
+- RULE-REG-022 — Valid service code · trigger: on load · scope: CREATE (load run)
+  - statement: The system shall reject a package when its declared service code, trimmed and in lower case, is empty, longer than 100 characters or not made of letters a-z, digits and single hyphens between them.
+  - message (en): The service code "{serviceCode}" is not valid; use lower-case letters, digits and single hyphens, at most 100 characters. · message (ar): PENDING ADR-REG-011
+  - DB enforcement: CHK_REG_SVC_PKG_SERVICE_CODE (+ app-level) · owner layer: service (load run / registry service)
 - RULE-REG-016 — Withdrawn or unknown service not supplied · trigger: on package request and on service read · scope: ALL (read)
   - statement: The system shall refuse to supply or return a service when its service code is not held by the registry or its Service Package is withdrawn (for a read, only an unknown code is refused).
   - message (en): The service "{serviceCode}" is not available. · message (ar): PENDING ADR-REG-011
@@ -250,6 +259,10 @@ DOMAIN RULES
   - statement: The system shall reject a package when its folder holds any file besides the service knowledge file and the service definition file.
   - message (en): The package folder "{folder}" holds "{file}"; a package folder holds only its service knowledge and its service definition. · message (ar): PENDING ADR-REG-011
   - DB enforcement: app-level · owner layer: service (load run / registry service)
+- RULE-REG-024 — Stable package read · trigger: on load · scope: CREATE (load run)
+  - statement: The system shall reject a package when the size or modification time of one of its files differs between the start and the end of its read.
+  - message (en): The package folder "{folder}" changed while it was being read; publish it again and restart. · message (ar): PENDING ADR-REG-011
+  - DB enforcement: app-level · owner layer: service (load run / registry service)
 STATE MACHINE  none
 CROSS-MODULE   none
 REPOSITORY OPS QR-REG-002
@@ -306,7 +319,11 @@ DEFAULT FIELDS per kind: config → none
 DTO MEMBERSHIP  create-request: none (no HTTP create — ADR-REG-007) · update-request: none · response: see API blocks (PK never exposed except loadResultId; serviceCode always present)
 LOOKUP FIELDS  documentType → DOCUMENT_TYPE (open, data) — stores the code; no lookup endpoint (values are CHECK constraints or package data, ADR-REG-010)
 DOMAIN RULES
-- none specific to this entity
+- RULE-REG-021 — Unique required document types · trigger: on load · scope: CREATE (load run)
+  - statement: The system shall reject a package when its service definition declares the same required document type more than once.
+  - message (en): The document type "{documentType}" is required more than once in "{serviceCode}". · message (ar): PENDING ADR-REG-011
+  - DB enforcement: UQ_REG_REQ_DOC_VER_TYPE (backstop; + app-level, checked before any insert) · owner layer: service (load run / registry service)
+- A version may declare zero required document types (REQ-REG-037); QR-REG-003 then returns an empty list.
 STATE MACHINE  none
 CROSS-MODULE   none
 REPOSITORY OPS QR-REG-003
@@ -369,9 +386,12 @@ DEFAULT FIELDS per kind: transactional → createdAt, updatedAt
 | DBF-REG-049 | updatedAt | UPDATED_AT | TIMESTAMP WITH TIME ZONE | NOT NULL | yes (no HTTP write) | — | updatedAt / PENDING ADR-REG-011 |
 
 DTO MEMBERSHIP  create-request: none (no HTTP create — ADR-REG-007) · update-request: none · response: see API blocks (PK never exposed except loadResultId; serviceCode always present)
-LOOKUP FIELDS  subjectKind → LOAD_SUBJECT; outcome → LOAD_OUTCOME (closed) — stores the code; no lookup endpoint (values are CHECK constraints or package data, ADR-REG-010)
+LOOKUP FIELDS  subjectKind → LOAD_SUBJECT (SERVICE_PACKAGE | CONNECTION | PACKAGE_DIRECTORY); outcome → LOAD_OUTCOME (closed) — stores the code; no lookup endpoint (values are CHECK constraints or package data, ADR-REG-010)
 DOMAIN RULES
-- none specific to this entity
+- RULE-REG-023 — Package directory reachable · trigger: on load · scope: CREATE (load run)
+  - statement: The system shall load no package and withdraw no Service Package when the package directory does not exist, cannot be read, or holds no package folder while at least one Service Package is available.
+  - message (en): The package directory "{directory}" is missing, unreadable or empty; no service was loaded or withdrawn. · message (ar): PENDING ADR-REG-011
+  - DB enforcement: app-level (CHK_REG_LOAD_RESULT_SUBJECT_KIND admits PACKAGE_DIRECTORY) · owner layer: service (load run / registry service)
 STATE MACHINE  none
 CROSS-MODULE   none
 REPOSITORY OPS QR-REG-005
@@ -379,24 +399,25 @@ REPOSITORY OPS QR-REG-005
 <!-- SUB:DATA-DOM-TRANSACTIONAL:END -->
 <!-- PHASE:DATA-DOM:END -->
 
-<!-- PHASE:PORTS:START traces=REQ-REG-005,REQ-REG-049,REQ-REG-016 -->
+<!-- PHASE:PORTS:START traces=REQ-REG-005,REQ-REG-049,REQ-REG-016,REQ-REG-066,REQ-REG-069 -->
 ## PHASE PORTS — PORTS+ADAPTERS
 
 REG runs no query, fetches no document and calls no model: the QUERY, DOCUMENT and MODEL ports of the profile belong to the modules that run Checks. REG owns two inbound configuration ports, each behind an interface with a replaceable adapter (profile layers port / adapter):
-- `PackageSource` (port) → `FileSystemPackageSource` (adapter): lists the folders of `aias.registry.package-directory`, returns per folder its name, the service knowledge file text, the service definition file text and the names of every other file in it (REQ-REG-005, REQ-REG-016, REQ-REG-062). Resolves each folder with `toRealPath()` and refuses one outside the directory.
+- `PackageSource` (port) → `FileSystemPackageSource` (adapter): first reports the directory status — MISSING, UNREADABLE, EMPTY or READY (REQ-REG-066, ADR-REG-018); when READY lists the folders of `aias.registry.package-directory`, returns per folder its name, the service knowledge file text, the service definition file text and the names of every other file in it (REQ-REG-005, REQ-REG-016, REQ-REG-062), plus a `stable` flag: the size and last-modified time of each file read before and after reading it are equal (REQ-REG-069, RULE-REG-024). Resolves each folder with `toRealPath()` and refuses one outside the directory.
 - `ActivationSource` (port) → `PropertiesActivationSource` (adapter): returns the environment name and the connection entries of `aias.registry.connections[]` (REQ-REG-049, ADR-REG-009). Never resolves the credential: only its reference name is passed on.
 - `ServiceDefinitionParser` (domain service, no I/O): parses the service definition YAML into the closed structure `service, version, input, queries, documents, approval`; any other element → RULE-REG-012.
 <!-- PHASE:PORTS:END -->
 
-<!-- PHASE:SVC-API:START traces=DBF-REG-002,DBF-REG-003,DBF-REG-007,DBF-REG-011,DBF-REG-016,DBF-REG-027,DBF-REG-040,DBF-REG-041,DBF-REG-042,DBF-REG-043,DBF-REG-044,DBF-REG-045,DBF-REG-046,DBF-REG-047,REQ-REG-005,REQ-REG-007,REQ-REG-008,REQ-REG-013,REQ-REG-014,REQ-REG-015,REQ-REG-024,REQ-REG-030,REQ-REG-048 -->
+<!-- PHASE:SVC-API:START traces=DBF-REG-002,DBF-REG-003,DBF-REG-007,DBF-REG-011,DBF-REG-016,DBF-REG-027,DBF-REG-040,DBF-REG-041,DBF-REG-042,DBF-REG-043,DBF-REG-044,DBF-REG-045,DBF-REG-046,DBF-REG-047,REQ-REG-005,REQ-REG-007,REQ-REG-008,REQ-REG-013,REQ-REG-014,REQ-REG-015,REQ-REG-024,REQ-REG-030,REQ-REG-048,REQ-REG-063,REQ-REG-064,REQ-REG-065,REQ-REG-066,REQ-REG-067,REQ-REG-068,REQ-REG-069 -->
 ## PHASE SVC-API — SVC+API
 
 ### Service layer — the start-up load run (ADR-REG-007, ADR-REG-011)
-`RegistryLoadRun` runs once per start, after the schema is ready and before the service accepts traffic, in one READ_WRITE transaction per item (a failing item never rolls back another). Steps, in order:
+`RegistryLoadRun` runs once per start, after the schema is ready and before the service accepts traffic, as ONE READ_WRITE transaction under one exclusive database lock (REQ-REG-067, ADR-REG-015); each package and each connection is processed behind its own savepoint, so a failing item rolls back to its savepoint only and never undoes another (REQ-REG-007). Steps, in order:
+0. **Take the load lock** — the transaction's first statement is `LOCK TABLE REG_LOAD_RESULT IN EXCLUSIVE MODE WAIT {aias.registry.load-lock-timeout in seconds}`; the lock is held until the run commits (or rolls back) after step 6. If it is not granted in time (ORA-30006) the run ends without writing anything and the instance serves the registry as stored (REQ-REG-068). An instance granted the lock after another instance committed runs a full, idempotent load run (unchanged packages → UNCHANGED). Readers never wait: they see the last committed run only (QR-REG-005 always returns one complete run).
 1. **Start the run** — loadRunAt = now; delete every REG_LOAD_RESULT row of earlier runs (REQ-REG-009).
 2. **Activate connections** (REQ-REG-049 … REQ-REG-056, ADR-REG-009) — read `ActivationSource`; refuse a name listed twice (RULE-REG-013), a type outside mcp | jdbc (RULE-REG-014), an entry not declared read-only (RULE-REG-015); insert new REG_CONNECTION rows (ACTIVATED), update rows whose settings changed (UPDATED, REQ-REG-050), delete rows no longer listed (REMOVED, REQ-REG-051); store credentialReference only (REQ-REG-054). Each outcome → one REG_LOAD_RESULT row (subjectKind CONNECTION).
-3. **Load packages** (REQ-REG-005 … REQ-REG-007, REQ-REG-016) — for every folder of `PackageSource`: validate in this order RULE-REG-020 (only two files), RULE-REG-001 (both files), RULE-REG-018 (knowledge not empty), RULE-REG-012 (closed structure), RULE-REG-008, RULE-REG-019, RULE-REG-006, RULE-REG-007, RULE-REG-005, RULE-REG-009, RULE-REG-010, RULE-REG-011; then RULE-REG-002 across folders (REQ-REG-004). A failing folder → REJECTED with the rule's load reason code and message (REQ-REG-007, REQ-REG-061); processing continues with the next folder.
-4. **Register versions** (REQ-REG-006, REQ-REG-019 … REQ-REG-023, ADR-REG-003) — contentHash = SHA-256 of knowledge + definition; unknown service code → insert REG_SVC_PKG (available = 1, registeredAt = now) and version (REGISTERED); declared version > current → insert version (REGISTERED, becomes current); equal number + equal hash → UNCHANGED; equal number + different hash → RULE-REG-003; lower and not stored → RULE-REG-004. A version insert writes REG_SVC_PKG_VER with its REG_SVC_QUERY and REG_REQ_DOC rows in one transaction; the unique constraint UQ_REG_SVC_PKG_VER_PKG_VERSION is the concurrency guard (a second instance starting at the same time fails the insert and records UNCHANGED after re-reading). No version, query or required document is ever updated or deleted (REQ-REG-026).
+3. **Load packages** (REQ-REG-005 … REQ-REG-007, REQ-REG-016) — guard first (REQ-REG-066, RULE-REG-023, ADR-REG-018): if `PackageSource` reports MISSING or UNREADABLE, or EMPTY while REG_SVC_PKG holds ≥ 1 row with AVAILABLE = 1, record one REG_LOAD_RESULT row (subjectKind PACKAGE_DIRECTORY, subjectName = the configured path, outcome REJECTED, reason REG-LOAD-PACKAGE-DIRECTORY-UNAVAILABLE) and skip steps 4 and 5 entirely — no version is registered and no service is withdrawn or restored; EMPTY with no available service is a normal empty load. Otherwise, for every folder: validate in this order RULE-REG-024 (stable read), RULE-REG-020 (only two files), RULE-REG-001 (both files), RULE-REG-018 (knowledge not empty), RULE-REG-012 (closed structure), RULE-REG-022 (valid service code, after canonicalisation), RULE-REG-008, RULE-REG-019, RULE-REG-021 (unique required document types), RULE-REG-006, RULE-REG-007, RULE-REG-005, RULE-REG-009, RULE-REG-010, RULE-REG-011; then RULE-REG-002 across folders on canonical codes (REQ-REG-004, REQ-REG-064). A failing folder → REJECTED with the rule's load reason code and message (REQ-REG-007, REQ-REG-061); processing continues with the next folder.
+4. **Register versions** (REQ-REG-006, REQ-REG-019 … REQ-REG-023, ADR-REG-003) — contentHash = SHA-256 of knowledge + definition; unknown service code → insert REG_SVC_PKG (available = 1, registeredAt = now) and version (REGISTERED); declared version > current → insert version (REGISTERED, becomes current); equal number + equal hash → UNCHANGED; equal number + different hash → RULE-REG-003; lower and not stored → RULE-REG-004. A version insert writes REG_SVC_PKG_VER with its REG_SVC_QUERY and REG_REQ_DOC rows in one transaction; concurrent load runs are excluded by the load lock of step 0 (ADR-REG-015); the unique constraint UQ_REG_SVC_PKG_VER_PKG_VERSION stays as a backstop. No version, query or required document is ever updated or deleted (REQ-REG-026).
 5. **Withdraw / restore** — a stored service code with no folder → available = 0, withdrawnAt = now, WITHDRAWN (REQ-REG-010); a withdrawn code with a valid folder → available = 1, withdrawnAt = null (REQ-REG-011). Stored versions stay (REQ-REG-026).
 6. The pilot package `scholarship-request` is delivered as a folder of the package directory (fetch `path`, required TRANSCRIPT and ID_CARD, input `requestId`, numeric thresholds written as digits — REQ-REG-057, REQ-REG-058); it passes through steps 3–4 like any other package.
 
@@ -421,9 +442,13 @@ REG runs no query, fetches no document and calls no model: the QUERY, DOCUMENT a
 | RULE-REG-018 | REG-LOAD-EMPTY-SERVICE-KNOWLEDGE | The service knowledge of "{serviceCode}" is empty. | PENDING ADR-REG-011 |
 | RULE-REG-019 | REG-LOAD-DUPLICATE-QUERY-NAME | The query name "{queryName}" is used twice in "{serviceCode}". | PENDING ADR-REG-011 |
 | RULE-REG-020 | REG-LOAD-FOREIGN-FILE-IN-PACKAGE | The package folder "{folder}" holds "{file}"; a package folder holds only its service knowledge and its service definition. | PENDING ADR-REG-011 |
+| RULE-REG-021 | REG-LOAD-DUPLICATE-DOCUMENT-TYPE | The document type "{documentType}" is required more than once in "{serviceCode}". | PENDING ADR-REG-011 |
+| RULE-REG-022 | REG-LOAD-INVALID-SERVICE-CODE | The service code "{serviceCode}" is not valid; use lower-case letters, digits and single hyphens, at most 100 characters. | PENDING ADR-REG-011 |
+| RULE-REG-023 | REG-LOAD-PACKAGE-DIRECTORY-UNAVAILABLE | The package directory "{directory}" is missing, unreadable or empty; no service was loaded or withdrawn. | PENDING ADR-REG-011 |
+| RULE-REG-024 | REG-LOAD-PACKAGE-CHANGED-DURING-READ | The package folder "{folder}" changed while it was being read; publish it again and restart. | PENDING ADR-REG-011 |
 
 ### Service layer — the in-process interface `ServiceRegistry` (contract-reg.md)
-Injected into the consumer modules (profile `module_interface: in_process`); every method is READ_ONLY and returns immutable value objects (Java records with unmodifiable lists — REQ-REG-060). The service knowledge is a separate field from the queries and document settings (REQ-REG-018, REQ-REG-030); no method returns request data (REQ-REG-059).
+Injected into the consumer modules (profile `module_interface: in_process`); every method canonicalises a received service code first (trim + lower case — REQ-REG-064) and is READ_ONLY and returns immutable value objects (Java records with unmodifiable lists — REQ-REG-060). The service knowledge is a separate field from the queries and document settings (REQ-REG-018, REQ-REG-030); no method returns request data (REQ-REG-059).
 - `getCurrentServicePackage(serviceCode)` → ServicePackage {serviceCode, versionNumber, serviceKnowledge, inputName, queries[queryName, connectionName, sqlText], fetchMode, documentSource, requiredDocumentTypes}; refuses with `ServiceNotAvailableException` (RULE-REG-016) for an unknown or withdrawn code and `ServiceConnectionNotActivatedException` (RULE-REG-017) when a query names a connection absent from REG_CONNECTION (REQ-REG-012, REQ-REG-024, REQ-REG-027, REQ-REG-029, REQ-REG-053). Carries no approval API (REQ-REG-044).
   - Honours: CON-REG-007
 - `getServicePackageVersion(serviceCode, versionNumber)` → full immutable version; `VersionNotFoundException` otherwise (REQ-REG-025).
@@ -444,10 +469,10 @@ Entity       : ENT-REG-001
 Endpoint     : /api/v1/services   verb: GET
 Layers       : controller ServiceRegistryController → service ServiceRegistryQueryService
 Request      : no path or query parameter; no body
-Response     : 200 · array of ServiceSummary {serviceCode (DBF-REG-002), versionNumber (DBF-REG-007), fetchMode (DBF-REG-011), requiredDocumentTypes (DBF-REG-027), approvalEnabled (DBF-REG-016)} · not paginated · no envelope; never SQL text or connection settings (REQ-REG-030)
+Response     : 200 · array of ServiceSummary {serviceCode (DBF-REG-002), available (DBF-REG-003 — always true here, the list holds available services only; ADR-REG-016), versionNumber (DBF-REG-007), fetchMode (DBF-REG-011), requiredDocumentTypes (DBF-REG-027), approvalEnabled (DBF-REG-016)} · not paginated · no envelope; never SQL text or connection settings (REQ-REG-030)
 Validations  : none
 Errors       : REG-500 (PLATFORM-STD)
-Orchestration : load available packages (QR-REG-001, filter on DBF-REG-003) → per package its current version (QR-REG-002) and its document types (QR-REG-003) → map to ServiceSummary; writes nothing
+Orchestration : load available packages (QR-REG-001, filter on DBF-REG-003) → per package its current version (QR-REG-002) and its document types (QR-REG-003) → map to ServiceSummary (available = true); writes nothing
 Repository   : QR-REG-001, QR-REG-002, QR-REG-003 · FIND_BY_CRITERIA / FIND_ONE / FIND_ALL · join NONE · READ_ONLY
 Concurrency  : NONE — this endpoint neither allocates a unique value nor reads-then-writes
 Security     : none — no permission model, endpoints are open per the SRS (caller authentication deferred, raw-idea A2; REQ-REG-013, REQ-REG-014, REQ-REG-008 name no role check)
@@ -456,16 +481,16 @@ Honours      : CON-REG-008
 Covers       : REQ-REG-017 (read-only surface), REQ-REG-059 (no request data in any response), REQ-REG-060 (responses are copies; nothing a caller sends changes the registry)
 <!-- API:API-REG-001:END -->
 
-<!-- API:API-REG-002:START traces=REQ-REG-014,REQ-REG-015,DBF-REG-002,DBF-REG-003,DBF-REG-007,DBF-REG-011,DBF-REG-016,DBF-REG-027 -->
+<!-- API:API-REG-002:START traces=REQ-REG-014,REQ-REG-015,REQ-REG-064,DBF-REG-002,DBF-REG-003,DBF-REG-007,DBF-REG-011,DBF-REG-016,DBF-REG-027 -->
 ### API-REG-002 — Read one service
 Entity       : ENT-REG-001
 Endpoint     : /api/v1/services/{serviceCode}   verb: GET
 Layers       : controller ServiceRegistryController → service ServiceRegistryQueryService
-Request      : path serviceCode (DBF-REG-002, string ≤ 100, required); no body
-Response     : 200 · ServiceSummary {serviceCode, versionNumber, fetchMode, requiredDocumentTypes, approvalEnabled} of the current version, available or withdrawn · no envelope
+Request      : path serviceCode (DBF-REG-002, string ≤ 100, required; trimmed and lower-cased before lookup — REQ-REG-064, ADR-REG-017); no body
+Response     : 200 · ServiceSummary {serviceCode (canonical), available (DBF-REG-003: false when withdrawn — ADR-REG-016), versionNumber, fetchMode, requiredDocumentTypes, approvalEnabled} of the current version, available or withdrawn · no envelope
 Validations  : RULE-REG-016 — Withdrawn or unknown service not supplied · trigger: on package request and on service read · statement: The system shall refuse to supply or return a service when its service code is not held by the registry or its Service Package is withdrawn (for a read, only an unknown code is refused). · message (en): The service "{serviceCode}" is not available. · message (ar): PENDING ADR-REG-011
 Errors       : REG-404-SERVICE-NOT-FOUND (404, RULE-REG-016) · REG-500 (PLATFORM-STD)
-Orchestration : load package by code (QR-REG-004) → none → REG-404-SERVICE-NOT-FOUND → current version (QR-REG-002) → document types (QR-REG-003) → ServiceSummary; writes nothing
+Orchestration : canonicalise the code → load package by code (QR-REG-004) → none → REG-404-SERVICE-NOT-FOUND → current version (QR-REG-002) → document types (QR-REG-003) → ServiceSummary; writes nothing
 Repository   : QR-REG-004, QR-REG-002, QR-REG-003 · FIND_ONE / FIND_ALL · join NONE · READ_ONLY
 Concurrency  : NONE — this endpoint neither allocates a unique value nor reads-then-writes
 Security     : none — no permission model, endpoints are open per the SRS (caller authentication deferred, raw-idea A2; REQ-REG-013, REQ-REG-014, REQ-REG-008 name no role check)
@@ -488,7 +513,7 @@ Repository   : QR-REG-005 · FIND_BY_CRITERIA · join NONE · READ_ONLY
 Concurrency  : NONE — this endpoint neither allocates a unique value nor reads-then-writes
 Security     : none — no permission model, endpoints are open per the SRS (caller authentication deferred, raw-idea A2; REQ-REG-013, REQ-REG-014, REQ-REG-008 name no role check)
 Localization : messages en per SRS; ar PENDING ADR-REG-011
-Covers       : the outcomes recorded by the load run for REQ-REG-003, REQ-REG-004, REQ-REG-005, REQ-REG-016, REQ-REG-051, REQ-REG-058, REQ-REG-061, REQ-REG-062 (see the load run and the load reason codes above)
+Covers       : the outcomes recorded by the load run for REQ-REG-003, REQ-REG-004, REQ-REG-005, REQ-REG-016, REQ-REG-051, REQ-REG-058, REQ-REG-061, REQ-REG-062, REQ-REG-063, REQ-REG-065, REQ-REG-066, REQ-REG-067, REQ-REG-069 (see the load run and the load reason codes above)
 <!-- API:API-REG-003:END -->
 
 <!-- PHASE:SVC-API:END -->
@@ -599,8 +624,8 @@ Join         : NONE
 Transaction  : READ_ONLY
 Locking      : NONE — read only, nothing is written back
 Pagination   : NO
-Filters      : SERVICE_CODE: EXACT
-Result shape : projection SERVICE_PACKAGE_ID, SERVICE_CODE, AVAILABLE
+Filters      : SERVICE_CODE: EXACT on the canonical (trimmed, lower-case) code (REQ-REG-064)
+Result shape : projection SERVICE_PACKAGE_ID, SERVICE_CODE, AVAILABLE (AVAILABLE → ServiceSummary.available)
 Null handling: no row → REG-404-SERVICE-NOT-FOUND (RULE-REG-016)
 
 ### QR-REG-005 — Load results of the latest load run
@@ -649,5 +674,9 @@ rows:
 | RULE-REG-018 | load run (outcome via API-REG-003) | REG-LOAD-EMPTY-SERVICE-KNOWLEDGE |
 | RULE-REG-019 | load run (outcome via API-REG-003) | REG-LOAD-DUPLICATE-QUERY-NAME |
 | RULE-REG-020 | load run (outcome via API-REG-003) | REG-LOAD-FOREIGN-FILE-IN-PACKAGE |
+| RULE-REG-021 | load run (outcome via API-REG-003) | REG-LOAD-DUPLICATE-DOCUMENT-TYPE |
+| RULE-REG-022 | load run (outcome via API-REG-003) | REG-LOAD-INVALID-SERVICE-CODE |
+| RULE-REG-023 | load run (outcome via API-REG-003) | REG-LOAD-PACKAGE-DIRECTORY-UNAVAILABLE |
+| RULE-REG-024 | load run (outcome via API-REG-003) | REG-LOAD-PACKAGE-CHANGED-DURING-READ |
 
-Integration: none (0 XM). ADRs cited: ADR-REG-003, ADR-REG-006, ADR-REG-007, ADR-REG-009, ADR-REG-010, ADR-REG-011.
+Integration: none (0 XM). ADRs cited: ADR-REG-003, ADR-REG-006, ADR-REG-007, ADR-REG-009, ADR-REG-010, ADR-REG-011, ADR-REG-015, ADR-REG-016, ADR-REG-017, ADR-REG-018, ADR-REG-019.

@@ -73,7 +73,7 @@ AUTO: Service Package and Connection are SHARED (read through the REG interface 
 AUTO: A loaded service package version is never changed in place; a change is a new version; a new Check uses the current version; every loaded version stays resolvable so a stored report's version can be traced to its content  FROM: [KB:raw-idea.md §4]; G11; ADR-REG-003  IF WRONG: allow in-place edits and record only the version number
 AUTO: The read-only JDBC data source used by `blob` fetching is a Connection of type `jdbc` held in REG  FROM: [KB:raw-idea.md §6]; G14; ADR-REG-004  IF WRONG: DOC holds its own JDBC data source outside REG
 AUTO: Fetch mode values are the profile's closed enum; REG accepts only `path`, `blob`, `manual` in a service definition without reading DOC  FROM: profile `conventions.lookups`; ADR-REG-005  IF WRONG: REG soft-reads the list from DOC (would break REG's tier 0)
-AUTO: The allowed storage root (G5) is DOC's environment setting and the check limits (G8) are platform configuration; neither is REG data  FROM: [KB:raw-idea.md §12]; profile tracks.backend CORE; ADR-REG-006  IF WRONG: add them to the Connection or the service definition
+AUTO: The allowed storage root (G5) is DOC's environment setting and the check limits (G8) are platform configuration (`aias.check.timeout` PT2M, `aias.check.max-rows` 100, `aias.check.max-file-size` 10MB — ADR-REG-019); neither is REG data  FROM: [KB:raw-idea.md §12]; profile tracks.backend CORE; ADR-REG-006; ADR-REG-019  IF WRONG: add them to the Connection or the service definition
 AUTO: No administration UI; the service administrator maintains service packages and connections directly  FROM: [KB:raw-idea.md §2]; profile review AIAS-2  IF WRONG: a later version adds the administration UI
 
 RESOLVED DECISIONS (dialogue, this module)
@@ -81,10 +81,10 @@ RESOLVED DECISIONS (dialogue, this module)
 |---|---|---|---|---|
 | 1 | Owner of the Check run record, findings and Check Document record (OQ-1, OQ-2) — none of them is REG's | RPT owns them; CHK writes through RPT's interface; DOC reads but does not own (ADR-REG-001) | yes — owner statement 2026-10-01 | [KB:raw-idea.md §14] |
 | 2 | REG's tier and dependencies | Tier 0, no dependencies, root of the graph | yes — owner statement 2026-10-01 | owner platform-dependency input |
-| 3 | Version immutability and the version a new Check uses | Versions are never changed in place; new Checks use the current version; every loaded version stays resolvable (ADR-REG-003) | recommended — pending owner confirmation at prd-approval | [KB:raw-idea.md §4]; G11 |
-| 4 | Where the `blob` JDBC data source lives | A REG Connection of type `jdbc` (ADR-REG-004) | recommended — pending owner confirmation at prd-approval | [KB:raw-idea.md §6]; G14 |
-| 5 | Fetch mode values without a REG → DOC edge | Profile closed enum used directly (ADR-REG-005) | recommended — pending owner confirmation at prd-approval | profile `conventions.lookups` |
-| 6 | Storage root and check limits | Not REG data — DOC environment setting and platform configuration (ADR-REG-006) | recommended — pending owner confirmation at prd-approval | [KB:raw-idea.md §12]; G5, G8 |
+| 3 | Version immutability and the version a new Check uses | Versions are never changed in place; new Checks use the current version; every loaded version stays resolvable (ADR-REG-003) | recommended — confirmed by owner at prd-approval 2026-10-01 | [KB:raw-idea.md §4]; G11 |
+| 4 | Where the `blob` JDBC data source lives | A REG Connection of type `jdbc` (ADR-REG-004) | recommended — confirmed by owner at prd-approval 2026-10-01 | [KB:raw-idea.md §6]; G14 |
+| 5 | Fetch mode values without a REG → DOC edge | Profile closed enum used directly (ADR-REG-005) | recommended — confirmed by owner at prd-approval 2026-10-01 | profile `conventions.lookups` |
+| 6 | Storage root and check limits | Not REG data — DOC environment setting and platform configuration (ADR-REG-006) | recommended — confirmed by owner at prd-approval 2026-10-01 | [KB:raw-idea.md §12]; G5, G8 |
 ══════════════════════════════════════════════════════════════════
 
 ✓ Service Registry — P0 complete

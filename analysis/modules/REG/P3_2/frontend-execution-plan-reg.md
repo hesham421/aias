@@ -35,7 +35,7 @@ Field/DTO binding : see `api-spec-reg.yaml` — the response schemas of API-REG-
 
 | Type | Operation(s) | Rule |
 |---|---|---|
-| `ServiceSummary` | API-REG-001 (array), API-REG-002 | exactly the document's properties; it carries no SQL text and no connection setting (REQ-REG-013, AC-REG-014) |
+| `ServiceSummary` | API-REG-001 (array), API-REG-002 | exactly the document's properties, including the required `available` flag (false for a withdrawn service — ADR-REG-016); it carries no SQL text and no connection setting (REQ-REG-013, AC-REG-014) |
 | `LoadResult` | API-REG-003 (array) | exactly the document's properties; nullable `serviceCode`, `versionNumber`, `reason` stay nullable (AC-REG-008) |
 | `ProblemDetail` | every error response | `code` carries the catalog code (`REG-404-SERVICE-NOT-FOUND`, `REG-500`) |
 | `FetchMode` | `ServiceSummary.fetchMode` | the document's closed enum path · blob · manual (ADR-REG-005) |

@@ -29,11 +29,14 @@ For reference only — no REG screen renders them. Shapes are read in `api-spec-
 | Field | Operation | Label (en) | Label (ar) |
 |---|---|---|---|
 | serviceCode | API-REG-001, API-REG-002, API-REG-003 | Service code | PENDING ADR-REG-011 |
+| available | API-REG-001, API-REG-002 | Available (false when the service is withdrawn — ADR-REG-016) | PENDING ADR-REG-011 |
 | versionNumber | API-REG-001, API-REG-002, API-REG-003 | Version | PENDING ADR-REG-011 |
 | fetchMode | API-REG-001, API-REG-002 | Fetch mode | PENDING ADR-REG-011 |
 | requiredDocumentTypes | API-REG-001, API-REG-002 | Document type | PENDING ADR-REG-011 |
 | approvalEnabled | API-REG-001, API-REG-002 | Approval API enabled | PENDING ADR-REG-011 |
 | subjectKind, subjectName, outcome, reason, loadRunAt | API-REG-003 | Subject kind, Subject, Outcome, Reason, Load run | PENDING ADR-REG-011 |
+
+Service codes in every response are canonical lower case; a read matches the code trimmed and case-insensitively (REQ-REG-064, ADR-REG-017). `subjectKind` includes PACKAGE_DIRECTORY (ADR-REG-018).
 
 No response carries SQL text or a connection setting (REQ-REG-013, AC-REG-014); the frontend never asks for one.
 

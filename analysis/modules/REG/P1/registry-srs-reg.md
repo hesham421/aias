@@ -20,7 +20,7 @@ None — the `module-dependencies` block is `consumes: []`.
 | CONNECTION_TYPE | ENT-REG-005 | 2 |
 | DOCUMENT_TYPE | ENT-REG-004 | 2 |
 | LOAD_OUTCOME | ENT-REG-006 | 7 |
-| LOAD_SUBJECT | ENT-REG-006 | 2 |
+| LOAD_SUBJECT | ENT-REG-006 | 3 |
 
 ### Lookups consumed
 | Key | Owner |
@@ -31,7 +31,7 @@ None — the `module-dependencies` block is `consumes: []`.
 None — no SCR-REQ in this version (administration UI out of scope).
 
 ### Requirements
-REQ count 62 · AC count 64 · RULE count 20 · last sequence per atom (REQ: 62, AC: 64, ENT: 6, RULE: 20, SCR-REQ: 0)
+REQ count 69 · AC count 81 · RULE count 24 · last sequence per atom (REQ: 69, AC: 81, ENT: 6, RULE: 24, SCR-REQ: 0)
 
 | REQ | AC |
 |---|---|
@@ -41,14 +41,14 @@ REQ count 62 · AC count 64 · RULE count 20 · last sequence per atom (REQ: 62,
 | REQ-REG-004 | AC-REG-004 |
 | REQ-REG-005 | AC-REG-005 |
 | REQ-REG-006 | AC-REG-006 |
-| REQ-REG-007 | AC-REG-007 |
+| REQ-REG-007 | AC-REG-007, AC-REG-078 |
 | REQ-REG-008 | AC-REG-008 |
 | REQ-REG-009 | AC-REG-009 |
 | REQ-REG-010 | AC-REG-010 |
 | REQ-REG-011 | AC-REG-011 |
 | REQ-REG-012 | AC-REG-012, AC-REG-013 |
 | REQ-REG-013 | AC-REG-014 |
-| REQ-REG-014 | AC-REG-015 |
+| REQ-REG-014 | AC-REG-015, AC-REG-081 |
 | REQ-REG-015 | AC-REG-016 |
 | REQ-REG-016 | AC-REG-017 |
 | REQ-REG-017 | AC-REG-018 |
@@ -68,12 +68,12 @@ REQ count 62 · AC count 64 · RULE count 20 · last sequence per atom (REQ: 62,
 | REQ-REG-031 | AC-REG-032 |
 | REQ-REG-032 | AC-REG-033, AC-REG-034 |
 | REQ-REG-033 | AC-REG-035 |
-| REQ-REG-034 | AC-REG-036 |
+| REQ-REG-034 | AC-REG-036, AC-REG-079, AC-REG-080 |
 | REQ-REG-035 | AC-REG-037 |
 | REQ-REG-036 | AC-REG-038 |
 | REQ-REG-037 | AC-REG-039 |
 | REQ-REG-038 | AC-REG-040 |
-| REQ-REG-039 | AC-REG-041 |
+| REQ-REG-039 | AC-REG-041, AC-REG-075, AC-REG-076, AC-REG-077 |
 | REQ-REG-040 | AC-REG-042 |
 | REQ-REG-041 | AC-REG-043 |
 | REQ-REG-042 | AC-REG-044 |
@@ -97,6 +97,13 @@ REQ count 62 · AC count 64 · RULE count 20 · last sequence per atom (REQ: 62,
 | REQ-REG-060 | AC-REG-062 |
 | REQ-REG-061 | AC-REG-063 |
 | REQ-REG-062 | AC-REG-064 |
+| REQ-REG-063 | AC-REG-065 |
+| REQ-REG-064 | AC-REG-066, AC-REG-067, AC-REG-068 |
+| REQ-REG-065 | AC-REG-069 |
+| REQ-REG-066 | AC-REG-070, AC-REG-071 |
+| REQ-REG-067 | AC-REG-072 |
+| REQ-REG-068 | AC-REG-073 |
+| REQ-REG-069 | AC-REG-074 |
 
 | RULE | Traces |
 |---|---|
@@ -120,9 +127,14 @@ REQ count 62 · AC count 64 · RULE count 20 · last sequence per atom (REQ: 62,
 | RULE-REG-018 | REQ-REG-028 |
 | RULE-REG-019 | REQ-REG-035 |
 | RULE-REG-020 | REQ-REG-062 |
+| RULE-REG-021 | REQ-REG-063 |
+| RULE-REG-022 | REQ-REG-065 |
+| RULE-REG-023 | REQ-REG-066 |
+| RULE-REG-024 | REQ-REG-069 |
 
 ### Decisions
-ADR-REG-007, ADR-REG-008, ADR-REG-009 (new, ACCEPTED); applied ADR-REG-001 … ADR-REG-006. BLOCKED: none.
+ADR-REG-007, ADR-REG-008, ADR-REG-009, ADR-REG-015 … ADR-REG-019 (new, ACCEPTED); applied ADR-REG-001 … ADR-REG-006, ADR-REG-013, ADR-REG-014. BLOCKED: none.
 
 ### Event
 "P1 completed: REG v1 — REQ 62 · AC 64 · ENT 6 · RULE 20 · SCR-REQ 0 · ADR 3"
+"P1 revised (gate-analysis REVISE 2026-10-01): REG v1 — REQ 69 · AC 81 · ENT 6 · RULE 24 · SCR-REQ 0 · ADR 8"

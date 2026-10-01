@@ -7,8 +7,8 @@ SCREENS       none
 UXD INDEX     none — a REG field rendered by an INT screen is INT's UXD
 API COVERAGE  documented endpoints used 3/3: API-REG-001, API-REG-002, API-REG-003 (read queries of F2; API-REG-003 has no v1 consuming screen — ADR-REG-012) · unused: none
 ALIGN         verdict as stamped by the orchestrator · findings fixed: none
-ADRs          decisions/REG/ADR-REG-012 (ACCEPTED)
-TRACEABILITY  REQ covered by ≥1 SCR/F-block: 5/62 (REQ-REG-008, REQ-REG-013, REQ-REG-014, REQ-REG-015, REQ-REG-017) · orphan REQ: none for this track — the other 57 REQs are backend-only (load run, in-process interface) with no frontend surface
+ADRs          decisions/REG/ADR-REG-012 (ACCEPTED); applied ADR-REG-016 (`available` on ServiceSummary — gate-analysis REVISE 2026-10-01)
+TRACEABILITY  REQ covered by ≥1 SCR/F-block: 5/69 (REQ-REG-008, REQ-REG-013, REQ-REG-014, REQ-REG-015, REQ-REG-017) · orphan REQ: none for this track — the other 64 REQs are backend-only (load run, in-process interface) with no frontend surface
 ```
 
 ### Event

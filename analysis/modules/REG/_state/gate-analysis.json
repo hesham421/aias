@@ -1,0 +1,233 @@
+{
+  "gate": "analysis",
+  "stages": [
+    "P0",
+    "P0.5",
+    "P1",
+    "P1.5",
+    "P2",
+    "P3.1",
+    "P3.2",
+    "P4"
+  ],
+  "verdict": "REVISE",
+  "scores": {
+    "unambiguous": 2,
+    "verifiable": 2,
+    "complete": 2,
+    "consistent": 2,
+    "singular": 3,
+    "feasible": 2,
+    "traceable": 2
+  },
+  "findings": [
+    {
+      "id": "G1",
+      "severity": "MAJOR",
+      "section": "backend",
+      "artifact": "srs / db-script / backend-execution-plan",
+      "line": null,
+      "clause": "adversarial probe P1/P4 (silent path, pattern); rubric: complete",
+      "problem": "A service definition that declares the same required document type twice has no application-level rejection path. db-script-reg.md adds a bare UNIQUE constraint (UQ_REG_REQ_DOC_VER_TYPE on SERVICE_PACKAGE_VERSION_ID, DOCUMENT_TYPE), but the backend-execution-plan's ENT-REG-004 domain rules say 'none specific to this entity' and there is no RULE-REG-*, no load reason code, no REQ/AC, and no TC for this case — unlike every sibling duplicate-value scenario in the same module (duplicate service code -> RULE-REG-002, duplicate connection name -> RULE-REG-013, duplicate query name -> RULE-REG-019, each with its own message, load-reason code, REQ/AC and TC). As specified, loading such a package throws a raw Oracle unique-constraint violation mid-transaction (SVC-API step 4) instead of a REJECTED Load Result, breaking REQ-REG-007's guarantee and raw-idea §12 'nothing is skipped silently'.",
+      "fix": "Add RULE-REG-021 'Unique required document types' (scope ENT-REG-004, trigger on load, message e.g. 'The document type \"{documentType}\" is required more than once in \"{serviceCode}\"'), a load reason code REG-LOAD-DUPLICATE-DOCUMENT-TYPE, extend REQ-REG-037 with an AC, add it to the backend-execution-plan's ENT-REG-004 domain rules and to the load-run validation order in step 3, and add one TC following the RULE-REG-019 pattern. Also state explicitly whether a service definition may declare zero required documents (QR-REG-003 implies yes).",
+      "adr": false
+    },
+    {
+      "id": "G2",
+      "severity": "MAJOR",
+      "section": "backend",
+      "artifact": "backend-execution-plan",
+      "line": null,
+      "clause": "concurrency guard (gate brief §5); rubric: feasible",
+      "problem": "PHASE SVC-API step 4 (version registration) explicitly names its concurrency guard ('the unique constraint UQ_REG_SVC_PKG_VER_PKG_VERSION is the concurrency guard... a second instance starting at the same time fails the insert and records UNCHANGED after re-reading'). No equivalent guard is named for (a) step 1, which deletes every REG_LOAD_RESULT row of earlier runs and then inserts rows across the whole run with no run-wide lock — two instances starting together can interleave deletes/inserts and leave a partial or mixed report that QR-REG-005 (reading MAX(loadRunAt)) would misreport, breaking REQ-REG-007/008's 'nothing skipped silently'; or (b) connection activation (step 2), whose insert is protected by UQ_REG_CONNECTION_CONNECTION_NAME but whose update/remove paths have no optimistic lock and no stated behaviour under a concurrent race. Nothing in the SRS, db-script or backend plan states a single-instance deployment assumption either.",
+      "fix": "Either (a) state explicitly, in an ADR and the backend plan's CORE phase, that REG runs load as a single leader instance per environment (e.g. an exclusive Oracle DBMS_LOCK.REQUEST on a named lock, or SELECT...FOR UPDATE on a one-row lock table, held for the whole run and released after step 6; an instance that cannot acquire it within a timeout skips loading and serves the stored registry), and state for connection activation that concurrent update/remove is an acceptable idempotent last-writer-wins refresh (connections carry no request state); or (b) key REG_LOAD_RESULT by a monotonic LOAD_RUN_ID so two concurrent runs never interleave visibly. Add a TC exercising concurrent start.",
+      "adr": true
+    },
+    {
+      "id": "G3",
+      "severity": "MAJOR",
+      "section": "backend",
+      "artifact": "api-spec / backend-execution-plan",
+      "line": null,
+      "clause": "P3 seam reading (api-spec <-> srs <-> frontend read binding); rubric: complete",
+      "problem": "RULE-REG-016 refuses a read 'only when the code is unknown' — a WITHDRAWN service's current version is still returned as 200 by GET /api/v1/services/{serviceCode} (API-REG-002), and ServiceSummary carries no available/withdrawn field, even though API-REG-001's list correctly filters to AVAILABLE=1 (DBF-REG-003). A direct read of a withdrawn service therefore looks identical to a live one to any caller, including INT's screen bound to API-REG-002 via the screen-hooks block. The same blind spot applies when RULE-REG-017 (a query's connection is not activated) would refuse the in-process Check: the HTTP summary gives no signal that the service is not currently runnable.",
+      "fix": "Add a required `available` boolean to ServiceSummary (true when AVAILABLE=1), threaded through REQ-REG-013/REQ-REG-014, AC-REG-014/015, CON-REG-008/CON-REG-010, api-spec-reg.yaml and the API-REG-001/002 blocks, with a TC for a withdrawn-service read returning available=false. If the owner instead wants 'listed' to mean 'loaded, not necessarily runnable', state that explicitly in REQ-REG-013/014's rationale — either way this is a scope call that needs an ADR.",
+      "adr": true
+    },
+    {
+      "id": "G4",
+      "severity": "MAJOR",
+      "section": "backend",
+      "artifact": "srs",
+      "line": null,
+      "clause": "rubric: unambiguous; P2 closure question (duplicate identity)",
+      "problem": "The SRS never defines what makes two service codes the same. RULE-REG-002 rejects two folders that 'declare the same service code' and UQ_REG_SVC_PKG_SERVICE_CODE compares raw bytes, so `scholarship-request`, `Scholarship-Request` and a trailing-space variant would register as three separate services. That defeats POL-REG-001 (one package per service) and POL-REG-013 (codes come only from the registry, never hardcoded — a consumer cannot know the exact casing to expect). The SRS also never states whether the folder name must equal the declared code.",
+      "fix": "Add a RULE (e.g. RULE-REG-021, renumbered if combined with G1's rule) constraining the service-code format on load: lowercase, hyphen-separated ASCII, at most 100 characters, equal to the folder name; reject otherwise with a dedicated load reason code. Add the matching CHECK constraint (REGEXP_LIKE) in db-script, and a REQ/AC/TC (e.g. folder `Scholarship-Request` -> REJECTED).",
+      "adr": true
+    },
+    {
+      "id": "G5",
+      "severity": "MAJOR",
+      "section": "backend",
+      "artifact": "srs / backend-execution-plan",
+      "line": null,
+      "clause": "adversarial probe P1 (unwanted behaviour, silent path); rubric: complete",
+      "problem": "REQ-REG-010 withdraws every stored service code that currently has no folder. If the configured package directory itself is missing, unreadable, or empty (a bad path, a failed volume mount), the very next start withdraws every service the platform holds and every Check is refused — the only trace is a set of WITHDRAWN rows, with no REQ, RULE, AC or TC distinguishing 'administrator removed every folder' from 'directory not reachable'. This is the most extreme instance of raw-idea §12 'nothing is skipped silently' left unstated.",
+      "fix": "Add a REQ (e.g. REQ-REG-063) stating that when the configured package directory does not exist, cannot be read, or holds no package folder while the registry currently holds at least one available Service Package, the system withdraws no service and instead records one Load Result (outcome REJECTED, a new load reason code e.g. REG-LOAD-PACKAGE-DIRECTORY-UNAVAILABLE, subject naming the directory path). Add AC + TC (registry holds 2 services, directory missing -> both stay available, 1 REJECTED row) and the guard before step 5 of RegistryLoadRun.",
+      "adr": true
+    },
+    {
+      "id": "G6",
+      "severity": "MINOR",
+      "section": "tests",
+      "artifact": "backend-test-plan",
+      "line": null,
+      "clause": "rubric: verifiable; C10.2",
+      "problem": "RULE-REG-009 (document-source completeness) rejects four distinct conditions (missing document-source query, missing document-type column, a missing path/content column depending on fetch mode, and a source query naming a different service definition), but only one AC/TC pair exists (AC-REG-041/TC-REG-041), covering only the fetch:path-without-path-column case. The blob-mode, type-column and foreign-query branches are untested, unlike RULE-REG-006 which has two ACs for its two shapes.",
+      "fix": "Add AC-REG-065..067 under REQ-REG-039 for the three untested branches (blob with no content_column; path with no type_column; document_source naming a query not declared in the same service definition), and matching TC-REG-072..074 in the backend-test-plan (package SVC-API, exercising API-REG-003).",
+      "adr": false
+    },
+    {
+      "id": "G7",
+      "severity": "MAJOR",
+      "section": "backend",
+      "artifact": "business-policies / platform-summary / ADR-REG-006",
+      "line": null,
+      "clause": "AIAS-7; rubric: complete, feasible",
+      "problem": "AIAS-7 requires every Check to declare its timeout, maximum rows and maximum file size. REG correctly refuses a per-service override (RULE-REG-012) and defers the actual values to 'platform configuration' (ADR-REG-006) — but no artifact this analysis read states the configuration property names or default values, nor is this hand-off (or the similar hand-offs of raw-idea §12 guardrails 5, 6 and 8, and the AIAS-10 MODEL-EVAL known-result set, to DOC/CHK/RPT per ADR-REG-008's Consequences) tracked as an item the consuming module's own gate is obliged to close. REG's own P0/P1 analysis discovered this is platform-wide, not REG's to own, but never recorded it as a CAT-10 platform finding (and the registry has no working CAT-10 section to record it in anyway — see G9).",
+      "fix": "Record a CAT-10 platform finding: 'the platform-wide Check limits (timeout / maximum rows / maximum file size) have no stated owner artifact or default values, and the §12 guardrail hand-offs of ADR-REG-006/ADR-REG-008 are untracked'; belongs to CHK's own CORE phase / platform-summary; found by REG P0/P1.",
+      "adr": true
+    },
+    {
+      "id": "G8",
+      "severity": "MAJOR",
+      "section": "backend",
+      "artifact": "prd / business-policies / module-registry / ADR-REG-002..006",
+      "line": null,
+      "clause": "GOVERNANCE-CORE.md §6 (completion protocol); rubric: consistent",
+      "problem": "approvals/prd-approval.json records the owner's approval of the PRD and ADR-REG-002..006 on 2026-10-01T10:56:29Z, and current-srs.md correctly reflects 'ACCEPTED by owner' — but the confirmation was never written back into the artifacts that recorded it as pending: current-prd.md's APPROVAL block is still blank ('Approved by: — Date: —') with Status 'DRAFT — awaiting prd-approval', and 5 of its RESOLVED DECISIONS rows still read 'pending owner confirmation at prd-approval'; current-business-policies.md and current-module-registry.md carry the same stale rows (module-registry rows 3-6); and ADR-REG-002.md through ADR-REG-006.md all close their own body text with 'Status: recommended — pending owner confirmation at prd-approval' despite a header of 'RESOLVED-IN-DIALOGUE'. A reader or tool consulting any of these six artifacts in isolation is told the opposite of what actually happened.",
+      "fix": "The orchestrator's prd-approval completion step should stamp 'confirmed at prd-approval 2026-10-01 (see approvals/prd-approval.json)' into every row/ADR body currently reading 'pending owner confirmation', and fill the PRD's Status/APPROVAL block (Approved by: Hesham Ezzat (owner), Date: 2026-10-01). One rule-level fix, not six manual edits.",
+      "adr": false
+    },
+    {
+      "id": "G9",
+      "severity": "MAJOR",
+      "section": "backend",
+      "artifact": "project-registry (platform)",
+      "line": null,
+      "clause": "C2.2 registry-agree; shared/REGISTRY-SCHEMA.md §1, §4",
+      "problem": "project-registry.md's own SCHEMA COMPLIANCE MAP mis-maps every category from CAT-2 onward against shared/REGISTRY-SCHEMA.md §1's canonical list: its CAT-2 points to '2. Conventions & steering' (schema: CAT-2 = module index); its CAT-7 points to '7. Cross-module dependency index' (schema: CAT-7 = decision/ADR index); its CAT-10 points to '10. Change / event history' (schema: CAT-10 = platform findings, which schema actually assigns to CAT-9). No section genuinely implements CAT-7 (a cross-module ADR/decision index) or CAT-10 (platform findings) — the registry's real §8 'Open question index' is not one of the schema's ten categories at all — yet the block declares 'uncovered: []'.",
+      "fix": "Realign the compliance-map to REGISTRY-SCHEMA.md §1's actual CAT-1..CAT-10 order and add genuine CAT-7 and CAT-10 sections (CAT-10 is also where G7's and G10's platform findings belong). This is a pre-existing bootstrap (P-1) defect, not REG-authored content, but REG's gate is positioned to surface it since no module's gate had recorded it before.",
+      "adr": false
+    },
+    {
+      "id": "G10",
+      "severity": "MAJOR",
+      "section": "backend",
+      "artifact": "project-registry (platform)",
+      "line": null,
+      "clause": "GOVERNANCE-CORE.md §6 step 4; rubric: consistent",
+      "problem": "project-registry.md §8 still lists OQ-1 (owner of the Check run record) and OQ-2 (owner of the Check Document record) as status OPEN with 'To be resolved by P0 dialogue', although ADR-REG-001 states outright 'Closes project-registry OQ-1 and OQ-2' and ADR-REG-002 settles the write direction — both decided the same day the registry was last updated. The registry's own header still reads 'Open items: 2'.",
+      "fix": "Through the orchestrator's registry step: set OQ-1 and OQ-2 to RESOLVED, resolution 'RPT owns CHECK_RUN/CHECK_FINDING/CHECK_DOCUMENT; CHK writes through a result port it declares and RPT implements (ADR-REG-001, ADR-REG-002)'; update CAT-3 entity ownership for Check/Check Document to RPT; set the header to 'Open items: 0'; append a CAT-9 event row.",
+      "adr": false
+    },
+    {
+      "id": "G11",
+      "severity": "MAJOR",
+      "section": "backend",
+      "artifact": "project-registry (platform) / platform-summary",
+      "line": null,
+      "clause": "CAT-8 pipeline status; rubric: traceable",
+      "problem": "project-registry.md §9 lists every one of the 5 modules (REG, CHK, DOC, RPT, INT) as 'NOT STARTED', and current-platform-summary.md states 'No module is past P0 in the registry's pipeline status ... Phase 2 in this run: 0.1 REG', implying REG is the first module to progress past P0. This is factually wrong: governance-shared/analysis/modules/{CHK,DOC,RPT,INT}/ each already hold a complete P0 through P4 artifact set plus their own _state/traceability.md — four of the five modules have visibly progressed well past P0. REG's own frontend-execution-plan and flow-diagram even cite INT's SCR-REQ-INT-003 and REQ-INT-016 as stable facts (verified these IDs genuinely exist in INT's current-registry-srs.md, so the citation itself is sound) — but the registry a reader would check to confirm that stability says INT has not started at all.",
+      "fix": "Correct project-registry.md §9's pipeline-status table (and platform-summary's progress narrative) to each module's actual last-committed stage, or, if those modules were produced in a deliberately separate/exploratory track outside this registry's bookkeeping, state that explicitly next to the 'NOT STARTED' rows so REG's forward references into INT do not look unsupported. Belongs to the orchestrator/project-registry maintenance step, not REG's content.",
+      "adr": false
+    },
+    {
+      "id": "G12",
+      "severity": "MINOR",
+      "section": "backend",
+      "artifact": "contract",
+      "line": null,
+      "clause": "C13 (contract names every consumer); rubric: consistent",
+      "problem": "CON-REG-007, CON-REG-009, CON-REG-010, CON-REG-011 and CON-REG-013 rely only on the blanket module header 'Read by: DOC, CHK, RPT, INT' instead of naming their actual caller per operation (only CON-REG-012 names its one caller, INT's Employee Decision path). For example getConnection (CON-REG-011) reads as available to 'any caller', including the LLM, though AIAS-3/4 require it reach only CHK/DOC.",
+      "fix": "Add a 'Called by:' line to each CON-* item: CON-REG-007 -> CHK; CON-REG-009 -> RPT, CHK; CON-REG-010 -> INT/hosts; CON-REG-011 -> CHK (query execution), DOC (blob over jdbc), never the LLM; CON-REG-013 -> CHK, INT.",
+      "adr": false
+    },
+    {
+      "id": "G13",
+      "severity": "MINOR",
+      "section": "backend",
+      "artifact": "ADR stream (ADR-REG-001, ADR-REG-002)",
+      "line": null,
+      "clause": "rubric: traceable (every ADR carries traces)",
+      "problem": "ADR-REG-001 and ADR-REG-002 both carry 'traces: —' despite deciding matters other REG artifacts cite directly (the SRS out-of-scope bullet on Check/Check Document ownership, the contract's 'Read by' header, the RPT/CHK ownership split that current-business-policies.md and current-prd.md reference).",
+      "fix": "ADR-REG-001 traces: project-registry OQ-1, OQ-2. ADR-REG-002 traces: project-registry OQ-1, domain-profile §6 (RPT depends_on CHK). Where the factory requires a REG-local atom id and none exists, mark it explicitly 'platform-level, no REG atom' rather than leaving the field empty.",
+      "adr": false
+    },
+    {
+      "id": "G14",
+      "severity": "MINOR",
+      "section": "tests",
+      "artifact": "backend-test-plan",
+      "line": null,
+      "clause": "rubric: verifiable",
+      "problem": "Three narrower branch-coverage gaps: (a) REQ-REG-007's 'a failing package or connection does not stop the run' is tested only one failure at a time (TC-REG-007 for a package, TC-REG-049/054/057 each for one connection alone) — no fixture mixes a failing and a succeeding item in the same run to prove the survivor still loads; (b) RULE-REG-012's rejected elements `timeout` and `max_file_size` have no TC (only `max_rows` and `storage_root` do); (c) nothing states the outcome if a package folder is edited while the load run is reading it (a torn read over a half-written file taken into the content hash).",
+      "fix": "(a) Extend a load-run fixture to include one failing and one valid item together and assert both outcomes in the same Load Result set. (b) Add a TC asserting `timeout`/`max_file_size` in a service definition is rejected with the RULE-REG-012 message. (c) Add a sentence to REQ-REG-005's rationale recommending atomic-rename publishing by the administrator, and state that the load run re-checks file size/mtime before and after reading, rejecting with a new load reason if they changed mid-read.",
+      "adr": false
+    }
+  ],
+  "coverage": [
+    {
+      "id": "us-req",
+      "from": "US",
+      "to": [
+        "REQ"
+      ],
+      "total": 13,
+      "covered": 13,
+      "pct": 100.0
+    },
+    {
+      "id": "req-ac",
+      "from": "REQ",
+      "to": [
+        "AC"
+      ],
+      "total": 62,
+      "covered": 62,
+      "pct": 100.0
+    },
+    {
+      "id": "req-api",
+      "from": "REQ",
+      "to": [
+        "API"
+      ],
+      "total": 62,
+      "covered": 6,
+      "pct": 9.7
+    },
+    {
+      "id": "req-ux",
+      "from": "REQ",
+      "to": [
+        "SCR",
+        "UXD"
+      ],
+      "total": 62,
+      "covered": 0,
+      "pct": 0.0
+    },
+    {
+      "id": "ac-tc",
+      "from": "AC",
+      "to": [
+        "TC"
+      ],
+      "total": 64,
+      "covered": 64,
+      "pct": 100.0
+    }
+  ],
+  "at": "2026-10-01T14:45:09+00:00"
+}

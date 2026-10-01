@@ -1,0 +1,13 @@
+{
+  "module": "RPT",
+  "version": 1,
+  "answers": [
+    {
+      "key": "factory|xm_events|RPT>CHK",
+      "digest": "bfc9570655dd1841",
+      "ref": "ADR-RPT-019",
+      "how": "CHK v1 delivered with the cited contract items unchanged; RPT edges remain valid (see ADR)",
+      "at": "2026-10-01T15:08:08+00:00"
+    }
+  ]
+}

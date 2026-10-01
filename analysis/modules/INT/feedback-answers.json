@@ -1,0 +1,13 @@
+{
+  "module": "INT",
+  "version": 1,
+  "answers": [
+    {
+      "key": "factory|xm_events|INT>CHK",
+      "digest": "5f76f9f10b2cd904",
+      "ref": "ADR-INT-024",
+      "how": "CHK v1 delivered; cited CON-CHK-001..005 unchanged since INT's design, INT->CHK edge and plans remain valid",
+      "at": "2026-10-01T15:05:50+00:00"
+    }
+  ]
+}

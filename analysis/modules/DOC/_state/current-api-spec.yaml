@@ -1,0 +1,112 @@
+openapi: 3.1.0
+info:
+  title: Document Access (DOC) API
+  version: 1.0.0
+  description: 'Derived from backend-execution-plan-doc.md (API-DOC-001). Read-only;
+    the upload handover, document fetch and end-of-Check operations are in-process
+    (ADR-DOC-011). No security scheme: caller authentication is deferred (raw-idea A2).'
+paths:
+  /api/v1/uploaded-documents:
+    get:
+      operationId: listUploadedDocuments
+      summary: List the Uploaded Documents of a Check
+      x-api-id: API-DOC-001
+      x-traces:
+      - REQ-DOC-017
+      - REQ-DOC-018
+      - REQ-DOC-043
+      - REQ-DOC-056
+      - DBF-DOC-001
+      - DBF-DOC-002
+      - DBF-DOC-005
+      - DBF-DOC-006
+      - DBF-DOC-007
+      - DBF-DOC-009
+      - DBF-DOC-010
+      parameters:
+      - name: checkId
+        in: query
+        required: true
+        description: The Check identifier (DBF-DOC-002)
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: The Uploaded Documents of the Check, ordered by upload time; empty when none
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UploadedDocumentSummary'
+        '400':
+          description: The checkId query parameter is missing or not a number
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - DOC-400-CHECK-ID-REQUIRED
+        '500':
+          description: Unexpected server failure
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - DOC-500
+components:
+  schemas:
+    UploadedDocumentSummary:
+      type: object
+      required:
+      - uploadedDocumentId
+      - documentType
+      - fileName
+      - fileSize
+      - oversized
+      - createdAt
+      properties:
+        uploadedDocumentId:
+          type: integer
+          format: int64
+          description: DBF-DOC-001
+        documentType:
+          type: string
+          maxLength: 100
+          description: DBF-DOC-005 — DOCUMENT_TYPE code
+        fileName:
+          type: string
+          maxLength: 255
+          description: DBF-DOC-006
+        fileSize:
+          type: integer
+          format: int64
+          minimum: 1
+          description: DBF-DOC-007 — bytes
+        oversized:
+          type: boolean
+          description: DBF-DOC-009 — true when larger than the maximum file size (content not kept)
+        createdAt:
+          type: string
+          format: date-time
+          description: DBF-DOC-010 — upload time
+    ProblemDetail:
+      type: object
+      required:
+      - type
+      - title
+      - status
+      - code
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        code:
+          type: string

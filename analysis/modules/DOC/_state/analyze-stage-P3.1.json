@@ -1,0 +1,148 @@
+{
+  "module": "DOC",
+  "version": 1,
+  "scope": "stage:P3.1",
+  "counts": {
+    "CRITICAL": 0,
+    "MAJOR": 0,
+    "MINOR": 0
+  },
+  "clean": true,
+  "blocking": [
+    "CRITICAL",
+    "MAJOR"
+  ],
+  "contracts": [
+    "C0",
+    "C7",
+    "C8",
+    "C12"
+  ],
+  "skipped": [
+    "C7.23 (operation-resolves): the profile declares nothing at `conventions.security_model.actions` \u2014 the operation vocabulary \u2014 this clause enforced nothing",
+    "C7.20 (operation-resolves): the profile declares nothing at `conventions.security_model.actions` \u2014 the operation vocabulary \u2014 this clause enforced nothing"
+  ],
+  "coverage": {
+    "C0.1": 12,
+    "C7.2": 14,
+    "C7.3": 1,
+    "C7.4": 2,
+    "C7.5": 4,
+    "C7.5b": 4,
+    "C7.6": 59,
+    "C7.22": 1,
+    "C7.23": 0,
+    "C7.20": 0,
+    "C7.19": 0,
+    "C7.18": 4,
+    "C7.24": 0,
+    "C7.25": 5,
+    "C7.26": 4,
+    "C7.27": 14,
+    "C7.28": 0,
+    "C7.29": 2,
+    "C7.30": 2,
+    "C7.31": 1
+  },
+  "vacuous": [
+    "C7.19",
+    "C7.20",
+    "C7.23",
+    "C7.24",
+    "C7.28"
+  ],
+  "metrics": [
+    {
+      "id": "us-req",
+      "from": "US",
+      "to": [
+        "REQ"
+      ],
+      "total": 13,
+      "covered": 13,
+      "pct": 100.0
+    },
+    {
+      "id": "req-ac",
+      "from": "REQ",
+      "to": [
+        "AC"
+      ],
+      "total": 59,
+      "covered": 59,
+      "pct": 100.0
+    },
+    {
+      "id": "req-api",
+      "from": "REQ",
+      "to": [
+        "API"
+      ],
+      "total": 59,
+      "covered": 4,
+      "pct": 6.8
+    },
+    {
+      "id": "req-ux",
+      "from": "REQ",
+      "to": [
+        "SCR",
+        "UXD"
+      ],
+      "total": 59,
+      "covered": 0,
+      "pct": 0.0
+    },
+    {
+      "id": "ac-tc",
+      "from": "AC",
+      "to": [
+        "TC"
+      ],
+      "total": 62,
+      "covered": 0,
+      "pct": 0.0
+    }
+  ],
+  "findings": [],
+  "provenance": {
+    "rules": {
+      "contracts": "66ab69cc1483b2f9858c7b3db7d89f46990f817721fc4417f100bd5f023dff07",
+      "checker": "a94d2877f8d266ce52f428ed037da56bf89abcf3d31d225d01591f884f268f8b",
+      "policy": "f0051863173859c50eaa1091adddc83f9c46e4a33a735325d37acc31ffd51c3d"
+    },
+    "resolvable": [
+      "api-spec",
+      "backend-execution-plan",
+      "business-policies",
+      "contract",
+      "db-script",
+      "domain-profile",
+      "module-registry",
+      "platform-summary",
+      "prd",
+      "project-registry",
+      "registry-db",
+      "registry-exec-be",
+      "registry-srs",
+      "srs"
+    ],
+    "inputs": {
+      "api-spec": "2b81feba6bfa25dbc92cab4acf7efee984821593484ea5f8eef80db72e843fe2",
+      "backend-execution-plan": "5c0052ca9a30d2e9f53258ef06b471d91c67ef3bc1b6d83544a297406efe92a0",
+      "business-policies": "1c9c196a92c06d174a9f075740c48d1954b7ab0c61f6437dc1566ca19c324ac6",
+      "contract": "9f4d2b84ddaa69569afbbc3de2f9882ee3626556f0244acd0618fa8672cc964e",
+      "db-script": "fc203a6ffcdbe6c88a5458b20c51fdf8131974677b401d391a9092dcd4975361",
+      "domain-profile": "c9ffe7c45c917c5793e15b6fbc7151ccc4b9181c36a5aaf1ce2f15f6849e3cbd",
+      "module-registry": "b8de43f6c9f01340d973219f0d250ef6886d8121f0cfc383e9960c1c464fdaed",
+      "platform-summary": "2beb30eaa26a520522195bd01764073ec4b086ee85c0642849b0a3943a8f0986",
+      "prd": "682c62b88bbd8f2df993120568162993c3b1b6cb64a8d0c92572cdd73e7ba976",
+      "project-registry": "7652329cae1b5e14558ead423c4a0d157fcf3aead94176473c23adb034161a82",
+      "registry-db": "066e0e252d0c9610c9189ecfa7b4afdbc84eddb17d67b263fb5ee030d5871654",
+      "registry-exec-be": "b721a48d18605f8aaff3c37e2484577bba8715fb4260b4c39539f99d55a5892c",
+      "registry-srs": "04a71934e1b2c1f78aa2ef44dcf3cf6264c77597eca275382383b3ff02e8353a",
+      "srs": "8319c9397993687775f26a4e78f4a5fbbbdbe8a4d0296c1ea05d2eba0dfa4745"
+    },
+    "at": "2026-10-01T12:21:33+00:00"
+  }
+}

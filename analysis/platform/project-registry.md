@@ -1,34 +1,36 @@
 # PROJECT REGISTRY — Request Verification Service
 ══════════════════════════════════════════════════════════════════
 Profile            : aias
-Registry Version   : 1.0.0
+Registry Version   : 1.1.0
 Domain Profile     : analysis/domain/domain-profile.md v1
-Last Updated       : 2026-10-01 by P-1 (registry step of the DOC v1 analysis-gate revise: OQ-1, OQ-2 resolved; 6 platform findings recorded)
-Modules registered : 5   Entity candidates : 6   Open items : 0 (OQ-1, OQ-2 RESOLVED) · platform findings OPEN : 6
+Last Updated       : 2026-10-01 by P-1 (registry step of the REG v1 analysis-gate revise, findings G9, G11: sections and compliance map realigned to shared/REGISTRY-SCHEMA.md §1; decision index added; pipeline status set to the modules' real state)
+Modules registered : 5   Entity candidates : 6   Open items : 0 (OQ-1, OQ-2 RESOLVED) · ADR streams : 5 · platform findings OPEN : 6
 ══════════════════════════════════════════════════════════════════
 
 ## SCHEMA COMPLIANCE MAP
 
-The block `gov.py analyze` reads (C2.2): every category of `factory.yaml → registry.categories`, mapped to the section of this registry that covers it.
+The block `gov.py analyze` reads (C2.2): every category of `factory.yaml → registry.categories`, mapped to the section of this registry that covers it. Section numbers and names follow shared/REGISTRY-SCHEMA.md §1 one-to-one (section N covers CAT-N).
 
 ```yaml name=compliance-map
 categories:
-  CAT-1: "1. Identity & versioning"
-  CAT-2: "2. Conventions & steering"
-  CAT-3: "3. Module / component index"
-  CAT-4: "4. Entity ownership"
-  CAT-5: "5. Shared entity declarations"
-  CAT-6: "6. Structural / implementation registry"
-  CAT-7: "7. Cross-module dependency index"
-  CAT-8: "8. Open question index"
-  CAT-9: "9. Pipeline / progress status"
-  CAT-10: "10. Change / event history"
+  CAT-1: "1. Identity & conventions"
+  CAT-2: "2. Module index"
+  CAT-3: "3. Entity ownership"
+  CAT-4: "4. Shared declarations"
+  CAT-5: "5. Structural registry"
+  CAT-6: "6. Dependency indexes"
+  CAT-7: "7. Decision index"
+  CAT-8: "8. Pipeline status"
+  CAT-9: "9. Event history"
+  CAT-10: "10. Platform findings"
 uncovered: []
 ```
 
 ---
 
-## 1. Identity & versioning
+## 1. Identity & conventions
+
+### 1.1 Identity & versioning
 
 | Field | Value | Source |
 |---|---|---|
@@ -41,19 +43,18 @@ uncovered: []
 | Module interface | in-process — all modules in one deployable, reached through injected interfaces | domain-profile §6 (profile `conventions.module_interface: in_process`) |
 | Domain profile | analysis/domain/domain-profile.md v1 (Status FRESH, 2026-10-01) | domain-profile header |
 
-### Version history
+#### Version history
 
 | Registry version | Date | Stage | Change | Source |
 |---|---|---|---|---|
 | 1.0.0 | 2026-10-01 | P-1 | Registry bootstrapped from domain-profile v1 (first creation) | domain-profile v1 |
+| 1.1.0 | 2026-10-01 | P-1 | Sections and compliance map realigned to shared/REGISTRY-SCHEMA.md §1 (CAT-N = section N); conventions folded into CAT-1; decision index (CAT-7) added; platform findings made their own CAT-10 section; pipeline status (CAT-8) set to the real module state | REG v1 analysis gate G9, G11 |
 
----
+### 1.2 Conventions & steering
 
-## 2. Conventions & steering
+#### 1.2.1 Steering — copied verbatim from domain-profile §7
 
-### 2.1 Steering — copied verbatim from domain-profile §7
-
-#### 7.1 Ubiquitous language
+##### 7.1 Ubiquitous language
 
 | Term | Definition | Do not say | Module code |
 |---|---|---|---|
@@ -72,7 +73,7 @@ uncovered: []
 | Service Administrator | The person who maintains service packages and connections. | — | REG |
 | Employee | The host-system user who reviews the report and takes the decision; identified by the host, recorded with the check. | — | INT |
 
-#### 7.2 Bounded contexts
+##### 7.2 Bounded contexts
 
 | Context | Owns module codes | Boundary statement |
 |---|---|---|
@@ -81,7 +82,7 @@ uncovered: []
 | record | RPT | What a check FOUND and what the employee DECIDED, kept for the retention period. |
 | integration | INT | Everything a host or the employee frontend touches: the REST API and the outbound approval call. |
 
-#### 7.3 Module prefixes proposal
+##### 7.3 Module prefixes proposal
 
 | Code | Display | Status |
 |---|---|---|
@@ -91,15 +92,15 @@ uncovered: []
 | RPT | Report Store | IN PROFILE |
 | INT | Host Integration | IN PROFILE |
 
-#### 7.4 Identifier rules
+##### 7.4 Identifier rules
 
 Later stages build IDs as `{prefix}-{MOD}-{seq}` (seq width 3) with the module codes above. Entity kinds: `config, transactional`. The profile adds no domain-specific atom.
 
-#### 7.5 Knowledge sources to cite
+##### 7.5 Knowledge sources to cite
 
 - `profiles/aias/knowledge/raw-idea.md` (as amended in its §15, A1–A2)
 
-### 2.2 Profile echo (read-only, cited as "profile")
+#### 1.2.2 Profile echo (read-only, cited as "profile")
 
 | Fact | Value | Agrees with steering? |
 |---|---|---|
@@ -108,15 +109,15 @@ Later stages build IDs as `{prefix}-{MOD}-{seq}` (seq width 3) with the module c
 | Bounded contexts | configuration [REG]; verification [CHK, DOC]; record [RPT]; integration [INT] | yes |
 | Knowledge files | profiles/aias/knowledge/raw-idea.md | yes |
 
-### 2.3 Enforcement notes
+#### 1.2.3 Enforcement notes
 
-- **E1** Every later artifact uses the terms of §2.1 (7.1) verbatim; a synonym listed under "do not say" (e.g. job / audit / scan for Check; plugin / template / tenant for Service Package; prompt / rules file for Service Knowledge; issue / violation for Finding; client app for Host System; verdict for Employee Decision) is a consistency finding at the pass gate (`gov.py analyze` checks registry ↔ artifact agreement).
+- **E1** Every later artifact uses the terms of §1.2.1 (7.1) verbatim; a synonym listed under "do not say" (e.g. job / audit / scan for Check; plugin / template / tenant for Service Package; prompt / rules file for Service Knowledge; issue / violation for Finding; client app for Host System; verdict for Employee Decision) is a consistency finding at the pass gate (`gov.py analyze` checks registry ↔ artifact agreement).
 - **E2** IDs follow `{prefix}-{MOD}-{seq}` (seq width 3) with the module codes of this section only (REG, CHK, DOC, RPT, INT).
 - **E3** Entities are classified with the kinds `config, transactional`.
 - **E4** Sources to cite when a stage resolves an ambiguity: the knowledge sources listed here (`profiles/aias/knowledge/raw-idea.md`, as amended in §15 A1–A2), then the domain-profile itself.
-- **E5** Pipeline status per module (§9 "Pipeline / progress status") is maintained by the orchestrator from commits — this engine seeds the rows as NOT STARTED.
+- **E5** Pipeline status per module (§8 "Pipeline status", CAT-8) is maintained by the orchestrator from commits — P-1 seeded the rows as NOT STARTED; they now carry each module's real state.
 
-### 2.4 Governance decisions log (confirmed only)
+#### 1.2.4 Governance decisions log (confirmed only)
 
 Platform-wide governing rules (domain-profile §5):
 
@@ -168,7 +169,7 @@ ADRs referenced: none — this run made no decision of its own.
 
 ---
 
-## 3. Module / component index
+## 2. Module index
 
 | Module code | Display name | Bounded context | Category | Core / extension | Status | Scope | Source |
 |---|---|---|---|---|---|---|---|
@@ -178,13 +179,23 @@ ADRs referenced: none — this run made no decision of its own.
 | RPT | Report Store | record | Business | Core | RESERVED | Runs, findings, documents, employee decision; retention purge | domain-profile §4 row 4, §7.3; D1, D4; profile |
 | INT | Host Integration | integration | Integration | Core | RESERVED | REST API, employee frontend's API surface, optional approval API | domain-profile §4 row 5, §7.3; D1, D6; profile |
 
-All five codes are in `profile.vocabulary.module_prefixes`; RESERVED = code reserved, module not yet started (RULE-4).
+All five codes are in `profile.vocabulary.module_prefixes`; RESERVED = code reserved at bootstrap (RULE-4); every module has since started — its version, last committed stage and gate state are in the Versions table below and in §8.
+
+### Versions and last committed stage
+
+| Module | Versions | Last committed stage (v1) | Module folder |
+|---|---|---|---|
+| REG | v1 | P4 | analysis/modules/REG/ |
+| CHK | v1 (tagged) | P4 | analysis/modules/CHK/ |
+| DOC | v1 | P4 | analysis/modules/DOC/ |
+| RPT | v1 | P4 (pass 1 re-run from P3.1 pending) | analysis/modules/RPT/ |
+| INT | v1 | P4 | analysis/modules/INT/ |
 
 External systems (not modules — no code assigned, recorded for context only): host database via Oracle SQLcl MCP server; host file storage / host BLOB columns; LLM provider via Spring AI; host approval API; host systems (Oracle ADF, others). Source: domain-profile §6.
 
 ---
 
-## 4. Entity ownership
+## 3. Entity ownership
 
 Analysis-phase candidates. `CAND-*` refs are registry-local handles, not pipeline IDs; they are replaced by formal IDs when the owning stage registers the element.
 
@@ -192,9 +203,9 @@ Analysis-phase candidates. `CAND-*` refs are registry-local handles, not pipelin
 |---|---|---|---|---|---|---|
 | CAND-REG-001 | Service Package (service knowledge + service definition, versioned) | REG | config | SHARED? | CANDIDATE | domain-profile §4 row 1, §7.1, §7.2, G11; [KB:raw-idea.md §4] |
 | CAND-REG-002 | Connection | REG | config | SHARED? | CANDIDATE | domain-profile §6 (CHK depends on REG connection), §7.1; [KB:raw-idea.md §4] |
-| CAND-CHK-001 | Check (one check run: service, request number, employee, status, result, service version, model, timestamps) | UNCLEAR (CHK or RPT) | transactional | SHARED? | OPEN | domain-profile §7.1 (term "Check" → CHK), §4 row 4 (RPT holds "Runs"); [KB:raw-idea.md §9 CHECK_RUN] — see OQ-1 |
+| CAND-CHK-001 | Check (one check run: service, request number, employee, status, result, service version, model, timestamps) | RPT (OQ-1 RESOLVED) | transactional | SHARED? | CANDIDATE | domain-profile §7.1 (term "Check" → CHK), §4 row 4 (RPT holds "Runs"); [KB:raw-idea.md §9 CHECK_RUN]; OQ-1, ADR-REG-001 |
 | CAND-RPT-001 | Finding (satisfied flag, evidence, note) | RPT | transactional | PRIVATE | CANDIDATE | domain-profile §4 row 4, §7.1, G10; [KB:raw-idea.md §7, §9 CHECK_FINDING] |
-| CAND-RPT-002 | Check Document (type, source mode, read status) | UNCLEAR (RPT or DOC) | transactional | SHARED? | OPEN | domain-profile §4 rows 3–4, §7.1 (Fetch Mode → DOC); [KB:raw-idea.md §9 CHECK_DOCUMENT] — see OQ-2 |
+| CAND-RPT-002 | Check Document (type, source mode, read status) | RPT (OQ-2 RESOLVED) | transactional | SHARED? | CANDIDATE | domain-profile §4 rows 3–4, §7.1 (Fetch Mode → DOC); [KB:raw-idea.md §9 CHECK_DOCUMENT]; OQ-2, ADR-REG-001 |
 | CAND-RPT-003 | Employee Decision | RPT | transactional | PRIVATE | CANDIDATE | domain-profile §7.1, §7.2 (record context), §4 row 4; [KB:raw-idea.md §9, §11] |
 
 Notes (inferred, not confirmed):
@@ -204,63 +215,100 @@ Notes (inferred, not confirmed):
 
 ---
 
-## 5. Shared entity declarations
+## 4. Shared declarations
 
 | Candidate ref | Entity name | Owner module | Referenced by | Basis | Status | Source |
 |---|---|---|---|---|---|---|
 | CAND-REG-001 | Service Package | REG | CHK (loads package), RPT (records package version, G11) | Read across modules through the REG interface | CANDIDATE | domain-profile §6 (REG → CHK), §5 G11 |
 | CAND-REG-002 | Connection | REG | CHK, DOC (queries / BLOB reads use a connection) | Read across modules through the REG interface | CANDIDATE | domain-profile §6 (REG → CHK; CHK, DOC → host database) |
-| CAND-CHK-001 | Check | UNCLEAR (CHK or RPT) | CHK (runs it), RPT (report belongs to it), INT (start / poll) | Referenced by three modules; owner open | OPEN | domain-profile §6 (CHK → RPT, CHK → INT) — see OQ-1 |
-| CAND-RPT-002 | Check Document | UNCLEAR (RPT or DOC) | DOC (fetches / reads), RPT (stores), CHK (deterministic required-document check) | Referenced by three modules; owner open | OPEN | domain-profile §6 (DOC → CHK), §4 rows 3–4 — see OQ-2 |
+| CAND-CHK-001 | Check | RPT (OQ-1 RESOLVED) | CHK (runs it, writes through RPT's interface), RPT (report belongs to it), INT (start / poll) | Referenced by three modules; owner RPT | CANDIDATE | domain-profile §6 (CHK → RPT, CHK → INT); OQ-1, ADR-REG-001, ADR-REG-002 |
+| CAND-RPT-002 | Check Document | RPT (OQ-2 RESOLVED) | DOC (fetches / reads), RPT (stores), CHK (deterministic required-document check) | Referenced by three modules; owner RPT | CANDIDATE | domain-profile §6 (DOC → CHK), §4 rows 3–4; OQ-2, ADR-REG-001 |
 
 ---
 
-## 6. Structural / implementation registry
+## 5. Structural registry
 
-None yet — filled by P2 / P3.1.
+The structural artifacts of each module version are registered by its P2 stage registry; this section points to them and restates no row.
+
+| Module · version | Stage registry | Sequences |
+|---|---|---|
+| REG v1 | analysis/modules/REG/P2/registry-db-reg.md | last DBF: DBF-REG-049 · last XM: none |
+| CHK v1 | analysis/modules/CHK/P2/registry-db-chk.md | last DBF: DBF-CHK-006 · last XM: XM-CHK-005 |
+| DOC v1 | analysis/modules/DOC/P2/registry-db-doc.md | last DBF: DBF-DOC-015 · last XM: XM-DOC-004 |
+| RPT v1 | analysis/modules/RPT/P2/registry-db-rpt.md | last DBF: DBF-RPT-046 · last XM: none |
+| INT v1 | analysis/modules/INT/P2/registry-db-int.md | last DBF: DBF-INT-010 · last XM: XM-INT-001 |
 
 ---
 
-## 7. Cross-module dependency index
+## 6. Dependency indexes
 
-Derived: `platform/dependency-graph.json` (`gov.py graph`). No dependency row is written in this registry; the relations stated in domain-profile §6 reach P0, which turns them into its `platform-dependencies` block.
+- **XM (backend)**: derived — `platform/dependency-graph.json` (`gov.py graph`). No dependency row is written in this registry; the relations stated in domain-profile §6 reach P0, which turns them into its `platform-dependencies` block.
+- **UXD (frontend)**: kept separate from the XM index — each module's frontend stage records its UXD entries in its own ui-ux-spec / frontend execution plan (analysis/modules/{MOD}/P3_2/); no UXD row is restated here.
 
 ---
 
-## 8. Open question index
+## 7. Decision index
+
+### 7.1 ADR streams
+
+Every module keeps one ADR stream under `analysis/decisions/{MOD}/` (`ADR-{MOD}-{seq:03d}`); an ADR is never rewritten under its id — a later ADR supersedes it. Counts as of this registry version.
+
+| Stream | Folder | Id range | ADRs | Status | BLOCKED |
+|---|---|---|---|---|---|
+| REG | analysis/decisions/REG/ | ADR-REG-001 … ADR-REG-019 | 19 | ACCEPTED (P0 decisions confirmed in dialogue / at prd-approval) | 0 |
+| DOC | analysis/decisions/DOC/ | ADR-DOC-001 … ADR-DOC-017 | 17 | ACCEPTED (P0 decisions confirmed in dialogue / at prd-approval) | 0 |
+| CHK | analysis/decisions/CHK/ | ADR-CHK-001 … ADR-CHK-021 | 21 | ACCEPTED (P0 decisions confirmed in dialogue / at prd-approval) | 0 |
+| RPT | analysis/decisions/RPT/ | ADR-RPT-001 … ADR-RPT-018 | 18 | ACCEPTED (P0 decisions confirmed in dialogue / at prd-approval) | 0 |
+| INT | analysis/decisions/INT/ | ADR-INT-001 … ADR-INT-024 | 24 | ACCEPTED (P0 decisions confirmed in dialogue / at prd-approval) | 0 |
+
+### 7.2 Resolution events
+
+| Event | Consumer → target | Trigger | Status | Answer |
+|---|---|---|---|---|
+| INT>CHK | INT v1 → CHK v1 | CHK v1 delivered | ANSWERED | ADR-INT-024 — cited CON-CHK-001 … CON-CHK-005 unchanged; edge remains valid |
+| RPT>CHK | RPT v1 → CHK v1 | CHK v1 delivered | OPEN | — (RPT's to answer) |
+
+### 7.3 Open question index
 
 | Ref | Question | Evidence | Affected rows | Status | Resolution |
 |---|---|---|---|---|---|
-| OQ-1 | Which module owns the Check (check run) record — CHK, which runs the check and owns the term, or RPT, which stores runs? | Side A: domain-profile §7.1 maps the term "Check" to CHK; §3 / §4 row 2 make CHK run the pipeline. Side B: domain-profile §4 row 4 lists "Runs" in RPT's scope; §6 "RPT depends on CHK (the check run a report belongs to)"; [KB:raw-idea.md §9] puts `CHECK_RUN` with the report tables. | CAND-CHK-001 (§4, §5) | RESOLVED | RPT owns the Check run record; CHK runs the pipeline and writes through RPT's interface — platform-summary RESOLVED DECISIONS #1 (owner statement 2026-10-01), ADR-REG-001 |
-| OQ-2 | Which module owns the Check Document record (type, source mode, read status) — RPT, which stores "documents", or DOC, which fetches and reads them? | Side A: domain-profile §4 row 4 lists "documents" in RPT's scope; [KB:raw-idea.md §9] `CHECK_DOCUMENT` is a report table; §7 report "Documents" part. Side B: domain-profile §4 row 3 gives DOC fetching and reading; §7.1 maps "Fetch Mode" to DOC. | CAND-RPT-002 (§4, §5) | RESOLVED | RPT owns the Check Document record and the findings; DOC fetches and reads documents but owns no stored Check Document row — platform-summary RESOLVED DECISIONS #2 (owner statement 2026-10-01), ADR-REG-001 |
+| OQ-1 | Which module owns the Check (check run) record — CHK, which runs the check and owns the term, or RPT, which stores runs? | Side A: domain-profile §7.1 maps the term "Check" to CHK; §3 / §4 row 2 make CHK run the pipeline. Side B: domain-profile §4 row 4 lists "Runs" in RPT's scope; §6 "RPT depends on CHK (the check run a report belongs to)"; [KB:raw-idea.md §9] puts `CHECK_RUN` with the report tables. | CAND-CHK-001 (§3, §4) | RESOLVED | RPT owns the Check run record; CHK runs the pipeline and writes through RPT's interface — platform-summary RESOLVED DECISIONS #1 (owner statement 2026-10-01), ADR-REG-001 |
+| OQ-2 | Which module owns the Check Document record (type, source mode, read status) — RPT, which stores "documents", or DOC, which fetches and reads them? | Side A: domain-profile §4 row 4 lists "documents" in RPT's scope; [KB:raw-idea.md §9] `CHECK_DOCUMENT` is a report table; §7 report "Documents" part. Side B: domain-profile §4 row 3 gives DOC fetching and reading; §7.1 maps "Fetch Mode" to DOC. | CAND-RPT-002 (§3, §4) | RESOLVED | RPT owns the Check Document record and the findings; DOC fetches and reads documents but owns no stored Check Document row — platform-summary RESOLVED DECISIONS #2 (owner statement 2026-10-01), ADR-REG-001 |
 
 domain-profile §10 lists no open items; caller authentication and report-viewing rights are deferred by A2, not open (domain-profile §10; D7).
 
 ---
 
-## 9. Pipeline / progress status
+## 8. Pipeline status
 
-| Module code | Pipeline status | Source |
-|---|---|---|
-| REG | NOT STARTED | seeded by P-1 (E5) |
-| CHK | NOT STARTED | seeded by P-1 (E5) |
-| DOC | NOT STARTED | seeded by P-1 (E5) |
-| RPT | NOT STARTED | seeded by P-1 (E5) |
-| INT | NOT STARTED | seeded by P-1 (E5) |
+As `gov.py status` / `gov.py next` report it on 2026-10-01 (manifest.json of each module).
 
-Maintained by the orchestrator from commits from here on (E5).
+| Module · version | Last committed stage | Gates | Last analysis-gate verdict (scores u/v/c/cs/s/f/t) | Packaged tracks | Tag | Next step |
+|---|---|---|---|---|---|---|
+| REG v1 | P4 | prd-approval ✓ · analysis REVISE | REVISE — 2/2/2/2/3/2/2 (2026-10-01) | none | untagged | analysis gate (re-review after revise) |
+| CHK v1 | P4 | prd-approval ✓ · analysis APPROVE | APPROVE — 3/2/2/3/3/3/3 (2026-10-01) | backend/exec, backend/test, frontend/exec, frontend/test, integration XM-CHK-001 … XM-CHK-005 | tagged — v1 complete | `version --new` for a delta |
+| DOC v1 | P4 | prd-approval ✓ · analysis REVISE | REVISE — 3/3/2/2/3/3/2 (2026-10-01) | none | untagged | analysis gate (re-review after revise) |
+| RPT v1 | P4 | prd-approval ✓ · analysis not yet run | — | none | untagged | pass 1 from P3.1 (revise in progress), then the analysis gate |
+| INT v1 | P4 | prd-approval ✓ · analysis not yet run | — | none | untagged | analysis gate |
+
+Maintained by the orchestrator from commits (E5). The P0 platform-summary snapshots under analysis/modules/*/P0/ were written when no module had started and are not updated here.
 
 ---
 
-## 10. Change / event history
+## 9. Event history
 
 | Date | Event | ID | Ref | Summary |
 |---|---|---|---|---|
 | 2026-10-01 | BOOTSTRAP | — | — | Registry 1.0.0 created from domain-profile v1: 5 modules, 6 entity candidates (4 shared declarations), 14 governing rules + 7 user decisions + 8 locked knowledge decisions, 2 open items; steering copied (14 terms · 4 contexts · 5 codes, 0 RESERVED-outside-profile); 5 pipeline rows seeded NOT STARTED; 0 structural rows; 0 dependency rows (derived) |
 | 2026-10-01 | RESOLUTION | OQ-1, OQ-2 | ADR-REG-001; platform-summary RESOLVED DECISIONS #1, #2 | §8 OQ-1 and OQ-2 set RESOLVED (resolved at P0 by owner statement; bookkeeping applied at the DOC v1 analysis-gate revise, finding G4) |
-| 2026-10-01 | PLATFORM-FINDING | PF-1 … PF-6 | DOC v1 analysis gate (findings G2, G5) | 6 CAT-10 rows recorded below, all OPEN — obligations DOC's ADRs place on CHK, INT and RPT |
+| 2026-10-01 | PLATFORM-FINDING | PF-1 … PF-6 | DOC v1 analysis gate (findings G2, G5) | 6 CAT-10 rows recorded in §10, all OPEN — obligations DOC's ADRs place on CHK, INT and RPT |
+| 2026-10-01 | RESTRUCTURE | — | REG v1 analysis gate (finding G9) | Registry 1.1.0: sections and compliance map realigned to shared/REGISTRY-SCHEMA.md §1 (section N = CAT-N); conventions folded into §1; §7 decision index added (5 ADR streams, 2 resolution events); platform findings moved to their own §10; §3/§4 owner of Check and Check Document set to RPT (OQ-1, OQ-2) |
+| 2026-10-01 | PIPELINE-STATUS | — | REG v1 analysis gate (finding G11) | §8 set from the modules' manifests: CHK v1 APPROVE and tagged; REG, DOC at the analysis gate after REVISE; INT at the analysis gate; RPT re-running pass 1 from P3.1 |
+| 2026-10-01 | RESOLUTION-EVENT | INT>CHK | ADR-INT-024 | INT's XM event on CHK v1 delivery answered: cited CON-CHK-001 … CON-CHK-005 unchanged |
 
-### Platform findings (CAT-10)
+---
+
+## 10. Platform findings
 
 Findings a module-scoped stage recorded that are not that module's to settle (shared/REGISTRY-SCHEMA.md §4). Recorded, not fixed, by the finding module; closed only by the owner of the fix.
 
@@ -273,7 +321,11 @@ Findings a module-scoped stage recorded that are not that module's to settle (sh
 | PF-5 | INT's backend plan must list DOC's in-process rejection codes in its own error catalog and map them to ProblemDetail — DOC-400-INCOMPLETE-UPLOAD, DOC-404-SERVICE-VERSION-NOT-FOUND, DOC-422-FETCH-MODE-NOT-MANUAL, DOC-422-DOCUMENT-TYPE-NOT-OF-SERVICE, and since the revise DOC-409-CHECK-ENDED, DOC-422-UPLOAD-LIMIT-REACHED | ADR-DOC-012 (Consequences "recorded for INT"); ADR-DOC-015, ADR-DOC-016; backend-execution-plan-doc.md in-process rejection codes | DOC · P3.1 · v1 | INT (its P3.1 error catalog) | OPEN |
 | PF-6 | Ordering guarantee: no upload handover for a Check may reach DOC after that Check's end-of-Check notice — INT hands over only while the Check awaits documents, CHK sends the notice only once the Check accepts no more documents (DOC refuses and sweeps as a safety net) | ADR-DOC-015; contract-doc.md CON-DOC-003, CON-DOC-005 | DOC · P1 · v1 (analysis-gate finding G2) | CHK and INT (Check lifecycle / upload confirmation) | OPEN |
 
-### Extraction report — P-1 run
+---
+
+## Appendix — Extraction report of the P-1 bootstrap run
+
+Historical: the section numbers below are those of registry 1.0.0 (before the 1.1.0 realignment).
 
 ```
 ══════════════════════════════════════════════════════════════════

@@ -34,6 +34,11 @@
           "version": 1,
           "exec": "backend/modules/REG/packages/backend-execution",
           "test": "backend/modules/REG/packages/backend-test"
+        },
+        "frontend": {
+          "version": 1,
+          "exec": "frontend/modules/REG/packages/frontend-execution",
+          "test": "frontend/modules/REG/packages/frontend-test"
         }
       }
     },

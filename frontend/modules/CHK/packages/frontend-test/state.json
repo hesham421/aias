@@ -1,0 +1,32 @@
+{
+  "module": "CHK",
+  "track": "frontend",
+  "plan": "test",
+  "version": 1,
+  "profile": "aias",
+  "markers_schema_version": 2,
+  "source": "governance-shared/analysis/modules/CHK/P4/frontend-test-plan-chk.md",
+  "split_at": "2026-10-01T14:42:35+00:00",
+  "strict": false,
+  "files": [
+    "governance-shared/frontend/modules/CHK/packages/frontend-test/TEST-PLAN-FE.md",
+    "governance-shared/frontend/modules/CHK/packages/frontend-test/_SECTIONS.md",
+    "governance-shared/frontend/modules/CHK/packages/frontend-test/TEST-PLAN-FE.package.json"
+  ],
+  "indexes": [
+    "governance-shared/frontend/modules/CHK/packages/frontend-test/index.md"
+  ],
+  "units": [
+    "PHASE:TEST-PLAN-FE"
+  ],
+  "atoms": [
+    "TC:TC-CHK-101",
+    "TC:TC-CHK-102",
+    "TC:TC-CHK-103",
+    "TC:TC-CHK-104",
+    "TC:TC-CHK-105",
+    "TC:TC-CHK-106"
+  ],
+  "verification": "governance-shared/frontend/modules/CHK/packages/frontend-test/verification.json",
+  "verified": true
+}

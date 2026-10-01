@@ -1,0 +1,27 @@
+{
+  "unit": "PORTS-DOCUMENT",
+  "kind": "SUB",
+  "tests": [
+    "TC-DOC-002",
+    "TC-DOC-003",
+    "TC-DOC-004",
+    "TC-DOC-005",
+    "TC-DOC-006",
+    "TC-DOC-007",
+    "TC-DOC-008",
+    "TC-DOC-010",
+    "TC-DOC-016",
+    "TC-DOC-017",
+    "TC-DOC-018",
+    "TC-DOC-024",
+    "TC-DOC-025",
+    "TC-DOC-026",
+    "TC-DOC-035",
+    "TC-DOC-042",
+    "TC-DOC-043",
+    "TC-DOC-048",
+    "TC-DOC-049",
+    "TC-DOC-054"
+  ],
+  "acceptance": "tests-green"
+}

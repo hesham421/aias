@@ -1,0 +1,11 @@
+{
+  "unit": "PORTS-DOCUMENT",
+  "kind": "SUB",
+  "tests": [
+    "TC-CHK-011",
+    "TC-CHK-044",
+    "TC-CHK-063",
+    "TC-CHK-064"
+  ],
+  "acceptance": "tests-green"
+}

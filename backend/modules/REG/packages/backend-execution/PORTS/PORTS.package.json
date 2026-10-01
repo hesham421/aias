@@ -1,0 +1,10 @@
+{
+  "unit": "PORTS",
+  "kind": "PHASE",
+  "tests": [
+    "TC-REG-005",
+    "TC-REG-017",
+    "TC-REG-051"
+  ],
+  "acceptance": "tests-green"
+}

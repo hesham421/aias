@@ -1,0 +1,42 @@
+{
+  "module": "CHK",
+  "track": "frontend",
+  "plan": "exec",
+  "version": 1,
+  "profile": "aias",
+  "markers_schema_version": 2,
+  "source": "governance-shared/analysis/modules/CHK/P3_2/frontend-execution-plan-chk.md",
+  "split_at": "2026-10-01T14:42:35+00:00",
+  "strict": false,
+  "files": [
+    "governance-shared/frontend/modules/CHK/packages/frontend-execution/F1/F1.md",
+    "governance-shared/frontend/modules/CHK/packages/frontend-execution/F2/F2.md",
+    "governance-shared/frontend/modules/CHK/packages/frontend-execution/F3/F3.md",
+    "governance-shared/frontend/modules/CHK/packages/frontend-execution/F4/F4.md",
+    "governance-shared/frontend/modules/CHK/packages/frontend-execution/ALIGN-FE/ALIGN-FE.md",
+    "governance-shared/frontend/modules/CHK/packages/frontend-execution/_SECTIONS.md",
+    "governance-shared/frontend/modules/CHK/packages/frontend-execution/F1/F1.package.json",
+    "governance-shared/frontend/modules/CHK/packages/frontend-execution/F2/F2.package.json",
+    "governance-shared/frontend/modules/CHK/packages/frontend-execution/F3/F3.package.json",
+    "governance-shared/frontend/modules/CHK/packages/frontend-execution/F4/F4.package.json",
+    "governance-shared/frontend/modules/CHK/packages/frontend-execution/ALIGN-FE/ALIGN-FE.package.json"
+  ],
+  "indexes": [
+    "governance-shared/frontend/modules/CHK/packages/frontend-execution/index.md",
+    "governance-shared/frontend/modules/CHK/packages/frontend-execution/ALIGN-FE/index.md",
+    "governance-shared/frontend/modules/CHK/packages/frontend-execution/F1/index.md",
+    "governance-shared/frontend/modules/CHK/packages/frontend-execution/F2/index.md",
+    "governance-shared/frontend/modules/CHK/packages/frontend-execution/F3/index.md",
+    "governance-shared/frontend/modules/CHK/packages/frontend-execution/F4/index.md"
+  ],
+  "units": [
+    "PHASE:F1",
+    "PHASE:F2",
+    "PHASE:F3",
+    "PHASE:F4",
+    "PHASE:ALIGN-FE"
+  ],
+  "atoms": [],
+  "verification": "governance-shared/frontend/modules/CHK/packages/frontend-execution/verification.json",
+  "verified": true
+}

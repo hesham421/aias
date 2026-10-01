@@ -1,0 +1,60 @@
+{
+  "module": "INT",
+  "track": "backend",
+  "plan": "exec",
+  "version": 1,
+  "profile": "aias",
+  "markers_schema_version": 2,
+  "source": "governance-shared/analysis/modules/INT/P3_1/backend-execution-plan-int.md",
+  "split_at": "2026-10-01T15:52:06+00:00",
+  "strict": false,
+  "files": [
+    "governance-shared/backend/modules/INT/packages/backend-execution/CORE/CORE.md",
+    "governance-shared/backend/modules/INT/packages/backend-execution/DATA-DOM/DATA-DOM.md",
+    "governance-shared/backend/modules/INT/packages/backend-execution/PORTS/PORTS.md",
+    "governance-shared/backend/modules/INT/packages/backend-execution/SVC-API/SVC-API-HEADER.md",
+    "governance-shared/backend/modules/INT/packages/backend-execution/SVC-API/SVC-API-COMMAND.md",
+    "governance-shared/backend/modules/INT/packages/backend-execution/SVC-API/SVC-API-QUERY.md",
+    "governance-shared/backend/modules/INT/packages/backend-execution/ALIGN-BE/ALIGN-BE.md",
+    "governance-shared/backend/modules/INT/packages/integration/CROSS-MOD-HEADER.md",
+    "governance-shared/backend/modules/INT/packages/integration/XM-INT-001/XM-INT-001.md",
+    "governance-shared/backend/modules/INT/packages/backend-execution/_SECTIONS.md",
+    "governance-shared/backend/modules/INT/packages/integration/XM-INT-001/package.json",
+    "governance-shared/backend/modules/INT/packages/backend-execution/CORE/CORE.package.json",
+    "governance-shared/backend/modules/INT/packages/backend-execution/DATA-DOM/DATA-DOM.package.json",
+    "governance-shared/backend/modules/INT/packages/backend-execution/PORTS/PORTS.package.json",
+    "governance-shared/backend/modules/INT/packages/backend-execution/SVC-API/SVC-API-COMMAND.package.json",
+    "governance-shared/backend/modules/INT/packages/backend-execution/SVC-API/SVC-API-QUERY.package.json",
+    "governance-shared/backend/modules/INT/packages/backend-execution/ALIGN-BE/ALIGN-BE.package.json"
+  ],
+  "indexes": [
+    "governance-shared/backend/modules/INT/packages/backend-execution/index.md",
+    "governance-shared/backend/modules/INT/packages/backend-execution/ALIGN-BE/index.md",
+    "governance-shared/backend/modules/INT/packages/backend-execution/CORE/index.md",
+    "governance-shared/backend/modules/INT/packages/backend-execution/DATA-DOM/index.md",
+    "governance-shared/backend/modules/INT/packages/backend-execution/PORTS/index.md",
+    "governance-shared/backend/modules/INT/packages/backend-execution/SVC-API/index.md"
+  ],
+  "units": [
+    "PHASE:CORE",
+    "PHASE:DATA-DOM",
+    "PHASE:PORTS",
+    "SUB:SVC-API-COMMAND",
+    "SUB:SVC-API-QUERY",
+    "PHASE:ALIGN-BE",
+    "XM:XM-INT-001"
+  ],
+  "atoms": [
+    "API:API-INT-001",
+    "API:API-INT-002",
+    "API:API-INT-003",
+    "API:API-INT-004",
+    "API:API-INT-005",
+    "API:API-INT-006",
+    "API:API-INT-007",
+    "API:API-INT-008",
+    "XM:XM-INT-001"
+  ],
+  "verification": "governance-shared/backend/modules/INT/packages/backend-execution/verification.json",
+  "verified": true
+}

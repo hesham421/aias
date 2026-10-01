@@ -1,0 +1,6 @@
+{
+  "unit": "CORE",
+  "kind": "PHASE",
+  "tests": [],
+  "acceptance": "tests-green"
+}

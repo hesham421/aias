@@ -1,0 +1,10 @@
+<!-- source: PHASE:PORTS / SUB:PORTS-MODEL -->
+<!-- context: PORTS-HEADER.md — phase-level preamble -->
+<!-- traces: REQ-DOC-027, REQ-DOC-030, REQ-DOC-031, REQ-DOC-032, REQ-DOC-033, REQ-DOC-045, REQ-DOC-046, REQ-DOC-047, REQ-DOC-048, REQ-DOC-057, REQ-DOC-058, REQ-DOC-059 -->
+<!-- SUB:PORTS-MODEL:START traces=REQ-DOC-027,REQ-DOC-030,REQ-DOC-031,REQ-DOC-032,REQ-DOC-033,REQ-DOC-045,REQ-DOC-046,REQ-DOC-047,REQ-DOC-048,REQ-DOC-057,REQ-DOC-058,REQ-DOC-059 -->
+### SUB PORTS-MODEL
+- `DocumentReadingModelPort` (port) — `read(bytes, mediaType) → text`.
+- `SpringAiDocumentReadingAdapter` (adapter) — a dedicated Spring AI `ChatModel` bean, qualified `documentReadingModel`, built from `aias.documents.reading-model.*` only; the comparison model is a different bean and is never injected here (REQ-DOC-030; AIAS-9). It uses only the provider-neutral `ChatModel` / `Prompt` / `Media` API — no provider-specific option class (REQ-DOC-032). Each call is one new `Prompt` with exactly two parts: a system message equal to `aias.documents.reading-model.instruction` and one user message carrying the single document as `Media` (REQ-DOC-046, REQ-DOC-057). No conversation memory advisor, no tool callbacks, no function registration: the call declares 0 tools (REQ-DOC-048; AIAS-3). The model's output is returned as text and is never interpreted as a command.
+- Gate before every call (ADR-DOC-009): `tier == FREE && data-class == REAL` → no call; the document is UNREADABLE / MODEL_NOT_PERMITTED (REQ-DOC-058, REQ-DOC-059). No model configured → UNREADABLE / READING_FAILED (REQ-DOC-033). The call respects the remaining Check time (REQ-DOC-040).
+- Content as data (AIAS-6): read content leaves DOC only inside the `content` field of a `DocumentOutcome` record (text, or a list of tables), with `documentType` and `sourceMode` beside it and no instruction field (REQ-DOC-045). Text inside a document that reads like an instruction is copied unchanged into `content` (REQ-DOC-047); DOC itself never sends document content to any model other than the reading call above, whose instruction comes only from configuration.
+<!-- SUB:PORTS-MODEL:END -->

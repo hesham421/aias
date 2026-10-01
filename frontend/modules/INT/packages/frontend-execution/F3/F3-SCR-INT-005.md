@@ -1,0 +1,9 @@
+<!-- source: PHASE:F3 / SUB:F3-SCR-INT-005 -->
+<!-- context: F3-HEADER.md — phase-level preamble -->
+<!-- traces: AC-INT-025, AC-INT-026, AC-INT-027, AC-INT-038, AC-INT-039, AC-INT-040, AC-INT-041, AC-INT-042, AC-INT-043, API-INT-004, API-INT-005, REQ-INT-006, REQ-INT-021, REQ-INT-022, REQ-INT-023, REQ-INT-024, REQ-INT-025, REQ-INT-026, REQ-INT-027, REQ-INT-028, REQ-INT-034, REQ-INT-035, REQ-INT-036, REQ-INT-037, REQ-INT-038, REQ-INT-054, REQ-INT-061, SCR-INT-005 -->
+<!-- SUB:F3-SCR-INT-005:START traces=REQ-INT-006,REQ-INT-021,REQ-INT-022,REQ-INT-023,REQ-INT-024,REQ-INT-025,REQ-INT-026,REQ-INT-027,REQ-INT-028,REQ-INT-034,REQ-INT-035,REQ-INT-036,REQ-INT-037,REQ-INT-038,REQ-INT-054,REQ-INT-061,AC-INT-025,AC-INT-026,AC-INT-027,AC-INT-038,AC-INT-039,AC-INT-040,AC-INT-041,AC-INT-042,AC-INT-043,API-INT-004,API-INT-005,SCR-INT-005 -->
+### F3 — SCR-INT-005 Employee decision
+- `decisionFormSchema` — employeeDecision: required, APPROVED or REJECTED (DecisionRequest of API-INT-004); the submit adds `decidedBy` = the launch employeeId exactly as passed (REQ-INT-023).
+- Server refusals bound: `RPT-400-DECISION-INCOMPLETE` → inline on employeeDecision; `RPT-409-CHECK-NOT-COMPLETED`, `RPT-409-DECISION-ALREADY-RECORDED`, `RPT-422-APPROVAL-FLAG-ON-REJECTION`, `INT-502-APPROVAL-API-FAILED`, `INT-504-APPROVAL-API-TIMED-OUT` → form message (texts bound in §3.0); the chosen decision is kept.
+- One submit ("Record decision"); disabled while pending so one press sends one request (REQ-INT-033).
+<!-- SUB:F3-SCR-INT-005:END -->

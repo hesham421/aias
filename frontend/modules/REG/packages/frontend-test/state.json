@@ -1,0 +1,34 @@
+{
+  "module": "REG",
+  "track": "frontend",
+  "plan": "test",
+  "version": 1,
+  "profile": "aias",
+  "markers_schema_version": 2,
+  "source": "governance-shared/analysis/modules/REG/P4/frontend-test-plan-reg.md",
+  "split_at": "2026-10-01T15:33:10+00:00",
+  "strict": false,
+  "files": [
+    "governance-shared/frontend/modules/REG/packages/frontend-test/TEST-PLAN-FE.md",
+    "governance-shared/frontend/modules/REG/packages/frontend-test/_SECTIONS.md",
+    "governance-shared/frontend/modules/REG/packages/frontend-test/TEST-PLAN-FE.package.json"
+  ],
+  "indexes": [
+    "governance-shared/frontend/modules/REG/packages/frontend-test/index.md"
+  ],
+  "units": [
+    "PHASE:TEST-PLAN-FE"
+  ],
+  "atoms": [
+    "TC:TC-REG-065",
+    "TC:TC-REG-066",
+    "TC:TC-REG-067",
+    "TC:TC-REG-068",
+    "TC:TC-REG-069",
+    "TC:TC-REG-070",
+    "TC:TC-REG-071",
+    "TC:TC-REG-100"
+  ],
+  "verification": "governance-shared/frontend/modules/REG/packages/frontend-test/verification.json",
+  "verified": true
+}

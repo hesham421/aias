@@ -1,0 +1,12 @@
+<!-- source: PHASE:F2 — preamble before the first SUB -->
+<!-- traces: REQ-INT-001, REQ-INT-006, REQ-INT-009, REQ-INT-010, REQ-INT-011, REQ-INT-012, REQ-INT-013, REQ-INT-014, REQ-INT-015, REQ-INT-016, REQ-INT-017, REQ-INT-018, REQ-INT-019, REQ-INT-020, REQ-INT-021, REQ-INT-022, REQ-INT-023, REQ-INT-024, REQ-INT-025, REQ-INT-026, REQ-INT-027, REQ-INT-028, REQ-INT-034, REQ-INT-035, REQ-INT-036, REQ-INT-037, REQ-INT-038, REQ-INT-040, REQ-INT-041, REQ-INT-042, REQ-INT-043, REQ-INT-044, REQ-INT-045, REQ-INT-046, REQ-INT-047, REQ-INT-048, REQ-INT-049, REQ-INT-050, REQ-INT-051, REQ-INT-052, REQ-INT-053, REQ-INT-054, REQ-INT-055, REQ-INT-056, REQ-INT-057, REQ-INT-061, REQ-INT-062, REQ-INT-063, REQ-INT-064, AC-INT-013, AC-INT-015, AC-INT-016, AC-INT-017, AC-INT-018, AC-INT-020, AC-INT-021, AC-INT-022, AC-INT-023, AC-INT-024, AC-INT-025, AC-INT-026, AC-INT-027, AC-INT-038, AC-INT-039, AC-INT-040, AC-INT-041, AC-INT-042, AC-INT-043, AC-INT-045, AC-INT-046, AC-INT-047, AC-INT-048, AC-INT-049, AC-INT-050, AC-INT-051, AC-INT-052, AC-INT-053, AC-INT-054, AC-INT-055, AC-INT-056, AC-INT-057, AC-INT-058, AC-INT-059, AC-INT-060, AC-INT-061, AC-INT-062, AC-INT-067, AC-INT-068, AC-INT-069, AC-INT-070, AC-INT-071, AC-INT-072, AC-INT-073, AC-INT-074, API-INT-001, API-INT-002, API-INT-003, API-INT-004, API-INT-005, API-INT-006, API-INT-007, API-INT-008, UXD-INT-001, UXD-INT-002, UXD-INT-003, UXD-INT-004, UXD-INT-005, UXD-INT-006, UXD-INT-007, UXD-INT-008, SCR-INT-001, SCR-INT-002, SCR-INT-003, SCR-INT-004, SCR-INT-005, REQ-INT-065, REQ-INT-066 -->
+## PHASE F2 — F2 — Data Hooks
+
+Role RF2 — WHAT each screen needs from the API, not hook code. Server state: `tanstack-query`. Components use
+the facade only; the facade uses the declared queries only. Cache policy: library defaults except where a row
+says otherwise. Loading: LOCAL everywhere (no call is declared slow by the SRS; the decision's Approval API
+wait is LOCAL to its submit). Shared hooks — one per operation, reused by every screen that reads it:
+CHECK-QUERY (API-INT-005, key `['check', checkId]`), UPLOADED-DOCUMENTS-QUERY (API-INT-007, key
+`['uploaded-documents', checkId]`), REQUIRED-TYPES-QUERY (API-INT-008, key `['required-document-types', checkId]`, long-lived
+cache — a Check's version never changes). Errors route per the Message binding list of §3.0 (codes → control, text bound there). No hook
+retries a mutation (REQ-INT-033: a retry is the employee's own new submit).

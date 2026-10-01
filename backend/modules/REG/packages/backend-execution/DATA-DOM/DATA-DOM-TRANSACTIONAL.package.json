@@ -1,0 +1,6 @@
+{
+  "unit": "DATA-DOM-TRANSACTIONAL",
+  "kind": "SUB",
+  "tests": [],
+  "acceptance": "tests-green"
+}

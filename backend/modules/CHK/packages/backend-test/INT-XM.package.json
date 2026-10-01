@@ -1,0 +1,6 @@
+{
+  "unit": "INT-XM",
+  "kind": "PHASE",
+  "tests": [],
+  "acceptance": "tests-green"
+}

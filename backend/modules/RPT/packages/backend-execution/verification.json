@@ -1,0 +1,13 @@
+{
+  "module": "RPT",
+  "track": "backend",
+  "plan": "exec",
+  "version": 1,
+  "verify": "sha256",
+  "source": "governance-shared/analysis/modules/RPT/P3_1/backend-execution-plan-rpt.md",
+  "checked": 8,
+  "missing": [],
+  "mismatched": [],
+  "ok": true,
+  "at": "2026-10-01T15:34:56+00:00"
+}

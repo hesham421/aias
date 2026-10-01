@@ -1,0 +1,16 @@
+{
+  "unit": "PORTS-QUERY",
+  "kind": "SUB",
+  "tests": [
+    "TC-CHK-006",
+    "TC-CHK-007",
+    "TC-CHK-008",
+    "TC-CHK-030",
+    "TC-CHK-031",
+    "TC-CHK-032",
+    "TC-CHK-060",
+    "TC-CHK-061",
+    "TC-CHK-062"
+  ],
+  "acceptance": "tests-green"
+}

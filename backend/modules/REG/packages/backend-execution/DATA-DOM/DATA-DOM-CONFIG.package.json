@@ -1,0 +1,6 @@
+{
+  "unit": "DATA-DOM-CONFIG",
+  "kind": "SUB",
+  "tests": [],
+  "acceptance": "tests-green"
+}

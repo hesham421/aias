@@ -1,0 +1,112 @@
+<!-- source: content outside every PHASE block (leading / between / trailing sections) -->
+# BACKEND TEST PLAN — Document Access (DOC)
+══════════════════════════════════════════════════════════════════
+Module : DOC   Version : v1   Profile : aias   Track : backend   Framework : agnostic (profile.stack.testing.backend)
+Sources: _state/current-srs.md (P1 v1 — REQ 64 · AC 70 · RULE 10) · _state/current-registry-srs.md · _state/current-registry-db.md (XM-DOC-001 … XM-DOC-004) · _state/current-backend-execution-plan.md (API-DOC-001; packages PORTS-QUERY, PORTS-DOCUMENT, PORTS-MODEL, SVC-API, XM-DOC-001 … XM-DOC-004) · _state/current-api-spec.yaml (api-spec-doc.yaml) · P3_2/frontend-execution-plan-doc.md
+TCs    : 73 module (70 AC-derived + 3 boundary) · 4 integration · range TC-DOC-001 … TC-DOC-077 (TC-DOC-070 … TC-DOC-077 added at the analysis-gate revise)
+Open ADRs : 0 BLOCKED — applied: ADR-DOC-002, ADR-DOC-007, ADR-DOC-009, ADR-DOC-011, ADR-DOC-012, ADR-DOC-014, ADR-DOC-015, ADR-DOC-016, ADR-DOC-017
+══════════════════════════════════════════════════════════════════
+
+Framework note: framework-agnostic — every block below is the whole contract; the consumer repository chooses its tool and turns each TC into a test. Every AC describes an in-process `DocumentAccess` operation (DOC's only HTTP operation is the read API-DOC-001 — ADR-DOC-011): each TC calls the operation named on `Exercises`; the handover and end-of-Check effects of 7 ACs are read back through API-DOC-001 (ADR-DOC-014). Messages are asserted in en from the SRS; ar is PENDING ADR-DOC-012. Every host-data value is created by the REG service package load (ADR-DOC-014). Grouping: TEST-PLAN-BE holds 73 TCs (> 12) → SUBs RULE-SCENARIOS (rule-driven refusals and UNREADABLE outcomes), API-SCENARIOS (the happy paths of the fetch, handover and end-of-Check operations and API-DOC-001), MODEL-EVAL (the document-reading model set re-run on every model change, raw-idea §10); INT-XM holds 4 TCs (≤ 8) → no SUB, all target REG.
+
+
+## TC TRACEABILITY INDEX
+
+| TC | AC | REQ | API | RULE / code | Package | Group |
+|---|---|---|---|---|---|---|
+| TC-DOC-001 | AC-DOC-003 | REQ-DOC-003 | — | REQ-DOC-003 → DOC-404-SERVICE-VERSION-NOT-FOUND (in-process) | SVC-API | RULE-SCENARIOS |
+| TC-DOC-002 | AC-DOC-007 | REQ-DOC-007 | — | — | PORTS-DOCUMENT | RULE-SCENARIOS |
+| TC-DOC-003 | AC-DOC-008 | REQ-DOC-008 | — | — | PORTS-DOCUMENT | RULE-SCENARIOS |
+| TC-DOC-004 | AC-DOC-009 | REQ-DOC-009 | — | — | PORTS-DOCUMENT | RULE-SCENARIOS |
+| TC-DOC-005 | AC-DOC-010 | REQ-DOC-009 | — | — | PORTS-DOCUMENT | RULE-SCENARIOS |
+| TC-DOC-006 | AC-DOC-011 | REQ-DOC-009 | — | — | PORTS-DOCUMENT | RULE-SCENARIOS |
+| TC-DOC-007 | AC-DOC-012 | REQ-DOC-010 | — | — | PORTS-DOCUMENT | RULE-SCENARIOS |
+| TC-DOC-008 | AC-DOC-013 | REQ-DOC-011 | — | — | PORTS-DOCUMENT | RULE-SCENARIOS |
+| TC-DOC-009 | AC-DOC-016 | REQ-DOC-014 | — | RULE-DOC-006 → UNREADABLE / SOURCE_QUERY_FAILED outcome | PORTS-QUERY | RULE-SCENARIOS |
+| TC-DOC-010 | AC-DOC-017 | REQ-DOC-015 | — | — | PORTS-DOCUMENT | RULE-SCENARIOS |
+| TC-DOC-011 | AC-DOC-020 | REQ-DOC-018 | — | RULE-DOC-008 → internal log | SVC-API | RULE-SCENARIOS |
+| TC-DOC-012 | AC-DOC-022 | REQ-DOC-020 | API-DOC-001 | RULE-DOC-001 → DOC-422-FETCH-MODE-NOT-MANUAL (in-process) | SVC-API | RULE-SCENARIOS |
+| TC-DOC-013 | AC-DOC-023 | REQ-DOC-021 | API-DOC-001 | RULE-DOC-002 → DOC-422-DOCUMENT-TYPE-NOT-OF-SERVICE (in-process) | SVC-API | RULE-SCENARIOS |
+| TC-DOC-014 | AC-DOC-024 | REQ-DOC-022 | API-DOC-001 | RULE-DOC-003 → DOC-400-INCOMPLETE-UPLOAD (in-process) | SVC-API | RULE-SCENARIOS |
+| TC-DOC-015 | AC-DOC-025 | REQ-DOC-023 | API-DOC-001 | RULE-DOC-004 → — (no update path exists) | SVC-API | RULE-SCENARIOS |
+| TC-DOC-016 | AC-DOC-030 | REQ-DOC-028 | — | — | PORTS-DOCUMENT | RULE-SCENARIOS |
+| TC-DOC-017 | AC-DOC-031 | REQ-DOC-029 | — | — | PORTS-DOCUMENT | RULE-SCENARIOS |
+| TC-DOC-018 | AC-DOC-038 | REQ-DOC-036 | — | — | PORTS-DOCUMENT | RULE-SCENARIOS |
+| TC-DOC-019 | AC-DOC-039 | REQ-DOC-037 | — | — | SVC-API | RULE-SCENARIOS |
+| TC-DOC-020 | AC-DOC-041 | REQ-DOC-039 | — | — | PORTS-QUERY | RULE-SCENARIOS |
+| TC-DOC-021 | AC-DOC-041 | REQ-DOC-039 | — | — | PORTS-QUERY | RULE-SCENARIOS |
+| TC-DOC-022 | AC-DOC-042 | REQ-DOC-039 | — | — | PORTS-QUERY | RULE-SCENARIOS |
+| TC-DOC-023 | AC-DOC-043 | REQ-DOC-040 | — | — | SVC-API | RULE-SCENARIOS |
+| TC-DOC-024 | AC-DOC-044 | REQ-DOC-041 | — | — | PORTS-DOCUMENT | RULE-SCENARIOS |
+| TC-DOC-025 | AC-DOC-045 | REQ-DOC-042 | — | — | PORTS-DOCUMENT | RULE-SCENARIOS |
+| TC-DOC-026 | AC-DOC-045 | REQ-DOC-042 | — | — | PORTS-DOCUMENT | RULE-SCENARIOS |
+| TC-DOC-027 | AC-DOC-046 | REQ-DOC-043 | API-DOC-001 | RULE-DOC-005 → notice (not an error) | SVC-API | RULE-SCENARIOS |
+| TC-DOC-028 | AC-DOC-046 | REQ-DOC-043 | API-DOC-001 | RULE-DOC-005 → no notice | SVC-API | RULE-SCENARIOS |
+| TC-DOC-029 | AC-DOC-047 | REQ-DOC-044 | — | RULE-DOC-005 → UNREADABLE / TOO_LARGE outcome | SVC-API | RULE-SCENARIOS |
+| TC-DOC-030 | AC-DOC-055 | REQ-DOC-052 | — | RULE-DOC-007 → UNREADABLE / SOURCE_QUERY_FAILED outcome | PORTS-QUERY | RULE-SCENARIOS |
+| TC-DOC-031 | AC-DOC-059 | REQ-DOC-056 | — | RULE-DOC-008 → internal log | SVC-API | RULE-SCENARIOS |
+| TC-DOC-032 | AC-DOC-001 | REQ-DOC-001 | — | — | SVC-API | API-SCENARIOS |
+| TC-DOC-033 | AC-DOC-002 | REQ-DOC-002 | — | — | SVC-API | API-SCENARIOS |
+| TC-DOC-034 | AC-DOC-004 | REQ-DOC-004 | — | — | PORTS-QUERY | API-SCENARIOS |
+| TC-DOC-035 | AC-DOC-005 | REQ-DOC-005 | — | — | PORTS-DOCUMENT | API-SCENARIOS |
+| TC-DOC-036 | AC-DOC-006 | REQ-DOC-006 | — | — | SVC-API | API-SCENARIOS |
+| TC-DOC-037 | AC-DOC-014 | REQ-DOC-012 | — | — | PORTS-QUERY | API-SCENARIOS |
+| TC-DOC-038 | AC-DOC-015 | REQ-DOC-013 | — | — | PORTS-QUERY | API-SCENARIOS |
+| TC-DOC-039 | AC-DOC-018 | REQ-DOC-016 | — | — | PORTS-QUERY | API-SCENARIOS |
+| TC-DOC-040 | AC-DOC-019 | REQ-DOC-017 | API-DOC-001 | — | SVC-API | API-SCENARIOS |
+| TC-DOC-041 | AC-DOC-021 | REQ-DOC-019 | — | — | SVC-API | API-SCENARIOS |
+| TC-DOC-042 | AC-DOC-027 | REQ-DOC-025 | — | — | PORTS-DOCUMENT | API-SCENARIOS |
+| TC-DOC-043 | AC-DOC-028 | REQ-DOC-026 | — | — | PORTS-DOCUMENT | API-SCENARIOS |
+| TC-DOC-044 | AC-DOC-036 | REQ-DOC-034 | — | — | SVC-API | API-SCENARIOS |
+| TC-DOC-045 | AC-DOC-037 | REQ-DOC-035 | — | — | SVC-API | API-SCENARIOS |
+| TC-DOC-046 | AC-DOC-040 | REQ-DOC-038 | — | — | SVC-API | API-SCENARIOS |
+| TC-DOC-047 | AC-DOC-048 | REQ-DOC-045 | — | — | PORTS-MODEL | API-SCENARIOS |
+| TC-DOC-048 | AC-DOC-052 | REQ-DOC-049 | — | — | PORTS-DOCUMENT | API-SCENARIOS |
+| TC-DOC-049 | AC-DOC-053 | REQ-DOC-050 | — | — | PORTS-DOCUMENT | API-SCENARIOS |
+| TC-DOC-050 | AC-DOC-054 | REQ-DOC-051 | — | — | PORTS-QUERY | API-SCENARIOS |
+| TC-DOC-051 | AC-DOC-056 | REQ-DOC-053 | — | — | SVC-API | API-SCENARIOS |
+| TC-DOC-052 | AC-DOC-057 | REQ-DOC-054 | API-DOC-001 | — | SVC-API | API-SCENARIOS |
+| TC-DOC-053 | AC-DOC-058 | REQ-DOC-055 | — | — | SVC-API | API-SCENARIOS |
+| TC-DOC-054 | AC-DOC-026 | REQ-DOC-024 | — | — | PORTS-DOCUMENT | MODEL-EVAL |
+| TC-DOC-055 | AC-DOC-029 | REQ-DOC-027 | — | — | PORTS-MODEL | MODEL-EVAL |
+| TC-DOC-056 | AC-DOC-032 | REQ-DOC-030 | — | — | PORTS-MODEL | MODEL-EVAL |
+| TC-DOC-057 | AC-DOC-033 | REQ-DOC-031 | — | — | PORTS-MODEL | MODEL-EVAL |
+| TC-DOC-058 | AC-DOC-034 | REQ-DOC-032 | — | — | PORTS-MODEL | MODEL-EVAL |
+| TC-DOC-059 | AC-DOC-035 | REQ-DOC-033 | — | — | PORTS-MODEL | MODEL-EVAL |
+| TC-DOC-060 | AC-DOC-049 | REQ-DOC-046 | — | — | PORTS-MODEL | MODEL-EVAL |
+| TC-DOC-061 | AC-DOC-050 | REQ-DOC-047 | — | — | PORTS-MODEL | MODEL-EVAL |
+| TC-DOC-062 | AC-DOC-051 | REQ-DOC-048 | — | — | PORTS-MODEL | MODEL-EVAL |
+| TC-DOC-063 | AC-DOC-060 | REQ-DOC-057 | — | — | PORTS-MODEL | MODEL-EVAL |
+| TC-DOC-064 | AC-DOC-061 | REQ-DOC-058 | — | — | PORTS-MODEL | MODEL-EVAL |
+| TC-DOC-065 | AC-DOC-062 | REQ-DOC-059 | — | — | PORTS-MODEL | MODEL-EVAL |
+| TC-DOC-066 | — | REQ-DOC-002, REQ-DOC-003, REQ-DOC-020 | — | REQ-DOC-003 → DOC-404-SERVICE-VERSION-NOT-FOUND (in-process) | XM-DOC-001 | INT-XM |
+| TC-DOC-067 | — | REQ-DOC-004, REQ-DOC-012, REQ-DOC-051 | — | — (ADR-DOC-007 outcome) | XM-DOC-002 | INT-XM |
+| TC-DOC-068 | — | REQ-DOC-021, REQ-DOC-035 | — | RULE-DOC-002 → DOC-422-DOCUMENT-TYPE-NOT-OF-SERVICE (in-process) | XM-DOC-003 | INT-XM |
+| TC-DOC-069 | — | REQ-DOC-012, REQ-DOC-014, REQ-DOC-052 | — | — (ADR-DOC-007 outcome) | XM-DOC-004 | INT-XM |
+| TC-DOC-070 | AC-DOC-065 | REQ-DOC-061 | API-DOC-001 | RULE-DOC-009 → DOC-409-CHECK-ENDED (in-process) | SVC-API | RULE-SCENARIOS |
+| TC-DOC-071 | AC-DOC-067 | REQ-DOC-063 | API-DOC-001 | RULE-DOC-010 → DOC-422-UPLOAD-LIMIT-REACHED (in-process) | SVC-API | RULE-SCENARIOS |
+| TC-DOC-072 | AC-DOC-068 | REQ-DOC-063 | API-DOC-001 | RULE-DOC-010 → not raised (boundary) | SVC-API | RULE-SCENARIOS |
+| TC-DOC-073 | AC-DOC-063 | REQ-DOC-060 | — | — | SVC-API | API-SCENARIOS |
+| TC-DOC-074 | AC-DOC-064 | REQ-DOC-060 | — | — | SVC-API | API-SCENARIOS |
+| TC-DOC-075 | AC-DOC-066 | REQ-DOC-062 | API-DOC-001 | — | SVC-API | API-SCENARIOS |
+| TC-DOC-076 | AC-DOC-069 | REQ-DOC-064 | API-DOC-001 | — | SVC-API | API-SCENARIOS |
+| TC-DOC-077 | AC-DOC-070 | REQ-DOC-064 | — | — | SVC-API | API-SCENARIOS |
+
+### Package → TC
+
+| Package | TCs |
+|---|---|
+| PORTS-QUERY | TC-DOC-009, TC-DOC-020, TC-DOC-021, TC-DOC-022, TC-DOC-030, TC-DOC-034, TC-DOC-037, TC-DOC-038, TC-DOC-039, TC-DOC-050 |
+| PORTS-DOCUMENT | TC-DOC-002, TC-DOC-003, TC-DOC-004, TC-DOC-005, TC-DOC-006, TC-DOC-007, TC-DOC-008, TC-DOC-010, TC-DOC-016, TC-DOC-017, TC-DOC-018, TC-DOC-024, TC-DOC-025, TC-DOC-026, TC-DOC-035, TC-DOC-042, TC-DOC-043, TC-DOC-048, TC-DOC-049, TC-DOC-054 |
+| PORTS-MODEL | TC-DOC-047, TC-DOC-055, TC-DOC-056, TC-DOC-057, TC-DOC-058, TC-DOC-059, TC-DOC-060, TC-DOC-061, TC-DOC-062, TC-DOC-063, TC-DOC-064, TC-DOC-065 |
+| SVC-API | TC-DOC-001, TC-DOC-011, TC-DOC-012, TC-DOC-013, TC-DOC-014, TC-DOC-015, TC-DOC-019, TC-DOC-023, TC-DOC-027, TC-DOC-028, TC-DOC-029, TC-DOC-031, TC-DOC-032, TC-DOC-033, TC-DOC-036, TC-DOC-040, TC-DOC-041, TC-DOC-044, TC-DOC-045, TC-DOC-046, TC-DOC-051, TC-DOC-052, TC-DOC-053, TC-DOC-070, TC-DOC-071, TC-DOC-072, TC-DOC-073, TC-DOC-074, TC-DOC-075, TC-DOC-076, TC-DOC-077 |
+| XM-DOC-001 | TC-DOC-066 |
+| XM-DOC-002 | TC-DOC-067 |
+| XM-DOC-003 | TC-DOC-068 |
+| XM-DOC-004 | TC-DOC-069 |
+| CORE, DATA-DOM, ALIGN-BE | — (`no_tests` in the profile) |
+
+## COVERAGE
+
+AC covered 70/70 ✓ · REQ covered 64/64 ✓ · API covered 1/1 (API-DOC-001: TC-DOC-012, TC-DOC-013, TC-DOC-014, TC-DOC-015, TC-DOC-027, TC-DOC-028, TC-DOC-040, TC-DOC-052, TC-DOC-070, TC-DOC-071, TC-DOC-072, TC-DOC-075, TC-DOC-076) ✓ · XM edges covered 4/4 (XM-DOC-001 … XM-DOC-004) ✓ · RULE covered 10/10 (RULE-DOC-004 by the no-update outcome of its AC) ✓ · packages with acceptance 8/8 ✓
+Guardrail map (raw-idea §12): storage root → TC-DOC-003, TC-DOC-004, TC-DOC-005, TC-DOC-006, TC-DOC-007, TC-DOC-008 · BLOB never via MCP → the `blob` cases of API-SCENARIOS · read-only / bound parameters → the PORTS-QUERY cases · nothing skipped silently → the UNREADABLE and MISSING cases · content as data / injection → MODEL-EVAL · limits → the BOUNDARY cases and TC-DOC-071, TC-DOC-072 (maximum uploads) · nothing carried between Checks → the end-of-Check and isolation cases, TC-DOC-070, TC-DOC-073 … TC-DOC-075 (ended Checks, ADR-DOC-015).

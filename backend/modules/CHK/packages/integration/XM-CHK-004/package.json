@@ -1,0 +1,13 @@
+{
+  "xm": "XM-CHK-004",
+  "target": "REG · ENT-REG-004",
+  "requires": "REG:DELIVERED",
+  "tests": [
+    "AC-CHK-020",
+    "AC-CHK-021",
+    "AC-CHK-022",
+    "AC-CHK-023",
+    "TC-CHK-099"
+  ],
+  "acceptance": "tests-green"
+}

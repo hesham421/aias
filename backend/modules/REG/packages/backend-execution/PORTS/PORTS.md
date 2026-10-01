@@ -1,0 +1,10 @@
+<!-- source: PHASE:PORTS -->
+<!-- traces: REQ-REG-005, REQ-REG-016, REQ-REG-049, REQ-REG-066, REQ-REG-069, REQ-REG-071 -->
+<!-- PHASE:PORTS:START traces=REQ-REG-005,REQ-REG-049,REQ-REG-016,REQ-REG-066,REQ-REG-069,REQ-REG-071 -->
+## PHASE PORTS — PORTS+ADAPTERS
+
+REG runs no query, fetches no document and calls no model: the QUERY, DOCUMENT and MODEL ports of the profile belong to the modules that run Checks. REG owns two inbound configuration ports, each behind an interface with a replaceable adapter (profile layers port / adapter):
+- `PackageSource` (port) → `FileSystemPackageSource` (adapter): first reports the directory status — MISSING, UNREADABLE, EMPTY or READY (REQ-REG-066, ADR-REG-018); when READY lists the folders of `aias.registry.package-directory`, returns per folder its name, the service knowledge file text, the service definition file text and the names of every other file in it (REQ-REG-005, REQ-REG-016, REQ-REG-062), plus a `stable` flag: the size and last-modified time of each file read before and after reading it are equal (REQ-REG-069, RULE-REG-024). Resolves each folder with `toRealPath()` and refuses one outside the directory. A per-file read failure inside a present folder (permission denied, I/O fault — any `IOException` on that file) never propagates: the adapter catches it for that one folder and returns the folder with `unreadableFile` = the file's name and no text for it; the load run rejects that folder under RULE-REG-026 at its own savepoint and continues with the next folder (REQ-REG-071). Only a failure to list the directory itself is UNREADABLE (RULE-REG-023).
+- `ActivationSource` (port) → `PropertiesActivationSource` (adapter): returns the environment name and the connection entries of `aias.registry.connections[]` (REQ-REG-049, ADR-REG-009). Never resolves the credential: only its reference name is passed on.
+- `ServiceDefinitionParser` (domain service, no I/O): parses the service definition YAML into the closed structure `service, version, input, queries, documents, approval`; any other element → RULE-REG-012.
+<!-- PHASE:PORTS:END -->

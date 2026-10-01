@@ -1,0 +1,19 @@
+{
+  "unit": "PORTS-MODEL",
+  "kind": "SUB",
+  "tests": [
+    "TC-DOC-047",
+    "TC-DOC-055",
+    "TC-DOC-056",
+    "TC-DOC-057",
+    "TC-DOC-058",
+    "TC-DOC-059",
+    "TC-DOC-060",
+    "TC-DOC-061",
+    "TC-DOC-062",
+    "TC-DOC-063",
+    "TC-DOC-064",
+    "TC-DOC-065"
+  ],
+  "acceptance": "tests-green"
+}

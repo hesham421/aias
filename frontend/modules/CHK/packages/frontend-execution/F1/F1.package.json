@@ -1,0 +1,8 @@
+{
+  "unit": "F1",
+  "kind": "PHASE",
+  "tests": [
+    "TC-CHK-101"
+  ],
+  "acceptance": "tests-green"
+}

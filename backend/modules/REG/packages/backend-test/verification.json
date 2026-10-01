@@ -1,0 +1,13 @@
+{
+  "module": "REG",
+  "track": "backend",
+  "plan": "test",
+  "version": 1,
+  "verify": "sha256",
+  "source": "governance-shared/analysis/modules/REG/P4/backend-test-plan-reg.md",
+  "checked": 95,
+  "missing": [],
+  "mismatched": [],
+  "ok": true,
+  "at": "2026-10-01T15:33:09+00:00"
+}

@@ -1,0 +1,47 @@
+{
+  "module": "RPT",
+  "track": "backend",
+  "plan": "exec",
+  "version": 1,
+  "profile": "aias",
+  "markers_schema_version": 2,
+  "source": "governance-shared/analysis/modules/RPT/P3_1/backend-execution-plan-rpt.md",
+  "split_at": "2026-10-01T15:34:56+00:00",
+  "strict": false,
+  "files": [
+    "governance-shared/backend/modules/RPT/packages/backend-execution/CORE/CORE.md",
+    "governance-shared/backend/modules/RPT/packages/backend-execution/DATA-DOM/DATA-DOM.md",
+    "governance-shared/backend/modules/RPT/packages/backend-execution/PORTS/PORTS.md",
+    "governance-shared/backend/modules/RPT/packages/backend-execution/SVC-API/SVC-API.md",
+    "governance-shared/backend/modules/RPT/packages/backend-execution/ALIGN-BE/ALIGN-BE.md",
+    "governance-shared/backend/modules/RPT/packages/integration/CROSS-MOD-HEADER.md",
+    "governance-shared/backend/modules/RPT/packages/backend-execution/_SECTIONS.md",
+    "governance-shared/backend/modules/RPT/packages/backend-execution/CORE/CORE.package.json",
+    "governance-shared/backend/modules/RPT/packages/backend-execution/DATA-DOM/DATA-DOM.package.json",
+    "governance-shared/backend/modules/RPT/packages/backend-execution/PORTS/PORTS.package.json",
+    "governance-shared/backend/modules/RPT/packages/backend-execution/SVC-API/SVC-API.package.json",
+    "governance-shared/backend/modules/RPT/packages/backend-execution/ALIGN-BE/ALIGN-BE.package.json"
+  ],
+  "indexes": [
+    "governance-shared/backend/modules/RPT/packages/backend-execution/index.md",
+    "governance-shared/backend/modules/RPT/packages/backend-execution/ALIGN-BE/index.md",
+    "governance-shared/backend/modules/RPT/packages/backend-execution/CORE/index.md",
+    "governance-shared/backend/modules/RPT/packages/backend-execution/DATA-DOM/index.md",
+    "governance-shared/backend/modules/RPT/packages/backend-execution/PORTS/index.md",
+    "governance-shared/backend/modules/RPT/packages/backend-execution/SVC-API/index.md"
+  ],
+  "units": [
+    "PHASE:CORE",
+    "PHASE:DATA-DOM",
+    "PHASE:PORTS",
+    "PHASE:SVC-API",
+    "PHASE:ALIGN-BE"
+  ],
+  "atoms": [
+    "API:API-RPT-001",
+    "API:API-RPT-002",
+    "API:API-RPT-003"
+  ],
+  "verification": "governance-shared/backend/modules/RPT/packages/backend-execution/verification.json",
+  "verified": true
+}

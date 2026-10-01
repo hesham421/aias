@@ -1,0 +1,13 @@
+{
+  "module": "DOC",
+  "track": "frontend",
+  "plan": "test",
+  "version": 1,
+  "verify": "sha256",
+  "source": "governance-shared/analysis/modules/DOC/P4/frontend-test-plan-doc.md",
+  "checked": 6,
+  "missing": [],
+  "mismatched": [],
+  "ok": true,
+  "at": "2026-10-01T15:10:27+00:00"
+}

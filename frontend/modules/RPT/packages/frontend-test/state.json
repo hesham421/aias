@@ -1,0 +1,40 @@
+{
+  "module": "RPT",
+  "track": "frontend",
+  "plan": "test",
+  "version": 1,
+  "profile": "aias",
+  "markers_schema_version": 2,
+  "source": "governance-shared/analysis/modules/RPT/P4/frontend-test-plan-rpt.md",
+  "split_at": "2026-10-01T15:34:57+00:00",
+  "strict": false,
+  "files": [
+    "governance-shared/frontend/modules/RPT/packages/frontend-test/TEST-PLAN-FE-HEADER.md",
+    "governance-shared/frontend/modules/RPT/packages/frontend-test/UI-FLOWS.md",
+    "governance-shared/frontend/modules/RPT/packages/frontend-test/INT-FLOW.md",
+    "governance-shared/frontend/modules/RPT/packages/frontend-test/_SECTIONS.md",
+    "governance-shared/frontend/modules/RPT/packages/frontend-test/UI-FLOWS.package.json",
+    "governance-shared/frontend/modules/RPT/packages/frontend-test/INT-FLOW.package.json"
+  ],
+  "indexes": [
+    "governance-shared/frontend/modules/RPT/packages/frontend-test/index.md"
+  ],
+  "units": [
+    "SUB:UI-FLOWS",
+    "SUB:INT-FLOW"
+  ],
+  "atoms": [
+    "TC:TC-RPT-065",
+    "TC:TC-RPT-066",
+    "TC:TC-RPT-067",
+    "TC:TC-RPT-068",
+    "TC:TC-RPT-069",
+    "TC:TC-RPT-070",
+    "TC:TC-RPT-071",
+    "TC:TC-RPT-072",
+    "TC:TC-RPT-073",
+    "TC:TC-RPT-074"
+  ],
+  "verification": "governance-shared/frontend/modules/RPT/packages/frontend-test/verification.json",
+  "verified": true
+}

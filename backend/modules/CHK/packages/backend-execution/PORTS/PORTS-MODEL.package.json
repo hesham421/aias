@@ -1,0 +1,22 @@
+{
+  "unit": "PORTS-MODEL",
+  "kind": "SUB",
+  "tests": [
+    "TC-CHK-017",
+    "TC-CHK-018",
+    "TC-CHK-021",
+    "TC-CHK-022",
+    "TC-CHK-035",
+    "TC-CHK-046",
+    "TC-CHK-048",
+    "TC-CHK-049",
+    "TC-CHK-053",
+    "TC-CHK-068",
+    "TC-CHK-069",
+    "TC-CHK-070",
+    "TC-CHK-079",
+    "TC-CHK-081",
+    "TC-CHK-082"
+  ],
+  "acceptance": "tests-green"
+}

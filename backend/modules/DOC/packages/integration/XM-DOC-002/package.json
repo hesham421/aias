@@ -1,0 +1,12 @@
+{
+  "xm": "XM-DOC-002",
+  "target": "REG · ENT-REG-003",
+  "requires": "REG:DELIVERED",
+  "tests": [
+    "AC-DOC-004",
+    "AC-DOC-014",
+    "AC-DOC-054",
+    "TC-DOC-067"
+  ],
+  "acceptance": "tests-green"
+}

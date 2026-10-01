@@ -1,0 +1,6 @@
+{
+  "unit": "RULE-SCENARIOS",
+  "kind": "SUB",
+  "tests": [],
+  "acceptance": "tests-green"
+}

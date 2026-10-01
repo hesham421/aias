@@ -1,0 +1,10 @@
+{
+  "unit": "F1-SCR-INT-002",
+  "kind": "SUB",
+  "tests": [
+    "TC-INT-073",
+    "TC-INT-075",
+    "TC-INT-077"
+  ],
+  "acceptance": "tests-green"
+}

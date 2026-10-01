@@ -1,0 +1,9 @@
+{
+  "unit": "F4",
+  "kind": "PHASE",
+  "tests": [
+    "TC-RPT-073",
+    "TC-RPT-074"
+  ],
+  "acceptance": "tests-green"
+}

@@ -1,0 +1,15 @@
+{
+  "unit": "SVC-API-QUERY",
+  "kind": "SUB",
+  "tests": [
+    "TC-INT-088",
+    "TC-INT-090",
+    "TC-INT-094",
+    "TC-INT-087",
+    "TC-INT-089",
+    "TC-INT-091",
+    "TC-INT-092",
+    "TC-INT-093"
+  ],
+  "acceptance": "tests-green"
+}

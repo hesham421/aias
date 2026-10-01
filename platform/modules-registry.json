@@ -97,6 +97,11 @@
           "version": 1,
           "exec": "backend/modules/INT/packages/backend-execution",
           "test": "backend/modules/INT/packages/backend-test"
+        },
+        "frontend": {
+          "version": 1,
+          "exec": "frontend/modules/INT/packages/frontend-execution",
+          "test": "frontend/modules/INT/packages/frontend-test"
         }
       }
     }

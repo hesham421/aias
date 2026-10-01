@@ -5,7 +5,7 @@
   "counts": {
     "CRITICAL": 0,
     "MAJOR": 0,
-    "MINOR": 14
+    "MINOR": 12
   },
   "clean": true,
   "blocking": [
@@ -87,22 +87,6 @@
     }
   ],
   "findings": [
-    {
-      "severity": "MINOR",
-      "clause": "C5.13",
-      "check": "ambiguity",
-      "message": "`REQ-DOC-063` uses 'many' \u2014 a word two implementers read two ways; state the measure, the set or the rule instead",
-      "artifact": "srs",
-      "line": 987
-    },
-    {
-      "severity": "MINOR",
-      "clause": "C5.13",
-      "check": "ambiguity",
-      "message": "`RULE-DOC-010` uses 'many' \u2014 a word two implementers read two ways; state the measure, the set or the rule instead",
-      "artifact": "srs",
-      "line": 1090
-    },
     {
       "severity": "MINOR",
       "clause": "C5.14",
@@ -247,9 +231,9 @@
       "registry-exec-be": "b721a48d18605f8aaff3c37e2484577bba8715fb4260b4c39539f99d55a5892c",
       "registry-exec-fe": "5cb0d78b9c937ea85f64f8b1e2b26bc741d3bd3329d91be6e70c92e05b24ff00",
       "registry-srs": "bcfd440a12ab3c0e75d71e0e3b550325a2ed7a0bd9d3a444ceaf9fbbc544f243",
-      "srs": "dbc11a55efee360155c082614a979c5050eaec6134cdf9f261d147f42c498786",
+      "srs": "2c536eba348f8c71413197fc6adf848035c896aaa67d8e034d71a0b174c6537c",
       "ui-ux-spec": "a573f4dc8407c342aa58a28a73cea0e915f088519dafea0bfe126780a746e4af"
     },
-    "at": "2026-10-01T14:45:14+00:00"
+    "at": "2026-10-01T14:45:24+00:00"
   }
 }

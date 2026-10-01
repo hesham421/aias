@@ -986,7 +986,7 @@ Kind reason: transactional — one row per Check whose end the Check Engine has 
 
 ### REQ-DOC-063 — Maximum uploads per Check
   Pattern    : unwanted
-  Statement  : If an upload is handed over for a Check that already has as many Uploaded Documents as the maximum uploads per Check, then the system shall reject the upload.
+  Statement  : If an upload is handed over for a Check whose number of Uploaded Documents already equals the maximum uploads per Check, then the system shall reject the upload.
   Traces     : US-DOC-005, US-DOC-009
   Entities   : ENT-DOC-001
   Rationale  : Each Check has limits; an unbounded number of uploads would grow the stored file content of one Check without limit.
@@ -1090,7 +1090,7 @@ Kind reason: transactional — one row per Check whose end the Check Engine has 
 ### RULE-DOC-010 — Maximum uploads per Check
   Scope      : ENT-DOC-001
   Trigger    : on upload handover
-  Statement  : The system shall reject an upload when its Check already has as many Uploaded Documents as the maximum uploads per Check.
+  Statement  : The system shall reject an upload when the number of Uploaded Documents of its Check already equals the maximum uploads per Check.
   Message    : The Check {checkId} already has the maximum of {maxUploads} uploaded documents; no further file can be uploaded for it.
   Traces     : REQ-DOC-063
   Data source: ENT-DOC-001.checkId

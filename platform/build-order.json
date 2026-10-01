@@ -69,7 +69,7 @@
     "1": {
       "REG": "done",
       "DOC": "done",
-      "CHK": "ready",
+      "CHK": "done",
       "RPT": "ready",
       "INT": "waiting"
     },

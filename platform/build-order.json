@@ -76,7 +76,7 @@
     },
     "2": {
       "REG": "failed",
-      "DOC": "failed",
+      "DOC": "done",
       "CHK": "done",
       "RPT": "ready",
       "INT": "ready"

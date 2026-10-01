@@ -2,7 +2,7 @@
 ══════════════════════════════════════════════════════════════════
 Module : INT   Version : v1   Profile : aias   Stage : P4 (test-gen)   Framework : agnostic (profile.stack.testing.frontend)
 Sources: _state/current-srs.md (AC-INT-001 … AC-INT-074) · current-registry-srs.md · current-frontend-execution-plan.md (SCR-INT-001 … SCR-INT-005, F1–F4 SUBs, UXD-INT-001 … UXD-INT-008, §3.0 message binding) · current-api-spec.yaml (api-spec-int.yaml) (served by the mock server) — all v1
-Open ADRs: ADR-INT-017 (Arabic messages PENDING) · ADR-INT-018 / ADR-INT-021 (frontend binding) · ADR-INT-019 / ADR-INT-022 (derivation choices) · ADR-INT-020 (INT reads; DOC listing gap) — 0 BLOCKED
+Open ADRs: ADR-INT-017 (Arabic messages PENDING) · ADR-INT-018 / ADR-INT-021 (frontend binding) · ADR-INT-019 / ADR-INT-022 (derivation choices) · ADR-INT-020 (INT reads) · ADR-INT-023 (DOC listing gap closed) — 0 BLOCKED
 ══════════════════════════════════════════════════════════════════
 
 Framework note: the plan is framework-neutral — each TC block below is the whole contract; the consumer repository

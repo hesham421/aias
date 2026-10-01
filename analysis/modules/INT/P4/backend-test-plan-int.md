@@ -2,7 +2,7 @@
 ══════════════════════════════════════════════════════════════════
 Module : INT   Version : v1   Profile : aias   Stage : P4 (test-gen)   Framework : agnostic (profile.stack.testing.backend)
 Sources: _state/current-srs.md (REQ-INT-001 … REQ-INT-064, AC-INT-001 … AC-INT-074, RULE-INT-001 … RULE-INT-004) · current-registry-srs.md · current-registry-db.md (XM-INT-001) · current-backend-execution-plan.md (API-INT-001 … API-INT-008, CROSS-MOD XM-INT-001) · current-frontend-execution-plan.md · current-api-spec.yaml (api-spec-int.yaml — every endpoint shape asserted here) — all v1
-Open ADRs: ADR-INT-017 (Arabic messages PENDING) · ADR-INT-019 / ADR-INT-022 (derivation choices) · ADR-INT-020 (INT reads; DOC listing gap) · ADR-INT-021 (frontend binding) — 0 BLOCKED
+Open ADRs: ADR-INT-017 (Arabic messages PENDING) · ADR-INT-019 / ADR-INT-022 (derivation choices) · ADR-INT-020 (INT reads) · ADR-INT-021 (frontend binding) · ADR-INT-023 (API-INT-007 binds Document Access's listing operation; closes the DOC listing gap) — 0 BLOCKED
 ══════════════════════════════════════════════════════════════════
 
 Framework note: the plan is framework-neutral — each TC block below is the whole contract; the consumer repository
@@ -703,7 +703,7 @@ Exercises    : API-INT-007 GET /api/v1/checks/{checkId}/documents
 Rule / code  : —
 Package      : SVC-API-QUERY
 Scenario     : HAPPY · data class VALID · language ALL
-Preconditions: Check 623 has one uploaded TRANSCRIPT `t.pdf` of 300 KB (Document Access's listing operation delivered — ADR-INT-020 (4))
+Preconditions: Check 623 has one uploaded TRANSCRIPT `t.pdf` of 300 KB (Document Access's listing operation published — ADR-INT-023)
 Host data    : none
 Steps        : 1. GET /api/v1/checks/623/documents.
 Expected     : HTTP 200 with 1 entry: `documentType` TRANSCRIPT, `fileName` "t.pdf", `fileSize` 307200, `oversized` false, and no content field.
@@ -723,6 +723,20 @@ Steps        : 1. GET /api/v1/checks/631/documents.
 Expected     : HTTP 200 with 0 entries.
 Test data    : checkId 631
 <!-- TC:TC-INT-092:END -->
+
+<!-- TC:TC-INT-095:START traces=AC-INT-071,REQ-INT-063,API-INT-007 -->
+### TC-INT-095 — The uploaded-documents read relays Document Access's listing operation unchanged
+Derived from : AC-INT-071  (REQ-INT-063)
+Exercises    : API-INT-007 GET /api/v1/checks/{checkId}/documents
+Rule / code  : —
+Package      : PORTS
+Scenario     : HAPPY · data class VALID · language ALL
+Preconditions: Check 623 has two uploads in Document Access — TRANSCRIPT `t.pdf` of 300 KB uploaded first, ID_CARD `id.png` of 60 MB (oversized) uploaded second; calls to Document Access's in-process listing operation `listUploadedDocuments` are observed (ADR-INT-023)
+Host data    : none
+Steps        : 1. GET /api/v1/checks/623/documents.
+Expected     : 1 → Document Access's `listUploadedDocuments` receives exactly 1 call, with checkId 623. 2 → HTTP 200 with exactly 2 entries in upload order: TRANSCRIPT "t.pdf" 307200 oversized false, then ID_CARD "id.png" 62914560 oversized true, each with its `uploadedDocumentId` and `uploadedAt` as Document Access returned them, and no content field.
+Test data    : checkId 623; t.pdf 300 KB; id.png 60 MB
+<!-- TC:TC-INT-095:END -->
 
 <!-- TC:TC-INT-093:START traces=AC-INT-073,REQ-INT-064,API-INT-008 -->
 ### TC-INT-093 — The required document types are those of the Check's own version
@@ -814,16 +828,17 @@ Test data    : checkId, decidedBy: placeholders (GRACEFUL-DEGRADATION — XM-INT
 | TC-INT-089 | AC-INT-069 | REQ-INT-062 | API-INT-006 | — | SVC-API-QUERY |
 | TC-INT-091 | AC-INT-071 | REQ-INT-063 | API-INT-007 | — | SVC-API-QUERY |
 | TC-INT-092 | AC-INT-072 | REQ-INT-063 | API-INT-007 | — | SVC-API-QUERY |
+| TC-INT-095 | AC-INT-071 | REQ-INT-063 | API-INT-007 | — | PORTS |
 | TC-INT-093 | AC-INT-073 | REQ-INT-064 | API-INT-008 | — | SVC-API-QUERY |
 | TC-INT-044 | XM-INT-001 | REQ-INT-025, REQ-INT-028, REQ-INT-030 | API-INT-004 | PLATFORM-STD → INT-500 | XM-INT-001 |
 
-API → TC: API-INT-001: 8 (TC-INT-001 …) · API-INT-002: 11 (TC-INT-002 …) · API-INT-003: 4 (TC-INT-004 …) · API-INT-004: 22 (TC-INT-003 …) · API-INT-005: 2 (TC-INT-088 …) · API-INT-006: 2 (TC-INT-090 …) · API-INT-007: 2 (TC-INT-091 …) · API-INT-008: 2 (TC-INT-094 …)
+API → TC: API-INT-001: 8 (TC-INT-001 …) · API-INT-002: 11 (TC-INT-002 …) · API-INT-003: 4 (TC-INT-004 …) · API-INT-004: 22 (TC-INT-003 …) · API-INT-005: 2 (TC-INT-088 …) · API-INT-006: 2 (TC-INT-090 …) · API-INT-007: 3 (TC-INT-091 …) · API-INT-008: 2 (TC-INT-094 …)
 
-Package → TC: PORTS: TC-INT-010, TC-INT-020, TC-INT-040, TC-INT-041, TC-INT-042 · SVC-API-COMMAND: TC-INT-001, TC-INT-002, TC-INT-003, TC-INT-004, TC-INT-005, TC-INT-006, TC-INT-007, TC-INT-008, TC-INT-009, TC-INT-011, TC-INT-012, TC-INT-013, TC-INT-014, TC-INT-015, TC-INT-016, TC-INT-017, TC-INT-018, TC-INT-019, TC-INT-021, TC-INT-022, TC-INT-023, TC-INT-024, TC-INT-025, TC-INT-026, TC-INT-027, TC-INT-028, TC-INT-029, TC-INT-030, TC-INT-031, TC-INT-032, TC-INT-033, TC-INT-034, TC-INT-035, TC-INT-036, TC-INT-037, TC-INT-038, TC-INT-039, TC-INT-043 · SVC-API-QUERY: TC-INT-088, TC-INT-090, TC-INT-094, TC-INT-087, TC-INT-089, TC-INT-091, TC-INT-092, TC-INT-093 · XM-INT-001: TC-INT-044
+Package → TC: PORTS: TC-INT-010, TC-INT-020, TC-INT-040, TC-INT-041, TC-INT-042, TC-INT-095 · SVC-API-COMMAND: TC-INT-001, TC-INT-002, TC-INT-003, TC-INT-004, TC-INT-005, TC-INT-006, TC-INT-007, TC-INT-008, TC-INT-009, TC-INT-011, TC-INT-012, TC-INT-013, TC-INT-014, TC-INT-015, TC-INT-016, TC-INT-017, TC-INT-018, TC-INT-019, TC-INT-021, TC-INT-022, TC-INT-023, TC-INT-024, TC-INT-025, TC-INT-026, TC-INT-027, TC-INT-028, TC-INT-029, TC-INT-030, TC-INT-031, TC-INT-032, TC-INT-033, TC-INT-034, TC-INT-035, TC-INT-036, TC-INT-037, TC-INT-038, TC-INT-039, TC-INT-043 · SVC-API-QUERY: TC-INT-088, TC-INT-090, TC-INT-094, TC-INT-087, TC-INT-089, TC-INT-091, TC-INT-092, TC-INT-093 · XM-INT-001: TC-INT-044
 
 ## COVERAGE
 
 AC covered (backend track) 51/51 — AC-INT-001, AC-INT-002, AC-INT-003, AC-INT-004, AC-INT-005, AC-INT-006, AC-INT-007, AC-INT-008, AC-INT-009, AC-INT-010, AC-INT-011, AC-INT-012, AC-INT-013, AC-INT-014, AC-INT-015, AC-INT-016, AC-INT-017, AC-INT-018, AC-INT-019, AC-INT-022, AC-INT-023, AC-INT-025, AC-INT-026, AC-INT-028, AC-INT-029, AC-INT-030, AC-INT-031, AC-INT-032, AC-INT-033, AC-INT-034, AC-INT-035, AC-INT-036, AC-INT-037, AC-INT-038, AC-INT-039, AC-INT-040, AC-INT-041, AC-INT-042, AC-INT-043, AC-INT-044, AC-INT-064, AC-INT-065, AC-INT-066, AC-INT-067, AC-INT-068, AC-INT-069, AC-INT-070, AC-INT-071, AC-INT-072, AC-INT-073, AC-INT-074 · the other 23 ACs (AC-INT-020, AC-INT-021, AC-INT-024, AC-INT-027, AC-INT-045 … AC-INT-063) are covered in `frontend-test-plan-int.md` → module AC coverage 74/74, no gap ✗.
 REQ covered (backend) 42 · API covered 8/8 (API-INT-001 … API-INT-008) · XM edges covered 1/1 (XM-INT-001 → TC-INT-044).
 Units of the backend execution plan with acceptance: PORTS, SVC-API-COMMAND, SVC-API-QUERY, XM-INT-001 (CORE, DATA-DOM, ALIGN-BE are `no_tests`).
-TC count 52 for 51 ACs + 1 XM (guard ~2× not exceeded).
+TC count 53 for 51 ACs + 1 XM (TC-INT-095 — ADR-INT-023) (guard ~2× not exceeded).

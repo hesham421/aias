@@ -1,0 +1,8 @@
+# ADR-CHK-014 — A required document type is SATISFIED when at least one of its documents is READ; an unread service query is carried in the report as its query name with a detail text, with no new closed list
+Status      : ACCEPTED
+Stage       : P1        Module: CHK        Version: v1
+Context     : ADR-CHK-002 makes each required document type a condition (MISSING → NOT_SATISFIED, UNREADABLE → UNDETERMINED) but DOC may return more than one outcome for one type (ADR-DOC-006: several uploads per type; a host may list two files of one type). ADR-CHK-005 records an unread service query in the report but names no code list for why.
+Decision    : (1) A required document type's finding is SATISFIED when at least one outcome of that type is READ; otherwise UNDETERMINED when at least one is UNREADABLE (evidence: the unreadable reason and detail); otherwise NOT_SATISFIED (MISSING). (2) An unread service query is handed to the result port as an entry with the query name and a detail text (the query error, or the row limit exceeded with the row count, or the connection refused by RULE-CHK-002); no closed list of query failure codes is introduced in v1, so ADR-CHK-001's lists are unchanged.
+Alternatives rejected: requiring every document of a type to be READ — an extra unreadable copy would block an otherwise verified condition; a QUERY_FAILURE_REASON list — not asked for by any story, and a later version can add it.
+Consequences: RPT stores the unread-query entries as text beside the report.
+traces      : US-CHK-005, US-CHK-012, REQ-CHK-020, REQ-CHK-021, REQ-CHK-022, REQ-CHK-049, REQ-CHK-050, RULE-CHK-004

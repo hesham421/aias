@@ -3,8 +3,8 @@
   "version": 1,
   "scope": "all",
   "counts": {
-    "CRITICAL": 11,
-    "MAJOR": 7,
+    "CRITICAL": 9,
+    "MAJOR": 159,
     "MINOR": 0
   },
   "clean": false,
@@ -30,40 +30,40 @@
   ],
   "skipped": [],
   "coverage": {
-    "C0.1": 3,
+    "C0.1": 5,
     "C1.4": 3,
     "C2.2": 10,
     "C3.7": 29,
     "C3.8": 29,
     "C4.4": 18,
     "C4.7": 1,
-    "C5.2": 0,
-    "C5.3": 0,
-    "C5.4": 0,
-    "C5.5": 0,
-    "C5.6": 0,
-    "C5.8": 0,
-    "C5.13": 0,
-    "C5.14": 0,
+    "C5.2": 75,
+    "C5.3": 75,
+    "C5.4": 75,
+    "C5.5": 78,
+    "C5.6": 7,
+    "C5.8": 160,
+    "C5.13": 160,
+    "C5.14": 78,
     "C5.15": 0,
-    "C5.16": 0,
-    "C5.17": 0,
+    "C5.16": 18,
+    "C5.17": 1,
     "C6.2": 0,
     "C6.3": 0,
     "C6.5": 0,
     "C6.6": 0,
     "C6.10": 0,
-    "C6.11": 3,
+    "C6.11": 7,
     "C6.12": 0,
-    "C6.13": 3,
-    "C6.14": 3,
+    "C6.13": 7,
+    "C6.14": 7,
     "C6.15": 0,
     "C7.2": 0,
     "C7.3": 0,
     "C7.4": 0,
     "C7.5": 0,
     "C7.5b": 0,
-    "C7.6": 0,
+    "C7.6": 75,
     "C7.22": 0,
     "C7.23": 0,
     "C7.20": 0,
@@ -91,7 +91,7 @@
     "C9.22": 0,
     "C9.23": 6,
     "C10.1": 0,
-    "C10.2": 0,
+    "C10.2": 78,
     "C10.7": 0,
     "C10.8": 0,
     "C10.9": 0,
@@ -103,22 +103,11 @@
     "C10.1",
     "C10.10",
     "C10.11",
-    "C10.2",
     "C10.7",
     "C10.8",
     "C10.9",
     "C13.5",
-    "C5.13",
-    "C5.14",
     "C5.15",
-    "C5.16",
-    "C5.17",
-    "C5.2",
-    "C5.3",
-    "C5.4",
-    "C5.5",
-    "C5.6",
-    "C5.8",
     "C6.10",
     "C6.12",
     "C6.15",
@@ -144,7 +133,6 @@
     "C7.4",
     "C7.5",
     "C7.5b",
-    "C7.6",
     "C9.15",
     "C9.16",
     "C9.17",
@@ -166,8 +154,8 @@
         "REQ"
       ],
       "total": 18,
-      "covered": 0,
-      "pct": 0.0
+      "covered": 18,
+      "pct": 100.0
     },
     {
       "id": "req-ac",
@@ -175,9 +163,9 @@
       "to": [
         "AC"
       ],
-      "total": 0,
-      "covered": 0,
-      "pct": null
+      "total": 75,
+      "covered": 75,
+      "pct": 100.0
     },
     {
       "id": "req-api",
@@ -185,9 +173,9 @@
       "to": [
         "API"
       ],
-      "total": 0,
+      "total": 75,
       "covered": 0,
-      "pct": null
+      "pct": 0.0
     },
     {
       "id": "req-ux",
@@ -196,9 +184,9 @@
         "SCR",
         "UXD"
       ],
-      "total": 0,
+      "total": 75,
       "covered": 0,
-      "pct": null
+      "pct": 0.0
     },
     {
       "id": "ac-tc",
@@ -206,9 +194,9 @@
       "to": [
         "TC"
       ],
-      "total": 0,
+      "total": 78,
       "covered": 0,
-      "pct": null
+      "pct": 0.0
     }
   ],
   "findings": [
@@ -234,22 +222,6 @@
       "check": "exists",
       "message": "`contract` is missing or empty",
       "artifact": "contract",
-      "line": 0
-    },
-    {
-      "severity": "CRITICAL",
-      "clause": "C4.2",
-      "check": "gate-approved",
-      "message": "no approval record for gate `prd-approval` (gov.py approve prd-approval)",
-      "artifact": "",
-      "line": 0
-    },
-    {
-      "severity": "CRITICAL",
-      "clause": "C5.1",
-      "check": "exists",
-      "message": "`srs` is missing or empty",
-      "artifact": "srs",
       "line": 0
     },
     {
@@ -302,11 +274,627 @@
     },
     {
       "severity": "MAJOR",
-      "clause": "C5.8",
-      "check": "registry-agree",
-      "message": "registry `registry-srs` missing",
-      "artifact": "registry-srs",
-      "line": 0
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-001` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 95
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-002` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 109
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-003` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 123
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-004` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 137
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-005` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 151
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-006` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 156
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-007` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 170
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-008` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 184
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-009` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 198
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-010` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 212
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-011` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 226
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-012` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 240
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-013` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 254
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-014` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 268
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-015` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 282
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-016` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 296
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-017` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 310
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-018` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 324
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-019` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 338
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-020` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 352
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-021` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 366
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-022` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 380
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-023` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 394
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-024` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 408
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-025` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 422
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-026` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 436
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-027` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 450
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-028` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 464
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-029` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 478
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-030` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 492
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-031` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 506
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-032` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 520
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-033` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 534
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-034` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 548
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-035` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 562
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-036` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 576
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-037` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 590
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-038` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 604
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-039` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 618
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-040` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 632
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-041` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 646
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-042` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 660
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-043` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 674
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-044` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 679
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-045` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 693
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-046` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 707
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-047` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 721
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-048` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 735
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-049` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 749
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-050` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 763
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-051` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 777
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-052` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 791
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-053` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 805
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-054` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 819
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-055` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 833
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-056` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 847
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-057` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 861
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-058` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 875
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-059` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 889
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-060` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 903
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-061` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 917
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-062` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 931
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-063` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 945
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-064` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 950
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-065` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 964
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-066` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 978
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-067` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 992
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-068` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 1006
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-069` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 1020
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-070` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 1034
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-071` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 1048
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-072` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 1062
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-073` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 1076
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-074` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 1090
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-075` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 1104
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-076` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 1118
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-077` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 1132
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C10.2",
+      "check": "orphans",
+      "message": "`AC-CHK-078` is referenced by 0 of ['TC'], needs \u22651",
+      "artifact": "",
+      "line": 1146
     },
     {
       "severity": "MAJOR",
@@ -334,6 +922,606 @@
     },
     {
       "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-001` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 86
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-002` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 100
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-003` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 114
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-004` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 128
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-005` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 142
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-006` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 161
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-007` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 175
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-008` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 189
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-009` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 203
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-010` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 217
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-011` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 231
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-012` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 245
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-013` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 259
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-014` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 273
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-015` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 287
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-016` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 301
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-017` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 315
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-018` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 329
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-019` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 343
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-020` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 357
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-021` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 371
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-022` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 385
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-023` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 399
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-024` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 413
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-025` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 427
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-026` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 441
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-027` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 455
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-028` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 469
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-029` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 483
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-030` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 497
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-031` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 511
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-032` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 525
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-033` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 539
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-034` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 553
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-035` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 567
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-036` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 581
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-037` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 595
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-038` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 609
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-039` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 623
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-040` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 637
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-041` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 651
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-042` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 665
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-043` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 684
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-044` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 698
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-045` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 712
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-046` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 726
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-047` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 740
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-048` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 754
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-049` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 768
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-050` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 782
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-051` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 796
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-052` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 810
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-053` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 824
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-054` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 838
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-055` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 852
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-056` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 866
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-057` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 880
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-058` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 894
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-059` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 908
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-060` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 922
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-061` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 936
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-062` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 955
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-063` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 969
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-064` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 983
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-065` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 997
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-066` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 1011
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-067` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 1025
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-068` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 1039
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-069` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 1053
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-070` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 1067
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-071` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 1081
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-072` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 1095
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-073` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 1109
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-074` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 1123
+    },
+    {
+      "severity": "MAJOR",
+      "clause": "C7.6",
+      "check": "orphans",
+      "message": "`REQ-CHK-075` is referenced by 0 of ['API', 'DBF'], needs \u22651",
+      "artifact": "",
+      "line": 1137
+    },
+    {
+      "severity": "MAJOR",
       "clause": "C9.2",
       "check": "traces",
       "message": "`frontend-execution-plan` missing",
@@ -344,7 +1532,7 @@
       "severity": "MAJOR",
       "clause": "C9.23",
       "check": "publication-fresh",
-      "message": "`dependency-graph` in the project repo is stale \u2014 generated_from.platform-summary differ from what the factory derives now. Run `gov.py publish` (the version, split and gate steps do it themselves)",
+      "message": "`dependency-graph` in the project repo is stale \u2014 edges, generated_from.srs differ from what the factory derives now. Run `gov.py publish` (the version, split and gate steps do it themselves)",
       "artifact": "governance-shared/platform/dependency-graph.json",
       "line": 0
     },
@@ -369,7 +1557,9 @@
       "module-registry",
       "platform-summary",
       "prd",
-      "project-registry"
+      "project-registry",
+      "registry-srs",
+      "srs"
     ],
     "inputs": {
       "business-policies": "b075f91aac5d5d54e8a495e0ede567eb11df4727e43f96dea1d59b98693de810",
@@ -377,8 +1567,10 @@
       "module-registry": "bde56222f4c3b6e679af514172fd427fa717febc77bece975d37c79a21e54fa9",
       "platform-summary": "e9b1d30b89fa75593a2c2f94809ce473f56448410ab62ee3a84c05d9bbab0d65",
       "prd": "9a531acb9c3b58c61aaef38f7c13797c8b75353c159b2c015b293c1a2e81ffcb",
-      "project-registry": "7652329cae1b5e14558ead423c4a0d157fcf3aead94176473c23adb034161a82"
+      "project-registry": "7652329cae1b5e14558ead423c4a0d157fcf3aead94176473c23adb034161a82",
+      "registry-srs": "a7c637e18e88a83c208a91ba71ef0f6b6074d09b45ba9b50ef5de9b5ed15fa43",
+      "srs": "500bdc01f021c425432bf768ef2776f189dd6c20c1680bf9e0cf8d1c64bc2899"
     },
-    "at": "2026-10-01T12:32:12+00:00"
+    "at": "2026-10-01T12:58:17+00:00"
   }
 }

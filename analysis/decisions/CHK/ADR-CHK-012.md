@@ -1,0 +1,8 @@
+# ADR-CHK-012 — The known-result request set is a model-evaluation run delivered with the service; using a new model for real requests after it passes is the go-live gate, not a runtime lock
+Status      : ACCEPTED
+Stage       : P1        Module: CHK        Version: v1
+Context     : POL-CHK-028 and US-CHK-017 require the fixed set of test requests with known expected results to run on every comparison model change before the new model verifies real requests. The service cannot detect "a model change" across deployments without storing a model history, and the owner's D3 makes the real-data provider a go-live gate.
+Decision    : (1) The known-result request set is a fixed set of synthetic requests, each with its service package and its expected Overall Status, delivered with the service and run by a model-evaluation run against the configured comparison model (profile test phase MODEL-EVAL, AIAS-10). (2) The run reports, per request, the expected and the reached Overall Status, and reports itself failed when any differs. (3) Running it on every comparison model change, and switching an environment to the new model for REAL data only after it passes, is the operational go-live gate of D3; the runtime adds no stored model history and no lock.
+Alternatives rejected: a stored "last evaluated model" with a runtime block — adds a CHK table and an administration path the owner did not ask for (AIAS-2: no administration UI).
+Consequences: The test stage derives the MODEL-EVAL cases from REQ-CHK-069 … REQ-CHK-071.
+traces      : US-CHK-017, POL-CHK-028, REQ-CHK-069, REQ-CHK-070, REQ-CHK-071

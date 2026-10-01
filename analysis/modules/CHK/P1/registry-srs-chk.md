@@ -1,7 +1,9 @@
 ## REGISTRY — P1 — CHK v1
 
 ### Entities
-None — CHK owns no entity in this version (ADR-REG-001, ADR-CHK-011).
+| ENT | Name | Kind | Ownership | Status |
+|---|---|---|---|---|
+| ENT-CHK-001 | Active Check | transactional | PRIVATE | REGISTERED |
 
 ### Consumed
 | Module | ENT | Type |
@@ -16,7 +18,7 @@ None — CHK owns no entity in this version (ADR-REG-001, ADR-CHK-011).
 | Key | ENT | Values |
 |---|---|---|
 | OVERALL_STATUS | — (carried by value through the Check result port) | 3 |
-| CHECK_STATUS | — (carried by value through the Check result port) | 4 |
+| CHECK_STATUS | ENT-CHK-001 | 4 |
 | FINDING_OUTCOME | — (carried by value through the Check result port) | 3 |
 | CHECK_FAILURE_REASON | — (carried by value through the Check result port) | 7 |
 
@@ -34,7 +36,7 @@ None — CHK owns no entity in this version (ADR-REG-001, ADR-CHK-011).
 None — no SCR-REQ in this version (CHK has no screen).
 
 ### Requirements
-REQ count 75 · AC count 78 · RULE count 7 · last sequence per atom (REQ: 75, AC: 78, ENT: 0, RULE: 7, SCR-REQ: 0)
+REQ count 82 · AC count 85 · RULE count 10 · last sequence per atom (REQ: 82, AC: 85, ENT: 1, RULE: 10, SCR-REQ: 0)
 
 | REQ | AC |
 |---|---|
@@ -113,6 +115,13 @@ REQ count 75 · AC count 78 · RULE count 7 · last sequence per atom (REQ: 75, 
 | REQ-CHK-073 | AC-CHK-076 |
 | REQ-CHK-074 | AC-CHK-077 |
 | REQ-CHK-075 | AC-CHK-078 |
+| REQ-CHK-076 | AC-CHK-079 |
+| REQ-CHK-077 | AC-CHK-080 |
+| REQ-CHK-078 | AC-CHK-081 |
+| REQ-CHK-079 | AC-CHK-082 |
+| REQ-CHK-080 | AC-CHK-083 |
+| REQ-CHK-081 | AC-CHK-084 |
+| REQ-CHK-082 | AC-CHK-085 |
 
 | RULE | Traces |
 |---|---|
@@ -123,9 +132,12 @@ REQ count 75 · AC count 78 · RULE count 7 · last sequence per atom (REQ: 75, 
 | RULE-CHK-005 | REQ-CHK-015 |
 | RULE-CHK-006 | REQ-CHK-027 |
 | RULE-CHK-007 | REQ-CHK-007, REQ-CHK-008 |
+| RULE-CHK-008 | REQ-CHK-076, REQ-CHK-079 |
+| RULE-CHK-009 | REQ-CHK-076, REQ-CHK-077 |
+| RULE-CHK-010 | REQ-CHK-059, REQ-CHK-077 |
 
 ### Decisions
-ADR-CHK-009, ADR-CHK-010, ADR-CHK-011, ADR-CHK-012, ADR-CHK-013, ADR-CHK-014 (new, ACCEPTED); applied ADR-CHK-001 … ADR-CHK-008, ADR-REG-001, ADR-REG-002, ADR-REG-003, ADR-REG-006, ADR-DOC-001, ADR-DOC-008, ADR-DOC-009. BLOCKED: none.
+ADR-CHK-009, ADR-CHK-010, ADR-CHK-011, ADR-CHK-012, ADR-CHK-013, ADR-CHK-014, ADR-CHK-015 (new, ACCEPTED); applied ADR-CHK-001 … ADR-CHK-008, ADR-REG-001, ADR-REG-002, ADR-REG-003, ADR-REG-006, ADR-DOC-001, ADR-DOC-008, ADR-DOC-009. BLOCKED: none.
 
 ### Event
-"P1 completed: CHK v1 — REQ 75 · AC 78 · ENT 0 · RULE 7 · SCR-REQ 0 · ADR 6"
+"P1 completed: CHK v1 — REQ 82 · AC 85 · ENT 1 · RULE 10 · SCR-REQ 0 · ADR 7"

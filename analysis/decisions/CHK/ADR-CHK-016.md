@@ -1,0 +1,8 @@
+# ADR-CHK-016 — CHK's closed lookups get no lookup table and no seed rows; CHECK_STATUS is checked on the Active Check column and all four lists on RPT's columns; the Check identifier is a value; the REG reads are SOFT-READ XMs
+Status      : ACCEPTED
+Stage       : P2        Module: CHK        Version: v1
+Context     : The P2 engine seeds every lookup key a module owns. CHK owns four closed lists (ADR-CHK-001); only CHECK_STATUS backs a CHK column (ENT-CHK-001.checkStatus, two of its values — RULE-CHK-009); the others travel by value through the Check result port to RPT. The platform has no lookup table (ADR-REG-010; DOC did the same, ADR-DOC-010). ENT-CHK-001.checkId is RPT's identifier.
+Decision    : (1) No lookup table and no seed rows; CHK_ACTIVE_CHECK.CHECK_STATUS carries a CHECK of AWAITING_DOCUMENTS and RUNNING; RPT's script must carry CHECK constraints for OVERALL_STATUS, CHECK_STATUS, FINDING_OUTCOME and CHECK_FAILURE_REASON on the columns that store them (handed to RPT). (2) CHECK_ID is `NUMBER(19)` without FK and without XM — CHK never reads RPT tables; UNIQUE enforces RULE-CHK-008. (3) The SRS A8 entities ENT-REG-001 … ENT-REG-005 become XM-CHK-001 … XM-CHK-005, SOFT-READ, CONTRACTED against CON-REG-001 … CON-REG-005. (4) An index on DEADLINE_AT serves the deadline check (REQ-CHK-080).
+Alternatives rejected: a CHK-owned lookup table — would be the platform's only one and duplicate code-level enums.
+Consequences: P3.1 validates codes in the service layer against the enums.
+traces      : ENT-CHK-001, REQ-CHK-076, REQ-CHK-077, REQ-CHK-079, REQ-CHK-080, REQ-CHK-005, REQ-CHK-011, REQ-CHK-013, REQ-CHK-019

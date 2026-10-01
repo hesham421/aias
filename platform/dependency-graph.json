@@ -2,6 +2,7 @@
   "schema": 1,
   "generated_from": {
     "platform-summary": {
+      "DOC": "v1",
       "REG": "v1"
     },
     "srs": {

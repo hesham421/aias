@@ -19,6 +19,16 @@
       ],
       "current_version": 1,
       "delivery": {}
+    },
+    "DOC": {
+      "code": "DOC",
+      "description": "",
+      "registered_at": "2026-10-01T11:53:29+00:00",
+      "versions": [
+        1
+      ],
+      "current_version": 1,
+      "delivery": {}
     }
   }
 }

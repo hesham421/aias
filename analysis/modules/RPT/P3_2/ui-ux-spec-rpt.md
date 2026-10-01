@@ -27,5 +27,6 @@ The SRS states these about RPT's data wherever it is shown; Part B (F4) turns th
 | Stored texts are shown as text, never interpreted | REQ-RPT-027, AC-RPT-032 |
 | The Checks of a request are listed newest first, at most 100, with the total shown so a cut is visible | REQ-RPT-028, REQ-RPT-031, AC-RPT-034, AC-RPT-037 |
 | A Check that is not found (never created or purged) is told apart from a running one | REQ-RPT-025, AC-RPT-030 |
+| The Employee Decision block is shown only once a decision is recorded (`decision` null before — shown as "no decision yet", never as a default APPROVED or REJECTED); once recorded, employeeDecision, decidedBy and decidedAt are shown together, with whether it was executed through the Approval API (approvalApiExecuted) as its own distinct text label; the block stands beside the Overall Status and findings and never replaces them, and nothing in it implies the Report Store approved on its own | REQ-RPT-032, AC-RPT-038, REQ-RPT-036, AC-RPT-043, REQ-RPT-037, AC-RPT-044 |
 
 Labels (en) are the SRS field labels of ENT-RPT-001 … ENT-RPT-004; Arabic labels and messages are `PENDING ADR-RPT-013`. No permission model: screens open per the SRS (raw-idea A2).

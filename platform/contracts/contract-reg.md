@@ -14,8 +14,8 @@ Identifier rule (profile `conventions.identifiers`): every identifier of the ser
 
 ### CON-REG-001 — Service Package: the registry of service codes
 Entity    : ENT-REG-001 — key columns: serviceCode (business key, `VARCHAR2(100 CHAR)`, unique, immutable), servicePackageId (identifier) · identifier type: NUMBER(19)
-Promise   : a service code is valid only if REG holds it; `available` tells whether new Checks may use it (RULE-REG-016). Service codes are never hardcoded by a consumer (POL-REG-013).
-Traces    : ENT-REG-001, REQ-REG-001, REQ-REG-006, REQ-REG-010
+Promise   : a service code is valid only if REG holds it; `available` tells whether new Checks may use it (RULE-REG-016). Service codes are never hardcoded by a consumer (POL-REG-013). Every stored service code is lower case (`^[a-z0-9]+(-[a-z0-9]+)*$`, ≤ 100); every operation that takes a service code trims it and matches it case-insensitively (REQ-REG-064, REQ-REG-065, ADR-REG-017).
+Traces    : ENT-REG-001, REQ-REG-001, REQ-REG-006, REQ-REG-010, REQ-REG-064, REQ-REG-065
 
 ### CON-REG-002 — Service Package Version: an immutable, resolvable version
 Entity    : ENT-REG-002 — key columns: serviceCode + versionNumber (business key; versionNumber `NUMBER(10)`), servicePackageVersionId (identifier) · identifier type: NUMBER(19)
@@ -47,40 +47,49 @@ Traces    : ENT-REG-001, ENT-REG-004, ENT-REG-005, REQ-REG-036, REQ-REG-037
 ### CON-REG-007 — Supply the current service package of a service
 Signature : getCurrentServicePackage(serviceCode) → read-only package {serviceCode, versionNumber, serviceKnowledge (whole, unaltered), inputName, queries [queryName, connectionName, sqlText], fetchMode, document source {documentSourceQueryName, documentTypeColumn, documentPathColumn | documentContentColumn}, requiredDocumentTypes} · errors: service not available (unknown or withdrawn code — RULE-REG-016), connection not activated (RULE-REG-017)
 Entity    : ENT-REG-002
+Called by : CHK (Check pipeline — knowledge, queries, document settings); DOC (fetch mode, document source, required document types). Never the LLM: CHK passes the LLM only the service knowledge part.
 Notes     : the service knowledge is a separate part from the queries and document settings (REQ-REG-018, REQ-REG-030); the package carries no approval API definition (REQ-REG-044) and no request data (REQ-REG-059); it is immutable for the caller (REQ-REG-060).
 Traces    : REQ-REG-024, REQ-REG-027, REQ-REG-029, REQ-REG-012, REQ-REG-053
 
 ### CON-REG-008 — List the available services
-Signature : listServices() → list of {serviceCode, versionNumber, fetchMode, requiredDocumentTypes, approvalEnabled} · errors: none
+Signature : listServices() → list of {serviceCode, available, versionNumber, fetchMode, requiredDocumentTypes, approvalEnabled} · errors: none
 Entity    : ENT-REG-001
+Called by : INT (employee frontend and host systems, through the HTTP read API-REG-001)
+Notes     : lists available services only, so every row has available = true (ADR-REG-016).
 Traces    : REQ-REG-013
 
 ### CON-REG-009 — Resolve a stored version
 Signature : getServicePackageVersion(serviceCode, versionNumber) → read-only full version {serviceKnowledge, serviceDefinition, queries, fetchMode, requiredDocumentTypes, approvalEnabled} · errors: not found (no such service code or version)
 Entity    : ENT-REG-002
+Called by : RPT (resolving the version a stored report recorded — G11); CHK (re-reading the version of a running Check)
 Traces    : REQ-REG-025
 
 ### CON-REG-010 — Read one service's current version summary
-Signature : getService(serviceCode) → {serviceCode, versionNumber, fetchMode, requiredDocumentTypes, approvalEnabled} · errors: not found (RULE-REG-016)
+Signature : getService(serviceCode) → {serviceCode, available, versionNumber, fetchMode, requiredDocumentTypes, approvalEnabled} · errors: not found (RULE-REG-016)
 Entity    : ENT-REG-001
-Traces    : REQ-REG-014, REQ-REG-015
+Called by : INT (Document upload screen SCR-REQ-INT-003 and host systems, through the HTTP read API-REG-002)
+Notes     : a withdrawn service is returned with available = false (ADR-REG-016); the code is matched trimmed and case-insensitively (REQ-REG-064).
+Traces    : REQ-REG-014, REQ-REG-015, REQ-REG-064
 
 ### CON-REG-011 — Supply a connection by name
 Signature : getConnection(connectionName) → {connectionName, connectionType, endpoint, queryTool, dialect, credentialReference, limitedToViews} · errors: not found (connection not activated in this environment)
 Entity    : ENT-REG-005
+Called by : CHK (query execution over `mcp` or `jdbc`); DOC (`blob` content over the read-only `jdbc` connection). Never the LLM and never INT or RPT (AIAS-3, AIAS-4).
 Traces    : REQ-REG-048
 
 ### CON-REG-012 — Supply the approval API of a version to the Employee Decision path
 Signature : getApprovalApi(serviceCode, versionNumber) → {approvalEnabled, approvalApi (present only when enabled)} · errors: not found (no such service code or version)
 Entity    : ENT-REG-002
+Called by : INT (Employee Decision operation only)
 Notes     : only INT's Employee Decision operation may call this item (raw idea §12; G2; AIAS-4). No other consumer, and never the LLM, receives the approval API definition.
 Traces    : REQ-REG-044, REQ-REG-045
 
 ### CON-REG-013 — Check whether a service code is available
 Signature : isServiceAvailable(serviceCode) → flag · errors: none (an unknown code answers false)
 Entity    : ENT-REG-001
+Called by : CHK (before starting a Check); INT (before offering a service to the employee)
 Traces    : REQ-REG-012, REQ-REG-001
 
 ## Stability
-All 13 items are ADDITIVE in v1. Changing or removing one a consumer depends on requires a BREAKING version with an ADR.
+All 13 items are ADDITIVE in v1. The gate-analysis revision of 2026-10-01 added `available` to CON-REG-008 and CON-REG-010 (ADR-REG-016), the service-code canonical form to CON-REG-001 (ADR-REG-017) and a `Called by` line to every operation; no consumer had built against the earlier shape. Changing or removing one a consumer depends on requires a BREAKING version with an ADR.
 ══════════════════════════════════════════════════════════════════

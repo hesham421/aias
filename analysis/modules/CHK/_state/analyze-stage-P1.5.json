@@ -19,7 +19,7 @@
   ],
   "skipped": [],
   "coverage": {
-    "C0.1": 5,
+    "C0.1": 7,
     "C13.5": 11
   },
   "vacuous": [],
@@ -40,8 +40,8 @@
       "to": [
         "AC"
       ],
-      "total": 75,
-      "covered": 75,
+      "total": 82,
+      "covered": 82,
       "pct": 100.0
     },
     {
@@ -50,7 +50,7 @@
       "to": [
         "API"
       ],
-      "total": 75,
+      "total": 82,
       "covered": 0,
       "pct": 0.0
     },
@@ -61,7 +61,7 @@
         "SCR",
         "UXD"
       ],
-      "total": 75,
+      "total": 82,
       "covered": 0,
       "pct": 0.0
     },
@@ -71,7 +71,7 @@
       "to": [
         "TC"
       ],
-      "total": 78,
+      "total": 85,
       "covered": 0,
       "pct": 0.0
     }
@@ -86,25 +86,29 @@
     "resolvable": [
       "business-policies",
       "contract",
+      "db-script",
       "domain-profile",
       "module-registry",
       "platform-summary",
       "prd",
       "project-registry",
+      "registry-db",
       "registry-srs",
       "srs"
     ],
     "inputs": {
       "business-policies": "b075f91aac5d5d54e8a495e0ede567eb11df4727e43f96dea1d59b98693de810",
-      "contract": "3f4795da281bcc5582efcd4e6b4d37eace5bafbd890becebb129aa151dfd87e3",
+      "contract": "ff504493f1092d3bc51f04431ebec84e64e2421b11facbe4ace132e42f64e20a",
+      "db-script": "35ac635d02877ea6514eba64dfe2d3c1b0b213775573900a9c549239e0a3e931",
       "domain-profile": "c9ffe7c45c917c5793e15b6fbc7151ccc4b9181c36a5aaf1ce2f15f6849e3cbd",
       "module-registry": "bde56222f4c3b6e679af514172fd427fa717febc77bece975d37c79a21e54fa9",
       "platform-summary": "e9b1d30b89fa75593a2c2f94809ce473f56448410ab62ee3a84c05d9bbab0d65",
       "prd": "9a531acb9c3b58c61aaef38f7c13797c8b75353c159b2c015b293c1a2e81ffcb",
       "project-registry": "7652329cae1b5e14558ead423c4a0d157fcf3aead94176473c23adb034161a82",
-      "registry-srs": "a7c637e18e88a83c208a91ba71ef0f6b6074d09b45ba9b50ef5de9b5ed15fa43",
-      "srs": "500bdc01f021c425432bf768ef2776f189dd6c20c1680bf9e0cf8d1c64bc2899"
+      "registry-db": "ada836d8b15eecfd846e52da818ea553af4a796b9a6cccdb16eaaceda5bcde6e",
+      "registry-srs": "125a089f738923ba7a7921768905dd4f0c8cc643406b6fbad7374a5668a418df",
+      "srs": "c63dfae3f180f887206645f48d9850ac3f20a975a795504c203015549a6f0f54"
     },
-    "at": "2026-10-01T12:59:20+00:00"
+    "at": "2026-10-01T13:04:53+00:00"
   }
 }

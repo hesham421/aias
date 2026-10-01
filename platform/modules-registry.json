@@ -1,0 +1,14 @@
+{
+  "modules": {
+    "CHK": {
+      "code": "CHK",
+      "description": "",
+      "registered_at": "2026-10-01T10:20:07+00:00",
+      "versions": [
+        1
+      ],
+      "current_version": 1,
+      "delivery": {}
+    }
+  }
+}

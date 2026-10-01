@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "waves": [
+    [
+      "CHK"
+    ]
+  ],
+  "parallelism": [
+    1
+  ],
+  "critical_path": [
+    "CHK"
+  ],
+  "cycles": [],
+  "modules": {
+    "CHK": {
+      "wave": 1,
+      "depends_on": []
+    }
+  },
+  "status": {
+    "1": {
+      "CHK": "ready"
+    },
+    "2": {
+      "CHK": "ready"
+    }
+  }
+}

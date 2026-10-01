@@ -1,0 +1,11 @@
+{
+  "gate": "prd-approval",
+  "module": "INT",
+  "version": 1,
+  "by": "Hesham Ezzat (owner) — standing instruction 'do all with recommended, don't ask me'; PRD + INT ADRs confirmed 2026-10-01",
+  "at": "2026-10-01T13:47:12+00:00",
+  "after": "P0.5",
+  "artifact_sha": {
+    "prd": "d39662755a943b101ca970c40fb6b50438c24238f6a7e9e78d70be208445ad5c"
+  }
+}

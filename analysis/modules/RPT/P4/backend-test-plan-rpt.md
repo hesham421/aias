@@ -1,14 +1,14 @@
 # BACKEND TEST PLAN — Report Store (RPT)
 ══════════════════════════════════════════════════════════════════
 Module : RPT   Version : v1   Profile : aias   Stage : P4   Framework : agnostic (the consumer repo chooses its tool; this plan names none)
-Sources : _state/current-srs.md (v1, AC 60) · current-registry-srs.md · current-registry-db.md (XM 0) · current-backend-execution-plan.md (units PORTS, SVC-API; CORE, DATA-DOM, ALIGN-BE no_tests; CROSS-MOD 0 edges) · current-api-spec.yaml (API-RPT-001 … API-RPT-003) · dependency-graph (no RPT XM edge)
-Open ADRs : none BLOCKED — applied ADR-RPT-006, ADR-RPT-012, ADR-RPT-013, ADR-RPT-015
-TCs : 60 (TC-RPT-001 … TC-RPT-060) — one per AC; RULE-SCENARIOS 31 · API-SCENARIOS 28 · MODEL-EVAL 1
+Sources : _state/current-srs.md (v1, AC 61) · current-registry-srs.md · current-registry-db.md (XM 0) · current-backend-execution-plan.md (units PORTS, SVC-API; CORE, DATA-DOM, ALIGN-BE no_tests; CROSS-MOD 0 edges) · current-api-spec.yaml (API-RPT-001 … API-RPT-003) · dependency-graph (no RPT XM edge)
+Open ADRs : none BLOCKED — applied ADR-RPT-006, ADR-RPT-012, ADR-RPT-013, ADR-RPT-015, ADR-RPT-018
+TCs : 61 (TC-RPT-001 … TC-RPT-061) — one per AC; RULE-SCENARIOS 31 · API-SCENARIOS 29 · MODEL-EVAL 1
 ══════════════════════════════════════════════════════════════════
 
 Every TC derives from one AC. In-process operations (the Check result port, the decision procedure, the purge — ADR-RPT-006) are named on the `Exercises` line; HTTP cases cite the API id and read the shape in api-spec-rpt.yaml. Errors over HTTP are ProblemDetail (RFC 9457) → {type, title, status, detail, code}; in-process refusals are typed exceptions carrying the same code and message (ADR-RPT-013). Arabic messages are `PENDING ADR-RPT-013`. Values of the open REG lists (service code, document type) are placeholders carried by value (ADR-RPT-015). INT-XM is absent: RPT declares no XM edge (registry-db XM 0).
 
-<!-- PHASE:TEST-PLAN-BE:START traces=AC-RPT-001,AC-RPT-002,AC-RPT-003,AC-RPT-004,AC-RPT-005,AC-RPT-006,AC-RPT-007,AC-RPT-008,AC-RPT-009,AC-RPT-010,AC-RPT-011,AC-RPT-012,AC-RPT-013,AC-RPT-014,AC-RPT-015,AC-RPT-016,AC-RPT-017,AC-RPT-018,AC-RPT-019,AC-RPT-020,AC-RPT-021,AC-RPT-022,AC-RPT-023,AC-RPT-024,AC-RPT-025,AC-RPT-026,AC-RPT-027,AC-RPT-028,AC-RPT-029,AC-RPT-030,AC-RPT-031,AC-RPT-032,AC-RPT-033,AC-RPT-034,AC-RPT-035,AC-RPT-036,AC-RPT-037,AC-RPT-038,AC-RPT-039,AC-RPT-040,AC-RPT-041,AC-RPT-042,AC-RPT-043,AC-RPT-044,AC-RPT-045,AC-RPT-046,AC-RPT-047,AC-RPT-048,AC-RPT-049,AC-RPT-050,AC-RPT-051,AC-RPT-052,AC-RPT-053,AC-RPT-054,AC-RPT-055,AC-RPT-056,AC-RPT-057,AC-RPT-058,AC-RPT-059,AC-RPT-060,REQ-RPT-001,REQ-RPT-002,REQ-RPT-003,REQ-RPT-004,REQ-RPT-005,REQ-RPT-006,REQ-RPT-007,REQ-RPT-008,REQ-RPT-009,REQ-RPT-010,REQ-RPT-011,REQ-RPT-012,REQ-RPT-013,REQ-RPT-014,REQ-RPT-015,REQ-RPT-016,REQ-RPT-017,REQ-RPT-018,REQ-RPT-019,REQ-RPT-020,REQ-RPT-021,REQ-RPT-022,REQ-RPT-023,REQ-RPT-024,REQ-RPT-025,REQ-RPT-026,REQ-RPT-027,REQ-RPT-028,REQ-RPT-029,REQ-RPT-030,REQ-RPT-031,REQ-RPT-032,REQ-RPT-033,REQ-RPT-034,REQ-RPT-035,REQ-RPT-036,REQ-RPT-037,REQ-RPT-038,REQ-RPT-039,REQ-RPT-040,REQ-RPT-041,REQ-RPT-042,REQ-RPT-043,REQ-RPT-044,REQ-RPT-045,REQ-RPT-046,REQ-RPT-047,REQ-RPT-048,REQ-RPT-049,REQ-RPT-050,REQ-RPT-051,REQ-RPT-052 -->
+<!-- PHASE:TEST-PLAN-BE:START traces=AC-RPT-001,AC-RPT-002,AC-RPT-003,AC-RPT-004,AC-RPT-005,AC-RPT-006,AC-RPT-007,AC-RPT-008,AC-RPT-009,AC-RPT-010,AC-RPT-011,AC-RPT-012,AC-RPT-013,AC-RPT-014,AC-RPT-015,AC-RPT-016,AC-RPT-017,AC-RPT-018,AC-RPT-019,AC-RPT-020,AC-RPT-021,AC-RPT-022,AC-RPT-023,AC-RPT-024,AC-RPT-025,AC-RPT-026,AC-RPT-027,AC-RPT-028,AC-RPT-029,AC-RPT-030,AC-RPT-031,AC-RPT-032,AC-RPT-033,AC-RPT-034,AC-RPT-035,AC-RPT-036,AC-RPT-037,AC-RPT-038,AC-RPT-039,AC-RPT-040,AC-RPT-041,AC-RPT-042,AC-RPT-043,AC-RPT-044,AC-RPT-045,AC-RPT-046,AC-RPT-047,AC-RPT-048,AC-RPT-049,AC-RPT-050,AC-RPT-051,AC-RPT-052,AC-RPT-053,AC-RPT-054,AC-RPT-055,AC-RPT-056,AC-RPT-057,AC-RPT-058,AC-RPT-059,AC-RPT-060,AC-RPT-061,REQ-RPT-001,REQ-RPT-002,REQ-RPT-003,REQ-RPT-004,REQ-RPT-005,REQ-RPT-006,REQ-RPT-007,REQ-RPT-008,REQ-RPT-009,REQ-RPT-010,REQ-RPT-011,REQ-RPT-012,REQ-RPT-013,REQ-RPT-014,REQ-RPT-015,REQ-RPT-016,REQ-RPT-017,REQ-RPT-018,REQ-RPT-019,REQ-RPT-020,REQ-RPT-021,REQ-RPT-022,REQ-RPT-023,REQ-RPT-024,REQ-RPT-025,REQ-RPT-026,REQ-RPT-027,REQ-RPT-028,REQ-RPT-029,REQ-RPT-030,REQ-RPT-031,REQ-RPT-032,REQ-RPT-033,REQ-RPT-034,REQ-RPT-035,REQ-RPT-036,REQ-RPT-037,REQ-RPT-038,REQ-RPT-039,REQ-RPT-040,REQ-RPT-041,REQ-RPT-042,REQ-RPT-043,REQ-RPT-044,REQ-RPT-045,REQ-RPT-046,REQ-RPT-047,REQ-RPT-048,REQ-RPT-049,REQ-RPT-050,REQ-RPT-051,REQ-RPT-052,REQ-RPT-053 -->
 ## PHASE TEST-PLAN-BE
 
 <!-- SUB:RULE-SCENARIOS:START traces=AC-RPT-003,AC-RPT-004,AC-RPT-005,AC-RPT-006,AC-RPT-007,AC-RPT-008,AC-RPT-009,AC-RPT-010,AC-RPT-012,AC-RPT-016,AC-RPT-017,AC-RPT-018,AC-RPT-019,AC-RPT-020,AC-RPT-021,AC-RPT-023,AC-RPT-035,AC-RPT-039,AC-RPT-040,AC-RPT-041,AC-RPT-042,AC-RPT-045,AC-RPT-046,AC-RPT-049,AC-RPT-050,AC-RPT-051,AC-RPT-052,AC-RPT-053,AC-RPT-054,AC-RPT-059,AC-RPT-060,REQ-RPT-003,REQ-RPT-004,REQ-RPT-005,REQ-RPT-006,REQ-RPT-007,REQ-RPT-009,REQ-RPT-013,REQ-RPT-014,REQ-RPT-015,REQ-RPT-016,REQ-RPT-017,REQ-RPT-018,REQ-RPT-020,REQ-RPT-029,REQ-RPT-033,REQ-RPT-034,REQ-RPT-035,REQ-RPT-038,REQ-RPT-039,REQ-RPT-041,REQ-RPT-042,REQ-RPT-043,REQ-RPT-044,REQ-RPT-045,REQ-RPT-046,REQ-RPT-051,REQ-RPT-052 -->
@@ -465,7 +465,7 @@ Test data    : Checks 544, 545
 <!-- TC:TC-RPT-060:END -->
 <!-- SUB:RULE-SCENARIOS:END -->
 
-<!-- SUB:API-SCENARIOS:START traces=AC-RPT-001,AC-RPT-002,AC-RPT-011,AC-RPT-013,AC-RPT-014,AC-RPT-015,AC-RPT-022,AC-RPT-024,AC-RPT-025,AC-RPT-026,AC-RPT-027,AC-RPT-028,AC-RPT-029,AC-RPT-030,AC-RPT-031,AC-RPT-032,AC-RPT-033,AC-RPT-034,AC-RPT-036,AC-RPT-037,AC-RPT-038,AC-RPT-043,AC-RPT-044,AC-RPT-047,AC-RPT-048,AC-RPT-055,AC-RPT-056,AC-RPT-058,REQ-RPT-001,REQ-RPT-002,REQ-RPT-008,REQ-RPT-010,REQ-RPT-011,REQ-RPT-012,REQ-RPT-019,REQ-RPT-021,REQ-RPT-022,REQ-RPT-023,REQ-RPT-024,REQ-RPT-025,REQ-RPT-026,REQ-RPT-027,REQ-RPT-028,REQ-RPT-030,REQ-RPT-031,REQ-RPT-032,REQ-RPT-036,REQ-RPT-037,REQ-RPT-040,REQ-RPT-047,REQ-RPT-048,REQ-RPT-050 -->
+<!-- SUB:API-SCENARIOS:START traces=AC-RPT-001,AC-RPT-002,AC-RPT-011,AC-RPT-013,AC-RPT-014,AC-RPT-015,AC-RPT-022,AC-RPT-024,AC-RPT-025,AC-RPT-026,AC-RPT-027,AC-RPT-028,AC-RPT-029,AC-RPT-030,AC-RPT-031,AC-RPT-032,AC-RPT-033,AC-RPT-034,AC-RPT-036,AC-RPT-037,AC-RPT-038,AC-RPT-043,AC-RPT-044,AC-RPT-047,AC-RPT-048,AC-RPT-055,AC-RPT-056,AC-RPT-058,REQ-RPT-001,REQ-RPT-002,REQ-RPT-008,REQ-RPT-010,REQ-RPT-011,REQ-RPT-012,REQ-RPT-019,REQ-RPT-021,REQ-RPT-022,REQ-RPT-023,REQ-RPT-024,REQ-RPT-025,REQ-RPT-026,REQ-RPT-027,REQ-RPT-028,REQ-RPT-030,REQ-RPT-031,REQ-RPT-032,REQ-RPT-036,REQ-RPT-037,REQ-RPT-040,REQ-RPT-047,REQ-RPT-048,REQ-RPT-050,AC-RPT-061,REQ-RPT-053 -->
 ### API-SCENARIOS
 
 <!-- TC:TC-RPT-001:START traces=AC-RPT-001,REQ-RPT-001 -->
@@ -569,7 +569,7 @@ Preconditions: Check 516 is COMPLETED with a document outcome ⟨DOC-TYPE-1⟩ R
 Host data    : none — service codes and document types are the placeholders ⟨SVC-A⟩, ⟨SVC-B⟩, ⟨DOC-TYPE-1⟩, ⟨DOC-TYPE-2⟩, passed by value as opaque text (ADR-RPT-015)
 Steps        : 1. read Check 516 through API-RPT-001
                2. inspect the columns of RPT_CHECK_DOCUMENT
-Expected     : the document entry holds exactly position, documentType, sourceMode, readStatus, unreadableReason (null) and detail — no property and no column holds file content
+Expected     : the document entry holds exactly position (1), documentType, sourceMode, readStatus READ, unreadableReason (null) and detail — none of them, and no column, holds the document's raw text, image data or file bytes
 Test data    : ⟨DOC-TYPE-1⟩ READ
 <!-- TC:TC-RPT-022:END -->
 
@@ -871,6 +871,22 @@ Steps        : 1. GET /api/v1/checks?serviceCode=⟨SVC-A⟩&requestNumber=1001'
 Expected     : 200; checks empty; total 0; no other request's Check returned
 Test data    : requestNumber `1001' OR '1'='1`
 <!-- TC:TC-RPT-058:END -->
+
+<!-- TC:TC-RPT-061:START traces=AC-RPT-061,REQ-RPT-053 -->
+### TC-RPT-061 — Hand-over with an undeclared field cannot reach the store
+Derived from : AC-RPT-061  (REQ-RPT-053)
+Exercises    : the result port operations completeCheck and failCheck — value types inspected (ADR-RPT-018)
+Rule / code  : — (structural; an undeclared value in a declared code field stays RULE-RPT-006 → RPT-422-UNKNOWN-CODE, TC-RPT-018)
+Package      : PORTS
+Scenario     : VIOLATION · data class INVALID · language ALL
+Preconditions: the RPT result port implementation is on the classpath
+Host data    : none
+Steps        : 1. list, by reflection, the record components of the finding, document outcome, unread query and metadata value types accepted by completeCheck, and the parameters of failCheck
+               2. run the architecture rule over those types: no component typed as a map, a byte array or an untyped object, and no "extra attributes" holder
+               3. list the columns of RPT_FINDING, RPT_CHECK_DOCUMENT and RPT_UNREAD_QUERY
+Expected     : finding = {condition, outcome, evidence, note}; document outcome = {documentType, sourceMode, readStatus, reason, detail}; unread query = {queryName, detail}; metadata = {serviceCode, versionNumber, fetchMode, comparisonModel, employeeId, startedAt, endedAt}; failCheck = (checkId, failureReason, detail, endedAt); the architecture rule passes (0 open components); no table holds a column beyond its DBF-bound fields and createdAt / updatedAt
+Test data    : —
+<!-- TC:TC-RPT-061:END -->
 <!-- SUB:API-SCENARIOS:END -->
 
 <!-- SUB:MODEL-EVAL:START traces=AC-RPT-057,REQ-RPT-049 -->
@@ -958,10 +974,11 @@ Test data    : —
 | AC-RPT-058 | REQ-RPT-050 | TC-RPT-058 | API-RPT-002 | — | SVC-API |
 | AC-RPT-059 | REQ-RPT-051 | TC-RPT-059 | in-process | RULE-RPT-010 → RPT-400-FAILURE-INCOMPLETE | PORTS |
 | AC-RPT-060 | REQ-RPT-052 | TC-RPT-060 | in-process | — | SVC-API |
+| AC-RPT-061 | REQ-RPT-053 | TC-RPT-061 | in-process | — (structural, ADR-RPT-018) | PORTS |
 
-Package → TC: PORTS: 29 (TC-RPT-001 …) · SVC-API: 31 (TC-RPT-022 …) · CORE, DATA-DOM, ALIGN-BE: no_tests (profile) · CROSS-MOD: 0 edges, no unit
+Package → TC: PORTS: 30 (TC-RPT-001 …) · SVC-API: 31 (TC-RPT-022 …) · CORE, DATA-DOM, ALIGN-BE: no_tests (profile) · CROSS-MOD: 0 edges, no unit
 XM → TC: none (0 XM)
 
 ## COVERAGE
 
-AC covered 60/60 ✓ · REQ covered 52/52 ✓ · API covered 3/3 (API-RPT-001, API-RPT-002, API-RPT-003) ✓ · XM edges covered 0/0 (none declared) · retention purge: TC-RPT-050 … TC-RPT-054, TC-RPT-060 · one-time final decision: TC-RPT-039 · COMPLIANT only when every finding SATISFIED: TC-RPT-017 · closed-list CHECK constraints: TC-RPT-004, TC-RPT-018, TC-RPT-020, TC-RPT-046
+AC covered 61/61 ✓ · REQ covered 53/53 ✓ · API covered 3/3 (API-RPT-001, API-RPT-002, API-RPT-003) ✓ · XM edges covered 0/0 (none declared) · retention purge: TC-RPT-050 … TC-RPT-054, TC-RPT-060 · one-time final decision: TC-RPT-039 · COMPLIANT only when every finding SATISFIED: TC-RPT-017 · closed-list CHECK constraints: TC-RPT-004, TC-RPT-018, TC-RPT-020, TC-RPT-046

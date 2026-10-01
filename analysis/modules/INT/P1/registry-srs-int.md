@@ -1,0 +1,116 @@
+## REGISTRY — P1 — INT v1
+
+### Entities
+None — Host Integration declares no entity (ADR-INT-007, ADR-INT-013).
+
+### Consumed
+| Module | Entity | Type |
+|---|---|---|
+| RPT | ENT-RPT-001 | SOFT-READ |
+| REG | ENT-REG-002 | SOFT-READ |
+
+### Lookups owned
+None — `lookups: []` (ADR-INT-013).
+
+### Lookups consumed
+| Key | Owner |
+|---|---|
+| CHECK_STATUS | CHK |
+| OVERALL_STATUS | CHK |
+| FINDING_OUTCOME | CHK |
+| CHECK_FAILURE_REASON | CHK |
+| FETCH_MODE | DOC |
+| DOCUMENT_READ_STATUS | DOC |
+| UNREADABLE_REASON | DOC |
+| EMPLOYEE_DECISION | RPT |
+| SERVICE_CODE | REG |
+| DOCUMENT_TYPE | REG |
+
+### Screens
+| SCR-REQ | Name | Page code |
+|---|---|---|
+| SCR-REQ-INT-001 | Checks of a request | — |
+| SCR-REQ-INT-002 | Check report | — |
+| SCR-REQ-INT-003 | Document upload | — |
+| SCR-REQ-INT-004 | Upload confirmation | — |
+| SCR-REQ-INT-005 | Employee decision | — |
+
+### Requirements
+REQ count 60 · AC count 66 · RULE count 4 · last sequence per atom (REQ: 60, AC: 66, ENT: 0, RULE: 4, SCR-REQ: 5)
+
+| REQ | AC |
+|---|---|
+| REQ-INT-001 | AC-INT-001, AC-INT-002 |
+| REQ-INT-002 | AC-INT-003 |
+| REQ-INT-003 | AC-INT-004 |
+| REQ-INT-004 | AC-INT-005 |
+| REQ-INT-005 | AC-INT-006 |
+| REQ-INT-006 | AC-INT-007, AC-INT-008, AC-INT-009, AC-INT-010 |
+| REQ-INT-007 | AC-INT-011 |
+| REQ-INT-008 | AC-INT-012 |
+| REQ-INT-009 | AC-INT-013 |
+| REQ-INT-010 | AC-INT-014 |
+| REQ-INT-011 | AC-INT-015 |
+| REQ-INT-012 | AC-INT-016 |
+| REQ-INT-013 | AC-INT-017 |
+| REQ-INT-014 | AC-INT-018 |
+| REQ-INT-015 | AC-INT-019 |
+| REQ-INT-016 | AC-INT-020 |
+| REQ-INT-017 | AC-INT-021 |
+| REQ-INT-018 | AC-INT-022 |
+| REQ-INT-019 | AC-INT-023 |
+| REQ-INT-020 | AC-INT-024 |
+| REQ-INT-021 | AC-INT-025 |
+| REQ-INT-022 | AC-INT-026 |
+| REQ-INT-023 | AC-INT-027 |
+| REQ-INT-024 | AC-INT-028 |
+| REQ-INT-025 | AC-INT-029 |
+| REQ-INT-026 | AC-INT-030 |
+| REQ-INT-027 | AC-INT-031 |
+| REQ-INT-028 | AC-INT-032 |
+| REQ-INT-029 | AC-INT-033 |
+| REQ-INT-030 | AC-INT-034 |
+| REQ-INT-031 | AC-INT-035 |
+| REQ-INT-032 | AC-INT-036 |
+| REQ-INT-033 | AC-INT-037 |
+| REQ-INT-034 | AC-INT-038 |
+| REQ-INT-035 | AC-INT-039, AC-INT-040 |
+| REQ-INT-036 | AC-INT-041 |
+| REQ-INT-037 | AC-INT-042 |
+| REQ-INT-038 | AC-INT-043 |
+| REQ-INT-039 | AC-INT-044 |
+| REQ-INT-040 | AC-INT-045 |
+| REQ-INT-041 | AC-INT-046 |
+| REQ-INT-042 | AC-INT-047 |
+| REQ-INT-043 | AC-INT-048 |
+| REQ-INT-044 | AC-INT-049 |
+| REQ-INT-045 | AC-INT-050 |
+| REQ-INT-046 | AC-INT-051 |
+| REQ-INT-047 | AC-INT-052 |
+| REQ-INT-048 | AC-INT-053 |
+| REQ-INT-049 | AC-INT-054, AC-INT-055 |
+| REQ-INT-050 | AC-INT-056 |
+| REQ-INT-051 | AC-INT-057 |
+| REQ-INT-052 | AC-INT-058 |
+| REQ-INT-053 | AC-INT-059 |
+| REQ-INT-054 | AC-INT-060 |
+| REQ-INT-055 | AC-INT-061 |
+| REQ-INT-056 | AC-INT-062 |
+| REQ-INT-057 | AC-INT-063 |
+| REQ-INT-058 | AC-INT-064 |
+| REQ-INT-059 | AC-INT-065 |
+| REQ-INT-060 | AC-INT-066 |
+
+### Rules
+| RULE | Traces |
+|---|---|
+| RULE-INT-001 | REQ-INT-011 |
+| RULE-INT-002 | REQ-INT-034 |
+| RULE-INT-003 | REQ-INT-035 |
+| RULE-INT-004 | REQ-INT-041 |
+
+### Decisions
+ADR-INT-010, ADR-INT-011, ADR-INT-012, ADR-INT-013 (new, ACCEPTED); applied ADR-INT-001 … ADR-INT-009. No BLOCKED ADR.
+
+### Event
+P1 completed: INT v1 — 60 REQ · 66 AC · 0 ENT · 4 RULE · 5 SCR-REQ · 4 ADR

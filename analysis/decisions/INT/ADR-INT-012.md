@@ -1,0 +1,7 @@
+# ADR-INT-012 — Host Integration's limits are platform configuration: the Approval API timeout (default 10 seconds), the upload request limit (default 50 MB, never set below Document Access's maximum file size) and the host Approval API base address per environment
+Status      : ACCEPTED
+Stage       : P1        Module: INT        Version: v1
+Context     : Raw idea §12 gives every Check limits; the platform already keeps limits as configuration (ADR-REG-006). INT adds two outbound/inbound limits of its own: how long to wait for the host Approval API (profile 504) and how large an upload request may be before it is read. Document Access accepts a file above its maximum file size as a record without content and reports it UNREADABLE / TOO_LARGE (CON-DOC-003), so the transport limit must not cut such files off below that size. The host's base address differs per environment, as connections do (raw idea §4).
+Decision    : (1) `approval timeout` — whole seconds, default 10; reaching it answers `INT-504-APPROVAL-API-TIMED-OUT`. (2) `upload request limit` — default 50 MB, configured at or above Document Access's maximum file size; a larger request answers `INT-413-UPLOAD-TOO-LARGE` and nothing reaches Document Access. (3) `approval base address` — per environment; the version's approval API definition supplies only the method and the path. None of these is an entity.
+Consequences: P3.1 declares the three values in the CORE configuration; tests set them explicitly.
+traces      : REQ-INT-014, REQ-INT-036, REQ-INT-037, US-INT-003, US-INT-007

@@ -1,0 +1,249 @@
+{
+  "module": "INT",
+  "version": 1,
+  "scope": "stage:P1",
+  "counts": {
+    "CRITICAL": 0,
+    "MAJOR": 0,
+    "MINOR": 16
+  },
+  "clean": true,
+  "blocking": [
+    "CRITICAL",
+    "MAJOR"
+  ],
+  "contracts": [
+    "C0",
+    "C5",
+    "C12"
+  ],
+  "skipped": [],
+  "coverage": {
+    "C0.1": 5,
+    "C5.2": 60,
+    "C5.3": 60,
+    "C5.4": 60,
+    "C5.5": 66,
+    "C5.6": 4,
+    "C5.8": 130,
+    "C5.13": 130,
+    "C5.14": 66,
+    "C5.15": 0,
+    "C5.16": 12,
+    "C5.17": 1
+  },
+  "vacuous": [
+    "C5.15"
+  ],
+  "metrics": [
+    {
+      "id": "us-req",
+      "from": "US",
+      "to": [
+        "REQ"
+      ],
+      "total": 12,
+      "covered": 12,
+      "pct": 100.0
+    },
+    {
+      "id": "req-ac",
+      "from": "REQ",
+      "to": [
+        "AC"
+      ],
+      "total": 60,
+      "covered": 60,
+      "pct": 100.0
+    },
+    {
+      "id": "req-api",
+      "from": "REQ",
+      "to": [
+        "API"
+      ],
+      "total": 60,
+      "covered": 0,
+      "pct": 0.0
+    },
+    {
+      "id": "req-ux",
+      "from": "REQ",
+      "to": [
+        "SCR",
+        "UXD"
+      ],
+      "total": 60,
+      "covered": 0,
+      "pct": 0.0
+    },
+    {
+      "id": "ac-tc",
+      "from": "AC",
+      "to": [
+        "TC"
+      ],
+      "total": 66,
+      "covered": 0,
+      "pct": 0.0
+    }
+  ],
+  "findings": [
+    {
+      "severity": "MINOR",
+      "clause": "C5.13",
+      "check": "ambiguity",
+      "message": "`AC-INT-011` uses 'could' \u2014 a word two implementers read two ways; state the measure, the set or the rule instead",
+      "artifact": "srs",
+      "line": 193
+    },
+    {
+      "severity": "MINOR",
+      "clause": "C5.13",
+      "check": "ambiguity",
+      "message": "`AC-INT-012` uses 'could' \u2014 a word two implementers read two ways; state the measure, the set or the rule instead",
+      "artifact": "srs",
+      "line": 207
+    },
+    {
+      "severity": "MINOR",
+      "clause": "C5.13",
+      "check": "ambiguity",
+      "message": "`AC-INT-019` uses 'etc' \u2014 a word two implementers read two ways; state the measure, the set or the rule instead",
+      "artifact": "srs",
+      "line": 305
+    },
+    {
+      "severity": "MINOR",
+      "clause": "C5.13",
+      "check": "ambiguity",
+      "message": "`REQ-INT-048` uses 'could' \u2014 a word two implementers read two ways; state the measure, the set or the rule instead",
+      "artifact": "srs",
+      "line": 763
+    },
+    {
+      "severity": "MINOR",
+      "clause": "C5.13",
+      "check": "ambiguity",
+      "message": "`REQ-INT-057` uses 'may' \u2014 a word two implementers read two ways; state the measure, the set or the rule instead",
+      "artifact": "srs",
+      "line": 894
+    },
+    {
+      "severity": "MINOR",
+      "clause": "C5.14",
+      "check": "ac-measurable",
+      "message": "`AC-INT-020` `Then: the document type choices are exactly TRANSCRIPT and ID_CARD` names no number, limit, id or enumerable outcome \u2014 no test can fail it; say what is created, rejected, returned or shown, and how much",
+      "artifact": "srs",
+      "line": 319
+    },
+    {
+      "severity": "MINOR",
+      "clause": "C5.14",
+      "check": "ac-measurable",
+      "message": "`AC-INT-033` `Then: the host receives no Approval API call` names no number, limit, id or enumerable outcome \u2014 no test can fail it; say what is created, rejected, returned or shown, and how much",
+      "artifact": "srs",
+      "line": 501
+    },
+    {
+      "severity": "MINOR",
+      "clause": "C5.14",
+      "check": "ac-measurable",
+      "message": "`AC-INT-037` `Then: the host receives exactly one call` names no number, limit, id or enumerable outcome \u2014 no test can fail it; say what is created, rejected, returned or shown, and how much",
+      "artifact": "srs",
+      "line": 557
+    },
+    {
+      "severity": "MINOR",
+      "clause": "C5.14",
+      "check": "ac-measurable",
+      "message": "`AC-INT-059` `Then: the document upload and the upload confirmation are offered and the de` names no number, limit, id or enumerable outcome \u2014 no test can fail it; say what is created, rejected, returned or shown, and how much",
+      "artifact": "srs",
+      "line": 847
+    },
+    {
+      "severity": "MINOR",
+      "clause": "C5.16",
+      "check": "feature-unwanted",
+      "message": "`US-INT-001` is covered by 6 requirement(s) and none states an `unwanted` path \u2014 what the system does when the input, state or sequence is wrong is unspecified for this feature",
+      "artifact": "srs",
+      "line": 11
+    },
+    {
+      "severity": "MINOR",
+      "clause": "C5.16",
+      "check": "feature-unwanted",
+      "message": "`US-INT-004` is covered by 4 requirement(s) and none states an `unwanted` path \u2014 what the system does when the input, state or sequence is wrong is unspecified for this feature",
+      "artifact": "srs",
+      "line": 38
+    },
+    {
+      "severity": "MINOR",
+      "clause": "C5.16",
+      "check": "feature-unwanted",
+      "message": "`US-INT-005` is covered by 5 requirement(s) and none states an `unwanted` path \u2014 what the system does when the input, state or sequence is wrong is unspecified for this feature",
+      "artifact": "srs",
+      "line": 47
+    },
+    {
+      "severity": "MINOR",
+      "clause": "C5.16",
+      "check": "feature-unwanted",
+      "message": "`US-INT-010` is covered by 2 requirement(s) and none states an `unwanted` path \u2014 what the system does when the input, state or sequence is wrong is unspecified for this feature",
+      "artifact": "srs",
+      "line": 92
+    },
+    {
+      "severity": "MINOR",
+      "clause": "C5.16",
+      "check": "feature-unwanted",
+      "message": "`US-INT-011` is covered by 2 requirement(s) and none states an `unwanted` path \u2014 what the system does when the input, state or sequence is wrong is unspecified for this feature",
+      "artifact": "srs",
+      "line": 101
+    },
+    {
+      "severity": "MINOR",
+      "clause": "C5.16",
+      "check": "feature-unwanted",
+      "message": "`US-INT-012` is covered by 2 requirement(s) and none states an `unwanted` path \u2014 what the system does when the input, state or sequence is wrong is unspecified for this feature",
+      "artifact": "srs",
+      "line": 110
+    },
+    {
+      "severity": "MINOR",
+      "clause": "C5.17",
+      "check": "glossary",
+      "message": "`job` appears 1\u00d7 where the glossary term is `Check` (lines 427)",
+      "artifact": "srs",
+      "line": 427
+    }
+  ],
+  "provenance": {
+    "rules": {
+      "contracts": "66ab69cc1483b2f9858c7b3db7d89f46990f817721fc4417f100bd5f023dff07",
+      "checker": "a94d2877f8d266ce52f428ed037da56bf89abcf3d31d225d01591f884f268f8b",
+      "policy": "f0051863173859c50eaa1091adddc83f9c46e4a33a735325d37acc31ffd51c3d"
+    },
+    "resolvable": [
+      "business-policies",
+      "domain-profile",
+      "module-registry",
+      "platform-summary",
+      "prd",
+      "project-registry",
+      "registry-srs",
+      "srs"
+    ],
+    "inputs": {
+      "business-policies": "b3d3c54c9491ed1e4dd712c776861a342ebdbf00781122e295730f38ca465118",
+      "domain-profile": "c9ffe7c45c917c5793e15b6fbc7151ccc4b9181c36a5aaf1ce2f15f6849e3cbd",
+      "module-registry": "88bb2f37bcfca903bb7b7847860c342cb5c9d59eca14dafffedf5fb84e6075a6",
+      "platform-summary": "f37b801d053b9f3fc47378f11eee1d9a8350520a0ae1db83d39d19133c46ddfc",
+      "prd": "d39662755a943b101ca970c40fb6b50438c24238f6a7e9e78d70be208445ad5c",
+      "project-registry": "7652329cae1b5e14558ead423c4a0d157fcf3aead94176473c23adb034161a82",
+      "registry-srs": "ced82fb853904f2f2a8487e7e3d643bc2e8789f859b61c4f6b5e227edc5aedc5",
+      "srs": "dc44d0c3bcf6b1bd51cc9567d65397a8d96718d4666c9993b16e90a64c2b146b"
+    },
+    "at": "2026-10-01T13:55:59+00:00"
+  }
+}

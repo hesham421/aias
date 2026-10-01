@@ -36,7 +36,7 @@ None — `lookups: []` (ADR-INT-013).
 | SCR-REQ-INT-005 | Employee decision | — |
 
 ### Requirements
-REQ count 64 · AC count 74 · RULE count 4 · last sequence per atom (REQ: 64, AC: 74, ENT: 0, RULE: 4, SCR-REQ: 5)
+REQ count 66 · AC count 79 · RULE count 4 · last sequence per atom (REQ: 66, AC: 79, ENT: 0, RULE: 4, SCR-REQ: 5)
 
 | REQ | AC |
 |---|---|
@@ -45,7 +45,7 @@ REQ count 64 · AC count 74 · RULE count 4 · last sequence per atom (REQ: 64, 
 | REQ-INT-003 | AC-INT-004 |
 | REQ-INT-004 | AC-INT-005 |
 | REQ-INT-005 | AC-INT-006 |
-| REQ-INT-006 | AC-INT-007, AC-INT-008, AC-INT-009, AC-INT-010 |
+| REQ-INT-006 | AC-INT-007, AC-INT-008, AC-INT-009, AC-INT-010, AC-INT-075, AC-INT-076 |
 | REQ-INT-007 | AC-INT-011 |
 | REQ-INT-008 | AC-INT-012 |
 | REQ-INT-009 | AC-INT-013 |
@@ -73,7 +73,7 @@ REQ count 64 · AC count 74 · RULE count 4 · last sequence per atom (REQ: 64, 
 | REQ-INT-031 | AC-INT-035 |
 | REQ-INT-032 | AC-INT-036 |
 | REQ-INT-033 | AC-INT-037 |
-| REQ-INT-034 | AC-INT-038 |
+| REQ-INT-034 | AC-INT-038, AC-INT-079 |
 | REQ-INT-035 | AC-INT-039, AC-INT-040 |
 | REQ-INT-036 | AC-INT-041 |
 | REQ-INT-037 | AC-INT-042 |
@@ -104,6 +104,8 @@ REQ count 64 · AC count 74 · RULE count 4 · last sequence per atom (REQ: 64, 
 | REQ-INT-062 | AC-INT-069, AC-INT-070 |
 | REQ-INT-063 | AC-INT-071, AC-INT-072 |
 | REQ-INT-064 | AC-INT-073, AC-INT-074 |
+| REQ-INT-065 | AC-INT-077 |
+| REQ-INT-066 | AC-INT-078 |
 
 ### Rules
 | RULE | Traces |
@@ -114,7 +116,7 @@ REQ count 64 · AC count 74 · RULE count 4 · last sequence per atom (REQ: 64, 
 | RULE-INT-004 | REQ-INT-041 |
 
 ### Decisions
-ADR-INT-010, ADR-INT-011, ADR-INT-012, ADR-INT-013, ADR-INT-016, ADR-INT-020, ADR-INT-023 (new, ACCEPTED — ADR-INT-020 adds REQ-INT-061 … REQ-INT-064 in a revision; ADR-INT-023 binds REQ-INT-063 to Document Access's CON-DOC-006, closing ADR-INT-020 (4)); applied ADR-INT-001 … ADR-INT-009. No BLOCKED ADR.
+ADR-INT-010, ADR-INT-011, ADR-INT-012, ADR-INT-013, ADR-INT-016, ADR-INT-020, ADR-INT-023, ADR-INT-025, ADR-INT-026 (new, ACCEPTED — ADR-INT-020 adds REQ-INT-061 … REQ-INT-064 in a revision; ADR-INT-023 binds REQ-INT-063 to Document Access's CON-DOC-006, closing ADR-INT-020 (4); ADR-INT-025 adds AC-INT-075, AC-INT-076 for DOC's ended-Check and upload-limit refusals; ADR-INT-026 adds REQ-INT-065, REQ-INT-066, AC-INT-077 … AC-INT-079 and rewords REQ-INT-057); applied ADR-INT-001 … ADR-INT-009. No BLOCKED ADR.
 
 ### Event
-P1 completed: INT v1 — 64 REQ · 74 AC · 0 ENT · 4 RULE · 5 SCR-REQ · 7 ADR (revision: +4 REQ, +8 AC — ADR-INT-020; CON-DOC-006 binding — ADR-INT-023)
+P1 completed: INT v1 — 66 REQ · 79 AC · 0 ENT · 4 RULE · 5 SCR-REQ · 9 ADR (revision: +4 REQ, +8 AC — ADR-INT-020; CON-DOC-006 binding — ADR-INT-023; gate round 1: +2 REQ, +5 AC — ADR-INT-025, ADR-INT-026)

@@ -42,7 +42,7 @@
     {
       "from": "CHK",
       "to": "DOC",
-      "state": "READY",
+      "state": "DELIVERED",
       "source": "platform"
     },
     {
@@ -201,7 +201,7 @@
     {
       "from": "INT",
       "to": "DOC",
-      "state": "READY",
+      "state": "DELIVERED",
       "source": "platform"
     },
     {

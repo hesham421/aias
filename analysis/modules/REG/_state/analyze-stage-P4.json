@@ -20,12 +20,12 @@
   "skipped": [],
   "coverage": {
     "C0.1": 15,
-    "C10.1": 88,
-    "C10.2": 81,
+    "C10.1": 100,
+    "C10.2": 91,
     "C10.7": 2,
     "C10.8": 0,
     "C10.9": 0,
-    "C10.10": 88,
+    "C10.10": 100,
     "C10.11": 11
   },
   "vacuous": [
@@ -49,8 +49,8 @@
       "to": [
         "AC"
       ],
-      "total": 69,
-      "covered": 69,
+      "total": 74,
+      "covered": 74,
       "pct": 100.0
     },
     {
@@ -59,9 +59,9 @@
       "to": [
         "API"
       ],
-      "total": 69,
+      "total": 74,
       "covered": 7,
-      "pct": 10.1
+      "pct": 9.5
     },
     {
       "id": "req-ux",
@@ -70,7 +70,7 @@
         "SCR",
         "UXD"
       ],
-      "total": 69,
+      "total": 74,
       "covered": 0,
       "pct": 0.0
     },
@@ -80,8 +80,8 @@
       "to": [
         "TC"
       ],
-      "total": 81,
-      "covered": 81,
+      "total": 91,
+      "covered": 91,
       "pct": 100.0
     }
   ],
@@ -116,26 +116,26 @@
     ],
     "inputs": {
       "api-spec": "c6505c33d81e97969f3c466b4d0893ebb5d3d8cb85080f97075b4093d36c4532",
-      "backend-execution-plan": "c4ddede47c0798747fcce668dd279619491531e0e141c17eb703b0eae5ea1c5e",
-      "backend-test-plan": "a3996597543900f799fb55389dca00b0e972f699e87eb3438f23174e7c3884cb",
+      "backend-execution-plan": "97de85faeb108e1dc769f130a6ac0be2bfadf6bbf61c8803001b49b203f3455a",
+      "backend-test-plan": "ed5f71a76732a256f5eb0b2443e168d5e8edadcb2c3970caade559300a9a1a8f",
       "business-policies": "013babd7ea1d785cbb21f942946db55b0c69557085800a70dbe06f5ba8393499",
-      "contract": "1b1fd701ed20b65d47af0f77e7f8e3ed02d5fc741fb0eb3b48f6dff79e7ced20",
-      "db-script": "47cffdbf534599d847812bad560e875ed57d8c2d0b1b382b0c105c072337280f",
+      "contract": "6a5b26f51c6e374630d059a0a13ec424ad070bfe7c8385477a7e9f7ae483b89d",
+      "db-script": "55a27b07f2a6d445b6ef6c2e7ec9f3109646e12b0742e6bcf99ee051da2a57f0",
       "domain-profile": "c9ffe7c45c917c5793e15b6fbc7151ccc4b9181c36a5aaf1ce2f15f6849e3cbd",
       "flow-diagram": "f90d52e899227ad432b1ba543b505bafd6cee498d8576df115217a399c62931a",
-      "frontend-execution-plan": "c6f5a0d3022418c0a90db92853ddd11ec2711bfb3464aac838b1b0cb5ff35b0e",
-      "frontend-test-plan": "e6217f7bee51a70983350859c30bfae7a171d1774f34314d7dde385739c21bec",
+      "frontend-execution-plan": "83e57a61c4fe1c78945c5b51668cb898a5e758c5c4a566f0a64f23f3915ec9a2",
+      "frontend-test-plan": "1a760dbedd977b330092f570138f1e0c404150d4dcb9a74fa0d860a63cb91adc",
       "module-registry": "a2758d2683662198389174350d8c2d025bc8c29f5a86e89242d07d780de95e56",
       "platform-summary": "c6de83d8c1dce3f765ace2a6254fac74cb9f285bea2562968c4804961c308676",
       "prd": "b4455d56bb4ffd13b3f70fe595fdb3f13468054e8fba4b47c8971e013b8c47e1",
-      "project-registry": "715e7fc8d741601c09b787acf9a9c67c5d885977334834eb3b1f3bbf958928a1",
-      "registry-db": "836ecb6b01336a06ad042f0e9bc030ee3abfde6d53a10e0347a31522f98884bb",
-      "registry-exec-be": "c874fceabd7f8bc0a6f7c318823bba75af6a25baac504902439394af38cb8254",
-      "registry-exec-fe": "ee82b4d4aa569121cf2b3b8e32d0cd4018cf3130da23e65be4c1c9a8b62e8ed1",
-      "registry-srs": "f7e8c9e6d3b2168c92549c55624b08d17a13cb6eddd21445507c0377289f60e9",
-      "srs": "a41ca16912d4931181ebf8aed47de9027d8961cfe2f35dac56e3063323401ad2",
-      "ui-ux-spec": "11d4bdc30eaa2ac2a87288c991c175e9e6dd5a2310285f7a6c949954f28fd33c"
+      "project-registry": "1a17eb5c9f24158dab0fe2302e1173bfeffddbc582a82f29d88c0ee815511800",
+      "registry-db": "b19f6a7009487b69cc871e780bc87d07b804a738808f41574ff21e955cdaa384",
+      "registry-exec-be": "50e4024eea3c029ef0a752c8fb23cac3e47a8c942b3e3a05ecdd480bc196eccc",
+      "registry-exec-fe": "78e57d273c1272e9ce7698632e091e26adbe8f49b6d2e0952fa96a4a1be3c1a7",
+      "registry-srs": "20101bedffeada715aeaeb10262aebcad2a0b0a1f092d69e0520d45bf8df570f",
+      "srs": "72b28d7e5386dd923508da72dd4ec0864617d5988266c09289e8e9455375debc",
+      "ui-ux-spec": "c35feb7a14710999f21bd66aa2e5281f27428d138259cb4953667b69ec2b666c"
     },
-    "at": "2026-10-01T14:57:31+00:00"
+    "at": "2026-10-01T15:25:54+00:00"
   }
 }

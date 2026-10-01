@@ -1,27 +1,27 @@
 # BACKEND TEST PLAN — Service Registry (REG)
 ══════════════════════════════════════════════════════════════════
 Module : REG   Version : v1   Profile : aias   Stage : P4   Track : backend
-Sources: _state/current-srs.md (REG v1 — REQ 69 · AC 81 · RULE 24) · current-registry-srs.md · current-registry-db.md (0 XM) · current-backend-execution-plan.md (API-REG-001 … API-REG-003; units PORTS, SVC-API) · current-api-spec.yaml (api-spec-reg.yaml) · current-frontend-execution-plan.md · current-dependency-graph.md
+Sources: _state/current-srs.md (REG v1 — REQ 74 · AC 91 · RULE 28) · current-registry-srs.md · current-registry-db.md (0 XM) · current-backend-execution-plan.md (API-REG-001 … API-REG-003; units PORTS, SVC-API) · current-api-spec.yaml (api-spec-reg.yaml) · current-frontend-execution-plan.md · current-dependency-graph.md
 Framework: agnostic — each TC below is the whole contract; the consumer repository chooses its tool. No framework, annotation or file layout is named.
-Open ADRs: none BLOCKED — applied ADR-REG-003, ADR-REG-007, ADR-REG-009, ADR-REG-011, ADR-REG-012, ADR-REG-015, ADR-REG-016, ADR-REG-017, ADR-REG-018, ADR-REG-019
+Open ADRs: none BLOCKED — applied ADR-REG-003, ADR-REG-007, ADR-REG-009, ADR-REG-011, ADR-REG-012, ADR-REG-015, ADR-REG-016, ADR-REG-017, ADR-REG-018, ADR-REG-019, ADR-REG-020, ADR-REG-021, ADR-REG-022
 ══════════════════════════════════════════════════════════════════
 
 Derivation notes
-- One TC per AC, mechanically (TC-REG-nnn ↔ AC-REG-nnn for nnn = 001 … 064; TC-REG-065 … TC-REG-071 are the frontend track's). The ACs added by the gate-analysis revision (AC-REG-065 … AC-REG-081) map to TC-REG-072 … TC-REG-088 in AC order (TC = AC + 7). No happy-path twin and no boundary case was added beyond what an AC states.
+- One TC per AC, mechanically (TC-REG-nnn ↔ AC-REG-nnn for nnn = 001 … 064; TC-REG-065 … TC-REG-071 are the frontend track's). The ACs added by the gate-analysis revision (AC-REG-065 … AC-REG-081) map to TC-REG-072 … TC-REG-088 in AC order (TC = AC + 7). The round-2 revision's ACs (AC-REG-082 … AC-REG-091) map to TC-REG-089 … TC-REG-098 in AC order (TC = AC + 7). One boundary case beyond the ACs: TC-REG-099, the 100-character pass of RULE-REG-022 (gate-analysis round 2, finding G11); TC-REG-076 asserts each invalid shape of RULE-REG-022's Test-Hint as a sub-case. The frontend track continues at TC-REG-100 (after the highest TC id across both plans).
 - REG has no HTTP write operation (ADR-REG-007): load-time outcomes are observed through the load report (API-REG-003) and the reads (API-REG-001, API-REG-002); in-process outcomes through the `ServiceRegistry` / `ApprovalApiRegistry` interfaces the SVC-API phase specifies (ADR-REG-011). Shapes are read in api-spec-reg.yaml by `API-*` id.
 - Load-time refusals are Load Result reasons behind `REG-LOAD-*` codes, not HTTP errors (ADR-REG-011); the only HTTP refusal is `REG-404-SERVICE-NOT-FOUND` (RULE-REG-016). Messages are the SRS English text, placeholders filled with the AC's values; Arabic is PENDING ADR-REG-011 (the SRS carries English only).
 - Package: every TC names the backend split unit that implements its REQ — `PORTS` for the package directory and activation sources (REQ-REG-005, REQ-REG-016, REQ-REG-049), `SVC-API` for the load run, the reads and the in-process interface. CORE, DATA-DOM and ALIGN-BE are `no_tests`; CROSS-MOD has no edge (0 XM).
 - Integration: REG declares no `XM-*` (registry-db: 0 XM; CROSS-MOD "No edge"), so the INT-XM phase is absent.
 
-<!-- PHASE:TEST-PLAN-BE:START traces=AC-REG-001,AC-REG-002,AC-REG-003,AC-REG-004,AC-REG-005,AC-REG-006,AC-REG-007,AC-REG-008,AC-REG-009,AC-REG-010,AC-REG-011,AC-REG-012,AC-REG-013,AC-REG-014,AC-REG-015,AC-REG-016,AC-REG-017,AC-REG-018,AC-REG-019,AC-REG-020,AC-REG-021,AC-REG-022,AC-REG-023,AC-REG-024,AC-REG-025,AC-REG-026,AC-REG-027,AC-REG-028,AC-REG-029,AC-REG-030,AC-REG-031,AC-REG-032,AC-REG-033,AC-REG-034,AC-REG-035,AC-REG-036,AC-REG-037,AC-REG-038,AC-REG-039,AC-REG-040,AC-REG-041,AC-REG-042,AC-REG-043,AC-REG-044,AC-REG-045,AC-REG-046,AC-REG-047,AC-REG-048,AC-REG-049,AC-REG-050,AC-REG-051,AC-REG-052,AC-REG-053,AC-REG-054,AC-REG-055,AC-REG-056,AC-REG-057,AC-REG-058,AC-REG-059,AC-REG-060,AC-REG-061,AC-REG-062,AC-REG-063,AC-REG-064,REQ-REG-001,REQ-REG-002,REQ-REG-003,REQ-REG-004,REQ-REG-005,REQ-REG-006,REQ-REG-007,REQ-REG-008,REQ-REG-009,REQ-REG-010,REQ-REG-011,REQ-REG-012,REQ-REG-013,REQ-REG-014,REQ-REG-015,REQ-REG-016,REQ-REG-017,REQ-REG-018,REQ-REG-019,REQ-REG-020,REQ-REG-021,REQ-REG-022,REQ-REG-023,REQ-REG-024,REQ-REG-025,REQ-REG-026,REQ-REG-027,REQ-REG-028,REQ-REG-029,REQ-REG-030,REQ-REG-031,REQ-REG-032,REQ-REG-033,REQ-REG-034,REQ-REG-035,REQ-REG-036,REQ-REG-037,REQ-REG-038,REQ-REG-039,REQ-REG-040,REQ-REG-041,REQ-REG-042,REQ-REG-043,REQ-REG-044,REQ-REG-045,REQ-REG-046,REQ-REG-047,REQ-REG-048,REQ-REG-049,REQ-REG-050,REQ-REG-051,REQ-REG-052,REQ-REG-053,REQ-REG-054,REQ-REG-055,REQ-REG-056,REQ-REG-057,REQ-REG-058,REQ-REG-059,REQ-REG-060,REQ-REG-061,REQ-REG-062,API-REG-001,API-REG-002,API-REG-003,RULE-REG-001,RULE-REG-002,RULE-REG-003,RULE-REG-004,RULE-REG-005,RULE-REG-006,RULE-REG-007,RULE-REG-008,RULE-REG-009,RULE-REG-010,RULE-REG-011,RULE-REG-012,RULE-REG-013,RULE-REG-014,RULE-REG-015,RULE-REG-016,RULE-REG-017,RULE-REG-018,RULE-REG-019,RULE-REG-020,AC-REG-065,REQ-REG-063,RULE-REG-021,AC-REG-066,REQ-REG-064,AC-REG-067,AC-REG-068,AC-REG-069,REQ-REG-065,RULE-REG-022,AC-REG-070,REQ-REG-066,RULE-REG-023,AC-REG-071,AC-REG-072,REQ-REG-067,AC-REG-073,REQ-REG-068,AC-REG-074,REQ-REG-069,RULE-REG-024,AC-REG-075,AC-REG-076,AC-REG-077,AC-REG-078,AC-REG-079,AC-REG-080,AC-REG-081 -->
+<!-- PHASE:TEST-PLAN-BE:START traces=AC-REG-001,AC-REG-002,AC-REG-003,AC-REG-004,AC-REG-005,AC-REG-006,AC-REG-007,AC-REG-008,AC-REG-009,AC-REG-010,AC-REG-011,AC-REG-012,AC-REG-013,AC-REG-014,AC-REG-015,AC-REG-016,AC-REG-017,AC-REG-018,AC-REG-019,AC-REG-020,AC-REG-021,AC-REG-022,AC-REG-023,AC-REG-024,AC-REG-025,AC-REG-026,AC-REG-027,AC-REG-028,AC-REG-029,AC-REG-030,AC-REG-031,AC-REG-032,AC-REG-033,AC-REG-034,AC-REG-035,AC-REG-036,AC-REG-037,AC-REG-038,AC-REG-039,AC-REG-040,AC-REG-041,AC-REG-042,AC-REG-043,AC-REG-044,AC-REG-045,AC-REG-046,AC-REG-047,AC-REG-048,AC-REG-049,AC-REG-050,AC-REG-051,AC-REG-052,AC-REG-053,AC-REG-054,AC-REG-055,AC-REG-056,AC-REG-057,AC-REG-058,AC-REG-059,AC-REG-060,AC-REG-061,AC-REG-062,AC-REG-063,AC-REG-064,REQ-REG-001,REQ-REG-002,REQ-REG-003,REQ-REG-004,REQ-REG-005,REQ-REG-006,REQ-REG-007,REQ-REG-008,REQ-REG-009,REQ-REG-010,REQ-REG-011,REQ-REG-012,REQ-REG-013,REQ-REG-014,REQ-REG-015,REQ-REG-016,REQ-REG-017,REQ-REG-018,REQ-REG-019,REQ-REG-020,REQ-REG-021,REQ-REG-022,REQ-REG-023,REQ-REG-024,REQ-REG-025,REQ-REG-026,REQ-REG-027,REQ-REG-028,REQ-REG-029,REQ-REG-030,REQ-REG-031,REQ-REG-032,REQ-REG-033,REQ-REG-034,REQ-REG-035,REQ-REG-036,REQ-REG-037,REQ-REG-038,REQ-REG-039,REQ-REG-040,REQ-REG-041,REQ-REG-042,REQ-REG-043,REQ-REG-044,REQ-REG-045,REQ-REG-046,REQ-REG-047,REQ-REG-048,REQ-REG-049,REQ-REG-050,REQ-REG-051,REQ-REG-052,REQ-REG-053,REQ-REG-054,REQ-REG-055,REQ-REG-056,REQ-REG-057,REQ-REG-058,REQ-REG-059,REQ-REG-060,REQ-REG-061,REQ-REG-062,API-REG-001,API-REG-002,API-REG-003,RULE-REG-001,RULE-REG-002,RULE-REG-003,RULE-REG-004,RULE-REG-005,RULE-REG-006,RULE-REG-007,RULE-REG-008,RULE-REG-009,RULE-REG-010,RULE-REG-011,RULE-REG-012,RULE-REG-013,RULE-REG-014,RULE-REG-015,RULE-REG-016,RULE-REG-017,RULE-REG-018,RULE-REG-019,RULE-REG-020,AC-REG-065,REQ-REG-063,RULE-REG-021,AC-REG-066,REQ-REG-064,AC-REG-067,AC-REG-068,AC-REG-069,REQ-REG-065,RULE-REG-022,AC-REG-070,REQ-REG-066,RULE-REG-023,AC-REG-071,AC-REG-072,REQ-REG-067,AC-REG-073,REQ-REG-068,AC-REG-074,REQ-REG-069,RULE-REG-024,AC-REG-075,AC-REG-076,AC-REG-077,AC-REG-078,AC-REG-079,AC-REG-080,AC-REG-081,AC-REG-082,REQ-REG-070,AC-REG-083,REQ-REG-071,RULE-REG-026,AC-REG-084,AC-REG-085,REQ-REG-072,RULE-REG-025,AC-REG-086,AC-REG-087,AC-REG-088,REQ-REG-073,RULE-REG-027,AC-REG-089,AC-REG-090,REQ-REG-074,RULE-REG-028,AC-REG-091 -->
 ## PHASE TEST-PLAN-BE
 
-81 TCs > 12 → grouped RULE-SCENARIOS / API-SCENARIOS / MODEL-EVAL.
+92 TCs > 12 → grouped RULE-SCENARIOS / API-SCENARIOS / MODEL-EVAL.
 
-<!-- SUB:RULE-SCENARIOS:START traces=AC-REG-003,AC-REG-004,AC-REG-007,AC-REG-012,AC-REG-013,AC-REG-016,AC-REG-022,AC-REG-023,AC-REG-029,AC-REG-032,AC-REG-033,AC-REG-034,AC-REG-035,AC-REG-036,AC-REG-037,AC-REG-040,AC-REG-041,AC-REG-042,AC-REG-043,AC-REG-045,AC-REG-049,AC-REG-054,AC-REG-055,AC-REG-057,AC-REG-063,AC-REG-064,REQ-REG-003,REQ-REG-004,REQ-REG-007,REQ-REG-012,REQ-REG-015,REQ-REG-021,REQ-REG-022,REQ-REG-028,REQ-REG-031,REQ-REG-032,REQ-REG-033,REQ-REG-034,REQ-REG-035,REQ-REG-038,REQ-REG-039,REQ-REG-040,REQ-REG-041,REQ-REG-043,REQ-REG-047,REQ-REG-052,REQ-REG-053,REQ-REG-055,REQ-REG-061,REQ-REG-062,API-REG-002,API-REG-003,RULE-REG-001,RULE-REG-002,RULE-REG-003,RULE-REG-004,RULE-REG-005,RULE-REG-006,RULE-REG-007,RULE-REG-008,RULE-REG-009,RULE-REG-010,RULE-REG-011,RULE-REG-012,RULE-REG-013,RULE-REG-014,RULE-REG-015,RULE-REG-016,RULE-REG-017,RULE-REG-018,RULE-REG-019,RULE-REG-020,AC-REG-065,REQ-REG-063,RULE-REG-021,AC-REG-067,REQ-REG-064,AC-REG-069,REQ-REG-065,RULE-REG-022,AC-REG-070,REQ-REG-066,API-REG-001,RULE-REG-023,AC-REG-071,AC-REG-074,REQ-REG-069,RULE-REG-024,AC-REG-075,AC-REG-076,AC-REG-077,AC-REG-078,AC-REG-079,AC-REG-080 -->
+<!-- SUB:RULE-SCENARIOS:START traces=AC-REG-003,AC-REG-004,AC-REG-007,AC-REG-012,AC-REG-013,AC-REG-016,AC-REG-022,AC-REG-023,AC-REG-029,AC-REG-032,AC-REG-033,AC-REG-034,AC-REG-035,AC-REG-036,AC-REG-037,AC-REG-040,AC-REG-041,AC-REG-042,AC-REG-043,AC-REG-045,AC-REG-049,AC-REG-054,AC-REG-055,AC-REG-057,AC-REG-063,AC-REG-064,REQ-REG-003,REQ-REG-004,REQ-REG-007,REQ-REG-012,REQ-REG-015,REQ-REG-021,REQ-REG-022,REQ-REG-028,REQ-REG-031,REQ-REG-032,REQ-REG-033,REQ-REG-034,REQ-REG-035,REQ-REG-038,REQ-REG-039,REQ-REG-040,REQ-REG-041,REQ-REG-043,REQ-REG-047,REQ-REG-052,REQ-REG-053,REQ-REG-055,REQ-REG-061,REQ-REG-062,API-REG-002,API-REG-003,RULE-REG-001,RULE-REG-002,RULE-REG-003,RULE-REG-004,RULE-REG-005,RULE-REG-006,RULE-REG-007,RULE-REG-008,RULE-REG-009,RULE-REG-010,RULE-REG-011,RULE-REG-012,RULE-REG-013,RULE-REG-014,RULE-REG-015,RULE-REG-016,RULE-REG-017,RULE-REG-018,RULE-REG-019,RULE-REG-020,AC-REG-065,REQ-REG-063,RULE-REG-021,AC-REG-067,REQ-REG-064,AC-REG-069,REQ-REG-065,RULE-REG-022,AC-REG-070,REQ-REG-066,API-REG-001,RULE-REG-023,AC-REG-071,AC-REG-074,REQ-REG-069,RULE-REG-024,AC-REG-075,AC-REG-076,AC-REG-077,AC-REG-078,AC-REG-079,AC-REG-080,AC-REG-083,REQ-REG-071,RULE-REG-026,AC-REG-084,AC-REG-085,REQ-REG-072,RULE-REG-025,AC-REG-086,AC-REG-087,AC-REG-088,REQ-REG-073,RULE-REG-027,AC-REG-089,AC-REG-090,REQ-REG-074,RULE-REG-028,AC-REG-091 -->
 ## SUB RULE-SCENARIOS
 
-Rule-driven acceptance — every load-time and read-time refusal, asserted through the load report (API-REG-003), API-REG-002 or the in-process interface. (38 TCs)
+Rule-driven acceptance — every load-time and read-time refusal, asserted through the load report (API-REG-003), API-REG-002 or the in-process interface. (48 TCs)
 
 <!-- TC:TC-REG-003:START traces=AC-REG-003,REQ-REG-003,API-REG-003,RULE-REG-001 -->
 ### TC-REG-003 — Folder with only a service definition is rejected
@@ -335,7 +335,7 @@ Test data    : connection `ftp-db`, type `ftp`
 ### TC-REG-055 — A version naming a removed connection is not supplied
 Derived from : AC-REG-055  (REQ-REG-053)
 Exercises    : in-process `ServiceRegistry` interface (SVC-API; no HTTP operation — ADR-REG-011)
-Rule / code  : RULE-REG-017 → ServiceConnectionNotActivatedException (in-process)
+Rule / code  : RULE-REG-017 → ServiceConnectionNotActivatedException, in-process code REG-SERVE-CONNECTION-NOT-ACTIVATED (never a load reason)
 Package      : SVC-API
 Scenario     : VIOLATION · data class INVALID · language en
 Preconditions: The current version of `scholarship-request` names `main-db` in a query and `main-db` was removed at activation.
@@ -425,8 +425,8 @@ Scenario     : VIOLATION · data class INVALID · language en
 Preconditions: A folder whose service definition declares service code `scholarship request!`.
 Host data    : none — package folders and the activation configuration are test fixtures of the environment (ADR-REG-007, ADR-REG-009); every SERVICE_CODE and DOCUMENT_TYPE value named here enters the registry through the fixture folder itself
 Steps        : 1. Start the service (one start-up load run). 2. Read the load report with API-REG-003 GET /api/v1/load-results.
-Expected     : The package is rejected and no Service Package is created; the load report records one row with outcome REJECTED and reason equal to the RULE-REG-022 message (en) «The service code "scholarship request!" is not valid; use lower-case letters, digits and single hyphens, at most 100 characters.» (ar: PENDING ADR-REG-011).
-Test data    : service code `scholarship request!` (also per Test-Hint: `a_b`, `-a`, `a--b`, a 101-character code)
+Expected     : The package is rejected and no Service Package is created; the load report records one row with outcome REJECTED and reason equal to the RULE-REG-022 message (en) «The service code "scholarship request!" is not valid; use lower-case letters, digits and single hyphens, at most 100 characters.» (ar: PENDING ADR-REG-011). Sub-cases, one folder each, each run separately and each asserted the same way — REJECTED, the RULE-REG-022 message with the code filled in, 0 Service Packages for it: (b) `a_b` (underscore); (c) `-a` (leading hyphen); (d) `a-` (trailing hyphen); (e) `a--b` (double hyphen); (f) a 101-character code (`a` × 101); (g) an empty code (`""` or only spaces). The boundary pass at exactly 100 characters is TC-REG-099.
+Test data    : (a) `scholarship request!` · (b) `a_b` · (c) `-a` · (d) `a-` · (e) `a--b` · (f) `a` × 101 · (g) `""`
 <!-- TC:TC-REG-076:END -->
 
 <!-- TC:TC-REG-077:START traces=AC-REG-070,REQ-REG-066,API-REG-003,API-REG-001,RULE-REG-023 -->
@@ -555,12 +555,152 @@ Expected     : The package is rejected with the RULE-REG-012 message (en) «The 
 Test data    : `max_file_size: 50MB`
 <!-- TC:TC-REG-087:END -->
 
+<!-- TC:TC-REG-090:START traces=AC-REG-083,REQ-REG-071,API-REG-003,API-REG-002,RULE-REG-026 -->
+### TC-REG-090 — A present package folder with an unreadable file is rejected and the run continues
+Derived from : AC-REG-083  (REQ-REG-071)
+Exercises    : API-REG-003 GET /api/v1/load-results
+Rule / code  : RULE-REG-026 → REG-LOAD-PACKAGE-FILE-UNREADABLE (load reason code — ADR-REG-011)
+Package      : SVC-API
+Scenario     : VIOLATION · data class INVALID · language en
+Preconditions: The package directory holds 3 otherwise valid folders `scholarship-request`, `vehicle-permit` and `demo-service`; the file `service.yaml` of `demo-service` exists but reading it fails with a permission error (file mode 000 for the service account).
+Host data    : none — package folders and the activation configuration are test fixtures of the environment (ADR-REG-007, ADR-REG-009); every SERVICE_CODE and DOCUMENT_TYPE value named here enters the registry through the fixture folder itself
+Steps        : 1. Start the service (one start-up load run). 2. Read the load report with API-REG-003 GET /api/v1/load-results.
+Expected     : The run completes (no aborted load run): 3 SERVICE_PACKAGE rows — `scholarship-request` and `vehicle-permit` REGISTERED, `demo-service` REJECTED with the RULE-REG-026 message (en) «The file "service.yaml" of the package folder "demo-service" cannot be read; check its permissions and restart.» (ar: PENDING ADR-REG-011); API-REG-002 GET /api/v1/services/demo-service → 404.
+Test data    : folder `demo-service`, unreadable `service.yaml`
+<!-- TC:TC-REG-090:END -->
+
+<!-- TC:TC-REG-091:START traces=AC-REG-084,REQ-REG-072,API-REG-003,RULE-REG-025 -->
+### TC-REG-091 — A re-activation that turns a blob version's connection into mcp is refused
+Derived from : AC-REG-084  (REQ-REG-072)
+Exercises    : API-REG-003 GET /api/v1/load-results
+Rule / code  : RULE-REG-025 → REG-LOAD-CONNECTION-TYPE-BREAKS-BLOB (load reason code — ADR-REG-011)
+Package      : SVC-API
+Scenario     : VIOLATION · data class INVALID · language en
+Preconditions: Start 1: the activation configuration lists `main-db` (jdbc, endpoint `jdbc:oracle:thin:@db1:1521/APP`, read-only) and the package directory holds `archive-request` version 1 with `fetch: blob` and its document source query on `main-db`; start 1 stores version 1. Start 2: the activation configuration lists `main-db` with type `mcp` and endpoint `http://mcp1:8080`.
+Host data    : none — package folders and the activation configuration are test fixtures of the environment (ADR-REG-007, ADR-REG-009); every SERVICE_CODE and DOCUMENT_TYPE value named here enters the registry through the fixture folder itself
+Steps        : 1. Run start 1, then start 2. 2. Read the load report with API-REG-003 GET /api/v1/load-results. 3. Request `getConnection("main-db")` and `getCurrentServicePackage("archive-request")` in-process.
+Expected     : After start 2: 1 CONNECTION row for `main-db`, outcome REJECTED, reason equal to the RULE-REG-025 message (en) «The connection "main-db" must stay of type jdbc: version 1 of "archive-request" reads its documents through it.» (ar: PENDING ADR-REG-011); `getConnection("main-db")` returns connectionType `jdbc` and endpoint `jdbc:oracle:thin:@db1:1521/APP`; `getCurrentServicePackage("archive-request")` supplies version 1.
+Test data    : connection `main-db` jdbc → mcp; service `archive-request` v1 blob
+<!-- TC:TC-REG-091:END -->
+
+<!-- TC:TC-REG-092:START traces=AC-REG-085,REQ-REG-072,API-REG-003,RULE-REG-025 -->
+### TC-REG-092 — A removed connection is not re-registered as mcp while a blob version reads through it
+Derived from : AC-REG-085  (REQ-REG-072)
+Exercises    : API-REG-003 GET /api/v1/load-results
+Rule / code  : RULE-REG-025 → REG-LOAD-CONNECTION-TYPE-BREAKS-BLOB (load reason code — ADR-REG-011)
+Package      : SVC-API
+Scenario     : VIOLATION · data class INVALID · language en
+Preconditions: Stored version 1 of `archive-request` has `fetch: blob` with its document source query on `main-db`; `main-db` was removed at an earlier start (absent from REG_CONNECTION); the activation configuration now lists `main-db` with type `mcp`.
+Host data    : none — package folders and the activation configuration are test fixtures of the environment (ADR-REG-007, ADR-REG-009); every SERVICE_CODE and DOCUMENT_TYPE value named here enters the registry through the fixture folder itself
+Steps        : 1. Start the service (one start-up load run). 2. Read the load report with API-REG-003 GET /api/v1/load-results. 3. Request `getConnection("main-db")` in-process.
+Expected     : 1 CONNECTION row for `main-db`, outcome REJECTED, reason equal to the RULE-REG-025 message (en) «The connection "main-db" must stay of type jdbc: version 1 of "archive-request" reads its documents through it.»; `getConnection("main-db")` → ConnectionNotFoundException (no Connection `main-db` registered).
+Test data    : connection `main-db` (removed, relisted as mcp)
+<!-- TC:TC-REG-092:END -->
+
+<!-- TC:TC-REG-093:START traces=AC-REG-086,REQ-REG-073,API-REG-003,API-REG-002,RULE-REG-027 -->
+### TC-REG-093 — A folder whose name exceeds 200 characters is rejected; the run continues
+Derived from : AC-REG-086  (REQ-REG-073)
+Exercises    : API-REG-003 GET /api/v1/load-results
+Rule / code  : RULE-REG-027 → REG-LOAD-VALUE-TOO-LONG (load reason code — ADR-REG-011)
+Package      : SVC-API
+Scenario     : BOUNDARY · data class INVALID · language en
+Preconditions: The package directory holds 2 valid folders and 1 otherwise valid folder whose name is 201 characters (`p` × 201) declaring `long-folder-service` version 1.
+Host data    : none — package folders and the activation configuration are test fixtures of the environment (ADR-REG-007, ADR-REG-009); every SERVICE_CODE and DOCUMENT_TYPE value named here enters the registry through the fixture folder itself
+Steps        : 1. Start the service (one start-up load run). 2. Read the load report with API-REG-003 GET /api/v1/load-results.
+Expected     : The run completes: 3 SERVICE_PACKAGE rows — 2 REGISTERED and 1 REJECTED; the REJECTED row's reason is the RULE-REG-027 message with field `folder name`, length 201 and limit 200, i.e. (en) «The folder name of "pppp…" has 201 characters; at most 200 are allowed.» shortened if needed to 1000 characters; its subjectName has exactly 200 characters (199 × `p` followed by «…» — RULE-REG-028); API-REG-002 GET /api/v1/services/long-folder-service → 404.
+Test data    : folder name of 201 characters
+<!-- TC:TC-REG-093:END -->
+
+<!-- TC:TC-REG-094:START traces=AC-REG-087,REQ-REG-073,API-REG-003,RULE-REG-027 -->
+### TC-REG-094 — A connection name longer than 100 characters is refused
+Derived from : AC-REG-087  (REQ-REG-073)
+Exercises    : API-REG-003 GET /api/v1/load-results
+Rule / code  : RULE-REG-027 → REG-LOAD-VALUE-TOO-LONG (load reason code — ADR-REG-011)
+Package      : SVC-API
+Scenario     : BOUNDARY · data class INVALID · language en
+Preconditions: The activation configuration lists `main-db` (mcp, read-only) and a read-only mcp connection whose name is 101 characters (`c` × 101).
+Host data    : none — package folders and the activation configuration are test fixtures of the environment (ADR-REG-007, ADR-REG-009); every SERVICE_CODE and DOCUMENT_TYPE value named here enters the registry through the fixture folder itself
+Steps        : 1. Start the service (one start-up load run). 2. Read the load report with API-REG-003 GET /api/v1/load-results.
+Expected     : The run completes: `main-db` ACTIVATED; the 101-character connection is not registered and has one CONNECTION row, outcome REJECTED, reason the RULE-REG-027 message (en) «The connection name of "ccc…" has 101 characters; at most 100 are allowed.»; the row's subjectName is the full 101-character name (it fits the 200-character subject field).
+Test data    : connection name of 101 characters
+<!-- TC:TC-REG-094:END -->
+
+<!-- TC:TC-REG-095:START traces=AC-REG-088,REQ-REG-073,API-REG-003,RULE-REG-027 -->
+### TC-REG-095 — A connection endpoint longer than 500 characters is refused
+Derived from : AC-REG-088  (REQ-REG-073)
+Exercises    : API-REG-003 GET /api/v1/load-results
+Rule / code  : RULE-REG-027 → REG-LOAD-VALUE-TOO-LONG (load reason code — ADR-REG-011)
+Package      : SVC-API
+Scenario     : BOUNDARY · data class INVALID · language en
+Preconditions: The activation configuration lists `blob-db` (jdbc, read-only) with an endpoint of 501 characters.
+Host data    : none — package folders and the activation configuration are test fixtures of the environment (ADR-REG-007, ADR-REG-009); every SERVICE_CODE and DOCUMENT_TYPE value named here enters the registry through the fixture folder itself
+Steps        : 1. Start the service (one start-up load run). 2. Read the load report with API-REG-003 GET /api/v1/load-results.
+Expected     : `blob-db` is not registered; 1 CONNECTION row `blob-db`, outcome REJECTED, reason the RULE-REG-027 message (en) «The endpoint of "blob-db" has 501 characters; at most 500 are allowed.» (ar: PENDING ADR-REG-011).
+Test data    : endpoint of 501 characters
+<!-- TC:TC-REG-095:END -->
+
+<!-- TC:TC-REG-096:START traces=AC-REG-089,REQ-REG-074,API-REG-003,RULE-REG-023,RULE-REG-028 -->
+### TC-REG-096 — An over-length package directory path is shortened on its Load Result row, never a load-run failure
+Derived from : AC-REG-089  (REQ-REG-074)
+Exercises    : API-REG-003 GET /api/v1/load-results
+Rule / code  : RULE-REG-023 → REG-LOAD-PACKAGE-DIRECTORY-UNAVAILABLE (load reason code — ADR-REG-011) · RULE-REG-028 (shortening, no code)
+Package      : SVC-API
+Scenario     : BOUNDARY · data class EDGE · language en
+Preconditions: The registry holds 2 available Service Packages; `aias.registry.package-directory` is a 250-character path (`/srv/` followed by 245 × `d`) that does not exist.
+Host data    : none — package folders and the activation configuration are test fixtures of the environment (ADR-REG-007, ADR-REG-009); every SERVICE_CODE and DOCUMENT_TYPE value named here enters the registry through the fixture folder itself
+Steps        : 1. Start the service (one start-up load run). 2. Read the load report with API-REG-003 GET /api/v1/load-results.
+Expected     : The run completes; 1 row subjectKind PACKAGE_DIRECTORY, outcome REJECTED, subjectName of exactly 200 characters = the first 199 characters of the path followed by «…»; reason = the RULE-REG-023 message with the full path, at most 1000 characters; both Service Packages stay available.
+Test data    : 250-character directory path (absent)
+<!-- TC:TC-REG-096:END -->
+
+<!-- TC:TC-REG-097:START traces=AC-REG-090,REQ-REG-074,API-REG-003,RULE-REG-022,RULE-REG-028 -->
+### TC-REG-097 — An over-length invalid service code is shortened on its Load Result row
+Derived from : AC-REG-090  (REQ-REG-074)
+Exercises    : API-REG-003 GET /api/v1/load-results
+Rule / code  : RULE-REG-022 → REG-LOAD-INVALID-SERVICE-CODE (load reason code — ADR-REG-011) · RULE-REG-028 (shortening, no code)
+Package      : SVC-API
+Scenario     : BOUNDARY · data class INVALID · language en
+Preconditions: A folder `long-code` whose service definition declares a service code of 150 lower-case letters (`a` × 150).
+Host data    : none — package folders and the activation configuration are test fixtures of the environment (ADR-REG-007, ADR-REG-009); every SERVICE_CODE and DOCUMENT_TYPE value named here enters the registry through the fixture folder itself
+Steps        : 1. Start the service (one start-up load run). 2. Read the load report with API-REG-003 GET /api/v1/load-results.
+Expected     : The run completes; the package is rejected with the RULE-REG-022 message (reason at most 1000 characters); the row's serviceCode has exactly 100 characters = 99 × `a` followed by «…»; no Service Package is created.
+Test data    : service code `a` × 150
+<!-- TC:TC-REG-097:END -->
+
+<!-- TC:TC-REG-098:START traces=AC-REG-091,REQ-REG-004,API-REG-003,API-REG-002,RULE-REG-002,RULE-REG-008 -->
+### TC-REG-098 — A valid folder is rejected as a duplicate even when its twin fails another rule
+Derived from : AC-REG-091  (REQ-REG-004)
+Exercises    : API-REG-003 GET /api/v1/load-results
+Rule / code  : RULE-REG-002 → REG-LOAD-DUPLICATE-SERVICE-CODE (load reason code — ADR-REG-011) · RULE-REG-008 → REG-LOAD-UNKNOWN-FETCH-MODE (load reason code — ADR-REG-011)
+Package      : SVC-API
+Scenario     : VIOLATION · data class INVALID · language en
+Preconditions: The registry holds no `vehicle-permit`; folder `a` is valid and declares `vehicle-permit` version 1; folder `b` declares `Vehicle-Permit` version 1 with `fetch: fax`.
+Host data    : none — package folders and the activation configuration are test fixtures of the environment (ADR-REG-007, ADR-REG-009); every SERVICE_CODE and DOCUMENT_TYPE value named here enters the registry through the fixture folder itself
+Steps        : 1. Start the service (one start-up load run). 2. Read the load report with API-REG-003 GET /api/v1/load-results.
+Expected     : 2 SERVICE_PACKAGE rows: `a` REJECTED with the RULE-REG-002 message (en) «The service code "vehicle-permit" is declared by more than one package folder; keep one folder per service.»; `b` REJECTED with the RULE-REG-008 message (en) «The fetch mode "fax" is not supported; use path, blob or manual.»; API-REG-002 GET /api/v1/services/vehicle-permit → 404.
+Test data    : folders `a`, `b`; codes `vehicle-permit`, `Vehicle-Permit`
+<!-- TC:TC-REG-098:END -->
+
+<!-- TC:TC-REG-099:START traces=AC-REG-069,REQ-REG-065,API-REG-003,API-REG-002,RULE-REG-022 -->
+### TC-REG-099 — A 100-character service code with single hyphens is accepted (boundary pass)
+Derived from : AC-REG-069  (REQ-REG-065)
+Exercises    : API-REG-003 GET /api/v1/load-results
+Rule / code  : RULE-REG-022 (boundary pass — no reason)
+Package      : SVC-API
+Scenario     : BOUNDARY · data class VALID · language en
+Preconditions: A valid folder whose service definition declares a service code of exactly 100 characters: 49 × `a`, one `-`, 50 × `b`.
+Host data    : none — package folders and the activation configuration are test fixtures of the environment (ADR-REG-007, ADR-REG-009); every SERVICE_CODE and DOCUMENT_TYPE value named here enters the registry through the fixture folder itself
+Steps        : 1. Start the service (one start-up load run). 2. Read the load report with API-REG-003 GET /api/v1/load-results. 3. Read the service with API-REG-002 GET /api/v1/services/{that code}.
+Expected     : 1 SERVICE_PACKAGE row with outcome REGISTERED and no reason; API-REG-002 returns 200 with that 100-character serviceCode and available = true.
+Test data    : service code of 100 characters (`a`×49 + `-` + `b`×50)
+<!-- TC:TC-REG-099:END -->
+
 <!-- SUB:RULE-SCENARIOS:END -->
 
-<!-- SUB:API-SCENARIOS:START traces=AC-REG-001,AC-REG-002,AC-REG-005,AC-REG-006,AC-REG-008,AC-REG-009,AC-REG-010,AC-REG-011,AC-REG-014,AC-REG-015,AC-REG-017,AC-REG-018,AC-REG-020,AC-REG-021,AC-REG-024,AC-REG-025,AC-REG-026,AC-REG-027,AC-REG-030,AC-REG-038,AC-REG-039,AC-REG-044,AC-REG-046,AC-REG-047,AC-REG-048,AC-REG-050,AC-REG-051,AC-REG-052,AC-REG-053,AC-REG-056,AC-REG-058,AC-REG-059,AC-REG-061,AC-REG-062,REQ-REG-001,REQ-REG-002,REQ-REG-005,REQ-REG-006,REQ-REG-008,REQ-REG-009,REQ-REG-010,REQ-REG-011,REQ-REG-013,REQ-REG-014,REQ-REG-016,REQ-REG-017,REQ-REG-019,REQ-REG-020,REQ-REG-023,REQ-REG-024,REQ-REG-025,REQ-REG-026,REQ-REG-029,REQ-REG-036,REQ-REG-037,REQ-REG-042,REQ-REG-044,REQ-REG-045,REQ-REG-046,REQ-REG-048,REQ-REG-049,REQ-REG-050,REQ-REG-051,REQ-REG-054,REQ-REG-056,REQ-REG-057,REQ-REG-059,REQ-REG-060,API-REG-001,API-REG-002,API-REG-003,AC-REG-066,REQ-REG-064,AC-REG-068,AC-REG-072,REQ-REG-067,AC-REG-073,REQ-REG-068,AC-REG-081 -->
+<!-- SUB:API-SCENARIOS:START traces=AC-REG-001,AC-REG-002,AC-REG-005,AC-REG-006,AC-REG-008,AC-REG-009,AC-REG-010,AC-REG-011,AC-REG-014,AC-REG-015,AC-REG-017,AC-REG-018,AC-REG-020,AC-REG-021,AC-REG-024,AC-REG-025,AC-REG-026,AC-REG-027,AC-REG-030,AC-REG-038,AC-REG-039,AC-REG-044,AC-REG-046,AC-REG-047,AC-REG-048,AC-REG-050,AC-REG-051,AC-REG-052,AC-REG-053,AC-REG-056,AC-REG-058,AC-REG-059,AC-REG-061,AC-REG-062,REQ-REG-001,REQ-REG-002,REQ-REG-005,REQ-REG-006,REQ-REG-008,REQ-REG-009,REQ-REG-010,REQ-REG-011,REQ-REG-013,REQ-REG-014,REQ-REG-016,REQ-REG-017,REQ-REG-019,REQ-REG-020,REQ-REG-023,REQ-REG-024,REQ-REG-025,REQ-REG-026,REQ-REG-029,REQ-REG-036,REQ-REG-037,REQ-REG-042,REQ-REG-044,REQ-REG-045,REQ-REG-046,REQ-REG-048,REQ-REG-049,REQ-REG-050,REQ-REG-051,REQ-REG-054,REQ-REG-056,REQ-REG-057,REQ-REG-059,REQ-REG-060,API-REG-001,API-REG-002,API-REG-003,AC-REG-066,REQ-REG-064,AC-REG-068,AC-REG-072,REQ-REG-067,AC-REG-073,REQ-REG-068,AC-REG-081,AC-REG-082,REQ-REG-070 -->
 ## SUB API-SCENARIOS
 
-Endpoint- and state-driven acceptance — the three reads, the load run's outcomes, version history, connections and the in-process supply. (34 TCs)
+Endpoint- and state-driven acceptance — the three reads, the load run's outcomes, version history, connections and the in-process supply. (35 TCs)
 
 <!-- TC:TC-REG-001:START traces=AC-REG-001,REQ-REG-001,API-REG-003,API-REG-002 -->
 ### TC-REG-001 — One Service Package per service code at first load
@@ -1108,6 +1248,20 @@ Expected     : 200 with serviceCode `vehicle-permit`, available = false and vers
 Test data    : withdrawn service `vehicle-permit`, version 2
 <!-- TC:TC-REG-088:END -->
 
+<!-- TC:TC-REG-089:START traces=AC-REG-082,REQ-REG-070 -->
+### TC-REG-089 — A Check's pinned version is supplied after a newer version became current
+Derived from : AC-REG-082  (REQ-REG-070)
+Exercises    : in-process `ServiceRegistry` interface (SVC-API; no HTTP operation — ADR-REG-011)
+Rule / code  : —
+Package      : SVC-API
+Scenario     : EDGE · data class VALID · language en
+Preconditions: Start 1 stores `scholarship-request` version 3 (fetch `path`, document source query `documents` with type column `doc_type` and path column `file_path`, required TRANSCRIPT and ID_CARD). A Check resolves it through `getCurrentServicePackage("scholarship-request")` and pins versionNumber 3. Start 2 then stores version 4 (fetch `manual`, required TRANSCRIPT) as current.
+Host data    : none — package folders and the activation configuration are test fixtures of the environment (ADR-REG-007, ADR-REG-009); every SERVICE_CODE and DOCUMENT_TYPE value named here enters the registry through the fixture folder itself
+Steps        : 1. After start 2, request `getServicePackageVersion("scholarship-request", 3)` — the read DOC's document fetch of that Check makes (ADR-REG-020). 2. Request `getCurrentServicePackage("scholarship-request")`.
+Expected     : Step 1 returns versionNumber 3, fetchMode `path`, document source {documentSourceQueryName `documents`, documentTypeColumn `doc_type`, documentPathColumn `file_path`} and requiredDocumentTypes TRANSCRIPT, ID_CARD — unchanged by version 4; step 2 returns version 4 (the resolution step of a new Check only).
+Test data    : versions 3 and 4 of `scholarship-request`
+<!-- TC:TC-REG-089:END -->
+
 <!-- SUB:API-SCENARIOS:END -->
 
 <!-- SUB:MODEL-EVAL:START traces=AC-REG-019,AC-REG-028,AC-REG-031,AC-REG-060,REQ-REG-018,REQ-REG-027,REQ-REG-030,REQ-REG-058,API-REG-001 -->
@@ -1233,7 +1387,7 @@ Test data    : the delivered knowledge file
 | TC-REG-052 | AC-REG-052 | REQ-REG-050 | API-REG-003 | — | SVC-API | API-SCENARIOS |
 | TC-REG-053 | AC-REG-053 | REQ-REG-051 | API-REG-003 | — | SVC-API | API-SCENARIOS |
 | TC-REG-054 | AC-REG-054 | REQ-REG-052 | API-REG-003 | RULE-REG-014 → REG-LOAD-UNKNOWN-CONNECTION-TYPE (load reason code — ADR-REG-011) | SVC-API | RULE-SCENARIOS |
-| TC-REG-055 | AC-REG-055 | REQ-REG-053 | in-process | RULE-REG-017 → ServiceConnectionNotActivatedException (in-process) | SVC-API | RULE-SCENARIOS |
+| TC-REG-055 | AC-REG-055 | REQ-REG-053 | in-process | RULE-REG-017 → ServiceConnectionNotActivatedException (REG-SERVE-CONNECTION-NOT-ACTIVATED, in-process) | SVC-API | RULE-SCENARIOS |
 | TC-REG-056 | AC-REG-056 | REQ-REG-054 | API-REG-001 | — | SVC-API | API-SCENARIOS |
 | TC-REG-057 | AC-REG-057 | REQ-REG-055 | API-REG-003 | RULE-REG-015 → REG-LOAD-CONNECTION-NOT-READ-ONLY (load reason code — ADR-REG-011) | SVC-API | RULE-SCENARIOS |
 | TC-REG-058 | AC-REG-058 | REQ-REG-056 | in-process | — | SVC-API | API-SCENARIOS |
@@ -1260,19 +1414,30 @@ Test data    : the delivered knowledge file
 | TC-REG-086 | AC-REG-079 | REQ-REG-034 | API-REG-003 | RULE-REG-012 → REG-LOAD-ELEMENT-NOT-ALLOWED (load reason code — ADR-REG-011) | SVC-API | RULE-SCENARIOS |
 | TC-REG-087 | AC-REG-080 | REQ-REG-034 | API-REG-003 | RULE-REG-012 → REG-LOAD-ELEMENT-NOT-ALLOWED (load reason code — ADR-REG-011) | SVC-API | RULE-SCENARIOS |
 | TC-REG-088 | AC-REG-081 | REQ-REG-014 | API-REG-002 | — | SVC-API | API-SCENARIOS |
+| TC-REG-089 | AC-REG-082 | REQ-REG-070 | in-process | — | SVC-API | API-SCENARIOS |
+| TC-REG-090 | AC-REG-083 | REQ-REG-071 | API-REG-003, API-REG-002 | RULE-REG-026 → REG-LOAD-PACKAGE-FILE-UNREADABLE (load reason code — ADR-REG-011) | SVC-API | RULE-SCENARIOS |
+| TC-REG-091 | AC-REG-084 | REQ-REG-072 | API-REG-003 | RULE-REG-025 → REG-LOAD-CONNECTION-TYPE-BREAKS-BLOB (load reason code — ADR-REG-011) | SVC-API | RULE-SCENARIOS |
+| TC-REG-092 | AC-REG-085 | REQ-REG-072 | API-REG-003 | RULE-REG-025 → REG-LOAD-CONNECTION-TYPE-BREAKS-BLOB (load reason code — ADR-REG-011) | SVC-API | RULE-SCENARIOS |
+| TC-REG-093 | AC-REG-086 | REQ-REG-073 | API-REG-003, API-REG-002 | RULE-REG-027 → REG-LOAD-VALUE-TOO-LONG (load reason code — ADR-REG-011) | SVC-API | RULE-SCENARIOS |
+| TC-REG-094 | AC-REG-087 | REQ-REG-073 | API-REG-003 | RULE-REG-027 → REG-LOAD-VALUE-TOO-LONG (load reason code — ADR-REG-011) | SVC-API | RULE-SCENARIOS |
+| TC-REG-095 | AC-REG-088 | REQ-REG-073 | API-REG-003 | RULE-REG-027 → REG-LOAD-VALUE-TOO-LONG (load reason code — ADR-REG-011) | SVC-API | RULE-SCENARIOS |
+| TC-REG-096 | AC-REG-089 | REQ-REG-074 | API-REG-003 | RULE-REG-023 → REG-LOAD-PACKAGE-DIRECTORY-UNAVAILABLE (load reason code — ADR-REG-011) · RULE-REG-028 (shortening) | SVC-API | RULE-SCENARIOS |
+| TC-REG-097 | AC-REG-090 | REQ-REG-074 | API-REG-003 | RULE-REG-022 → REG-LOAD-INVALID-SERVICE-CODE (load reason code — ADR-REG-011) · RULE-REG-028 (shortening) | SVC-API | RULE-SCENARIOS |
+| TC-REG-098 | AC-REG-091 | REQ-REG-004 | API-REG-003, API-REG-002 | RULE-REG-002 → REG-LOAD-DUPLICATE-SERVICE-CODE (load reason code — ADR-REG-011) · RULE-REG-008 → REG-LOAD-UNKNOWN-FETCH-MODE (load reason code — ADR-REG-011) | SVC-API | RULE-SCENARIOS |
+| TC-REG-099 | AC-REG-069 | REQ-REG-065 | API-REG-003, API-REG-002 | RULE-REG-022 (boundary pass) | SVC-API | RULE-SCENARIOS |
 
 ### API → TC
 | API | TCs |
 |---|---|
 | API-REG-001 | TC-REG-010, TC-REG-011, TC-REG-014, TC-REG-018, TC-REG-031, TC-REG-056, TC-REG-061, TC-REG-073, TC-REG-077, TC-REG-078, TC-REG-079  |
-| API-REG-002 | TC-REG-001, TC-REG-004, TC-REG-006, TC-REG-010, TC-REG-015, TC-REG-016, TC-REG-018, TC-REG-020, TC-REG-021, TC-REG-023, TC-REG-038, TC-REG-039, TC-REG-059, TC-REG-061, TC-REG-072, TC-REG-075, TC-REG-081, TC-REG-085, TC-REG-088  |
-| API-REG-003 | TC-REG-001, TC-REG-002, TC-REG-003, TC-REG-004, TC-REG-005, TC-REG-006, TC-REG-007, TC-REG-008, TC-REG-009, TC-REG-010, TC-REG-011, TC-REG-017, TC-REG-018, TC-REG-021, TC-REG-022, TC-REG-023, TC-REG-024, TC-REG-027, TC-REG-029, TC-REG-032, TC-REG-033, TC-REG-034, TC-REG-035, TC-REG-036, TC-REG-037, TC-REG-040, TC-REG-041, TC-REG-042, TC-REG-043, TC-REG-045, TC-REG-048, TC-REG-049, TC-REG-051, TC-REG-052, TC-REG-053, TC-REG-054, TC-REG-057, TC-REG-059, TC-REG-061, TC-REG-063, TC-REG-064, TC-REG-072, TC-REG-073, TC-REG-074, TC-REG-076, TC-REG-077, TC-REG-078, TC-REG-079, TC-REG-080, TC-REG-081, TC-REG-082, TC-REG-083, TC-REG-084, TC-REG-085, TC-REG-086, TC-REG-087  |
+| API-REG-002 | TC-REG-001, TC-REG-004, TC-REG-006, TC-REG-010, TC-REG-015, TC-REG-016, TC-REG-018, TC-REG-020, TC-REG-021, TC-REG-023, TC-REG-038, TC-REG-039, TC-REG-059, TC-REG-061, TC-REG-072, TC-REG-075, TC-REG-081, TC-REG-085, TC-REG-088, TC-REG-090, TC-REG-093, TC-REG-098, TC-REG-099  |
+| API-REG-003 | TC-REG-001, TC-REG-002, TC-REG-003, TC-REG-004, TC-REG-005, TC-REG-006, TC-REG-007, TC-REG-008, TC-REG-009, TC-REG-010, TC-REG-011, TC-REG-017, TC-REG-018, TC-REG-021, TC-REG-022, TC-REG-023, TC-REG-024, TC-REG-027, TC-REG-029, TC-REG-032, TC-REG-033, TC-REG-034, TC-REG-035, TC-REG-036, TC-REG-037, TC-REG-040, TC-REG-041, TC-REG-042, TC-REG-043, TC-REG-045, TC-REG-048, TC-REG-049, TC-REG-051, TC-REG-052, TC-REG-053, TC-REG-054, TC-REG-057, TC-REG-059, TC-REG-061, TC-REG-063, TC-REG-064, TC-REG-072, TC-REG-073, TC-REG-074, TC-REG-076, TC-REG-077, TC-REG-078, TC-REG-079, TC-REG-080, TC-REG-081, TC-REG-082, TC-REG-083, TC-REG-084, TC-REG-085, TC-REG-086, TC-REG-087, TC-REG-090, TC-REG-091, TC-REG-092, TC-REG-093, TC-REG-094, TC-REG-095, TC-REG-096, TC-REG-097, TC-REG-098, TC-REG-099  |
 
 ### Package → TC
 | Package | TCs |
 |---|---|
 | PORTS | TC-REG-005, TC-REG-017, TC-REG-051 |
-| SVC-API | TC-REG-001, TC-REG-002, TC-REG-003, TC-REG-004, TC-REG-006, TC-REG-007, TC-REG-008, TC-REG-009, TC-REG-010, TC-REG-011, TC-REG-012, TC-REG-013, TC-REG-014, TC-REG-015, TC-REG-016, TC-REG-018, TC-REG-019, TC-REG-020, TC-REG-021, TC-REG-022, TC-REG-023, TC-REG-024, TC-REG-025, TC-REG-026, TC-REG-027, TC-REG-028, TC-REG-029, TC-REG-030, TC-REG-031, TC-REG-032, TC-REG-033, TC-REG-034, TC-REG-035, TC-REG-036, TC-REG-037, TC-REG-038, TC-REG-039, TC-REG-040, TC-REG-041, TC-REG-042, TC-REG-043, TC-REG-044, TC-REG-045, TC-REG-046, TC-REG-047, TC-REG-048, TC-REG-049, TC-REG-050, TC-REG-052, TC-REG-053, TC-REG-054, TC-REG-055, TC-REG-056, TC-REG-057, TC-REG-058, TC-REG-059, TC-REG-060, TC-REG-061, TC-REG-062, TC-REG-063, TC-REG-064, TC-REG-072, TC-REG-073, TC-REG-074, TC-REG-075, TC-REG-076, TC-REG-077, TC-REG-078, TC-REG-079, TC-REG-080, TC-REG-081, TC-REG-082, TC-REG-083, TC-REG-084, TC-REG-085, TC-REG-086, TC-REG-087, TC-REG-088  |
+| SVC-API | TC-REG-001, TC-REG-002, TC-REG-003, TC-REG-004, TC-REG-006, TC-REG-007, TC-REG-008, TC-REG-009, TC-REG-010, TC-REG-011, TC-REG-012, TC-REG-013, TC-REG-014, TC-REG-015, TC-REG-016, TC-REG-018, TC-REG-019, TC-REG-020, TC-REG-021, TC-REG-022, TC-REG-023, TC-REG-024, TC-REG-025, TC-REG-026, TC-REG-027, TC-REG-028, TC-REG-029, TC-REG-030, TC-REG-031, TC-REG-032, TC-REG-033, TC-REG-034, TC-REG-035, TC-REG-036, TC-REG-037, TC-REG-038, TC-REG-039, TC-REG-040, TC-REG-041, TC-REG-042, TC-REG-043, TC-REG-044, TC-REG-045, TC-REG-046, TC-REG-047, TC-REG-048, TC-REG-049, TC-REG-050, TC-REG-052, TC-REG-053, TC-REG-054, TC-REG-055, TC-REG-056, TC-REG-057, TC-REG-058, TC-REG-059, TC-REG-060, TC-REG-061, TC-REG-062, TC-REG-063, TC-REG-064, TC-REG-072, TC-REG-073, TC-REG-074, TC-REG-075, TC-REG-076, TC-REG-077, TC-REG-078, TC-REG-079, TC-REG-080, TC-REG-081, TC-REG-082, TC-REG-083, TC-REG-084, TC-REG-085, TC-REG-086, TC-REG-087, TC-REG-088, TC-REG-089, TC-REG-090, TC-REG-091, TC-REG-092, TC-REG-093, TC-REG-094, TC-REG-095, TC-REG-096, TC-REG-097, TC-REG-098, TC-REG-099  |
 
 ### XM → TC
 None — REG declares no XM edge.
@@ -1281,13 +1446,13 @@ None — REG declares no XM edge.
 
 | Measure | Covered | Note |
 |---|---|---|
-| AC | 81/81 ✓ | one TC per AC (TC-REG-001 … TC-REG-064, TC-REG-072 … TC-REG-088) |
-| REQ | 69/69 ✓ | every REQ through its AC |
-| API | 3/3 ✓ | API-REG-001 (11 TCs), API-REG-002 (19), API-REG-003 (56) |
-| RULE | 24/24 ✓ | every RULE-REG-001 … RULE-REG-024 asserted by ≥1 violation TC |
+| AC | 91/91 ✓ | one TC per AC (TC-REG-001 … TC-REG-064, TC-REG-072 … TC-REG-098) + boundary TC-REG-099 |
+| REQ | 74/74 ✓ | every REQ through its AC |
+| API | 3/3 ✓ | API-REG-001 (11 TCs), API-REG-002 (23), API-REG-003 (66) |
+| RULE | 28/28 ✓ | every RULE-REG-001 … RULE-REG-028 asserted by ≥1 TC (RULE-REG-028 by the shortened rows of TC-REG-093, TC-REG-096, TC-REG-097) |
 | XM edges | 0/0 | no edge — INT-XM absent |
-| Packages | PORTS 3 TCs · SVC-API 78 TCs | CORE, DATA-DOM, ALIGN-BE `no_tests`; CROSS-MOD carries no edge unit |
+| Packages | PORTS 3 TCs · SVC-API 89 TCs | CORE, DATA-DOM, ALIGN-BE `no_tests`; CROSS-MOD carries no edge unit |
 
-Track TC count 81 = AC count 81 (≤ 2× guard).
+Track TC count 92 for AC count 91 (≤ 2× guard).
 
-Cover map of the stage brief's focus: package loading at start-up TC-REG-001, TC-REG-005, TC-REG-006, TC-REG-007, TC-REG-009 · strict validation (single SELECT TC-REG-035; only the declared input as a named bind TC-REG-033, TC-REG-034; no limits / locations in definitions TC-REG-036, TC-REG-043; no extra files TC-REG-064) · versions never edited in place TC-REG-022 (with TC-REG-021, TC-REG-023, TC-REG-024, TC-REG-027) · withdrawn service refuses new checks TC-REG-010, TC-REG-012 · connections read-only, mcp and jdbc TC-REG-042, TC-REG-054, TC-REG-057, TC-REG-058 · per-environment activation TC-REG-051, TC-REG-052, TC-REG-053, TC-REG-055 · responses never expose SQL or connection settings TC-REG-014 (and the frontend TC-REG-065, TC-REG-070) · scholarship-request pilot package loads TC-REG-059 (with TC-REG-060, TC-REG-063) · gate-analysis revision: duplicate document type TC-REG-072 · service-code equality TC-REG-073 … TC-REG-076 · unreachable / empty package directory TC-REG-077, TC-REG-078 · concurrent start and load lock TC-REG-079, TC-REG-080 · torn read TC-REG-081 · document-source branches TC-REG-082 … TC-REG-084 · mixed failing / succeeding items TC-REG-085 · timeout / max_file_size rejected TC-REG-086, TC-REG-087 · withdrawn read available = false TC-REG-088.
+Cover map of the stage brief's focus: package loading at start-up TC-REG-001, TC-REG-005, TC-REG-006, TC-REG-007, TC-REG-009 · strict validation (single SELECT TC-REG-035; only the declared input as a named bind TC-REG-033, TC-REG-034; no limits / locations in definitions TC-REG-036, TC-REG-043; no extra files TC-REG-064) · versions never edited in place TC-REG-022 (with TC-REG-021, TC-REG-023, TC-REG-024, TC-REG-027) · withdrawn service refuses new checks TC-REG-010, TC-REG-012 · connections read-only, mcp and jdbc TC-REG-042, TC-REG-054, TC-REG-057, TC-REG-058 · per-environment activation TC-REG-051, TC-REG-052, TC-REG-053, TC-REG-055 · responses never expose SQL or connection settings TC-REG-014 (and the frontend TC-REG-065, TC-REG-070) · scholarship-request pilot package loads TC-REG-059 (with TC-REG-060, TC-REG-063) · gate-analysis revision: duplicate document type TC-REG-072 · service-code equality TC-REG-073 … TC-REG-076 · unreachable / empty package directory TC-REG-077, TC-REG-078 · concurrent start and load lock TC-REG-079, TC-REG-080 · torn read TC-REG-081 · document-source branches TC-REG-082 … TC-REG-084 · mixed failing / succeeding items TC-REG-085 · timeout / max_file_size rejected TC-REG-086, TC-REG-087 · withdrawn read available = false TC-REG-088 · gate-analysis round 2: pinned version across one Check TC-REG-089 · unreadable package file TC-REG-090 · blob connection stays jdbc TC-REG-091, TC-REG-092 · over-length values TC-REG-093 … TC-REG-095 (connection name TC-REG-094) · shortened Load Result text TC-REG-096 (over-length directory path), TC-REG-097 · duplicate code with mixed validity TC-REG-098 · 100-character code boundary pass TC-REG-099.

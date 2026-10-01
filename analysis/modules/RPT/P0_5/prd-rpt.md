@@ -3,7 +3,7 @@
 Module          : RPT     Version : v1
 Source artifacts: platform-summary, module-registry, business-policies
 Stories         : 12   Policies covered : 23/23   Deferred : 0
-Status          : DRAFT — awaiting prd-approval
+Status          : APPROVED — prd-approval 2026-10-01 (Hesham Ezzat, owner — standing instruction "do all with recommended"; ADR-RPT-016)
 ══════════════════════════════════════════════════════════════════
 
 ## USER STORIES
@@ -146,7 +146,7 @@ US-RPT-012
 | None | No RPT story is deferred. Out-of-scope items (viewer restriction, changing a decision, per-service retention, archiving) stay in the RPT SCOPE EXCEPTIONS, not as stories | — |
 
 ## APPROVAL
-Approved by : —   Date : —
+Approved by : Hesham Ezzat (owner — standing instruction "do all with recommended")   Date : 2026-10-01   Record : _state/approvals/prd-approval.json; ADR-RPT-016
 Once approved, no stage may raise a question; P1 onward self-resolve
 per the ambiguity rule (shared/GOVERNANCE-CORE.md).
 ══════════════════════════════════════════════════════════════════

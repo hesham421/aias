@@ -11,6 +11,7 @@
     "srs": {
       "CHK": "v1",
       "DOC": "v1",
+      "INT": "v1",
       "REG": "v1",
       "RPT": "v1"
     }
@@ -205,9 +206,19 @@
     },
     {
       "from": "INT",
-      "to": "RPT",
+      "to": "REG",
+      "entity": "ENT-REG-002",
+      "type": "SOFT-READ",
       "state": "READY",
-      "source": "platform"
+      "source": "module"
+    },
+    {
+      "from": "INT",
+      "to": "RPT",
+      "entity": "ENT-RPT-001",
+      "type": "SOFT-READ",
+      "state": "READY",
+      "source": "module"
     },
     {
       "from": "RPT",

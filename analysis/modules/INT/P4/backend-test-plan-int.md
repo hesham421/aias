@@ -1,8 +1,8 @@
 # BACKEND TEST PLAN — Host Integration (INT)
 ══════════════════════════════════════════════════════════════════
 Module : INT   Version : v1   Profile : aias   Stage : P4 (test-gen)   Framework : agnostic (profile.stack.testing.backend)
-Sources: _state/current-srs.md (REQ-INT-001 … REQ-INT-064, AC-INT-001 … AC-INT-074, RULE-INT-001 … RULE-INT-004) · current-registry-srs.md · current-registry-db.md (XM-INT-001) · current-backend-execution-plan.md (API-INT-001 … API-INT-008, CROSS-MOD XM-INT-001) · current-frontend-execution-plan.md · current-api-spec.yaml (api-spec-int.yaml — every endpoint shape asserted here) — all v1
-Open ADRs: ADR-INT-017 (Arabic messages PENDING) · ADR-INT-019 / ADR-INT-022 (derivation choices) · ADR-INT-020 (INT reads) · ADR-INT-021 (frontend binding) · ADR-INT-023 (API-INT-007 binds Document Access's listing operation; closes the DOC listing gap) — 0 BLOCKED
+Sources: _state/current-srs.md (REQ-INT-001 … REQ-INT-066, AC-INT-001 … AC-INT-079, RULE-INT-001 … RULE-INT-004) · current-registry-srs.md · current-registry-db.md (XM-INT-001) · current-backend-execution-plan.md (API-INT-001 … API-INT-008, CROSS-MOD XM-INT-001) · current-frontend-execution-plan.md · current-api-spec.yaml (api-spec-int.yaml — every endpoint shape asserted here) — all v1
+Open ADRs: ADR-INT-017 (Arabic messages PENDING) · ADR-INT-019 / ADR-INT-022 (derivation choices) · ADR-INT-020 (INT reads) · ADR-INT-021 (frontend binding) · ADR-INT-023 (API-INT-007 binds Document Access's listing operation; closes the DOC listing gap) · ADR-INT-025 (DOC-409-CHECK-ENDED, DOC-422-UPLOAD-LIMIT-REACHED passed through) · ADR-INT-026 (gate round 1 clarifications) — 0 BLOCKED
 ══════════════════════════════════════════════════════════════════
 
 Framework note: the plan is framework-neutral — each TC block below is the whole contract; the consumer repository
@@ -11,13 +11,13 @@ responses' codes) are read in `api-spec-int.yaml` by the `API-*` id cited on the
 asserted in the error envelope ProblemDetail (RFC 9457) → {type, title, status, detail, code}; message texts are
 copied from the SRS / error catalog (en); ar is `PENDING ADR-INT-017`. The host Approval API is a stub
 (ADR-INT-019 (5)). MODEL-EVAL is not populated: INT calls no model — the known-result request set belongs to the
-module that runs the comparison (ADR-INT-019 (4)). 51 backend ACs (ADR-INT-019 (1), ADR-INT-022) — the other 23 ACs are
+module that runs the comparison (ADR-INT-019 (4)). 55 backend ACs (ADR-INT-019 (1), ADR-INT-022, ADR-INT-025, ADR-INT-026) — the other 24 ACs are
 derived in `frontend-test-plan-int.md`. TC-INT-087 … TC-INT-094 cover INT's reads (ADR-INT-020).
 
-<!-- PHASE:TEST-PLAN-BE:START traces=REQ-INT-001,REQ-INT-002,REQ-INT-003,REQ-INT-004,REQ-INT-005,REQ-INT-006,REQ-INT-007,REQ-INT-008,REQ-INT-009,REQ-INT-010,REQ-INT-011,REQ-INT-012,REQ-INT-013,REQ-INT-014,REQ-INT-015,REQ-INT-018,REQ-INT-019,REQ-INT-021,REQ-INT-022,REQ-INT-024,REQ-INT-025,REQ-INT-026,REQ-INT-027,REQ-INT-028,REQ-INT-029,REQ-INT-030,REQ-INT-031,REQ-INT-032,REQ-INT-033,REQ-INT-034,REQ-INT-035,REQ-INT-036,REQ-INT-037,REQ-INT-038,REQ-INT-039,REQ-INT-058,REQ-INT-059,REQ-INT-060,REQ-INT-061,REQ-INT-062,REQ-INT-063,REQ-INT-064,AC-INT-001,AC-INT-002,AC-INT-003,AC-INT-004,AC-INT-005,AC-INT-006,AC-INT-007,AC-INT-008,AC-INT-009,AC-INT-010,AC-INT-011,AC-INT-012,AC-INT-013,AC-INT-014,AC-INT-015,AC-INT-016,AC-INT-017,AC-INT-018,AC-INT-019,AC-INT-022,AC-INT-023,AC-INT-025,AC-INT-026,AC-INT-028,AC-INT-029,AC-INT-030,AC-INT-031,AC-INT-032,AC-INT-033,AC-INT-034,AC-INT-035,AC-INT-036,AC-INT-037,AC-INT-038,AC-INT-039,AC-INT-040,AC-INT-041,AC-INT-042,AC-INT-043,AC-INT-044,AC-INT-064,AC-INT-065,AC-INT-066,AC-INT-067,AC-INT-068,AC-INT-069,AC-INT-070,AC-INT-071,AC-INT-072,AC-INT-073,AC-INT-074 -->
+<!-- PHASE:TEST-PLAN-BE:START traces=REQ-INT-001,REQ-INT-002,REQ-INT-003,REQ-INT-004,REQ-INT-005,REQ-INT-006,REQ-INT-007,REQ-INT-008,REQ-INT-009,REQ-INT-010,REQ-INT-011,REQ-INT-012,REQ-INT-013,REQ-INT-014,REQ-INT-015,REQ-INT-018,REQ-INT-019,REQ-INT-021,REQ-INT-022,REQ-INT-024,REQ-INT-025,REQ-INT-026,REQ-INT-027,REQ-INT-028,REQ-INT-029,REQ-INT-030,REQ-INT-031,REQ-INT-032,REQ-INT-033,REQ-INT-034,REQ-INT-035,REQ-INT-036,REQ-INT-037,REQ-INT-038,REQ-INT-039,REQ-INT-058,REQ-INT-059,REQ-INT-060,REQ-INT-061,REQ-INT-062,REQ-INT-063,REQ-INT-064,AC-INT-001,AC-INT-002,AC-INT-003,AC-INT-004,AC-INT-005,AC-INT-006,AC-INT-007,AC-INT-008,AC-INT-009,AC-INT-010,AC-INT-011,AC-INT-012,AC-INT-013,AC-INT-014,AC-INT-015,AC-INT-016,AC-INT-017,AC-INT-018,AC-INT-019,AC-INT-022,AC-INT-023,AC-INT-025,AC-INT-026,AC-INT-028,AC-INT-029,AC-INT-030,AC-INT-031,AC-INT-032,AC-INT-033,AC-INT-034,AC-INT-035,AC-INT-036,AC-INT-037,AC-INT-038,AC-INT-039,AC-INT-040,AC-INT-041,AC-INT-042,AC-INT-043,AC-INT-044,AC-INT-064,AC-INT-065,AC-INT-066,AC-INT-067,AC-INT-068,AC-INT-069,AC-INT-070,AC-INT-071,AC-INT-072,AC-INT-073,AC-INT-074,REQ-INT-065,AC-INT-075,AC-INT-076,AC-INT-077,AC-INT-079 -->
 ## PHASE TEST-PLAN-BE
 
-<!-- SUB:RULE-SCENARIOS:START traces=REQ-INT-006,REQ-INT-007,REQ-INT-008,REQ-INT-011,REQ-INT-012,REQ-INT-014,REQ-INT-015,REQ-INT-019,REQ-INT-024,REQ-INT-027,REQ-INT-028,REQ-INT-029,REQ-INT-034,REQ-INT-035,REQ-INT-036,REQ-INT-037,REQ-INT-039,REQ-INT-058,REQ-INT-059,REQ-INT-060,REQ-INT-061,REQ-INT-062,REQ-INT-064,AC-INT-007,AC-INT-008,AC-INT-009,AC-INT-010,AC-INT-011,AC-INT-012,AC-INT-015,AC-INT-016,AC-INT-018,AC-INT-019,AC-INT-023,AC-INT-028,AC-INT-031,AC-INT-032,AC-INT-033,AC-INT-038,AC-INT-039,AC-INT-040,AC-INT-041,AC-INT-042,AC-INT-044,AC-INT-064,AC-INT-065,AC-INT-066,AC-INT-068,AC-INT-070,AC-INT-074 -->
+<!-- SUB:RULE-SCENARIOS:START traces=REQ-INT-006,REQ-INT-007,REQ-INT-008,REQ-INT-011,REQ-INT-012,REQ-INT-014,REQ-INT-015,REQ-INT-019,REQ-INT-024,REQ-INT-027,REQ-INT-028,REQ-INT-029,REQ-INT-034,REQ-INT-035,REQ-INT-036,REQ-INT-037,REQ-INT-039,REQ-INT-058,REQ-INT-059,REQ-INT-060,REQ-INT-061,REQ-INT-062,REQ-INT-064,AC-INT-007,AC-INT-008,AC-INT-009,AC-INT-010,AC-INT-011,AC-INT-012,AC-INT-015,AC-INT-016,AC-INT-018,AC-INT-019,AC-INT-023,AC-INT-028,AC-INT-031,AC-INT-032,AC-INT-033,AC-INT-038,AC-INT-039,AC-INT-040,AC-INT-041,AC-INT-042,AC-INT-044,AC-INT-064,AC-INT-065,AC-INT-066,AC-INT-068,AC-INT-070,AC-INT-074,REQ-INT-033,AC-INT-075,AC-INT-076,AC-INT-079 -->
 ### RULE-SCENARIOS — refusals, rule violations and state guarantees
 
 <!-- TC:TC-INT-001:START traces=AC-INT-007,REQ-INT-006,API-INT-001 -->
@@ -397,9 +397,65 @@ Steps        : 1. GET /api/v1/checks/99997/required-document-types.
 Expected     : HTTP 404, code `RPT-404-CHECK-NOT-FOUND`, detail en: "Check 99997 was not found." · ar: PENDING ADR-INT-017; the Service Registry is not asked for any version.
 Test data    : checkId 99997
 <!-- TC:TC-INT-094:END -->
+<!-- TC:TC-INT-096:START traces=AC-INT-075,REQ-INT-006,API-INT-002 -->
+### TC-INT-096 — An upload reaching Document Access after the Check ended passes Document Access's ended-Check refusal
+Derived from : AC-INT-075  (REQ-INT-006)
+Exercises    : API-INT-002 POST /api/v1/checks/{checkId}/documents
+Rule / code  : PASS-THROUGH → DOC-409-CHECK-ENDED (ADR-INT-025)
+Package      : SVC-API-COMMAND
+Scenario     : VIOLATION · data class EDGE · language ALL
+Preconditions: Check 650 of `manual-service` version 1 is AWAITING_DOCUMENTS in the Report Store; Document Access has recorded Check 650 as ended (its end-of-Check notice arrived after INT's status read — the race of ADR-INT-025), so its handover refuses Check 650
+Host data    : none
+Steps        : 1. POST /api/v1/checks/650/documents (multipart) with documentType "TRANSCRIPT" and one non-empty file. 2. GET /api/v1/checks/650/documents.
+Expected     : 1 → HTTP 409, application/problem+json, code `DOC-409-CHECK-ENDED`, detail en: "The Check 650 has already ended; documents can no longer be uploaded for it. Start a new check to provide these documents." · ar: PENDING ADR-INT-017 (not INT-500). 2 → HTTP 200 with 0 entries (no Uploaded Document was created).
+Test data    : checkId 650; documentType TRANSCRIPT; file: placeholder (non-empty)
+<!-- TC:TC-INT-096:END -->
+
+<!-- TC:TC-INT-097:START traces=AC-INT-076,REQ-INT-006,API-INT-002 -->
+### TC-INT-097 — An upload above the maximum uploads per Check passes Document Access's upload-limit refusal
+Derived from : AC-INT-076  (REQ-INT-006)
+Exercises    : API-INT-002 POST /api/v1/checks/{checkId}/documents
+Rule / code  : PASS-THROUGH → DOC-422-UPLOAD-LIMIT-REACHED (ADR-INT-025)
+Package      : SVC-API-COMMAND
+Scenario     : VIOLATION · data class BOUNDARY · language ALL
+Preconditions: the maximum uploads per Check is 20 (platform configuration); Check 651 of `manual-service` version 1 is AWAITING_DOCUMENTS and already holds 20 uploaded documents in Document Access
+Host data    : none
+Steps        : 1. POST /api/v1/checks/651/documents (multipart) with documentType "ID_CARD" and one non-empty file. 2. GET /api/v1/checks/651/documents.
+Expected     : 1 → HTTP 422, application/problem+json, code `DOC-422-UPLOAD-LIMIT-REACHED`, detail en: "The Check 651 already has the maximum of 20 uploaded documents; no further file can be uploaded for it." · ar: PENDING ADR-INT-017 (not INT-500). 2 → HTTP 200 with exactly 20 entries.
+Test data    : checkId 651; maximum uploads per Check 20; documentType ID_CARD; file: placeholder (non-empty)
+<!-- TC:TC-INT-097:END -->
+
+<!-- TC:TC-INT-098:START traces=AC-INT-040,REQ-INT-035,REQ-INT-033,API-INT-004 -->
+### TC-INT-098 — Two simultaneous APPROVED decisions on one approval-enabled Check are serialised by the per-Check lock
+Derived from : AC-INT-040  (REQ-INT-035, REQ-INT-033)
+Exercises    : API-INT-004 POST /api/v1/checks/{checkId}/decision
+Rule / code  : RULE-INT-003 → RPT-409-DECISION-ALREADY-RECORDED (raised by INT before any Approval API call — the per-Check lock of API-INT-004)
+Package      : SVC-API-COMMAND
+Scenario     : STATE · data class EDGE · language ALL
+Preconditions: Check 654 of `approve-service` version 2 (Approval API enabled), request `R-654`, is COMPLETED and undecided; the stub host Approval API holds its first answer (HTTP 200 after a delay released by the test) and counts the calls it receives
+Host data    : none
+Steps        : 1. Send request A: POST /api/v1/checks/654/decision with employeeDecision "APPROVED", decidedBy "E-1001"; wait until the stub has received A's call and holds it. 2. Send request B, the same body with decidedBy "E-1002", while A is held. 3. Release the stub's HTTP 200. 4. Read the Check (GET /api/v1/check-reports/654).
+Expected     : the stub receives exactly 1 call in total (A's). B waits for A's lock and gets no answer before step 3. A → HTTP 201 with employeeDecision APPROVED, decidedBy "E-1001", approvalApiExecuted true. B → HTTP 409, code `RPT-409-DECISION-ALREADY-RECORDED`, detail en: "Check 654 already has an Employee Decision." · ar: PENDING ADR-INT-017, and B never reaches the stub. 4 → the decision is APPROVED by "E-1001" with approvalApiExecuted true.
+Test data    : checkId 654; requestNumber `R-654`; decidedBy E-1001, E-1002
+<!-- TC:TC-INT-098:END -->
+
+<!-- TC:TC-INT-099:START traces=AC-INT-079,REQ-INT-034,API-INT-004 -->
+### TC-INT-099 — A decision code outside APPROVED and REJECTED is refused before any call
+Derived from : AC-INT-079  (REQ-INT-034)
+Exercises    : API-INT-004 POST /api/v1/checks/{checkId}/decision
+Rule / code  : RULE-INT-002 → RPT-400-DECISION-INCOMPLETE (invalid-code half)
+Package      : SVC-API-COMMAND
+Scenario     : VIOLATION · data class INVALID · language ALL
+Preconditions: Check 652 of `approve-service` version 2 (Approval API enabled) is COMPLETED and undecided; the stub host Approval API counts its calls
+Host data    : none
+Steps        : 1. POST /api/v1/checks/652/decision with employeeDecision "MAYBE", decidedBy "E-1001". 2. Read the Check (GET /api/v1/check-reports/652).
+Expected     : 1 → HTTP 400, code `RPT-400-DECISION-INCOMPLETE`, detail en: "The decision was not recorded: `MAYBE` is not APPROVED or REJECTED." · ar: PENDING ADR-INT-017; the stub receives 0 calls. 2 → the Check holds no decision.
+Test data    : checkId 652; employeeDecision MAYBE; decidedBy E-1001
+<!-- TC:TC-INT-099:END -->
+
 <!-- SUB:RULE-SCENARIOS:END -->
 
-<!-- SUB:API-SCENARIOS:START traces=REQ-INT-001,REQ-INT-002,REQ-INT-003,REQ-INT-004,REQ-INT-005,REQ-INT-009,REQ-INT-010,REQ-INT-013,REQ-INT-018,REQ-INT-021,REQ-INT-022,REQ-INT-025,REQ-INT-026,REQ-INT-030,REQ-INT-031,REQ-INT-032,REQ-INT-033,REQ-INT-038,REQ-INT-061,REQ-INT-062,REQ-INT-063,REQ-INT-064,AC-INT-001,AC-INT-002,AC-INT-003,AC-INT-004,AC-INT-005,AC-INT-006,AC-INT-013,AC-INT-014,AC-INT-017,AC-INT-022,AC-INT-025,AC-INT-026,AC-INT-029,AC-INT-030,AC-INT-034,AC-INT-035,AC-INT-036,AC-INT-037,AC-INT-043,AC-INT-067,AC-INT-069,AC-INT-071,AC-INT-072,AC-INT-073 -->
+<!-- SUB:API-SCENARIOS:START traces=REQ-INT-001,REQ-INT-002,REQ-INT-003,REQ-INT-004,REQ-INT-005,REQ-INT-009,REQ-INT-010,REQ-INT-013,REQ-INT-018,REQ-INT-021,REQ-INT-022,REQ-INT-025,REQ-INT-026,REQ-INT-030,REQ-INT-031,REQ-INT-032,REQ-INT-033,REQ-INT-038,REQ-INT-061,REQ-INT-062,REQ-INT-063,REQ-INT-064,AC-INT-001,AC-INT-002,AC-INT-003,AC-INT-004,AC-INT-005,AC-INT-006,AC-INT-013,AC-INT-014,AC-INT-017,AC-INT-022,AC-INT-025,AC-INT-026,AC-INT-029,AC-INT-030,AC-INT-034,AC-INT-035,AC-INT-036,AC-INT-037,AC-INT-043,AC-INT-067,AC-INT-069,AC-INT-071,AC-INT-072,AC-INT-073,REQ-INT-065,AC-INT-077 -->
 ### API-SCENARIOS — endpoint behaviour on valid requests
 
 <!-- TC:TC-INT-025:START traces=AC-INT-001,REQ-INT-001,API-INT-001 -->
@@ -751,6 +807,19 @@ Steps        : 1. GET /api/v1/checks/617/required-document-types.
 Expected     : HTTP 200 with exactly 2 types: TRANSCRIPT and ID_CARD (`versionNumber` 1).
 Test data    : checkId 617; versions 1 and 2
 <!-- TC:TC-INT-093:END -->
+<!-- TC:TC-INT-100:START traces=AC-INT-077,REQ-INT-065,API-INT-002,API-INT-007 -->
+### TC-INT-100 — A second upload of the same document type is handed over separately and both are listed
+Derived from : AC-INT-077  (REQ-INT-065)
+Exercises    : API-INT-002 POST /api/v1/checks/{checkId}/documents · API-INT-007 GET /api/v1/checks/{checkId}/documents
+Rule / code  : —
+Package      : SVC-API-COMMAND
+Scenario     : HAPPY · data class EDGE · language ALL
+Preconditions: Check 653 of `manual-service` version 1 is AWAITING_DOCUMENTS and has one uploaded TRANSCRIPT `t.pdf`; calls to Document Access's handover are observed
+Host data    : none
+Steps        : 1. POST /api/v1/checks/653/documents (multipart) with documentType "TRANSCRIPT" and file `t-v2.pdf`. 2. GET /api/v1/checks/653/documents.
+Expected     : 1 → HTTP 201 with documentType TRANSCRIPT and fileName "t-v2.pdf"; Document Access's handover receives exactly 1 call; INT makes no call that removes or replaces `t.pdf`. 2 → HTTP 200 with exactly 2 TRANSCRIPT entries in upload order: "t.pdf", then "t-v2.pdf".
+Test data    : checkId 653; t.pdf, t-v2.pdf: placeholders (non-empty)
+<!-- TC:TC-INT-100:END -->
 <!-- SUB:API-SCENARIOS:END -->
 <!-- PHASE:TEST-PLAN-BE:END -->
 
@@ -805,6 +874,10 @@ Test data    : checkId, decidedBy: placeholders (GRACEFUL-DEGRADATION — XM-INT
 | TC-INT-088 | AC-INT-068 | REQ-INT-061 | API-INT-005 | PASS-THROUGH → RPT-404-CHECK-NOT-FOUND | SVC-API-QUERY |
 | TC-INT-090 | AC-INT-070 | REQ-INT-062 | API-INT-006 | PASS-THROUGH → RPT-400-REQUEST-KEYS-MISSING | SVC-API-QUERY |
 | TC-INT-094 | AC-INT-074 | REQ-INT-064 | API-INT-008 | PASS-THROUGH → RPT-404-CHECK-NOT-FOUND | SVC-API-QUERY |
+| TC-INT-096 | AC-INT-075 | REQ-INT-006 | API-INT-002 | PASS-THROUGH → DOC-409-CHECK-ENDED | SVC-API-COMMAND |
+| TC-INT-097 | AC-INT-076 | REQ-INT-006 | API-INT-002 | PASS-THROUGH → DOC-422-UPLOAD-LIMIT-REACHED | SVC-API-COMMAND |
+| TC-INT-098 | AC-INT-040 | REQ-INT-035, REQ-INT-033 | API-INT-004 | RULE-INT-003 → RPT-409-DECISION-ALREADY-RECORDED (per-Check lock) | SVC-API-COMMAND |
+| TC-INT-099 | AC-INT-079 | REQ-INT-034 | API-INT-004 | RULE-INT-002 → RPT-400-DECISION-INCOMPLETE | SVC-API-COMMAND |
 | TC-INT-025 | AC-INT-001 | REQ-INT-001 | API-INT-001 | — | SVC-API-COMMAND |
 | TC-INT-026 | AC-INT-002 | REQ-INT-001 | API-INT-001 | — | SVC-API-COMMAND |
 | TC-INT-027 | AC-INT-003 | REQ-INT-002 | API-INT-001 | — | SVC-API-COMMAND |
@@ -830,15 +903,16 @@ Test data    : checkId, decidedBy: placeholders (GRACEFUL-DEGRADATION — XM-INT
 | TC-INT-092 | AC-INT-072 | REQ-INT-063 | API-INT-007 | — | SVC-API-QUERY |
 | TC-INT-095 | AC-INT-071 | REQ-INT-063 | API-INT-007 | — | PORTS |
 | TC-INT-093 | AC-INT-073 | REQ-INT-064 | API-INT-008 | — | SVC-API-QUERY |
+| TC-INT-100 | AC-INT-077 | REQ-INT-065 | API-INT-002, API-INT-007 | — | SVC-API-COMMAND |
 | TC-INT-044 | XM-INT-001 | REQ-INT-025, REQ-INT-028, REQ-INT-030 | API-INT-004 | PLATFORM-STD → INT-500 | XM-INT-001 |
 
-API → TC: API-INT-001: 8 (TC-INT-001 …) · API-INT-002: 11 (TC-INT-002 …) · API-INT-003: 4 (TC-INT-004 …) · API-INT-004: 22 (TC-INT-003 …) · API-INT-005: 2 (TC-INT-088 …) · API-INT-006: 2 (TC-INT-090 …) · API-INT-007: 3 (TC-INT-091 …) · API-INT-008: 2 (TC-INT-094 …)
+API → TC: API-INT-001: 8 (TC-INT-001 …) · API-INT-002: 14 (TC-INT-002 …) · API-INT-003: 4 (TC-INT-004 …) · API-INT-004: 24 (TC-INT-003 …) · API-INT-005: 2 (TC-INT-088 …) · API-INT-006: 2 (TC-INT-090 …) · API-INT-007: 4 (TC-INT-091 …) · API-INT-008: 2 (TC-INT-094 …)
 
-Package → TC: PORTS: TC-INT-010, TC-INT-020, TC-INT-040, TC-INT-041, TC-INT-042, TC-INT-095 · SVC-API-COMMAND: TC-INT-001, TC-INT-002, TC-INT-003, TC-INT-004, TC-INT-005, TC-INT-006, TC-INT-007, TC-INT-008, TC-INT-009, TC-INT-011, TC-INT-012, TC-INT-013, TC-INT-014, TC-INT-015, TC-INT-016, TC-INT-017, TC-INT-018, TC-INT-019, TC-INT-021, TC-INT-022, TC-INT-023, TC-INT-024, TC-INT-025, TC-INT-026, TC-INT-027, TC-INT-028, TC-INT-029, TC-INT-030, TC-INT-031, TC-INT-032, TC-INT-033, TC-INT-034, TC-INT-035, TC-INT-036, TC-INT-037, TC-INT-038, TC-INT-039, TC-INT-043 · SVC-API-QUERY: TC-INT-088, TC-INT-090, TC-INT-094, TC-INT-087, TC-INT-089, TC-INT-091, TC-INT-092, TC-INT-093 · XM-INT-001: TC-INT-044
+Package → TC: PORTS: TC-INT-010, TC-INT-020, TC-INT-040, TC-INT-041, TC-INT-042, TC-INT-095 · SVC-API-COMMAND: TC-INT-001, TC-INT-002, TC-INT-003, TC-INT-004, TC-INT-005, TC-INT-006, TC-INT-007, TC-INT-008, TC-INT-009, TC-INT-011, TC-INT-012, TC-INT-013, TC-INT-014, TC-INT-015, TC-INT-016, TC-INT-017, TC-INT-018, TC-INT-019, TC-INT-021, TC-INT-022, TC-INT-023, TC-INT-024, TC-INT-025, TC-INT-026, TC-INT-027, TC-INT-028, TC-INT-029, TC-INT-030, TC-INT-031, TC-INT-032, TC-INT-033, TC-INT-034, TC-INT-035, TC-INT-036, TC-INT-037, TC-INT-038, TC-INT-039, TC-INT-043, TC-INT-096, TC-INT-097, TC-INT-098, TC-INT-099, TC-INT-100 · SVC-API-QUERY: TC-INT-088, TC-INT-090, TC-INT-094, TC-INT-087, TC-INT-089, TC-INT-091, TC-INT-092, TC-INT-093 · XM-INT-001: TC-INT-044
 
 ## COVERAGE
 
-AC covered (backend track) 51/51 — AC-INT-001, AC-INT-002, AC-INT-003, AC-INT-004, AC-INT-005, AC-INT-006, AC-INT-007, AC-INT-008, AC-INT-009, AC-INT-010, AC-INT-011, AC-INT-012, AC-INT-013, AC-INT-014, AC-INT-015, AC-INT-016, AC-INT-017, AC-INT-018, AC-INT-019, AC-INT-022, AC-INT-023, AC-INT-025, AC-INT-026, AC-INT-028, AC-INT-029, AC-INT-030, AC-INT-031, AC-INT-032, AC-INT-033, AC-INT-034, AC-INT-035, AC-INT-036, AC-INT-037, AC-INT-038, AC-INT-039, AC-INT-040, AC-INT-041, AC-INT-042, AC-INT-043, AC-INT-044, AC-INT-064, AC-INT-065, AC-INT-066, AC-INT-067, AC-INT-068, AC-INT-069, AC-INT-070, AC-INT-071, AC-INT-072, AC-INT-073, AC-INT-074 · the other 23 ACs (AC-INT-020, AC-INT-021, AC-INT-024, AC-INT-027, AC-INT-045 … AC-INT-063) are covered in `frontend-test-plan-int.md` → module AC coverage 74/74, no gap ✗.
-REQ covered (backend) 42 · API covered 8/8 (API-INT-001 … API-INT-008) · XM edges covered 1/1 (XM-INT-001 → TC-INT-044).
+AC covered (backend track) 55/55 — AC-INT-001, AC-INT-002, AC-INT-003, AC-INT-004, AC-INT-005, AC-INT-006, AC-INT-007, AC-INT-008, AC-INT-009, AC-INT-010, AC-INT-011, AC-INT-012, AC-INT-013, AC-INT-014, AC-INT-015, AC-INT-016, AC-INT-017, AC-INT-018, AC-INT-019, AC-INT-022, AC-INT-023, AC-INT-025, AC-INT-026, AC-INT-028, AC-INT-029, AC-INT-030, AC-INT-031, AC-INT-032, AC-INT-033, AC-INT-034, AC-INT-035, AC-INT-036, AC-INT-037, AC-INT-038, AC-INT-039, AC-INT-040, AC-INT-041, AC-INT-042, AC-INT-043, AC-INT-044, AC-INT-064, AC-INT-065, AC-INT-066, AC-INT-067, AC-INT-068, AC-INT-069, AC-INT-070, AC-INT-071, AC-INT-072, AC-INT-073, AC-INT-074, AC-INT-075, AC-INT-076, AC-INT-077, AC-INT-079 · the other 24 ACs (AC-INT-020, AC-INT-021, AC-INT-024, AC-INT-027, AC-INT-045 … AC-INT-063, AC-INT-078) are covered in `frontend-test-plan-int.md` → module AC coverage 79/79, no gap ✗.
+REQ covered (backend) 43 · API covered 8/8 (API-INT-001 … API-INT-008) · XM edges covered 1/1 (XM-INT-001 → TC-INT-044).
 Units of the backend execution plan with acceptance: PORTS, SVC-API-COMMAND, SVC-API-QUERY, XM-INT-001 (CORE, DATA-DOM, ALIGN-BE are `no_tests`).
-TC count 53 for 51 ACs + 1 XM (TC-INT-095 — ADR-INT-023) (guard ~2× not exceeded).
+TC count 58 for 55 ACs + 1 XM (TC-INT-095 — ADR-INT-023; TC-INT-096 … TC-INT-100 — ADR-INT-025, ADR-INT-026 and the per-Check lock case TC-INT-098) (guard ~2× not exceeded).

@@ -1,8 +1,8 @@
 # FRONTEND TEST PLAN — Host Integration (INT) — employee frontend
 ══════════════════════════════════════════════════════════════════
 Module : INT   Version : v1   Profile : aias   Stage : P4 (test-gen)   Framework : agnostic (profile.stack.testing.frontend)
-Sources: _state/current-srs.md (AC-INT-001 … AC-INT-074) · current-registry-srs.md · current-frontend-execution-plan.md (SCR-INT-001 … SCR-INT-005, F1–F4 SUBs, UXD-INT-001 … UXD-INT-008, §3.0 message binding) · current-api-spec.yaml (api-spec-int.yaml) (served by the mock server) — all v1
-Open ADRs: ADR-INT-017 (Arabic messages PENDING) · ADR-INT-018 / ADR-INT-021 (frontend binding) · ADR-INT-019 / ADR-INT-022 (derivation choices) · ADR-INT-020 (INT reads) · ADR-INT-023 (DOC listing gap closed) — 0 BLOCKED
+Sources: _state/current-srs.md (AC-INT-001 … AC-INT-079) · current-registry-srs.md · current-frontend-execution-plan.md (SCR-INT-001 … SCR-INT-005, F1–F4 SUBs, UXD-INT-001 … UXD-INT-008, §3.0 message binding) · current-api-spec.yaml (api-spec-int.yaml) (served by the mock server) — all v1
+Open ADRs: ADR-INT-017 (Arabic messages PENDING) · ADR-INT-018 / ADR-INT-021 (frontend binding) · ADR-INT-019 / ADR-INT-022 (derivation choices) · ADR-INT-020 (INT reads) · ADR-INT-023 (DOC listing gap closed) · ADR-INT-025 (DOC upload refusals) · ADR-INT-026 (background-read failure, same-type uploads) — 0 BLOCKED
 ══════════════════════════════════════════════════════════════════
 
 Framework note: the plan is framework-neutral — each TC block below is the whole contract; the consumer repository
@@ -12,10 +12,10 @@ mock server serving api-spec-int.yaml (ADR-INT-021 (2), ADR-INT-022). The launch
 string is `?serviceCode=…&requestNumber=…&employeeId=…` (ADR-INT-018 (4)). 23 frontend ACs plus 3 frontend cases of
 backend ACs on SCR-INT-005 (ADR-INT-019 (2)); 16 integration cases for 8 UXD.
 
-<!-- PHASE:TEST-PLAN-FE:START traces=REQ-INT-016,REQ-INT-017,REQ-INT-020,REQ-INT-022,REQ-INT-023,REQ-INT-036,REQ-INT-038,REQ-INT-040,REQ-INT-041,REQ-INT-042,REQ-INT-043,REQ-INT-044,REQ-INT-045,REQ-INT-046,REQ-INT-047,REQ-INT-048,REQ-INT-049,REQ-INT-050,REQ-INT-051,REQ-INT-052,REQ-INT-053,REQ-INT-054,REQ-INT-055,REQ-INT-056,REQ-INT-057,AC-INT-020,AC-INT-021,AC-INT-024,AC-INT-026,AC-INT-027,AC-INT-041,AC-INT-043,AC-INT-045,AC-INT-046,AC-INT-047,AC-INT-048,AC-INT-049,AC-INT-050,AC-INT-051,AC-INT-052,AC-INT-053,AC-INT-054,AC-INT-055,AC-INT-056,AC-INT-057,AC-INT-058,AC-INT-059,AC-INT-060,AC-INT-061,AC-INT-062,AC-INT-063,SCR-INT-001,SCR-INT-002,SCR-INT-003,SCR-INT-004,SCR-INT-005 -->
+<!-- PHASE:TEST-PLAN-FE:START traces=REQ-INT-016,REQ-INT-017,REQ-INT-020,REQ-INT-022,REQ-INT-023,REQ-INT-036,REQ-INT-038,REQ-INT-040,REQ-INT-041,REQ-INT-042,REQ-INT-043,REQ-INT-044,REQ-INT-045,REQ-INT-046,REQ-INT-047,REQ-INT-048,REQ-INT-049,REQ-INT-050,REQ-INT-051,REQ-INT-052,REQ-INT-053,REQ-INT-054,REQ-INT-055,REQ-INT-056,REQ-INT-057,AC-INT-020,AC-INT-021,AC-INT-024,AC-INT-026,AC-INT-027,AC-INT-041,AC-INT-043,AC-INT-045,AC-INT-046,AC-INT-047,AC-INT-048,AC-INT-049,AC-INT-050,AC-INT-051,AC-INT-052,AC-INT-053,AC-INT-054,AC-INT-055,AC-INT-056,AC-INT-057,AC-INT-058,AC-INT-059,AC-INT-060,AC-INT-061,AC-INT-062,AC-INT-063,SCR-INT-001,SCR-INT-002,SCR-INT-003,SCR-INT-004,SCR-INT-005,REQ-INT-006,REQ-INT-065,REQ-INT-066,AC-INT-075,AC-INT-076,AC-INT-077,AC-INT-078 -->
 ## PHASE TEST-PLAN-FE
 
-<!-- SUB:UI-FLOWS:START traces=REQ-INT-016,REQ-INT-017,REQ-INT-020,REQ-INT-023,REQ-INT-036,REQ-INT-040,REQ-INT-041,REQ-INT-042,REQ-INT-043,REQ-INT-045,REQ-INT-046,REQ-INT-047,REQ-INT-048,REQ-INT-049,REQ-INT-050,REQ-INT-051,REQ-INT-052,REQ-INT-053,REQ-INT-054,REQ-INT-057,AC-INT-020,AC-INT-021,AC-INT-024,AC-INT-027,AC-INT-041,AC-INT-045,AC-INT-046,AC-INT-047,AC-INT-048,AC-INT-050,AC-INT-051,AC-INT-052,AC-INT-053,AC-INT-054,AC-INT-055,AC-INT-056,AC-INT-057,AC-INT-058,AC-INT-059,AC-INT-060,AC-INT-063,SCR-INT-001,SCR-INT-002,SCR-INT-003,SCR-INT-004,SCR-INT-005 -->
+<!-- SUB:UI-FLOWS:START traces=REQ-INT-016,REQ-INT-017,REQ-INT-020,REQ-INT-023,REQ-INT-036,REQ-INT-040,REQ-INT-041,REQ-INT-042,REQ-INT-043,REQ-INT-045,REQ-INT-046,REQ-INT-047,REQ-INT-048,REQ-INT-049,REQ-INT-050,REQ-INT-051,REQ-INT-052,REQ-INT-053,REQ-INT-054,REQ-INT-057,AC-INT-020,AC-INT-021,AC-INT-024,AC-INT-027,AC-INT-041,AC-INT-045,AC-INT-046,AC-INT-047,AC-INT-048,AC-INT-050,AC-INT-051,AC-INT-052,AC-INT-053,AC-INT-054,AC-INT-055,AC-INT-056,AC-INT-057,AC-INT-058,AC-INT-059,AC-INT-060,AC-INT-063,SCR-INT-001,SCR-INT-002,SCR-INT-003,SCR-INT-004,SCR-INT-005,REQ-INT-006,REQ-INT-065,AC-INT-075,AC-INT-076,AC-INT-077 -->
 ### UI-FLOWS — per-screen behaviour
 
 <!-- TC:TC-INT-045:START traces=AC-INT-020,REQ-INT-016,SCR-INT-003 -->
@@ -311,9 +311,36 @@ Steps        : 1. Open the employee decision of Check 641. 2. Choose APPROVED. 3
 Expected     : The decision form shows en: "The approval was not executed: the host Approval API answered 500. Nothing was recorded; you can try again." · ar: PENDING ADR-INT-017; APPROVED stays chosen; "Record decision" is enabled again; the screen does not navigate; Check 641 holds no decision (its read shows none).
 Test data    : checkId 641; host answer 500
 <!-- TC:TC-INT-065:END -->
+<!-- TC:TC-INT-102:START traces=AC-INT-075,AC-INT-076,REQ-INT-006,SCR-INT-003 -->
+### TC-INT-102 — Document Access's ended-Check and upload-limit refusals are shown as a form message on the upload form
+Derived from : AC-INT-075, AC-INT-076  (REQ-INT-006)
+Exercises    : SCR-INT-003 `/checks/650/documents` and `/checks/651/documents` (+ launch query string)
+Rule / code  : PASS-THROUGH → DOC-409-CHECK-ENDED · DOC-422-UPLOAD-LIMIT-REACHED (ADR-INT-025)
+Package      : F3-SCR-INT-003
+Scenario     : VIOLATION · data class EDGE · language ALL
+Preconditions: Checks 650 and 651 of `manual-service` are AWAITING_DOCUMENTS; API-INT-002 answers HTTP 409 `DOC-409-CHECK-ENDED` for Check 650 (detail "The Check 650 has already ended; documents can no longer be uploaded for it. Start a new check to provide these documents.") and HTTP 422 `DOC-422-UPLOAD-LIMIT-REACHED` for Check 651 (detail "The Check 651 already has the maximum of 20 uploaded documents; no further file can be uploaded for it."); after the 409, API-INT-005 answers Check 650 as COMPLETED; launched with a complete launch context (serviceCode, requestNumber, employeeId); the mock server serves api-spec-int.yaml (ADR-INT-021 (2), ADR-INT-022)
+Host data    : none
+Steps        : 1. Open the document upload of Check 650, choose TRANSCRIPT, choose a file, press "Upload". 2. Open the document upload of Check 651, choose ID_CARD, choose a file, press "Upload".
+Expected     : 1 → the server's detail for Check 650 is shown as a form message on the upload form, not as an inline field error and not as the generic INT-500 message; once Check 650 is read again as COMPLETED the form is no longer offered. 2 → the server's detail for Check 651 is shown as a form message; the chosen type ID_CARD is kept and the form stays offered.
+Test data    : checkIds 650, 651 (AC-INT-075, AC-INT-076)
+<!-- TC:TC-INT-102:END -->
+
+<!-- TC:TC-INT-103:START traces=AC-INT-077,REQ-INT-065,SCR-INT-003 -->
+### TC-INT-103 — A document type that already has an upload is marked and stays selectable
+Derived from : AC-INT-077  (REQ-INT-065)
+Exercises    : SCR-INT-003 `/checks/653/documents` (+ launch query string)
+Rule / code  : —
+Package      : F2-SCR-INT-003
+Scenario     : HAPPY · data class EDGE · language ALL
+Preconditions: Check 653 of `manual-service` is AWAITING_DOCUMENTS; API-INT-008 answers TRANSCRIPT and ID_CARD; API-INT-007 first answers one TRANSCRIPT `t.pdf`, then `t.pdf` and `t-v2.pdf` after the upload; API-INT-002 answers HTTP 201 for `t-v2.pdf`; launched with a complete launch context (serviceCode, requestNumber, employeeId); the mock server serves api-spec-int.yaml (ADR-INT-021 (2), ADR-INT-022)
+Host data    : none
+Steps        : 1. Open the document upload of Check 653 and open the document type control. 2. Choose TRANSCRIPT, choose `t-v2.pdf`, press "Upload".
+Expected     : 1 → TRANSCRIPT is marked "already uploaded" and can be selected; ID_CARD carries no marker. 2 → API-INT-002 receives exactly 1 request, with documentType TRANSCRIPT; the uploaded documents list shows 2 TRANSCRIPT entries, "t.pdf" first, then "t-v2.pdf".
+Test data    : checkId 653; t-v2.pdf: placeholder (AC-INT-077)
+<!-- TC:TC-INT-103:END -->
 <!-- SUB:UI-FLOWS:END -->
 
-<!-- SUB:INT-FLOW:START traces=REQ-INT-022,REQ-INT-038,REQ-INT-044,REQ-INT-055,REQ-INT-056,AC-INT-026,AC-INT-043,AC-INT-049,AC-INT-061,AC-INT-062,SCR-INT-001,SCR-INT-002,SCR-INT-005 -->
+<!-- SUB:INT-FLOW:START traces=REQ-INT-022,REQ-INT-038,REQ-INT-044,REQ-INT-055,REQ-INT-056,AC-INT-026,AC-INT-043,AC-INT-049,AC-INT-061,AC-INT-062,SCR-INT-001,SCR-INT-002,SCR-INT-005,REQ-INT-066,AC-INT-078 -->
 ### INT-FLOW — the module lifecycle: start → follow → report → decide → retry
 
 <!-- TC:TC-INT-066:START traces=AC-INT-049,REQ-INT-044,SCR-INT-001 -->
@@ -385,6 +412,19 @@ Steps        : 1. On the employee decision of Check 641, press "Record decision"
 Expected     : Exactly one new decision request is sent; the screen returns to the report of Check 641, which shows decision APPROVED and "executed through the Approval API".
 Test data    : checkId 641
 <!-- TC:TC-INT-070:END -->
+<!-- TC:TC-INT-101:START traces=AC-INT-078,REQ-INT-066,SCR-INT-002 -->
+### TC-INT-101 — A failed background read keeps the shown Check and shows a retry notice
+Derived from : AC-INT-078  (REQ-INT-066)
+Exercises    : SCR-INT-002 `/checks/730` (+ launch query string)
+Rule / code  : —
+Package      : F2-SCR-INT-002
+Scenario     : STATE · data class EDGE · language ALL
+Preconditions: the polling interval is 5 seconds; API-INT-005 answers Check 730 RUNNING on the first read, HTTP 500 (INT-500) on the second read, and RUNNING again on the third read; launched with a complete launch context (serviceCode, requestNumber, employeeId); the mock server serves api-spec-int.yaml (ADR-INT-021 (2), ADR-INT-022)
+Host data    : none
+Steps        : 1. Open Check 730 and wait for the first read. 2. Wait for the second (failing) read. 3. Wait for the third read.
+Expected     : 1 → Check 730 is shown as RUNNING. 2 → Check 730 is still shown as RUNNING, with the header and status unchanged; the non-blocking notice "Refresh failed; retrying" is shown; the screen's error state is not shown. 3 → Check 730 is shown as RUNNING and the notice is gone. The reads continue at the 5-second interval throughout.
+Test data    : polling interval 5 s; Check 730 (AC-INT-078)
+<!-- TC:TC-INT-101:END -->
 <!-- SUB:INT-FLOW:END -->
 <!-- PHASE:TEST-PLAN-FE:END -->
 
@@ -677,11 +717,14 @@ Test data    : checkId 626; answer: HTTP 500
 | TC-INT-084 | UXD-INT-006 (AC-INT-021) | REQ-INT-017 | SCR-INT-003 | — | F2-SCR-INT-003 |
 | TC-INT-085 | UXD-INT-007 (AC-INT-024) | REQ-INT-020 | SCR-INT-004 | — | F1-SCR-INT-004 |
 | TC-INT-086 | UXD-INT-007 (AC-INT-024) | REQ-INT-020 | SCR-INT-004 | — | F2-SCR-INT-004 |
+| TC-INT-101 | AC-INT-078 | REQ-INT-066 | SCR-INT-002 | — | F2-SCR-INT-002 |
+| TC-INT-102 | AC-INT-075, AC-INT-076 | REQ-INT-006 | SCR-INT-003 | PASS-THROUGH → DOC-409-CHECK-ENDED · DOC-422-UPLOAD-LIMIT-REACHED | F3-SCR-INT-003 |
+| TC-INT-103 | AC-INT-077 | REQ-INT-065 | SCR-INT-003 | — | F2-SCR-INT-003 |
 
-Package → TC: F1-SCR-INT-001: TC-INT-071 · F1-SCR-INT-002: TC-INT-073, TC-INT-075, TC-INT-077 · F1-SCR-INT-003: TC-INT-083 · F1-SCR-INT-004: TC-INT-085 · F1-SCR-INT-005: TC-INT-069 · F2-SCR-INT-001: TC-INT-064, TC-INT-066, TC-INT-072 · F2-SCR-INT-002: TC-INT-067, TC-INT-068, TC-INT-074, TC-INT-076, TC-INT-078 · F2-SCR-INT-003: TC-INT-080, TC-INT-084 · F2-SCR-INT-004: TC-INT-082, TC-INT-086 · F2-SCR-INT-005: TC-INT-065 · F3-SCR-INT-001: TC-INT-050 · F3-SCR-INT-002: TC-INT-057, TC-INT-058, TC-INT-060 · F3-SCR-INT-003: TC-INT-045, TC-INT-079 · F3-SCR-INT-004: TC-INT-081 · F3-SCR-INT-005: TC-INT-048 · F4-SCR-INT-001: TC-INT-049, TC-INT-051, TC-INT-052 · F4-SCR-INT-002: TC-INT-053, TC-INT-054, TC-INT-055, TC-INT-056, TC-INT-059, TC-INT-061, TC-INT-062, TC-INT-063 · F4-SCR-INT-003: TC-INT-046 · F4-SCR-INT-004: TC-INT-047 · F4-SCR-INT-005: TC-INT-070
+Package → TC: F1-SCR-INT-001: TC-INT-071 · F1-SCR-INT-002: TC-INT-073, TC-INT-075, TC-INT-077 · F1-SCR-INT-003: TC-INT-083 · F1-SCR-INT-004: TC-INT-085 · F1-SCR-INT-005: TC-INT-069 · F2-SCR-INT-001: TC-INT-064, TC-INT-066, TC-INT-072 · F2-SCR-INT-002: TC-INT-067, TC-INT-068, TC-INT-074, TC-INT-076, TC-INT-078, TC-INT-101 · F2-SCR-INT-003: TC-INT-080, TC-INT-084, TC-INT-103 · F2-SCR-INT-004: TC-INT-082, TC-INT-086 · F2-SCR-INT-005: TC-INT-065 · F3-SCR-INT-001: TC-INT-050 · F3-SCR-INT-002: TC-INT-057, TC-INT-058, TC-INT-060 · F3-SCR-INT-003: TC-INT-045, TC-INT-079, TC-INT-102 · F3-SCR-INT-004: TC-INT-081 · F3-SCR-INT-005: TC-INT-048 · F4-SCR-INT-001: TC-INT-049, TC-INT-051, TC-INT-052 · F4-SCR-INT-002: TC-INT-053, TC-INT-054, TC-INT-055, TC-INT-056, TC-INT-059, TC-INT-061, TC-INT-062, TC-INT-063 · F4-SCR-INT-003: TC-INT-046 · F4-SCR-INT-004: TC-INT-047 · F4-SCR-INT-005: TC-INT-070
 
 ## COVERAGE
 
-AC covered (frontend track) 26 — AC-INT-020, AC-INT-021, AC-INT-024, AC-INT-026, AC-INT-027, AC-INT-041, AC-INT-043, AC-INT-045, AC-INT-046, AC-INT-047, AC-INT-048, AC-INT-049, AC-INT-050, AC-INT-051, AC-INT-052, AC-INT-053, AC-INT-054, AC-INT-055, AC-INT-056, AC-INT-057, AC-INT-058, AC-INT-059, AC-INT-060, AC-INT-061, AC-INT-062, AC-INT-063; of these AC-INT-026, AC-INT-041, AC-INT-043 are also covered in `backend-test-plan-int.md` (ADR-INT-019 (2)) · the remaining 51 ACs (incl. AC-INT-067 … AC-INT-074 of INT's reads) are covered there → module AC coverage 74/74, no gap ✗.
+AC covered (frontend track) 30 — AC-INT-020, AC-INT-021, AC-INT-024, AC-INT-026, AC-INT-027, AC-INT-041, AC-INT-043, AC-INT-045, AC-INT-046, AC-INT-047, AC-INT-048, AC-INT-049, AC-INT-050, AC-INT-051, AC-INT-052, AC-INT-053, AC-INT-054, AC-INT-055, AC-INT-056, AC-INT-057, AC-INT-058, AC-INT-059, AC-INT-060, AC-INT-061, AC-INT-062, AC-INT-063, AC-INT-075, AC-INT-076, AC-INT-077, AC-INT-078; of these AC-INT-026, AC-INT-041, AC-INT-043, AC-INT-075, AC-INT-076, AC-INT-077 are also covered in `backend-test-plan-int.md` (ADR-INT-019 (2), ADR-INT-025, ADR-INT-026) · the remaining 49 ACs (incl. AC-INT-067 … AC-INT-074 of INT's reads and AC-INT-079) are covered there → module AC coverage 79/79, no gap ✗.
 SCR covered 5/5 (SCR-INT-001, SCR-INT-002, SCR-INT-003, SCR-INT-004, SCR-INT-005) · UXD covered 8/8 (UXD-INT-001 … UXD-INT-008, 2 cases each) · frontend plan units with acceptance 20/20 (F1–F4 × 5 screens; ALIGN-FE is `no_tests`).
-TC count 42 for 23 frontend ACs + 3 twins + 8 UXD (guard ~2×: 26 AC-derived cases for 23 ACs).
+TC count 45 for 24 frontend ACs + 6 twins + 8 UXD (guard ~2×: 29 AC-derived cases for 24 ACs; TC-INT-101 … TC-INT-103 — ADR-INT-025, ADR-INT-026).

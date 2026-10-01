@@ -1,0 +1,143 @@
+{
+  "module": "RPT",
+  "version": 1,
+  "scope": "stage:P1",
+  "counts": {
+    "CRITICAL": 0,
+    "MAJOR": 0,
+    "MINOR": 3
+  },
+  "clean": true,
+  "blocking": [
+    "CRITICAL",
+    "MAJOR"
+  ],
+  "contracts": [
+    "C0",
+    "C5",
+    "C12"
+  ],
+  "skipped": [],
+  "coverage": {
+    "C0.1": 5,
+    "C5.2": 52,
+    "C5.3": 52,
+    "C5.4": 52,
+    "C5.5": 60,
+    "C5.6": 15,
+    "C5.8": 131,
+    "C5.13": 127,
+    "C5.14": 60,
+    "C5.15": 4,
+    "C5.16": 12,
+    "C5.17": 1
+  },
+  "vacuous": [],
+  "metrics": [
+    {
+      "id": "us-req",
+      "from": "US",
+      "to": [
+        "REQ"
+      ],
+      "total": 12,
+      "covered": 12,
+      "pct": 100.0
+    },
+    {
+      "id": "req-ac",
+      "from": "REQ",
+      "to": [
+        "AC"
+      ],
+      "total": 52,
+      "covered": 52,
+      "pct": 100.0
+    },
+    {
+      "id": "req-api",
+      "from": "REQ",
+      "to": [
+        "API"
+      ],
+      "total": 52,
+      "covered": 0,
+      "pct": 0.0
+    },
+    {
+      "id": "req-ux",
+      "from": "REQ",
+      "to": [
+        "SCR",
+        "UXD"
+      ],
+      "total": 52,
+      "covered": 0,
+      "pct": 0.0
+    },
+    {
+      "id": "ac-tc",
+      "from": "AC",
+      "to": [
+        "TC"
+      ],
+      "total": 60,
+      "covered": 0,
+      "pct": 0.0
+    }
+  ],
+  "findings": [
+    {
+      "severity": "MINOR",
+      "clause": "C5.14",
+      "check": "ac-measurable",
+      "message": "`AC-RPT-022` `Then: it holds document type, source mode, read status and detail only \u2014 no ` names no number, limit, id or enumerable outcome \u2014 no test can fail it; say what is created, rejected, returned or shown, and how much",
+      "artifact": "srs",
+      "line": 433
+    },
+    {
+      "severity": "MINOR",
+      "clause": "C5.14",
+      "check": "ac-measurable",
+      "message": "`AC-RPT-027` `Then: it receives status RUNNING with the Check's service, version, request ` names no number, limit, id or enumerable outcome \u2014 no test can fail it; say what is created, rejected, returned or shown, and how much",
+      "artifact": "srs",
+      "line": 494
+    },
+    {
+      "severity": "MINOR",
+      "clause": "C5.16",
+      "check": "feature-unwanted",
+      "message": "`US-RPT-005` is covered by 4 requirement(s) and none states an `unwanted` path \u2014 what the system does when the input, state or sequence is wrong is unspecified for this feature",
+      "artifact": "srs",
+      "line": 47
+    }
+  ],
+  "provenance": {
+    "rules": {
+      "contracts": "66ab69cc1483b2f9858c7b3db7d89f46990f817721fc4417f100bd5f023dff07",
+      "checker": "a94d2877f8d266ce52f428ed037da56bf89abcf3d31d225d01591f884f268f8b",
+      "policy": "f0051863173859c50eaa1091adddc83f9c46e4a33a735325d37acc31ffd51c3d"
+    },
+    "resolvable": [
+      "business-policies",
+      "domain-profile",
+      "module-registry",
+      "platform-summary",
+      "prd",
+      "project-registry",
+      "registry-srs",
+      "srs"
+    ],
+    "inputs": {
+      "business-policies": "ec14c629acdd1de619615ecafb9334ad16dfe28e5ec6fad3f39fe514f1522532",
+      "domain-profile": "c9ffe7c45c917c5793e15b6fbc7151ccc4b9181c36a5aaf1ce2f15f6849e3cbd",
+      "module-registry": "a07242feb48a8784f1dd79de2661a2f296fbbb30a1780e08ff21e42c5955afa0",
+      "platform-summary": "6116c50040fad1e8ca92a3f797ed36ac8aeabc7fea06e67246766870d1a4107d",
+      "prd": "0d0de3e0921e85f08d6209e9c544ed49a429590458a4babf2423e3e4026ed9f8",
+      "project-registry": "7652329cae1b5e14558ead423c4a0d157fcf3aead94176473c23adb034161a82",
+      "registry-srs": "f27c18d7645c87b41f0e181fca5c4a29dd7330c529a1733846af978d5040deb7",
+      "srs": "220458ce608c70092a1809741c31217e509826ccd4435df9917eeadb02bc9e4a"
+    },
+    "at": "2026-10-01T13:25:56+00:00"
+  }
+}

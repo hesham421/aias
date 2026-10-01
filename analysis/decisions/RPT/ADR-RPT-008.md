@@ -1,0 +1,8 @@
+# ADR-RPT-008 — RPT states every raw-idea §12 guardrail at the surface it controls; the listing of a request's Checks is capped at the 100 newest with the total count
+Status      : ACCEPTED
+Stage       : P1        Module: RPT        Version: v1
+Context     : Profile check AIAS-1 requires every §12 guardrail as a REQ with an AC. RPT runs no query on host data, opens no file and calls no model, so most guardrails apply to it as things it never does; CHK and DOC took the same approach (ADR-CHK-009, ADR-DOC-005). The limits guardrail needs a surface RPT controls: its only unbounded read is the list of a request's Checks.
+Decision    : (1) LLM → REQ-RPT-049; (2) approval → REQ-RPT-037, REQ-RPT-039; (3) read-only host access → REQ-RPT-047; (4) bound parameters → REQ-RPT-050 (its own store's reads); (5) storage root → REQ-RPT-048; (6) nothing skipped → REQ-RPT-011, REQ-RPT-012, REQ-RPT-014; (7) content is data → REQ-RPT-019, REQ-RPT-027; (8) limits → REQ-RPT-031: at most 100 Checks per listing, newest first, with the total so the cut is visible; (9) nothing carried between Checks → REQ-RPT-030.
+Alternatives rejected: Paging parameters — no stated need; a request with more than 100 Checks is not expected and the total makes the cut visible; leaving guardrails RPT does not run unstated — fails AIAS-1.
+Consequences: P3.1's review scores AIAS-3 … AIAS-8 on RPT's code paths; P4 derives the negative tests (no model call, no host query, no file opened).
+traces      : US-RPT-005, US-RPT-008, US-RPT-009, US-RPT-010, REQ-RPT-019, REQ-RPT-027, REQ-RPT-030, REQ-RPT-031, REQ-RPT-037, REQ-RPT-047, REQ-RPT-048, REQ-RPT-049, REQ-RPT-050

@@ -13,6 +13,11 @@
           "version": 1,
           "exec": "backend/modules/CHK/packages/backend-execution",
           "test": "backend/modules/CHK/packages/backend-test"
+        },
+        "frontend": {
+          "version": 1,
+          "exec": "frontend/modules/CHK/packages/frontend-execution",
+          "test": "frontend/modules/CHK/packages/frontend-test"
         }
       }
     },

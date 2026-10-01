@@ -8,4 +8,4 @@ API DOCUMENT     api-spec-rpt.yaml · operations 3 = API blocks 3 · error respo
 ALIGN            verdict as stamped by the orchestrator
 ADRs             ADR-RPT-012 (ACCEPTED), ADR-RPT-013 (ACCEPTED)
 CONTRACT         Honours: CON-RPT-001, CON-RPT-002, CON-RPT-003, CON-RPT-004, CON-RPT-005, CON-RPT-006 · Implements the Check result port: CON-CHK-006, CON-CHK-007, CON-CHK-008, CON-CHK-009, CON-CHK-010, CON-CHK-011
-TRACEABILITY     REQ covered by ≥1 API/DBF: 52/52 · orphan REQ: none
+TRACEABILITY     REQ covered by ≥1 API/DBF: 53/53 · orphan REQ: none

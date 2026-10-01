@@ -308,11 +308,12 @@ CROSS-MODULE   none
 REPOSITORY OPS QR-RPT-004 (+ insert in completeCheck)
 <!-- PHASE:DATA-DOM:END -->
 
-<!-- PHASE:PORTS:START traces=REQ-RPT-001,REQ-RPT-005,REQ-RPT-008,REQ-RPT-018,REQ-RPT-021,REQ-RPT-022,REQ-RPT-047,REQ-RPT-048,REQ-RPT-049 -->
+<!-- PHASE:PORTS:START traces=REQ-RPT-001,REQ-RPT-005,REQ-RPT-008,REQ-RPT-018,REQ-RPT-021,REQ-RPT-022,REQ-RPT-047,REQ-RPT-048,REQ-RPT-049,REQ-RPT-053 -->
 ## PHASE PORTS — PORTS+ADAPTERS
 
 RPT runs no host query, fetches no document and calls no model: the QUERY, DOCUMENT and MODEL ports of the profile belong to the modules that run Checks and RPT has none of them (REQ-RPT-047, REQ-RPT-048, REQ-RPT-049). RPT has one inbound adapter:
 - `CheckResultStore` — the RPT bean that **implements the Check result port interface `CheckResultPort` declared by the Check Engine** (ADR-RPT-001). It is the only class of RPT that imports the port and the carried enums; each method delegates to `CheckRunCommandService` / `CheckRunQueryService` (SVC-API). Implements, one method each, exactly as the Check Engine's published contract signs them: `createCheckRun`, `markRunning`, `completeCheck`, `failCheck`, `getCheck`, `listUnfinishedChecks` (the contract items are listed in CROSS-MOD). The Check Engine never reads RPT tables and RPT never calls the Check Engine.
+- Closed value types (REQ-RPT-053, ADR-RPT-018): `completeCheck` and `failCheck` accept only Java records whose components are exactly the fields the Check Engine's published contract declares for them (items listed in CROSS-MOD) — finding {condition, outcome, evidence, note}; document outcome {documentType, sourceMode, readStatus, reason, detail}; unread query {queryName, detail}; metadata {serviceCode, versionNumber, fetchMode, comparisonModel, employeeId, startedAt, endedAt}; failCheck (checkId, failureReason, detail, endedAt). No component is a map, a byte array or an untyped object and no "extra attributes" holder exists, so a hand-over carrying an undeclared field cannot be constructed and nothing of it is written; an undeclared value in a declared code field is refused by RULE-RPT-006 (RPT-422-UNKNOWN-CODE).
 - Exceptions and transactions at the port (ADR-RPT-012): every method joins the caller's transaction (`Propagation.REQUIRED`). Every RULE is checked on the values received **before the first write**; a refusal throws an `RptRefusalException` subclass (a `RuntimeException`, code and message from the SVC-API table) declared `noRollbackFor`, so the caller's transaction stays usable and the Check Engine can still fail the Check in the same transaction. A database failure during the writes propagates and rolls the caller's transaction back whole — nothing of the report is left (REQ-RPT-009).
 <!-- PHASE:PORTS:END -->
 
@@ -334,14 +335,14 @@ All writes are READ_WRITE in the caller's transaction (ADR-RPT-012); timestamps 
   2. 0 rows → read QR-RPT-001: no row → `CheckNotFoundException` (RPT-404-CHECK-NOT-FOUND) "Check {checkId} was not found." (REQ-RPT-007); row ended → `CheckEndedException` (RPT-409-CHECK-ENDED) "Check {checkId} has already ended; its status cannot change." (RULE-RPT-003, REQ-RPT-006).
   - Concurrency: the conditional UPDATE is the guard — a concurrent end makes it update 0 rows.
 
-**`completeCheck(checkId, overallStatus, findings, documentOutcomes, unreadQueries, metadata)`** (port operation; REQ-RPT-008 … REQ-RPT-017, REQ-RPT-019, REQ-RPT-020)
+**`completeCheck(checkId, overallStatus, findings, documentOutcomes, unreadQueries, metadata)`** (port operation; REQ-RPT-008 … REQ-RPT-017, REQ-RPT-019, REQ-RPT-020, REQ-RPT-053)
   1. Load the Check Run (QR-RPT-001) with a locking read `FOR UPDATE`; none → RPT-404-CHECK-NOT-FOUND (REQ-RPT-007); COMPLETED / FAILED → RPT-409-CHECK-ENDED (REQ-RPT-020); AWAITING_DOCUMENTS → `CheckNotRunningException` (RPT-409-CHECK-NOT-RUNNING) "Check {checkId} is not running; it cannot be completed." (RULE-RPT-003, REQ-RPT-006).
   2. Validate the whole report in memory, in this order, before any write (ADR-RPT-012): RULE-RPT-006 codes (REQ-RPT-015) → RULE-RPT-004 metadata vs the loaded row (`MetadataMismatchException`, RPT-422-METADATA-MISMATCH; REQ-RPT-013) → RULE-RPT-007 every finding complete (`FindingIncompleteException`, RPT-422-FINDING-INCOMPLETE; REQ-RPT-016) and every unread query with name and detail → RULE-RPT-008 reasons (`DocumentReasonMismatchException`, RPT-422-DOCUMENT-REASON-MISMATCH; REQ-RPT-017) → RULE-RPT-005 COMPLIANT guard (`CompliantNotVerifiedException`, RPT-422-COMPLIANT-NOT-VERIFIED; REQ-RPT-014). Messages exactly as the DATA-DOM rules state them.
   3. Persist in this order: UPDATE RPT_CHECK_RUN SET CHECK_STATUS = 'COMPLETED' (DBF-RPT-007), OVERALL_STATUS (DBF-RPT-011), COMPARISON_MODEL (DBF-RPT-012), ENDED_AT (DBF-RPT-010), UPDATED_AT = SYSTIMESTAMP WHERE CHECK_RUN_ID = :checkId AND CHECK_STATUS = 'RUNNING'; INSERT one RPT_FINDING per finding (POSITION DBF-RPT-022 = index from 1, CONDITION_TEXT DBF-RPT-023, FINDING_OUTCOME DBF-RPT-024, EVIDENCE DBF-RPT-025, NOTE DBF-RPT-026, CHECK_RUN_ID DBF-RPT-027); one RPT_CHECK_DOCUMENT per document outcome (POSITION DBF-RPT-031, DOCUMENT_TYPE DBF-RPT-032, SOURCE_MODE DBF-RPT-033, READ_STATUS DBF-RPT-034, UNREADABLE_REASON DBF-RPT-035, DETAIL DBF-RPT-036, CHECK_RUN_ID DBF-RPT-037); one RPT_UNREAD_QUERY per unread query (POSITION DBF-RPT-041, QUERY_NAME DBF-RPT-042, DETAIL DBF-RPT-043, CHECK_RUN_ID DBF-RPT-044) — order kept as received (REQ-RPT-010, REQ-RPT-011, REQ-RPT-012). No document content and no query rows exist in the carried values or in any column (REQ-RPT-019).
   4. A database failure during step 3 → the exception propagates (`ReportNotStoredException`, RPT-500-REPORT-NOT-STORED) and the caller's transaction rolls back whole: no part of the report remains and the Check stays RUNNING (REQ-RPT-009).
   - Concurrency: the `FOR UPDATE` read and the conditional UPDATE serialise a completion against a concurrent fail — the second finds the row ended and is refused with RPT-409-CHECK-ENDED.
 
-**`failCheck(checkId, failureReason, detail, endedAt)`** (port operation; REQ-RPT-018, REQ-RPT-051)
+**`failCheck(checkId, failureReason, detail, endedAt)`** (port operation; REQ-RPT-018, REQ-RPT-051, REQ-RPT-053)
   1. RULE-RPT-010 — reason, detail (not blank) and endedAt present, endedAt ≥ STARTED_AT → else `FailureIncompleteException` (RPT-400-FAILURE-INCOMPLETE) "The failure of Check {checkId} was not stored: {field} is missing." (REQ-RPT-051); RULE-RPT-006 on the reason (REQ-RPT-015).
   2. UPDATE RPT_CHECK_RUN SET CHECK_STATUS = 'FAILED' (DBF-RPT-007), FAILURE_REASON (DBF-RPT-013), FAILURE_DETAIL (DBF-RPT-014), ENDED_AT (DBF-RPT-010), UPDATED_AT = SYSTIMESTAMP WHERE CHECK_RUN_ID = :checkId AND CHECK_STATUS IN ('AWAITING_DOCUMENTS', 'RUNNING'); OVERALL_STATUS and COMPARISON_MODEL stay NULL and no Finding is written (REQ-RPT-018).
   3. 0 rows → as markRunning step 2 (RPT-404-CHECK-NOT-FOUND / RPT-409-CHECK-ENDED).
@@ -417,7 +418,7 @@ Concurrency  : NONE — this endpoint neither allocates a unique value nor reads
 Security     : none — no permission model, endpoints are open per the SRS (caller authentication and report-viewing rights deferred, raw-idea A2, domain-profile D4; no REQ of the SRS names a role check)
 Localization : messages en per SRS; ar PENDING ADR-RPT-013
 Honours      : CON-RPT-003, CON-RPT-001
-Covers       : the data this endpoint returns is written only by the in-process result port and decision procedures of this phase, which implement and are listed here for the coverage check: REQ-RPT-001, REQ-RPT-002, REQ-RPT-003, REQ-RPT-004, REQ-RPT-005, REQ-RPT-006, REQ-RPT-007, REQ-RPT-008, REQ-RPT-009, REQ-RPT-010, REQ-RPT-011, REQ-RPT-012, REQ-RPT-013, REQ-RPT-014, REQ-RPT-015, REQ-RPT-016, REQ-RPT-017, REQ-RPT-018, REQ-RPT-019, REQ-RPT-020, REQ-RPT-021, REQ-RPT-022, REQ-RPT-032, REQ-RPT-033, REQ-RPT-034, REQ-RPT-035, REQ-RPT-036, REQ-RPT-037, REQ-RPT-038, REQ-RPT-039, REQ-RPT-051; the purge (REQ-RPT-042, REQ-RPT-043, REQ-RPT-044, REQ-RPT-045, REQ-RPT-046, REQ-RPT-052) is why a purged Check answers RPT-404-CHECK-NOT-FOUND; CORE carries REQ-RPT-047, REQ-RPT-048, REQ-RPT-049
+Covers       : the data this endpoint returns is written only by the in-process result port and decision procedures of this phase, which implement and are listed here for the coverage check: REQ-RPT-001, REQ-RPT-002, REQ-RPT-003, REQ-RPT-004, REQ-RPT-005, REQ-RPT-006, REQ-RPT-007, REQ-RPT-008, REQ-RPT-009, REQ-RPT-010, REQ-RPT-011, REQ-RPT-012, REQ-RPT-013, REQ-RPT-014, REQ-RPT-015, REQ-RPT-016, REQ-RPT-017, REQ-RPT-018, REQ-RPT-019, REQ-RPT-020, REQ-RPT-021, REQ-RPT-022, REQ-RPT-032, REQ-RPT-033, REQ-RPT-034, REQ-RPT-035, REQ-RPT-036, REQ-RPT-037, REQ-RPT-038, REQ-RPT-039, REQ-RPT-051, REQ-RPT-053; the purge (REQ-RPT-042, REQ-RPT-043, REQ-RPT-044, REQ-RPT-045, REQ-RPT-046, REQ-RPT-052) is why a purged Check answers RPT-404-CHECK-NOT-FOUND; CORE carries REQ-RPT-047, REQ-RPT-048, REQ-RPT-049
 <!-- API:API-RPT-001:END -->
 
 <!-- API:API-RPT-002:START traces=REQ-RPT-028,REQ-RPT-029,REQ-RPT-030,REQ-RPT-031,REQ-RPT-050,DBF-RPT-001,DBF-RPT-002,DBF-RPT-005,DBF-RPT-007,DBF-RPT-008,DBF-RPT-010,DBF-RPT-011,DBF-RPT-015 -->
@@ -502,6 +503,26 @@ examined_nothing:
 ## PHASE CROSS-MOD — CROSS-MODULE
 
 No edge: RPT consumes no entity of another module (SRS A8 `consumes: []`, db-script `records: []`). The Check result port RPT implements is the Check Engine's declared port (ADR-RPT-001) — an inbound call, not a dependency on Check Engine data. RPT's `CheckResultStore` implements its six operations as contract-chk.md promises them: `createCheckRun` (CON-CHK-006), `markRunning` (CON-CHK-007), `completeCheck` (CON-CHK-008), `failCheck` (CON-CHK-009), `getCheck` (CON-CHK-010), `listUnfinishedChecks` (CON-CHK-011); the codes it stores are those of CON-CHK-001 … CON-CHK-003 and of Document Access CON-DOC-001, CON-DOC-002, enforced by the CHECK constraints of db-script-rpt.md; inbound edges from Host Integration reach RPT through contract-rpt.md.
+
+Result-port operations implemented by `CheckResultStore` (PORTS) and served by `CheckRunCommandService` / `CheckRunQueryService` (SVC-API), each signed exactly as contract-chk.md declares it:
+
+**`createCheckRun(serviceCode, versionNumber, fetchMode, requestNumber, employeeId, status, startedAt)` → checkId** — SVC-API `createCheckRun`.
+  - Honours: CON-CHK-006
+
+**`markRunning(checkId, runningSince)`** — SVC-API `markRunning`.
+  - Honours: CON-CHK-007
+
+**`completeCheck(checkId, overallStatus, findings, documentOutcomes, unreadQueries, metadata)`** — SVC-API `completeCheck`; closed value types per PORTS (REQ-RPT-053, ADR-RPT-018).
+  - Honours: CON-CHK-008
+
+**`failCheck(checkId, failureReason, detail, endedAt)`** — SVC-API `failCheck`; closed value types per PORTS (REQ-RPT-053, ADR-RPT-018).
+  - Honours: CON-CHK-009
+
+**`getCheck(checkId)` → {checkId, status, serviceCode, versionNumber, fetchMode, requestNumber, employeeId, startedAt}** — SVC-API `getCheck`.
+  - Honours: CON-CHK-010
+
+**`listUnfinishedChecks()` → list of {checkId, status, startedAt}** — SVC-API `listUnfinishedChecks`.
+  - Honours: CON-CHK-011
 <!-- PHASE:CROSS-MOD:END -->
 
 ## QUERY REFERENCE CATALOG — RPT v1

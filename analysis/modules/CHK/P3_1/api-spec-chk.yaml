@@ -1,0 +1,101 @@
+openapi: 3.1.0
+info:
+  title: Check Engine (CHK) API
+  version: 1.0.0
+  description: 'Derived from backend-execution-plan-chk.md (API-CHK-001). Read-only;
+    starting a Check, confirming uploads, the pipeline and the result port are in-process
+    (ADR-CHK-017). No security scheme: caller authentication is deferred (raw-idea A2).'
+paths:
+  /api/v1/active-checks/{checkId}:
+    get:
+      operationId: readActiveCheck
+      summary: Read the Active Check of a Check
+      x-api-id: API-CHK-001
+      x-traces:
+      - REQ-CHK-076
+      - REQ-CHK-077
+      - REQ-CHK-080
+      - DBF-CHK-002
+      - DBF-CHK-003
+      - DBF-CHK-004
+      parameters:
+      - name: checkId
+        in: path
+        required: true
+        description: The Check identifier (DBF-CHK-002)
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: The status and deadline of the unfinished Check
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActiveCheckView'
+        '400':
+          description: The checkId path parameter is not a number
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - CHK-400-CHECK-ID-INVALID
+        '404':
+          description: No Active Check exists for the checkId — the Check has ended or does not exist
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - CHK-404-ACTIVE-CHECK-NOT-FOUND
+        '500':
+          description: Unexpected server failure
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetail'
+          x-error-codes:
+          - CHK-500
+components:
+  schemas:
+    ActiveCheckView:
+      type: object
+      required:
+      - checkId
+      - checkStatus
+      - deadlineAt
+      properties:
+        checkId:
+          type: integer
+          format: int64
+          description: DBF-CHK-002
+        checkStatus:
+          type: string
+          enum:
+          - AWAITING_DOCUMENTS
+          - RUNNING
+          maxLength: 30
+          description: DBF-CHK-003 — CHECK_STATUS code (unfinished values only)
+        deadlineAt:
+          type: string
+          format: date-time
+          description: DBF-CHK-004 — end of the upload window (AWAITING_DOCUMENTS) or of the Check timeout (RUNNING)
+    ProblemDetail:
+      type: object
+      required:
+      - type
+      - title
+      - status
+      - code
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        code:
+          type: string

@@ -1,14 +1,75 @@
 {
   "schema": 1,
   "generated_from": {
-    "platform-summary": {},
+    "platform-summary": {
+      "REG": "v1"
+    },
     "srs": {}
   },
   "modules": {
     "CHK": {
+      "tier": 2,
+      "tier_source": "declared"
+    },
+    "DOC": {
       "tier": 1,
-      "tier_source": "derived"
+      "tier_source": "declared"
+    },
+    "INT": {
+      "tier": 4,
+      "tier_source": "declared"
+    },
+    "REG": {
+      "tier": 0,
+      "tier_source": "declared"
+    },
+    "RPT": {
+      "tier": 3,
+      "tier_source": "declared"
     }
   },
-  "edges": []
+  "edges": [
+    {
+      "from": "CHK",
+      "to": "DOC",
+      "state": "DECLARED",
+      "source": "platform"
+    },
+    {
+      "from": "CHK",
+      "to": "REG",
+      "state": "DECLARED",
+      "source": "platform"
+    },
+    {
+      "from": "DOC",
+      "to": "REG",
+      "state": "DECLARED",
+      "source": "platform"
+    },
+    {
+      "from": "INT",
+      "to": "CHK",
+      "state": "DECLARED",
+      "source": "platform"
+    },
+    {
+      "from": "INT",
+      "to": "DOC",
+      "state": "DECLARED",
+      "source": "platform"
+    },
+    {
+      "from": "INT",
+      "to": "RPT",
+      "state": "DECLARED",
+      "source": "platform"
+    },
+    {
+      "from": "RPT",
+      "to": "CHK",
+      "state": "DECLARED",
+      "source": "platform"
+    }
+  ]
 }

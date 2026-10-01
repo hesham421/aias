@@ -9,6 +9,16 @@
       ],
       "current_version": 1,
       "delivery": {}
+    },
+    "REG": {
+      "code": "REG",
+      "description": "",
+      "registered_at": "2026-10-01T10:30:49+00:00",
+      "versions": [
+        1
+      ],
+      "current_version": 1,
+      "delivery": {}
     }
   }
 }

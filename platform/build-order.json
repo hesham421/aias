@@ -2,28 +2,83 @@
   "schema": 1,
   "waves": [
     [
+      "REG"
+    ],
+    [
+      "DOC"
+    ],
+    [
       "CHK"
+    ],
+    [
+      "RPT"
+    ],
+    [
+      "INT"
     ]
   ],
   "parallelism": [
+    1,
+    1,
+    1,
+    1,
     1
   ],
   "critical_path": [
-    "CHK"
+    "REG",
+    "DOC",
+    "CHK",
+    "RPT",
+    "INT"
   ],
   "cycles": [],
   "modules": {
-    "CHK": {
+    "REG": {
       "wave": 1,
       "depends_on": []
+    },
+    "DOC": {
+      "wave": 2,
+      "depends_on": [
+        "REG"
+      ]
+    },
+    "CHK": {
+      "wave": 3,
+      "depends_on": [
+        "DOC",
+        "REG"
+      ]
+    },
+    "RPT": {
+      "wave": 4,
+      "depends_on": [
+        "CHK"
+      ]
+    },
+    "INT": {
+      "wave": 5,
+      "depends_on": [
+        "CHK",
+        "DOC",
+        "RPT"
+      ]
     }
   },
   "status": {
     "1": {
-      "CHK": "ready"
+      "REG": "ready",
+      "DOC": "waiting",
+      "CHK": "waiting",
+      "RPT": "waiting",
+      "INT": "waiting"
     },
     "2": {
-      "CHK": "ready"
+      "REG": "ready",
+      "DOC": "waiting",
+      "CHK": "waiting",
+      "RPT": "waiting",
+      "INT": "waiting"
     }
   }
 }

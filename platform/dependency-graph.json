@@ -6,6 +6,7 @@
       "REG": "v1"
     },
     "srs": {
+      "DOC": "v1",
       "REG": "v1"
     }
   },
@@ -47,8 +48,34 @@
     {
       "from": "DOC",
       "to": "REG",
+      "entity": "ENT-REG-002",
+      "type": "SOFT-READ",
       "state": "READY",
-      "source": "platform"
+      "source": "module"
+    },
+    {
+      "from": "DOC",
+      "to": "REG",
+      "entity": "ENT-REG-003",
+      "type": "SOFT-READ",
+      "state": "READY",
+      "source": "module"
+    },
+    {
+      "from": "DOC",
+      "to": "REG",
+      "entity": "ENT-REG-004",
+      "type": "SOFT-READ",
+      "state": "READY",
+      "source": "module"
+    },
+    {
+      "from": "DOC",
+      "to": "REG",
+      "entity": "ENT-REG-005",
+      "type": "SOFT-READ",
+      "state": "READY",
+      "source": "module"
     },
     {
       "from": "INT",

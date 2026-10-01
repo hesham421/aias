@@ -195,7 +195,7 @@
     {
       "from": "INT",
       "to": "CHK",
-      "state": "READY",
+      "state": "DELIVERED",
       "source": "platform"
     },
     {
@@ -230,7 +230,7 @@
     {
       "from": "RPT",
       "to": "CHK",
-      "state": "READY",
+      "state": "DELIVERED",
       "source": "platform"
     }
   ]

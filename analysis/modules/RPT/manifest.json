@@ -47,7 +47,19 @@
       "req-api": 23.1,
       "req-ux": 0.0,
       "ac-tc": 100.0
-    }
+    },
+    "xm_events": [
+      {
+        "id": "RPT>CHK",
+        "key": "RPT>CHK@CHKv1:delivered",
+        "target": "CHK",
+        "target_version": 1,
+        "version": 1,
+        "trigger": "delivered",
+        "resolution": "OPEN",
+        "raised_at": "2026-10-01T14:42:34+00:00"
+      }
+    ]
   },
   "created_at": "2026-10-01T13:11:11+00:00"
 }

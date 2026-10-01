@@ -15,6 +15,20 @@
       "ref": "ADR-INT-027",
       "how": "DOC v1 delivered; INT already binds CON-DOC-006 (ADR-INT-023) and now passes through DOC-409-CHECK-ENDED and DOC-422-UPLOAD-LIMIT-REACHED (ADR-INT-025); INT->DOC edge remains valid",
       "at": "2026-10-01T15:41:09+00:00"
+    },
+    {
+      "key": "factory|xm_events|XM-INT-001",
+      "digest": "45931e0345e3deb2",
+      "ref": "ADR-INT-028",
+      "how": "REG v1 delivered; CON-REG-002/004/009/012 still honoured, required document types already read via CON-REG-009 with the Check's pinned version (ADR-REG-020); REQ-INT-016 source corrected; XM-INT-001 remains valid",
+      "at": "2026-10-01T15:45:47+00:00"
+    },
+    {
+      "key": "factory|xm_events|INT>RPT",
+      "digest": "bc9501dc4aa4e934",
+      "ref": "ADR-INT-029",
+      "how": "RPT v1 delivered; cited CON-RPT-001..004 and CON-RPT-006 and the RPT codes INT relays are unchanged; INT->RPT edge and plans remain valid",
+      "at": "2026-10-01T15:45:47+00:00"
     }
   ]
 }

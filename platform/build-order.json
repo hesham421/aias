@@ -68,14 +68,14 @@
   "status": {
     "1": {
       "REG": "ready",
-      "DOC": "waiting",
+      "DOC": "ready",
       "CHK": "waiting",
       "RPT": "waiting",
       "INT": "waiting"
     },
     "2": {
       "REG": "ready",
-      "DOC": "waiting",
+      "DOC": "ready",
       "CHK": "waiting",
       "RPT": "waiting",
       "INT": "waiting"

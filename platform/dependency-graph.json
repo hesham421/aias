@@ -205,7 +205,7 @@
     {
       "from": "INT",
       "to": "RPT",
-      "state": "DECLARED",
+      "state": "CONTRACTED",
       "source": "platform"
     },
     {

@@ -44,6 +44,11 @@
           "version": 1,
           "exec": "backend/modules/DOC/packages/backend-execution",
           "test": "backend/modules/DOC/packages/backend-test"
+        },
+        "frontend": {
+          "version": 1,
+          "exec": "frontend/modules/DOC/packages/frontend-execution",
+          "test": "frontend/modules/DOC/packages/frontend-test"
         }
       }
     },

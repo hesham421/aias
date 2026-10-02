@@ -30,6 +30,12 @@
       "resolution": "OPEN — MISSING_IN_DOCS pending spec clarification · interim implemented: SpringAiMcpQueryChannel over the Spring AI MCP client; endpoint convention `mcp:<client>`; query-tool args {sql, binds, maxRows} taken from the local Oracle MCP server; factory to confirm the protocol",
       "detail": "PORTS-QUERY · (1) the 'query-executor bean of the platform track' (CHK plan, ADR-DOC-001) is delivered by no package — the shared port is io.agenticai.platform.mcp.McpQueryChannel (moved from DOC, same row as DOC's document-source gap; columns=null now documented as 'all columns' for CHK) and McpServiceQueryAdapter records every query NotRead 'the platform MCP query channel is not available in this deployable' while no bean is present; (2) the MCP query tool's argument protocol (how SQL text, bind name/value, row limit and timeout are passed to the connection's queryTool) is stated nowhere — not invented; (3) CON-REG-011 carries no readOnly, so RULE-CHK-002's 'declared read-only' cannot be read through the contract — CON-REG-005/RULE-REG-015 guarantee every supplied connection is read-only; the guard refuses an absent connection or a type other than mcp — UPDATE 2026-10-02: io.agenticai.platform.mcp.SpringAiMcpQueryChannel (@Component) implements the port: REG endpoint `mcp:<client>` names a spring.ai.mcp.client.* connection; one tools/call of queryTool with {sql: stored text unchanged, binds: {<inputName>: requestNumber}, maxRows: maxRows+1}; parses text JSON {rowCount, rows}; isError → exception → NotRead/SOURCE_QUERY_FAILED; deadline enforced on the call; MCP→ToolCallback bridge disabled (spring.ai.mcp.client.toolcallback.enabled=false, start-up refuses any ToolCallbackProvider — G1); credential held by the MCP server's own config, credentialReference not read by the channel. Items (2)/(3) unchanged.",
       "recorded_at": "2026-10-02T08:11:25+00:00"
+    },
+    {
+      "endpoint": "POST /api/v1/checks/{checkId}/upload-confirmation",
+      "resolution": "IMPLEMENTED — REQ-CHK-040 finding without evidence: plan silent on its stored evidence/note while RULE-RPT-007 refuses blank ones (Check ended INTERNAL_ERROR); CHK now records evidence 'NONE' and, if the note is blank, message CHK-REQ-040 — factory to confirm or specify",
+      "detail": "FindingVerifier.java:80-83; messages.properties CHK-REQ-040",
+      "recorded_at": "2026-10-02T09:50:39+00:00"
     }
   ],
   "blocked": [],
@@ -59,7 +65,7 @@
     {
       "version": 1,
       "result": "PASS",
-      "recorded_at": "2026-10-02T08:11:25+00:00"
+      "recorded_at": "2026-10-02T09:50:31+00:00"
     }
   ]
 }

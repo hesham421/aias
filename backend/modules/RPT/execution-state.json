@@ -1,9 +1,65 @@
 {
   "module": "RPT",
-  "api_doc_gaps": [],
+  "api_doc_gaps": [
+    {
+      "endpoint": "RPT CORE — boundary guard + retention binding",
+      "resolution": "OPEN — pending spec clarification: (1) CORE R1 asks for an ArchUnit test failing the build if an RPT class imports org.springframework.ai, java.nio.file or the query-port types; not written this run (tests disallowed by the user) — the boundary is held by convention + grep (0 hits) until tests are allowed (gov-enforce-library-contract M.5 open). (2) aias.reports.retention-days binds as Integer per R1: a non-integer value (e.g. 'abc', '1.5') fails start-up at binding instead of the REQ-RPT-044 'not a whole number of days → purge skipped' path; the plan does not say which wins. (3) R1 says JPA maps the carried enums EnumType.STRING, but FETCH_MODE/SOURCE_MODE store path|blob|manual — DATA-DOM must use an AttributeConverter for FetchMode (build-create-entity step 4).",
+      "detail": "RPT CORE: ArchUnit guard deferred; retention-days non-integer binding; FetchMode converter note for DATA-DOM",
+      "recorded_at": "2026-10-01T23:18:36+00:00"
+    },
+    {
+      "endpoint": "RPT DATA-DOM — completeCheck / failCheck domain rules (RULE-RPT-005, 007, 008, 010) + enum mapping",
+      "resolution": "OPEN — pending spec clarification: (1) RULE-RPT-007 applied to unread queries (ENT-RPT-004) and RULE-RPT-008's 'document type required' state no message/code — SVC-API's FindingIncompleteException text names a finding; domain returns UNREAD_QUERY_INCOMPLETE / DOCUMENT_INCOMPLETE {position, field} for SVC-API to map; (2) RULE-RPT-005 owner is a 'CheckReport value object' but CheckReport is API-RPT-001's response — built as rpt.domain.SubmittedReport; (3) RULE-RPT-010 needs endedAt >= STARTED_AT but SVC-API failCheck reads no row before its conditional UPDATE — CheckFailure.refusal(startedAt) skips the comparison when startedAt is null, CHK_RPT_CHECK_RUN_ENDED_AT backstops; (4) CORE R1 says EnumType.STRING, FetchMode cannot — every RPT closed list is mapped through an AttributeConverter writing storedValue() (same values)",
+      "detail": "Domain refusal codes exist only in SVC-API's in-process table: DATA-DOM domain classes return RuleRefusal(RefusalReason, placeholders) and SVC-API raises its RptRefusalException subclasses.",
+      "recorded_at": "2026-10-01T23:26:02+00:00"
+    },
+    {
+      "endpoint": "RPT PORTS+SVC-API — result port adapter, in-process refusal table, API-RPT-001/002/003",
+      "resolution": "OPEN — pending spec clarification: (1) DATA-DOM message gaps carried into SVC-API: an unread query without name/detail (RefusalReason UNREAD_QUERY_INCOMPLETE, RULE-RPT-007) is raised as FindingIncompleteException RPT-422-FINDING-INCOMPLETE and a document outcome without a documentType (DOCUMENT_INCOMPLETE, RULE-RPT-008) as DocumentReasonMismatchException RPT-422-DOCUMENT-REASON-MISMATCH, both with the table's own generic text 'The report of Check {checkId} was not stored.' (key RPT-500-REPORT-NOT-STORED) since the plan states no message for either — no text invented; the factory should supply both messages. (2) CON-CHK-008 lets ReportDocumentOutcome.documentType be null for a host document whose type was NULL, but RULE-RPT-008 + DOCUMENT_TYPE NOT NULL refuse it, so such a report is refused and CHK fails the Check INTERNAL_ERROR. (3) getCheck: SVC-API says none -> RPT-404-CHECK-NOT-FOUND, the declared CheckResultPort returns Optional — implemented as an empty Optional. (4) RULE-RPT-006 is applied where CHK's String codes are mapped (CheckResultStore, fromStored), so an unknown code is refused before RULE-RPT-001 (createCheckRun) / RULE-RPT-010 (failCheck) presence checks when both apply; blank codes count as absent. (5) ADR-RPT-012(3) says a write failure rolls CHK's transaction back whole (Check stays RUNNING), while SVC-API completeCheck step 4 and CHK's CheckEndingService roll back to a savepoint and fail INTERNAL_ERROR; RPT declares ReportNotStoredException rollbackFor and leaves the savepoint to CHK. (6) API-RPT-002/003 query params maxLength 100 have no error code: not validated (an over-long value matches nothing). (7) Purge kept/deleted log lines (REQ-RPT-054, REQ-RPT-046) appended as message keys RPT-LOG-PURGE-KEPT / RPT-LOG-PURGE-DELETED. (8) M.5 ArchUnit boundary test still deferred (tests not allowed this run).",
+      "detail": "PORTS + SVC-API built without tests; no package rows recorded. Both DATA-DOM message gaps (unread-query / document-type incompleteness) mapped to their RULE's code with the plan's generic not-stored text.",
+      "recorded_at": "2026-10-01T23:38:34+00:00"
+    },
+    {
+      "endpoint": "completeCheck write failure: ADR-RPT-012(3) whole-transaction rollback vs REQ-CHK-048 failCheck in the same transaction",
+      "resolution": "OPEN — MAPPING_GAP pending spec clarification",
+      "detail": "Plan statements: (a) RPT ADR-RPT-012(3) + PORTS + SVC-API completeCheck step 4 — a database failure during the report writes propagates as ReportNotStoredException (RPT-500-REPORT-NOT-STORED) and rolls back the caller's WHOLE transaction: the report and the Check Engine's Active Check DELETE are undone together, the Check stays RUNNING and its deadline later ends it (REQ-RPT-009, AC-RPT-062). (b) CHK CON-CHK-008 / REQ-CHK-048 / ADR-CHK-015 (CheckEndingService.handOverReport) — on 'not stored' CHK rolls back to a savepoint taken before completeCheck and calls failCheck(INTERNAL_ERROR) IN THE SAME transaction. Both cannot hold. RPT's CheckResultStore and CheckRunCommandService (Propagation.REQUIRED, rollbackFor = ReportNotStoredException, which wins over noRollbackFor = RptRefusalException by Spring's closest-rule depth; the default rule would roll back any RuntimeException anyway) end the participating transaction with rollback: JpaTransactionObject.setRollbackOnly marks the JPA EntityTransaction rollback-only, and Hibernate marks it itself on a flush PersistenceException. JpaTransactionObject.rollbackToSavepoint resets only the EntityManagerHolder flag, so the EntityTransaction stays rollback-only and the ending commit fails with UnexpectedRollbackException: CHK's failCheck(INTERNAL_ERROR) and its Active Check DELETE roll back too. Current behaviour (static reading of src + spring-orm 7.0.9 / Hibernate 7.4.5 bytecode; not executed — tests disallowed): the exception leaves CheckEndingService.end, CheckPipeline.run's catch maps it (PipelineFailure default) to INTERNAL_ERROR and calls ending.fail in a NEW REQUIRES_NEW transaction; the Active Check row is back, the DELETE hits 1 row and RPT failCheck moves the still-RUNNING Check run to FAILED / INTERNAL_ERROR with the CHK-500 text. Only if that second ending also fails does PipelineRunner log it and the deadline check end the Check FAILED / TIMED_OUT (REQ-CHK-080). Related (CHK/REG, reported in ALIGN-BE-RPT-v1-2026-10-02 X2, not recorded here): JpaTransactionManager + HibernateJpaDialect exposes no SavepointManager (HibernateJpaDialect.SessionTransactionData does not implement it), so status.createSavepoint() in handOverReport throws NestedTransactionNotSupportedException before completeCheck is reached and the same pipeline catch ends the Check FAILED / INTERNAL_ERROR. In every path the outcome is recorded (FAILED / INTERNAL_ERROR, or FAILED / TIMED_OUT via the deadline check), never silent, and no part of the report remains (REQ-RPT-009 holds). Decision needed: which plan statement wins — RPT keeps whole-rollback (then CHK's REQ-CHK-048 must end the Check in a new transaction), or RPT must leave the caller's transaction usable on a write failure (then ADR-RPT-012(3) changes and the savepoint mechanism must exist).",
+      "recorded_at": "2026-10-01T23:47:41+00:00"
+    },
+    {
+      "endpoint": "GET /api/v1/checks — unsupported Accept header",
+      "resolution": "OPEN — MISSING_IN_DOCS pending spec clarification",
+      "detail": "A request with an Accept header the endpoint cannot produce (e.g. text/plain) answers RPT-500 because the error catalog has no 406/400 code for it; INT maps the same case to INT-400-REQUEST-INVALID. The factory is asked for a code (406 or 400) to add to the RPT error-catalog and API document.",
+      "recorded_at": "2026-10-02T07:58:04+00:00"
+    }
+  ],
   "blocked": [],
   "deferred_xm": [],
   "features_done": [],
-  "package_results": [],
-  "api_verify": []
+  "package_results": [
+    {
+      "package": "CORE",
+      "tests_passed": 0,
+      "tests_failed": 0,
+      "recorded_at": "2026-10-01T23:18:36+00:00"
+    },
+    {
+      "package": "DATA-DOM",
+      "tests_passed": 0,
+      "tests_failed": 0,
+      "recorded_at": "2026-10-01T23:26:02+00:00"
+    },
+    {
+      "package": "ALIGN-BE",
+      "tests_passed": 0,
+      "tests_failed": 0,
+      "recorded_at": "2026-10-01T23:49:54+00:00"
+    }
+  ],
+  "api_verify": [
+    {
+      "version": 1,
+      "result": "PASS",
+      "recorded_at": "2026-10-02T08:11:25+00:00"
+    }
+  ]
 }

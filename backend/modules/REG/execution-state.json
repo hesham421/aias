@@ -1,9 +1,59 @@
 {
   "module": "REG",
-  "api_doc_gaps": [],
+  "api_doc_gaps": [
+    {
+      "endpoint": "package files knowledge.md / service.yaml and definition keys queries.<name>.connection, documents.source",
+      "resolution": "RESOLVED — knowledge.md and service.yaml are named in ADR-REG-007 (Context: raw idea §4 'services/<service-code>/knowledge.md + service.yaml') and in TC-REG-090 (P4); documents.source is named in SRS AC-REG-039; queries.<name>.connection appears only in the raw-idea §4 YAML (analysis/modules/REG/_state/briefs/P0.md) — implemented as PackageSource.KNOWLEDGE_FILE / DEFINITION_FILE and ServiceDefinitionParser QUERY_CONNECTION_KEY / DOCUMENTS_SOURCE_KEY",
+      "detail": "PORTS · second-agent review 2026-10-01 grounded every item; no code change needed",
+      "recorded_at": "2026-10-01T19:28:57+00:00"
+    },
+    {
+      "endpoint": "load run: malformed service.yaml, a definition missing version/input/query sql or connection, an activation entry missing a required value, and an unexpected persistence failure of one item have no load reason code; in-process VersionNotFoundException / ConnectionNotFoundException have no stated code",
+      "resolution": "OPEN — MISSING_IN_DOCS pending spec clarification",
+      "detail": "SVC-API · second-agent review 2026-10-01: (i) in-process VersionNotFoundException/ConnectionNotFoundException carry no code BY DESIGN (ADR-REG-011 (2); registry-exec-be-reg.md counts one in-process code) — resolved; STILL OPEN, no rule/code/message exists for: (e) malformed service.yaml, (f) a definition missing version/input/a query's sql or connection or version < 1, (g) an activation entry missing name/endpoint/dialect/credential reference, an mcp entry without query tool, or a blank environment-name while entries are listed, (h) a persistence failure of one item after its rules passed · interim: (e)(f) rejected under RULE-REG-012 with element 'malformed: <detail>' / 'missing: <path>' / 'invalid: <path>'; (g) rejected PER ENTRY as a CONNECTION Load Result row with a plain-English reason and no code (REQ-REG-007, ADR-REG-015, ADR-REG-022), blank environment-name refuses every entry; (h) fails the run with REG-500 although REG-500 is an HTTP-only catalog code (ADR-REG-011) — the factory is asked for a load reason code for each",
+      "recorded_at": "2026-10-01T19:31:34+00:00"
+    },
+    {
+      "endpoint": "GET /api/v1/services — unsupported Accept header",
+      "resolution": "OPEN — MISSING_IN_DOCS pending spec clarification",
+      "detail": "A request with an Accept header the endpoint cannot produce (e.g. text/plain) answers REG-500 because the error catalog has no 406/400 code for it; INT maps the same case to INT-400-REQUEST-INVALID. The factory is asked for a code (406 or 400) to add to the REG error-catalog and API document.",
+      "recorded_at": "2026-10-02T07:58:04+00:00"
+    }
+  ],
   "blocked": [],
   "deferred_xm": [],
   "features_done": [],
-  "package_results": [],
-  "api_verify": []
+  "package_results": [
+    {
+      "package": "CORE",
+      "tests_passed": 0,
+      "tests_failed": 0,
+      "recorded_at": "2026-10-01T18:02:35+00:00"
+    },
+    {
+      "package": "DATA-DOM-CONFIG",
+      "tests_passed": 0,
+      "tests_failed": 0,
+      "recorded_at": "2026-10-01T18:08:11+00:00"
+    },
+    {
+      "package": "DATA-DOM-TRANSACTIONAL",
+      "tests_passed": 0,
+      "tests_failed": 0,
+      "recorded_at": "2026-10-01T18:14:11+00:00"
+    },
+    {
+      "package": "ALIGN-BE",
+      "tests_passed": 0,
+      "tests_failed": 0,
+      "recorded_at": "2026-10-01T19:42:29+00:00"
+    }
+  ],
+  "api_verify": [
+    {
+      "version": 1,
+      "result": "PASS",
+      "recorded_at": "2026-10-02T08:11:25+00:00"
+    }
+  ]
 }

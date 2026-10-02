@@ -1,9 +1,59 @@
 {
   "module": "DOC",
-  "api_doc_gaps": [],
+  "api_doc_gaps": [
+    {
+      "endpoint": "aias.documents.reading-model: provider dependency and connection settings (endpoint, credential) not stated",
+      "resolution": "OPEN — MISSING_IN_DOCS pending spec clarification",
+      "detail": "PORTS-MODEL · the plan names provider/model/tier/instruction only and no Spring AI provider starter (domain-profile D3: provider decided before go-live) · interim: v1 supports provider 'openai' only (spring-ai-starter-model-openai 2.0.1, built on the OpenAI Java SDK; an OpenAI-compatible base URL covers local/free-tier gateways), connection settings read from spring.ai.openai.base-url / spring.ai.openai.api-key (absent key = client without credential); the starter's default chat model is disabled with spring.ai.model.chat=none; any other provider or a blank model = no model configured → READING_FAILED (REQ-DOC-033)",
+      "recorded_at": "2026-10-01T20:26:16+00:00"
+    },
+    {
+      "endpoint": "DocumentAccess.fetchDocuments (CON-DOC-004): outcome of a document source row whose type column is NULL",
+      "resolution": "OPEN — MISSING_IN_DOCS pending spec clarification",
+      "detail": "SVC-API · REQ-DOC-006 takes each document's type from the type column, DocumentSourceRow allows a NULL column value and says the fetch procedure decides what such a row is, but no step of fetchDocuments and no REQ states the outcome · interim: the row is reported, never dropped (G6) — its outcome is read or unreadable as its content allows, with documentType null; it satisfies no required type, so the MISSING outcomes are unaffected",
+      "recorded_at": "2026-10-01T20:54:47+00:00"
+    },
+    {
+      "endpoint": "GET /api/v1/uploaded-documents — unsupported Accept header",
+      "resolution": "OPEN — MISSING_IN_DOCS pending spec clarification",
+      "detail": "A request with an Accept header the endpoint cannot produce (e.g. text/plain) answers DOC-500 because the error catalog has no 406/400 code for it; INT maps the same case to INT-400-REQUEST-INVALID. The factory is asked for a code (406 or 400) to add to the DOC error-catalog and API document.",
+      "recorded_at": "2026-10-02T07:58:04+00:00"
+    },
+    {
+      "endpoint": "document source query: platform MCP query channel bean, credential secret store, and readOnly on CON-REG-011 not stated",
+      "resolution": "OPEN — MISSING_IN_DOCS pending spec clarification · interim implemented: SpringAiMcpQueryChannel over the Spring AI MCP client; endpoint convention `mcp:<client>`; query-tool args {sql, binds, maxRows} taken from the local Oracle MCP server; factory to confirm the protocol",
+      "detail": "PORTS-QUERY · (1) the 'query-executor bean of the platform track' (ADR-DOC-001, CHK plan) is defined by no delivered package — DOC declares port McpQueryChannel and answers SOURCE_QUERY_FAILED when no bean is present; (2) no secret store is defined for the credential reference (ADR-REG-009) — interim: the reference names a Spring Environment property holding username:password; (3) CON-REG-011 carries no readOnly, so RULE-DOC-007 cannot be read through the contract — REG's CHK_REG_CONNECTION_READ_ONLY / RULE-REG-015 guarantee every supplied connection is read-only; the guard refuses only an absent connection — UPDATE 2026-10-02: io.agenticai.platform.mcp.SpringAiMcpQueryChannel (@Component) implements the port: REG endpoint `mcp:<client>` names a spring.ai.mcp.client.* connection; one tools/call of queryTool with {sql: stored text unchanged, binds: {<inputName>: requestNumber}, maxRows: maxRows+1}; parses text JSON {rowCount, rows}; isError → exception → NotRead/SOURCE_QUERY_FAILED; deadline enforced on the call; MCP→ToolCallback bridge disabled (spring.ai.mcp.client.toolcallback.enabled=false, start-up refuses any ToolCallbackProvider — G1); credential held by the MCP server's own config, credentialReference not read by the channel. Items (2)/(3) unchanged.",
+      "recorded_at": "2026-10-02T08:11:25+00:00"
+    }
+  ],
   "blocked": [],
   "deferred_xm": [],
   "features_done": [],
-  "package_results": [],
-  "api_verify": []
+  "package_results": [
+    {
+      "package": "CORE",
+      "tests_passed": 0,
+      "tests_failed": 0,
+      "recorded_at": "2026-10-01T19:56:00+00:00"
+    },
+    {
+      "package": "DATA-DOM",
+      "tests_passed": 0,
+      "tests_failed": 0,
+      "recorded_at": "2026-10-01T20:00:22+00:00"
+    },
+    {
+      "package": "ALIGN-BE",
+      "tests_passed": 0,
+      "tests_failed": 0,
+      "recorded_at": "2026-10-01T21:06:42+00:00"
+    }
+  ],
+  "api_verify": [
+    {
+      "version": 1,
+      "result": "PASS",
+      "recorded_at": "2026-10-02T08:11:25+00:00"
+    }
+  ]
 }

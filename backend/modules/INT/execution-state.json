@@ -1,9 +1,59 @@
 {
   "module": "INT",
-  "api_doc_gaps": [],
+  "api_doc_gaps": [
+    {
+      "endpoint": "GET /api/v1/check-reports",
+      "resolution": "RESOLVED — RPT publishes RequestKeysMissingException/ServiceCodeMissingException in rpt.contract; INT passes them through unchanged",
+      "detail": "RPT's CheckReportQueryService/DecisionAgreementQueryService now throw the two rpt.contract exceptions (subclasses of ReportStoreException: same codes, same catalog texts, RPT's own advice answers them unchanged); IntegrationProblemAdvice has a dedicated pass-through handler for RequestKeysMissingException. The former part 2 (owners' status/decision enums not in .contract) is re-recorded under the key POST /api/v1/checks/{checkId}/documents.",
+      "recorded_at": "2026-10-02T06:51:41+00:00"
+    },
+    {
+      "endpoint": "POST /api/v1/checks/{checkId}/documents",
+      "resolution": "OPEN — CheckStatus/EmployeeDecision named by CORE R1 / ADR-INT-013 are not published in chk/rpt .contract, so INT compares the owners' codes AWAITING_DOCUMENTS (RULE-INT-001) and COMPLETED/APPROVED/REJECTED (RULE-INT-002/003, decision endpoint) as strings — pending spec clarification",
+      "detail": "Fix option: owners publish the status/decision code constants (or enums) in chk.contract / rpt.contract; INT's UploadGuard/ApprovalGuard then use them.",
+      "recorded_at": "2026-10-02T06:51:41+00:00"
+    },
+    {
+      "endpoint": "POST /api/v1/checks/{checkId}/decision",
+      "resolution": "OPEN — PORTS/error-catalog silent on the INT-502 {status} value for an unreachable host and on a malformed Approval API definition; PORTS' prescribed buildAndExpand(...).encode() contradicts AC-INT-035",
+      "detail": "(1) Connection failure: {status} = new detail key INT-DETAIL-APPROVAL-UNREACHABLE 'no answer — the host could not be reached' (Arabic PENDING ADR-INT-017) — please confirm or supply the text. (2) An enabled approvalApi that cannot be called (no method/path split, non-token method, path not starting with '/', not exactly one {...} placeholder) is answered INT-500 (integrity failure, never treated as disabled) — REG's RULE-REG-011 checks presence only. (3) UriComponentsBuilder...buildAndExpand(rn).encode() leaves '/' of the request number unencoded (2026/77%20A); INT uses builder.encode().buildAndExpand(rn), which yields 2026%2F77%20A as AC-INT-035 requires — please align PORTS step 1.",
+      "recorded_at": "2026-10-02T06:51:41+00:00"
+    },
+    {
+      "endpoint": "POST /api/v1/checks",
+      "resolution": "OPEN — api-spec-int.yaml request schemas declare required/maxLength/enum/additionalProperties that the SVC-API-COMMAND unit assigns to the owners; no INT code for an over-length value; unsupported Content-Type now answers INT-400-REQUEST-INVALID; a 415 code is not in the catalog — pending spec clarification",
+      "detail": "SVC-API (also covers POST /api/v1/checks/{checkId}/decision, POST /api/v1/checks/{checkId}/documents, POST /api/v1/checks/{checkId}/upload-confirmation). (1) StartCheckRequest {serviceCode, requestNumber, employeeId} and DecisionRequest {employeeDecision enum, decidedBy} are required/maxLength 100 in the document, but the unit says presence is decided by the Check Engine (CHK-400-START-INCOMPLETE) and RULE-INT-002/the Report Store (RPT-400-DECISION-INCOMPLETE, AC-INT-038, AC-INT-079 'MAYBE'); bean-validation would preempt those codes and IntegrationProblemAdvice has no MethodArgumentNotValidException mapping, so the DTOs carry NO constraint and values pass as received. A value longer than 100 therefore reaches the owner unchecked; no INT/owner code is listed for it. (2) UploadConfirmationRequest additionalProperties:false is not enforced (unknown JSON members are ignored); no code is listed for a rejected member. (3) Unsupported Content-Type now answers INT-400-REQUEST-INVALID (IntegrationProblemAdvice maps HttpMediaTypeNotSupportedException, detail INT-DETAIL-CONTENT-TYPE-UNSUPPORTED; an unsatisfiable Accept header — HttpMediaTypeNotAcceptableException — likewise, detail INT-DETAIL-ACCEPT-UNSUPPORTED); a 415 (or 406) code is not in the catalog. Ask: either drop the constraints from the request schemas or name the refusal codes, and confirm INT-400-REQUEST-INVALID for a wrong Content-Type/Accept or add a 415/406 row.",
+      "recorded_at": "2026-10-02T07:41:49+00:00"
+    }
+  ],
   "blocked": [],
   "deferred_xm": [],
   "features_done": [],
-  "package_results": [],
-  "api_verify": []
+  "package_results": [
+    {
+      "package": "CORE",
+      "tests_passed": 0,
+      "tests_failed": 0,
+      "recorded_at": "2026-10-02T06:45:21+00:00"
+    },
+    {
+      "package": "DATA-DOM",
+      "tests_passed": 0,
+      "tests_failed": 0,
+      "recorded_at": "2026-10-02T06:45:21+00:00"
+    },
+    {
+      "package": "ALIGN-BE",
+      "tests_passed": 0,
+      "tests_failed": 0,
+      "recorded_at": "2026-10-02T07:08:31+00:00"
+    }
+  ],
+  "api_verify": [
+    {
+      "version": 1,
+      "result": "PASS",
+      "recorded_at": "2026-10-02T08:11:25+00:00"
+    }
+  ]
 }

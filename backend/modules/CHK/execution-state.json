@@ -1,9 +1,65 @@
 {
   "module": "CHK",
-  "api_doc_gaps": [],
+  "api_doc_gaps": [
+    {
+      "endpoint": "aias.check.upload-window default",
+      "resolution": "OPEN — default value pending spec clarification",
+      "detail": "CORE · CHK CORE R1, REQ-CHK-060 and ADR-CHK-004 name aias.check.upload-window (Duration) but state no default (only test-plan examples use 30/60 min). Implemented as REQUIRED (@NotNull) on io.agenticai.platform.config.CheckLimitsProperties: start-up fails until the environment sets it, which also affects every @SpringBootTest context (ApplicationTests, REG ITs) that does not set it.",
+      "recorded_at": "2026-10-01T22:32:52+00:00"
+    },
+    {
+      "endpoint": "ComparisonModelPort.compare (PORTS-MODEL): deadline bound and timed-out outcome",
+      "resolution": "OPEN — MISSING_IN_DOCS pending spec clarification",
+      "detail": "PORTS-MODEL states compare(serviceKnowledge, CheckData) and names only ModelNotPermitted/ModelUnavailable/ModelOutputInvalid; SVC-API step 4 maps only those three. Implemented as compare(serviceKnowledge, CheckData, Instant deadline) so the model call is bounded by the Check's remaining time (REQ-CHK-016/051, G8, as DOC's reading model), plus a 4th port exception ComparisonTimedOutException (deadline reached before/during the call, or pipeline interrupted) that SVC-API's CheckPipeline must map to FAILED / TIMED_OUT. Connection settings reuse spring.ai.openai.base-url/api-key — same gap as DOC's 'aias.documents.reading-model: provider dependency and connection settings' row, not duplicated.",
+      "recorded_at": "2026-10-01T22:43:25+00:00"
+    },
+    {
+      "endpoint": "CheckEngine / pipeline (SVC-API): unstated texts, formats and failure codes",
+      "resolution": "OPEN — MISSING_IN_DOCS pending spec clarification",
+      "detail": "SVC-API implemented with these choices where the plan/SRS/ADRs are silent: (1) model-eval known-result set (REQ-CHK-069..071, ADR-CHK-012/020): no set files delivered and no JSON format, location key, report destination or synthetic employee identity stated — runner reads a documented minimal record (KnownResultRequest: request, synthetic, expectedOverallStatus, servicePackage{...}, queryResults, unreadQueries, documents[{documentType, readStatus, reason, detail, text}]) from aias.check.model-eval.directory (default model-eval/known-result-set), writes the report {request, expected, reached} to the service log, uses employee 'model-eval', reached='FAILED <reason>' for a FAILED Check, refuses unless data class SYNTHETIC or a file is not marked synthetic. (2) RULE-CHK-004: {reasonSuffix} format unstated (implemented ' (<reasons>)' for UNREADABLE, '' otherwise); condition text of a required-document finding unstated (implemented: the document type); evidence of a SATISFIED type unstated (implemented 'READ'); several UNREADABLE outcomes → evidence 'reason: detail; ...'. (3) FAILED detail texts unstated for TIMED_OUT (own deadline and deadline check) and UPLOAD_WINDOW_EXPIRED (implemented: the reason code) and for INTERNAL_ERROR on an unexpected exception / completeCheck not stored / pipeline not submitted (implemented: the CHK-500 catalog text). (4) No in-process code for start/confirm failures outside the five rejections (createCheckRun not stored, RULE-CHK-008 duplicate, unexpected) — implemented CHK-500. (5) CON-CHK-007 notes say markRunning is called when a path/blob Check starts its pipeline; SVC-API startCheck steps create the run with status RUNNING and call no markRunning — followed the plan. (6) CON-CHK-010 'errors: not found' modelled as Optional.empty on getCheck. (7) ADR-CHK-003 verification: the searched 'data' = each read query's rows as JSON plus each cell value, each READ document's text (tables as JSON plus each cell); RULE-CHK-006 'literally' = exact substring; dates ISO yyyy-MM-dd or dd/MM/yyyy (strict); >= > <= < = apply to numbers and dates, before/after/on or before/on or after to dates only; a RULE-CHK-006 failure replaces the finding's note with the rule message. (8) ReportFinding evidence/note may be null (model finding without evidence/note).",
+      "recorded_at": "2026-10-01T23:02:13+00:00"
+    },
+    {
+      "endpoint": "GET /api/v1/active-checks/{checkId} — unsupported Accept header",
+      "resolution": "OPEN — MISSING_IN_DOCS pending spec clarification",
+      "detail": "A request with an Accept header the endpoint cannot produce (e.g. text/plain) answers CHK-500 because the error catalog has no 406/400 code for it; INT maps the same case to INT-400-REQUEST-INVALID. The factory is asked for a code (406 or 400) to add to the CHK error-catalog and API document.",
+      "recorded_at": "2026-10-02T07:58:04+00:00"
+    },
+    {
+      "endpoint": "service queries: platform MCP query channel, query-tool argument protocol, and readOnly on CON-REG-011 not stated",
+      "resolution": "OPEN — MISSING_IN_DOCS pending spec clarification · interim implemented: SpringAiMcpQueryChannel over the Spring AI MCP client; endpoint convention `mcp:<client>`; query-tool args {sql, binds, maxRows} taken from the local Oracle MCP server; factory to confirm the protocol",
+      "detail": "PORTS-QUERY · (1) the 'query-executor bean of the platform track' (CHK plan, ADR-DOC-001) is delivered by no package — the shared port is io.agenticai.platform.mcp.McpQueryChannel (moved from DOC, same row as DOC's document-source gap; columns=null now documented as 'all columns' for CHK) and McpServiceQueryAdapter records every query NotRead 'the platform MCP query channel is not available in this deployable' while no bean is present; (2) the MCP query tool's argument protocol (how SQL text, bind name/value, row limit and timeout are passed to the connection's queryTool) is stated nowhere — not invented; (3) CON-REG-011 carries no readOnly, so RULE-CHK-002's 'declared read-only' cannot be read through the contract — CON-REG-005/RULE-REG-015 guarantee every supplied connection is read-only; the guard refuses an absent connection or a type other than mcp — UPDATE 2026-10-02: io.agenticai.platform.mcp.SpringAiMcpQueryChannel (@Component) implements the port: REG endpoint `mcp:<client>` names a spring.ai.mcp.client.* connection; one tools/call of queryTool with {sql: stored text unchanged, binds: {<inputName>: requestNumber}, maxRows: maxRows+1}; parses text JSON {rowCount, rows}; isError → exception → NotRead/SOURCE_QUERY_FAILED; deadline enforced on the call; MCP→ToolCallback bridge disabled (spring.ai.mcp.client.toolcallback.enabled=false, start-up refuses any ToolCallbackProvider — G1); credential held by the MCP server's own config, credentialReference not read by the channel. Items (2)/(3) unchanged.",
+      "recorded_at": "2026-10-02T08:11:25+00:00"
+    }
+  ],
   "blocked": [],
   "deferred_xm": [],
   "features_done": [],
-  "package_results": [],
-  "api_verify": []
+  "package_results": [
+    {
+      "package": "CORE",
+      "tests_passed": 0,
+      "tests_failed": 0,
+      "recorded_at": "2026-10-01T22:32:52+00:00"
+    },
+    {
+      "package": "DATA-DOM",
+      "tests_passed": 0,
+      "tests_failed": 0,
+      "recorded_at": "2026-10-01T22:35:59+00:00"
+    },
+    {
+      "package": "ALIGN-BE",
+      "tests_passed": 0,
+      "tests_failed": 0,
+      "recorded_at": "2026-10-01T23:13:20+00:00"
+    }
+  ],
+  "api_verify": [
+    {
+      "version": 1,
+      "result": "PASS",
+      "recorded_at": "2026-10-02T08:11:25+00:00"
+    }
+  ]
 }

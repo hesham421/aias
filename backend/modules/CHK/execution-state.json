@@ -59,6 +59,36 @@
       "tests_passed": 0,
       "tests_failed": 0,
       "recorded_at": "2026-10-01T23:13:20+00:00"
+    },
+    {
+      "package": "PORTS-QUERY",
+      "tests_passed": 9,
+      "tests_failed": 0,
+      "recorded_at": "2026-10-03T14:10:13+00:00"
+    },
+    {
+      "package": "XM-CHK-001",
+      "tests_passed": 4,
+      "tests_failed": 0,
+      "recorded_at": "2026-10-03T14:10:13+00:00"
+    },
+    {
+      "package": "XM-CHK-003",
+      "tests_passed": 4,
+      "tests_failed": 0,
+      "recorded_at": "2026-10-03T14:10:13+00:00"
+    },
+    {
+      "package": "XM-CHK-004",
+      "tests_passed": 5,
+      "tests_failed": 0,
+      "recorded_at": "2026-10-03T14:10:13+00:00"
+    },
+    {
+      "package": "XM-CHK-005",
+      "tests_passed": 4,
+      "tests_failed": 0,
+      "recorded_at": "2026-10-03T14:10:13+00:00"
     }
   ],
   "api_verify": [

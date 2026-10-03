@@ -47,6 +47,18 @@
       "tests_passed": 0,
       "tests_failed": 0,
       "recorded_at": "2026-10-01T19:42:29+00:00"
+    },
+    {
+      "package": "PORTS",
+      "tests_passed": 3,
+      "tests_failed": 0,
+      "recorded_at": "2026-10-03T10:38:04+00:00"
+    },
+    {
+      "package": "RULE-SCENARIOS",
+      "tests_passed": 48,
+      "tests_failed": 0,
+      "recorded_at": "2026-10-03T10:38:04+00:00"
     }
   ],
   "api_verify": [

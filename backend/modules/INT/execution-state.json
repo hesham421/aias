@@ -53,13 +53,19 @@
       "tests_passed": 0,
       "tests_failed": 0,
       "recorded_at": "2026-10-02T07:08:31+00:00"
+    },
+    {
+      "package": "SVC-API-QUERY",
+      "tests_passed": 8,
+      "tests_failed": 0,
+      "recorded_at": "2026-10-03T09:39:27+00:00"
     }
   ],
   "api_verify": [
     {
       "version": 1,
       "result": "PASS",
-      "recorded_at": "2026-10-02T09:50:31+00:00"
+      "recorded_at": "2026-10-03T09:17:32+00:00"
     }
   ]
 }
